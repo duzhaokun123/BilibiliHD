@@ -1,6 +1,8 @@
 # Bilibili HD
 非官方哔哩哔哩客户端
 
+# SOURCE CODE IS COMING SOON
+
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
 ### 将支持的功能
