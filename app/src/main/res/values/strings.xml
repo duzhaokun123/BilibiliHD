@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">bilibili HD</string>
+    <string name="keyword">keyword</string>
+    <string name="search">Search</string>
+    <string name="passe_again_to_quit">Passe again to quit</string>
+    <string name="username">name</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="settings">Settings</string>
+    <string name="develop">develop</string>
+    <string name="logged">Logged</string>
+    <string name="not_logged_in">Not Logged In</string>
+    <string name="home">home</string>
+    <string name="logout">Logout</string>
+    <string name="logout_ask">Are you sure to LOGOUT?</string>
+    <string name="history">history</string>
+    <string name="fans">fans</string>
+    <string name="watching">watching</string>
+    <string name="like">like</string>
+</resources>
