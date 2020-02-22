@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
             } catch (Exception e) {
-                ToastUtil.sendMsg(MainActivity.this, e.getMessage());
                 e.printStackTrace();
+                ToastUtil.sendMsg(MainActivity.this, e.getMessage());
             }
 
             if (myInfo != null) {

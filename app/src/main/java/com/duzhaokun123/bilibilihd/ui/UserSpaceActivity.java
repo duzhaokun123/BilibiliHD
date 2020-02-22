@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -71,8 +73,11 @@ public class UserSpaceActivity extends AppCompatActivity {
                     space = pBilibiliClient.getPAppAPI().space(bundle.getLong("uid"));
                     handler.sendEmptyMessage(0);
                 } catch (Exception e) {
-                    ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage());
                     e.printStackTrace();
+                    Looper.prepare();
+                    ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage());
+                    Looper.loop();
+
                 }
             }
         }).start();
