@@ -30,11 +30,6 @@ public class SettingsMainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings_main, container, false);
-
-        if (mFragmentSettingsDevelop == null) {
-            mFragmentSettingsDevelop = new SettingsDevelopFragment();
-        }
-
         return view;
     }
 
@@ -48,11 +43,10 @@ public class SettingsMainFragment extends Fragment {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.develop:
-                        if (((SettingsActivity)getActivity()).getmFlSettingSecond() == null){
-                            getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, mFragmentSettingsDevelop).addToBackStack("develop").commitAllowingStateLoss();
-                        } else {
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, mFragmentSettingsDevelop).commitAllowingStateLoss();
+                        if (mFragmentSettingsDevelop == null) {
+                            mFragmentSettingsDevelop = new SettingsDevelopFragment();
                         }
+                        setSecondFrameLayout(mFragmentSettingsDevelop, "develop");
                         break;
                     case R.id.logout:
                         new AlertDialog.Builder(getContext())
@@ -79,5 +73,13 @@ public class SettingsMainFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void setSecondFrameLayout(Fragment fragment, String name){
+        if (((SettingsActivity)getActivity()).getmFlSettingSecond() == null){
+            getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
+        } else {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();
+        }
     }
 }

@@ -13,7 +13,7 @@ import android.widget.RadioGroup;
 
 import com.duzhaokun123.bilibilihd.R;
 
-public class DevelopActivity extends AppCompatActivity {
+public class JumpActivity extends AppCompatActivity {
 
     private EditText mEtComponent, mEtKey, mEtValue;
     private Button mBtnAdd, mBtnStart;
@@ -24,7 +24,7 @@ public class DevelopActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_develop);
+        setContentView(R.layout.activity_jump);
 
         mEtComponent = findViewById(R.id.et_component);
         mEtKey = findViewById(R.id.et_key);
@@ -38,7 +38,7 @@ public class DevelopActivity extends AppCompatActivity {
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("DevelopActivity", mEtKey.getText().toString() + ": " + mEtValue.getText().toString());
+                Log.d("JumpActivity", mEtKey.getText().toString() + ": " + mEtValue.getText().toString());
                 switch (mRgChoose.getCheckedRadioButtonId()) {
                     case R.id.rb_int:
                         intent.putExtra(mEtKey.getText().toString(), Integer.parseInt(mEtValue.getText().toString()));
@@ -62,8 +62,8 @@ public class DevelopActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("DevelopActivity", "start" + ": " + mEtComponent.getText().toString());
-                intent.setComponent(new ComponentName(DevelopActivity.this, mEtComponent.getText().toString()));
+                Log.d("JumpActivity", "start" + ": " + mEtComponent.getText().toString());
+                intent.setComponent(new ComponentName(JumpActivity.this, mEtComponent.getText().toString()));
                 startActivity(intent);
             }
         });

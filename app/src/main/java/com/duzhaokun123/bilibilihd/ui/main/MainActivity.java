@@ -17,9 +17,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.ui.DevelopActivity;
+import com.duzhaokun123.bilibilihd.ui.JumpActivity;
 import com.duzhaokun123.bilibilihd.ui.LoginActivity;
-import com.duzhaokun123.bilibilihd.ui.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.ui.userSpace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.navigation.NavigationView;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.junp:
-                        intent = new Intent(MainActivity.this, DevelopActivity.class);
+                        intent = new Intent(MainActivity.this, JumpActivity.class);
                         startActivity(intent);
                         break;
                 }
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
             }
         } else {
-            mCivFace.setImageDrawable(null);
+            mCivFace.setImageResource(R.mipmap.ic_launcher);
             mTvUsername.setText(R.string.not_logged_in);
             mIvLevel.setImageDrawable(null);
         }

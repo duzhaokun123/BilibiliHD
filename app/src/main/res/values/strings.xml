@@ -17,4 +17,10 @@
     <string name="fans">fans</string>
     <string name="watching">watching</string>
     <string name="like">like</string>
+    <string name="trend">trend</string>
+    <string name="submit">submit</string>
+    <string name="favorite">favorite</string>
+    <string name="license" translatable="false">license</string>
+    <string name="content">contents</string>
+    <string name="watched">watched</string>
 </resources>

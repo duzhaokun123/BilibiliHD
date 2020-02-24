@@ -5,9 +5,9 @@
 
 ### 将支持的功能
 - [x] 登录 (不完全，无法通过验证，不总是影响登录)
-- [x] 横屏
+- [x] 横屏 (转屏就崩)
 - [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取大会员用户的信息)
-- [ ] 首页推荐
+- [ ] 首页推荐 (加载更多没有实现)
 - [ ] 动态
 - [ ] 专栏
 - [ ] 视频播放
@@ -31,8 +31,14 @@
 ### 鸣谢
 [AOSP](https://source.android.com)
 
-[bilibili-api](https://github.com/czp3009/bilibili-api)
-
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
+
+[Material](material.io)
+
+[PhotoView](https://github.com/chrisbanes/PhotoView)
+
+[XRecyclerView](https://github.com/XRecyclerView/XRecyclerView)
+
+[bilibili-api](https://github.com/czp3009/bilibili-api)
 
 [glide](https://bumptech.github.io/glide/)
