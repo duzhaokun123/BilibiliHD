@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavMain;
     private RelativeLayout mRlMyInfo;
     private ImageView mIvLevel;
-    private Fragment homeFragment, historyFragment;
+    private Fragment homeFragment, historyFragment, dynamicFragment;
 
     private long lastBackPassTime = -1L;
     private PBilibiliClient pBilibiliClient;
@@ -88,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.home:
                         setTitle(R.string.home);
                         getSupportFragmentManager().beginTransaction().replace(R.id.fl_main, homeFragment).commitAllowingStateLoss();
+                        break;
+                    case R.id.dynamic:
+                        if (dynamicFragment == null) {
+                            dynamicFragment = new DynamicFragment();
+                        }
+                        setTitle(R.string.dynamic);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fl_main, dynamicFragment).commitAllowingStateLoss();
                         break;
                     case R.id.history:
                         if (historyFragment == null) {

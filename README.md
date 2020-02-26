@@ -4,11 +4,11 @@
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
 ### 将支持的功能
-- [x] 登录 (不完全，无法通过验证，不总是影响登录)
+- [x] 登录 (不完全, 无法通过验证, 不总是影响登录)
 - [x] 横屏 (转屏就崩)
-- [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取大会员用户的信息)
+- [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取认证用户的信息)
 - [ ] 首页推荐 (加载更多没有实现)
-- [ ] 动态
+- [ ] 动态 (bilibili-api 里没有, 自己抓包实现的)
 - [ ] 专栏
 - [ ] 视频播放
 - [ ] 视频弹幕
@@ -28,8 +28,16 @@
 
 明显还有为提及的，未提及的基本不会支持
 
+### 已知 BUG
+- 在收藏界面转屏会崩溃
+- 崩溃恢复后会失去登录状态 (可去登录界面直接点登录恢复)
+- 主页快速反复刷新会崩溃
+- 如果 XRecyclerView 一次刷新后内容不满屏幕会崩溃
+
 ### 鸣谢
 [AOSP](https://source.android.com)
+
+[BilibiliAPIDocs](https://github.com/fython/BilibiliAPIDocs)
 
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 
@@ -42,3 +50,7 @@
 [bilibili-api](https://github.com/czp3009/bilibili-api)
 
 [glide](https://bumptech.github.io/glide/)
+
+[gson](https://github.com/google/gson)
+
+[okttp](https://square.github.io/okhttp/)

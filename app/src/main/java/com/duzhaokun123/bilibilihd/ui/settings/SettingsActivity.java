@@ -14,7 +14,7 @@ import com.duzhaokun123.bilibilihd.R;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    private Fragment mFragmentSettingFirst, mFragmentSettingSecond;
+    private Fragment mFragmentSettingFirst;
 
     private FragmentManager fragmentManager;
 

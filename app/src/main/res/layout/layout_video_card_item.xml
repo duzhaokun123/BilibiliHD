@@ -5,13 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?selectableItemBackground"
-    android:orientation="vertical"
     app:cardCornerRadius="1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:padding="10dp">
 
         <ImageView
@@ -26,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv"
             android:layout_marginTop="5dp"
-            android:paddingRight="5dp"
+            android:layout_marginStart="5dp"
             android:textColor="@android:color/black"
             android:textSize="15sp" />
 
@@ -50,6 +48,16 @@
             android:layout_toEndOf="@id/tv_duration"
             android:background="@drawable/bg_text"
             android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp" />
+
     </RelativeLayout>
 
 

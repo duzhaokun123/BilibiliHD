@@ -1,10 +1,7 @@
-package com.duzhaokun123.bilibilihd.pBilibiliApi.app
+package com.duzhaokun123.bilibilihd.pBilibiliApi.api
 
 import com.hiczp.bilibili.api.app.AppAPI
-import com.hiczp.bilibili.api.app.model.HomePage
-import com.hiczp.bilibili.api.app.model.MyInfo
-import com.hiczp.bilibili.api.app.model.SearchResult
-import com.hiczp.bilibili.api.app.model.Space
+import com.hiczp.bilibili.api.app.model.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
@@ -41,5 +38,9 @@ class PAppAPI {
 
     fun homePage(pull: Boolean): HomePage{
         return GlobalScope.future { appAPI.homePage(pull = pull).await() }.get()
+    }
+
+    fun view(aid: Long): View {
+        return GlobalScope.future { appAPI.view(aid = aid).await() }.get()
     }
 }

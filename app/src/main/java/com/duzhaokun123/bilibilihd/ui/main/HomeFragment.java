@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -31,6 +31,7 @@ import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
@@ -45,15 +46,24 @@ public class HomeFragment extends Fragment {
     private HomePage homePage;
     private Handler handler;
 
+    private int limitNumber = 1;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
+        SettingsManager settingsManager = SettingsManager.getSettingsManager();
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
         View view = inflater.inflate(R.layout.fragment_only_xrecyclerview, container, false);
         mXrv = view.findViewById(R.id.xrv);
-        mXrv.setLayoutManager(new StaggeredGridLayoutManager(getResources().getInteger(R.integer.column_medium), StaggeredGridLayoutManager.VERTICAL));
-        if (getResources().getInteger(R.integer.column_medium) == 1) {
+        int spanCount = getResources().getInteger(R.integer.column_medium);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
+            spanCount = settingsManager.layout.getColumn();
+        } else if (settingsManager.layout.getColumnLand() != 0) {
+            spanCount = settingsManager.layout.getColumnLand();
+        }
+        mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        if (spanCount == 1) {
             mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -83,6 +93,7 @@ public class HomeFragment extends Fragment {
                 ((VideoCardHolder) holder).mTvTitle.setText(homePage.getData().getItems().get(position).getTitle());
                 ((VideoCardHolder) holder).mTvCount.setText(homePage.getData().getItems().get(position).getCoverLeftText1() + getString(R.string.watched));
                 ((VideoCardHolder) holder).mTvDuration.setText(homePage.getData().getItems().get(position).getCoverRightText());
+                ((VideoCardHolder) holder).mTvBadge.setText(homePage.getData().getItems().get(position).getBadge());
                 Glide.with(((VideoCardHolder) holder).mIv).load(homePage.getData().getItems().get(position).getCover()).listener(new RequestListener<Drawable>() {
                     private ImageView imageView = ((VideoCardHolder) holder).mIv;
                     @Override
@@ -102,14 +113,22 @@ public class HomeFragment extends Fragment {
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
                     private String av = homePage.getData().getItems().get(position).getParam();
+                    private String badge = homePage.getData().getItems().get(position).getBadge();
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), PlayActivity.class);
-                        intent.putExtra("av", av);
-                        startActivity(intent);
+                        Intent intent = null;
+                        if (badge == null) {
+                            intent = new Intent(getContext(), PlayActivity.class);
+                            intent.putExtra("av", av);
+                            startActivity(intent);
+                        } else {
+                            ToastUtil.sendMsg(getContext(), "暂不支持 " + badge);
+                        }
+
                     }
                 });
+
             }
 
             @Override
@@ -124,7 +143,7 @@ public class HomeFragment extends Fragment {
             class VideoCardHolder extends RecyclerView.ViewHolder {
 
                 private ImageView mIv;
-                private TextView mTvTitle, mTvCount, mTvDuration;
+                private TextView mTvTitle, mTvCount, mTvDuration, mTvBadge;
                 private CardView mCv;
 
                 public VideoCardHolder(@NonNull View itemView) {
@@ -133,10 +152,12 @@ public class HomeFragment extends Fragment {
                     mTvTitle = itemView.findViewById(R.id.tv_title);
                     mTvCount = itemView.findViewById(R.id.tv_count);
                     mTvDuration = itemView.findViewById(R.id.tv_duration);
+                    mTvBadge =  itemView.findViewById(R.id.tv_badge);
                     mCv = itemView.findViewById(R.id.cv);
                 }
             }
         });
+        mXrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
         mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -153,13 +174,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     class Handler extends android.os.Handler {
-        private int i = 1;
         /**
          * msg.what 0: 下拉刷新 1: 加载更多
          * @param msg
@@ -168,14 +183,11 @@ public class HomeFragment extends Fragment {
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    i = 1;
                     mXrv.refreshComplete();
                     XRecyclerViewUtil.notifyItemsChanged(mXrv, homePage.getData().getItems().size() - 1);
                     break;
                 case 1:
-                    i++;
                     mXrv.loadMoreComplete();
-                    mXrv.setLimitNumberToCallLoadMore(i);
                     break;
             }
         }
@@ -184,8 +196,13 @@ public class HomeFragment extends Fragment {
     class Refresh implements Runnable {
         @Override
         public void run() {
+            Log.d("HomePage", "Refresh");
+            limitNumber = 1;
             try {
                 homePage = pBilibiliClient.getPAppAPI().homePage(true);
+                for (int i = 0; i < 2; i++) {
+                    homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Looper.prepare();
@@ -199,9 +216,11 @@ public class HomeFragment extends Fragment {
     class LoadMore implements Runnable {
         @Override
         public void run() {
+            Log.d("HomePage", "LoadMore");
+            limitNumber++;
+            mXrv.setLimitNumberToCallLoadMore(limitNumber);
             try {
-                Log.d("HomePage", "LoadMore");
-                homePage = pBilibiliClient.getPAppAPI().homePage(false);
+                homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
             } catch (Exception e) {
                 e.printStackTrace();
                 Looper.prepare();

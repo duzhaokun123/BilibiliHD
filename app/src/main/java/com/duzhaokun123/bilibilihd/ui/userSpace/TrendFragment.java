@@ -17,15 +17,13 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 public class TrendFragment extends Fragment {
 
     private XRecyclerView mXrv;
-    private Context mContext;
 
     private Space space;
 
     public TrendFragment(){}
 
-    public TrendFragment(Context context, Space space) {
+    public TrendFragment(Space space) {
         this.space = space;
-        this.mContext = context;
     }
 
     @Nullable

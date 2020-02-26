@@ -22,7 +22,7 @@ public class SettingsMainFragment extends Fragment {
 
     private NavigationView mNavSettingsMain;
 
-    private Fragment mFragmentSettingsDevelop;
+    private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout;
 
     private PBilibiliClient pBilibiliClient;
 
@@ -42,6 +42,12 @@ public class SettingsMainFragment extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.layout:
+                        if (mFragmentSettingsLayout == null) {
+                            mFragmentSettingsLayout = new SettingLayoutFragment();
+                        }
+                        setSecondFrameLayout(mFragmentSettingsLayout, "layout");
+                        break;
                     case R.id.develop:
                         if (mFragmentSettingsDevelop == null) {
                             mFragmentSettingsDevelop = new SettingsDevelopFragment();

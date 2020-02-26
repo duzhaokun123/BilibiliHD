@@ -16,8 +16,11 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.play.PlayActivity"></activity>
         <activity
-            android:name=".ui.widget.PhotoViewActivity"
-            android:theme="@style/AppTheme.NoActionBar.Transparency" />
+            android:name=".ui.PhotoViewActivity"
+            android:theme="@style/AppTheme.NoActionBar.Transparency"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"/>
         <activity android:name=".ui.JumpActivity" />
         <activity
             android:name=".ui.userSpace.UserSpaceActivity"

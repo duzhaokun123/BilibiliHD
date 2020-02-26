@@ -19,15 +19,13 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 public class HomeFragment extends Fragment {
 
     private XRecyclerView mXrv;
-    private Context mContext;
 
     private Space space;
 
     public HomeFragment(){}
 
-    public HomeFragment(Context context, Space space) {
+    public HomeFragment(Space space) {
         this.space = space;
-        this.mContext = context;
     }
 
     @Nullable

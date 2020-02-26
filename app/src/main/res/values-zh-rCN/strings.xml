@@ -18,9 +18,15 @@
     <string name="fans">粉丝</string>
     <string name="watching">关注</string>
     <string name="like">赞</string>
-    <string name="trend">动态</string>
+    <string name="dynamic">动态</string>
     <string name="submit">投稿</string>
     <string name="favorite">收藏</string>
     <string name="content">个内容</string>
     <string name="watched">观看</string>
+    <string name="save">保存</string>
+    <string name="saved">已保存</string>
+    <string name="client">客户端</string>
+    <string name="column">列</string>
+    <string name="column_land">横向时列</string>
+    <string name="layout">布局</string>
 </resources>

@@ -8,8 +8,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.myBilibiliApi.dynamic.DynamicAPI;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
+import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
@@ -31,41 +33,16 @@ public class WelcomeActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SettingsManager.init(WelcomeActivity.this);
+                SettingsManager.init(getApplicationContext());
             }
         }).start();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                LoginResponse loginResponse = null;
-
-                FileInputStream fileInputStream = null;
-                ObjectInputStream objectInputStream = null;
-                try {
-                    fileInputStream = openFileInput("LoginResponse");
-                    objectInputStream = new ObjectInputStream(fileInputStream);
-                    loginResponse = (LoginResponse) objectInputStream.readObject();
-                } catch (ClassNotFoundException|IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (objectInputStream != null) {
-                            objectInputStream.close();
-                        }
-                        if (fileInputStream != null) {
-                            fileInputStream.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (loginResponse != null) {
-                    pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
-                }
+                OtherUtils.loadLoginResponse(WelcomeActivity.this, pBilibiliClient);
             }
         }).start();
-
 
          new Handler().postDelayed(new Runnable() {
             @Override

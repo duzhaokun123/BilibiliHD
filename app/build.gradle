@@ -68,4 +68,8 @@ dependencies {
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
+    //okhttp3
+    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

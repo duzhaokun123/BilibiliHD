@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.ui.widget.PhotoViewActivity;
+import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.tabs.TabLayout;
 import com.hiczp.bilibili.api.app.model.Space;
@@ -122,22 +121,22 @@ public class UserSpaceActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     if (mHomeFragment == null) {
-                        mHomeFragment = new HomeFragment(UserSpaceActivity.this, space);
+                        mHomeFragment = new HomeFragment(space);
                     }
                     return mHomeFragment;
                 case 1:
                     if (mTrendFragment == null) {
-                        mTrendFragment = new TrendFragment(UserSpaceActivity.this, space);
+                        mTrendFragment = new TrendFragment(space);
                     }
                     return mTrendFragment;
                 case 2:
                     if (mSubmitFragment == null) {
-                        mSubmitFragment = new SubmitFragment(UserSpaceActivity.this, space);
+                        mSubmitFragment = new SubmitFragment(space);
                     }
                     return mSubmitFragment;
                 case 3:
                     if (mFavoriteFragment == null) {
-                        mFavoriteFragment = new FavoriteFragment(UserSpaceActivity.this, space);
+                        mFavoriteFragment = new FavoriteFragment(space);
                     }
                     return mFavoriteFragment;
             }
@@ -157,7 +156,7 @@ public class UserSpaceActivity extends AppCompatActivity {
                 case 0:
                     return getString(R.string.home);
                 case 1:
-                    return getString(R.string.trend);
+                    return getString(R.string.dynamic);
                 case 2:
                     return getString(R.string.submit);
                 case 3:

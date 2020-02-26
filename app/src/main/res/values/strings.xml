@@ -17,10 +17,16 @@
     <string name="fans">fans</string>
     <string name="watching">watching</string>
     <string name="like">like</string>
-    <string name="trend">trend</string>
+    <string name="dynamic">dynamic</string>
     <string name="submit">submit</string>
     <string name="favorite">favorite</string>
     <string name="license" translatable="false">license</string>
     <string name="content">contents</string>
     <string name="watched">watched</string>
+    <string name="save">save</string>
+    <string name="saved">saved</string>
+    <string name="client">client</string>
+    <string name="column">column</string>
+    <string name="column_land">column land</string>
+    <string name="layout">layout</string>
 </resources>

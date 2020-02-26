@@ -1,7 +1,5 @@
 package com.duzhaokun123.bilibilihd.pBilibiliApi.api
 
-import android.util.Log
-import com.duzhaokun123.bilibilihd.pBilibiliApi.app.PAppAPI
 import com.hiczp.bilibili.api.BilibiliClient
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
@@ -12,6 +10,7 @@ class PBilibiliClient {
     private var bilibiliClient: BilibiliClient
 
     private lateinit var pAppAPI: PAppAPI
+    private lateinit var pPlayerAPI: PPlayerAPI
 
     companion object{
         private lateinit var pBilibiliClient: PBilibiliClient
@@ -38,6 +37,12 @@ class PBilibiliClient {
         return pAppAPI
     }
 
+    fun getPPlayerAPI(): PPlayerAPI {
+        if (::pPlayerAPI.isInitialized.not()) {
+            pPlayerAPI = PPlayerAPI(bilibiliClient.playerAPI)
+        }
+        return pPlayerAPI
+    }
 
     fun logout() {
         GlobalScope.future { bilibiliClient.logout() }.get()

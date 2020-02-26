@@ -17,15 +17,13 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 public class SubmitFragment extends Fragment {
 
     private XRecyclerView mXrv;
-    private Context mContext;
 
     private Space space;
 
     public SubmitFragment(){}
 
-    public SubmitFragment(Context context, Space space) {
+    public SubmitFragment(Space space) {
         this.space = space;
-        this.mContext = context;
     }
 
     @Nullable

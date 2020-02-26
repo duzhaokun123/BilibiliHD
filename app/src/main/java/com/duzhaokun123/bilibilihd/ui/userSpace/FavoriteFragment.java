@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.duzhaokun123.bilibilihd.R;
@@ -22,15 +23,13 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 public class FavoriteFragment extends Fragment {
 
     private XRecyclerView mXrv;
-    private Context mContext;
 
     private Space space;
 
     public FavoriteFragment(){}
 
-    public FavoriteFragment(Context context, Space space) {
+    public FavoriteFragment(Space space) {
         this.space = space;
-        this.mContext = context;
     }
 
     @Nullable
@@ -38,12 +37,12 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_only_xrecyclerview, container, false);
         mXrv = view.findViewById(R.id.xrv);
-        mXrv.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.column_medium)));
+        mXrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mXrv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new FavoriteCardViewHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_favorite_card_item, parent, false));
+                return new FavoriteCardViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.layout_favorite_card_item, parent, false));
             }
 
             @SuppressLint("SetTextI18n")
@@ -55,7 +54,11 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public int getItemCount() {
-                return space.getData().getFavourite().getItem().size();
+                if (space == null) {
+                    return 0;
+                }else {
+                    return space.getData().getFavourite().getItem().size();
+                }
             }
 
             class FavoriteCardViewHolder extends RecyclerView.ViewHolder {
