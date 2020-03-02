@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     private long lastBackPassTime = -1L;
     private PBilibiliClient pBilibiliClient;
+    private Handler handler;
+    private MyInfo myInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(R.string.home);
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        handler = new Handler();
 
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
@@ -154,26 +160,47 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
     private void reloadMyInfo() {
         if (pBilibiliClient.getBilibiliClient().isLogin()) {
-            MyInfo myInfo = null;
-            try {
-                myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastUtil.sendMsg(MainActivity.this, e.getMessage());
-            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Looper.prepare();
+                        ToastUtil.sendMsg(MainActivity.this, e.getMessage());
+                        Looper.loop();
+                    }
 
-            if (myInfo != null) {
-                Glide.with(mCivFace).load(myInfo.getData().getFace()).into(mCivFace);
-                mTvUsername.setText(myInfo.getData().getName());
-                setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
-            }
+                    if (myInfo != null) {
+                        handler.sendEmptyMessage(0);
+                    }
+                }
+            }).start();
+
         } else {
-            mCivFace.setImageResource(R.mipmap.ic_launcher);
-            mTvUsername.setText(R.string.not_logged_in);
-            mIvLevel.setImageDrawable(null);
+            handler.sendEmptyMessage(1);
+        }
+    }
+
+    class Handler extends android.os.Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Glide.with(mCivFace).load(myInfo.getData().getFace()).into(mCivFace);
+                    mTvUsername.setText(myInfo.getData().getName());
+                    setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
+                    break;
+                case 1:
+                    mCivFace.setImageResource(R.mipmap.ic_launcher);
+                    mTvUsername.setText(R.string.not_logged_in);
+                    mIvLevel.setImageDrawable(null);
+                    break;
+            }
         }
     }
 }

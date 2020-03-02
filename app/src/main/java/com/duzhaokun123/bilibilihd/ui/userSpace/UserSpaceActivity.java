@@ -10,8 +10,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,11 +17,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.myBilibiliApi.space.SpaceAPI;
+import com.duzhaokun123.bilibilihd.myBilibiliApi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.tabs.TabLayout;
-import com.hiczp.bilibili.api.app.model.Space;
+//import com.hiczp.bilibili.api.app.model.Space;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -32,7 +32,7 @@ import static com.duzhaokun123.bilibilihd.utils.OtherUtils.setSixDrawable;
 
 public class UserSpaceActivity extends AppCompatActivity {
 
-    private ImageView mIvSpeaceImage, mIvSex,mIvLevel;
+    private ImageView mIvSpaceImage, mIvSex,mIvLevel;
     private CircleImageView mCivFace;
     private TextView mTvName, mTvFans, mTvWatching, mTvLike, mTvSign;
     private TabLayout mTl;
@@ -40,7 +40,7 @@ public class UserSpaceActivity extends AppCompatActivity {
 
     private Bundle bundle;
     private PBilibiliClient pBilibiliClient;
-    private Space space;
+    private Space mSpace;
     private Handler handler;
 
     @Override
@@ -48,7 +48,7 @@ public class UserSpaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_space);
 
-        mIvSpeaceImage = findViewById(R.id.iv_spaceImage);
+        mIvSpaceImage = findViewById(R.id.iv_spaceImage);
         mIvSex = findViewById(R.id.iv_sex);
         mIvLevel = findViewById(R.id.iv_level);
         mCivFace = findViewById(R.id.civ_face);
@@ -62,35 +62,36 @@ public class UserSpaceActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
 
-        // FIXME: 20-2-22 你看下面黄的
-        handler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                Glide.with(mCivFace).load(space.getData().getCard().getFace()).into(mCivFace);
-                setSixDrawable(mIvSex, space.getData().getCard().getSex());
-                setLevelDrawable(mIvLevel, space.getData().getCard().getLevelInfo().getCurrentLevel());
-                mTvName.setText(space.getData().getCard().getName());
-                mTvFans.setText(String.valueOf(space.getData().getCard().getFans()));
-                mTvSign.setText(space.getData().getCard().getSign());
-                mTvWatching.setText(String.valueOf(space.getData().getCard().getAttention()));
-                // TODO: 20-2-22 试出 mTvLike 和 mIvSpaceImage 对应的键
-            }
-        };
+        handler = new Handler();
 
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
-                    space = pBilibiliClient.getPAppAPI().space(bundle.getLong("uid"));
-                    handler.sendEmptyMessage(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Looper.prepare();
-                    ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage());
-                    Looper.loop();
+//                try{
+//                    mSpace = pBilibiliClient.getPAppAPI().space(bundle.getLong("uid"));
+//                    handler.sendEmptyMessage(0);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Looper.prepare();
+//                    ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage());
+//                    Looper.loop();
+//
+//                }
+                SpaceAPI spaceAPI = SpaceAPI.getSpaceAPI();
+                spaceAPI.getSpace(bundle.getLong("uid"), new SpaceAPI.Callback() {
+                    @Override
+                    public void onException(Exception e) {
+                        e.printStackTrace();
+                        ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage());
+                    }
 
-                }
+                    @Override
+                    public void onSuccess(com.duzhaokun123.bilibilihd.myBilibiliApi.space.model.Space space) {
+                        mSpace = space;
+                        handler.sendEmptyMessage(0);
+                    }
+                });
             }
         }).start();
 
@@ -101,7 +102,7 @@ public class UserSpaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
-                intent.putExtra("url", space.getData().getCard().getFace());
+                intent.putExtra("url", mSpace.getData().getCard().getFace());
                 startActivity(intent);
             }
         });
@@ -121,22 +122,22 @@ public class UserSpaceActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     if (mHomeFragment == null) {
-                        mHomeFragment = new HomeFragment(space);
+                        mHomeFragment = new HomeFragment(mSpace);
                     }
                     return mHomeFragment;
                 case 1:
                     if (mTrendFragment == null) {
-                        mTrendFragment = new TrendFragment(space);
+                        mTrendFragment = new TrendFragment(mSpace);
                     }
                     return mTrendFragment;
                 case 2:
                     if (mSubmitFragment == null) {
-                        mSubmitFragment = new SubmitFragment(space);
+                        mSubmitFragment = new SubmitFragment(mSpace);
                     }
                     return mSubmitFragment;
                 case 3:
                     if (mFavoriteFragment == null) {
-                        mFavoriteFragment = new FavoriteFragment(space);
+                        mFavoriteFragment = new FavoriteFragment(mSpace);
                     }
                     return mFavoriteFragment;
             }
@@ -163,6 +164,44 @@ public class UserSpaceActivity extends AppCompatActivity {
                     return getString(R.string.favorite);
             }
             return super.getPageTitle(position);
+        }
+    }
+
+    class Handler extends android.os.Handler{
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Glide.with(mCivFace).load(mSpace.getData().getCard().getFace()).into(mCivFace);
+            if (mSpace.getData().getImages().getImgUrl().equals("")) {
+                Glide.with(mIvSpaceImage).load("https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png").into(mIvSpaceImage);
+                mIvSpaceImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
+                        intent.putExtra("url", "https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png");
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                Glide.with(mIvSpaceImage).load(mSpace.getData().getImages().getImgUrl()).into(mIvSpaceImage);
+                mIvSpaceImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
+                        intent.putExtra("url", mSpace.getData().getImages().getImgUrl());
+                        startActivity(intent);
+                    }
+                });
+            }
+            setSixDrawable(mIvSex, mSpace.getData().getCard().getSex());
+            setLevelDrawable(mIvLevel, mSpace.getData().getCard().getLevelInfo().getCurrentLevel());
+            mTvName.setText(mSpace.getData().getCard().getName());
+            mTvFans.setText(String.valueOf(mSpace.getData().getCard().getFans()));
+            mTvSign.setText(mSpace.getData().getCard().getSign());
+            mTvWatching.setText(String.valueOf(mSpace.getData().getCard().getAttention()));
+            if (mSpace.getData().getCard().getVip().getVipType() != 1) {
+                mTvName.setTextColor(getColor(R.color.colorAccent));
+            }
+            // TODO: 20-2-22 试出 mTvLike 对应的键
         }
     }
 }

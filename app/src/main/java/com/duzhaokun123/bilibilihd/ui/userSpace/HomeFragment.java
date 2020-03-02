@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.userSpace;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.hiczp.bilibili.api.app.model.Space;
+//import com.hiczp.bilibili.api.app.model.Space;
+import com.duzhaokun123.bilibilihd.myBilibiliApi.space.model.Space;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 public class HomeFragment extends Fragment {
@@ -31,7 +31,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_only_xrecyclerview, container, false);
+        View view = inflater.inflate(R.layout.fragment_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         return view;
     }

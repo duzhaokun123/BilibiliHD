@@ -17,9 +17,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorTransparency"
-        android:paddingEnd="20dp"
-        android:paddingBottom="20dp"
-        android:src="@drawable/ic_branding_watermark" />
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bg_text"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/ic_pip" />
+
+    <ImageButton
+        android:id="@+id/ib_dl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="40dp"
+        android:layout_toStartOf="@id/ib_pip"
+        android:background="@drawable/bg_text"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/ic_dl" />
 
 </RelativeLayout>

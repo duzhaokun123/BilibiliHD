@@ -1,11 +1,14 @@
 package com.duzhaokun123.bilibilihd.myBilibiliApi.dynamic.model;
 
+import com.google.gson.JsonElement;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class DynamicPage implements Serializable {
+public class DynamicPage {
     private int code;
     private String msg;
+    private int ttl;
 
     public int getCode() {
         return code;
@@ -33,8 +36,17 @@ public class DynamicPage implements Serializable {
 
     private Data data;
 
+    public int getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(int ttl) {
+        this.ttl = ttl;
+    }
+
     public class Data {
         private List<Card> cards;
+        private Attention attention;
 
         public List<Card> getCards() {
             return cards;
@@ -43,6 +55,15 @@ public class DynamicPage implements Serializable {
         public void setCards(List<Card> cards) {
             this.cards = cards;
         }
+
+        public Attention getAttention() {
+            return attention;
+        }
+
+        public void setAttention(Attention attention) {
+            this.attention = attention;
+        }
+
 
         public class Card {
             private Desc desc;
@@ -871,6 +892,76 @@ public class DynamicPage implements Serializable {
                         }
                     }
                 }
+            }
+        }
+
+        public class Attention {
+            private List<Long> uids;
+
+            public List<Long> getUids() {
+                return uids;
+            }
+
+            public void setUids(List<Long> uids) {
+                this.uids = uids;
+            }
+
+            public List<Bangumis> getBangumis() {
+                return bangumis;
+            }
+
+            public void setBangumis(List<Bangumis> bangumis) {
+                this.bangumis = bangumis;
+            }
+
+            public long getMax_dynamic_id() {
+                return max_dynamic_id;
+            }
+
+            public void setMax_dynamic_id(long max_dynamic_id) {
+                this.max_dynamic_id = max_dynamic_id;
+            }
+
+            public long getHistory_offset() {
+                return history_offset;
+            }
+
+            public void setHistory_offset(long history_offset) {
+                this.history_offset = history_offset;
+            }
+
+            public int get_gt_() {
+                return _gt_;
+            }
+
+            public void set_gt_(int _gt_) {
+                this._gt_ = _gt_;
+            }
+
+            private List<Bangumis> bangumis;
+            private long max_dynamic_id;
+            private long history_offset;
+            private int _gt_;
+
+            public class Bangumis {
+                public int getSeason_id() {
+                    return season_id;
+                }
+
+                public void setSeason_id(int season_id) {
+                    this.season_id = season_id;
+                }
+
+                public int getType() {
+                    return type;
+                }
+
+                public void setType(int type) {
+                    this.type = type;
+                }
+
+                private int season_id;
+                private int type;
             }
         }
     }

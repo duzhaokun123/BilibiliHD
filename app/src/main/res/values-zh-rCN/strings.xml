@@ -29,4 +29,8 @@
     <string name="column">列</string>
     <string name="column_land">横向时列</string>
     <string name="layout">布局</string>
+    <string name="inappropriate">不合适</string>
+    <string name="download">下载</string>
+    <string name="check_cover">检查封面</string>
+    <string name="add_to_watch_later">添加至稍后再看</string>
 </resources>

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="none" >
-        <item android:id="@+id/layout"
-            android:title="@string/layout"/>
-        <item android:id="@+id/develop"
-            android:title="@string/develop"
-            android:icon="@drawable/ic_code"/>
-        <item android:id="@+id/logout"
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/layout"
+            android:title="@string/layout" />
+        <item
+            android:id="@+id/download"
+            android:icon="@drawable/ic_dl"
+            android:title="@string/download" />
+        <item
+            android:id="@+id/develop"
+            android:icon="@drawable/ic_code"
+            android:title="@string/develop" />
+        <item
+            android:id="@+id/logout"
             android:title="@string/logout" />
     </group>
 

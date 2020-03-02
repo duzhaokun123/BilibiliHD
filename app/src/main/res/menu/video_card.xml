@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/check_cover"
+        android:title="@string/check_cover" />
+    <item
+        android:id="@+id/add_to_watch_later"
+        android:title="@string/add_to_watch_later" />
+</menu>

@@ -29,4 +29,10 @@
     <string name="column">column</string>
     <string name="column_land">column land</string>
     <string name="layout">layout</string>
+    <string name="inappropriate">inappropriate</string>
+    <string name="download">download</string>
+    <string name="check_cover">check cover</string>
+    <string name="add_to_watch_later">add to watch later</string>
+    <string name="okhttp" translatable="false">okhttp</string>
+    <string name="download_manager" translatable="false">download manager</string>
 </resources>

@@ -6,14 +6,15 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
@@ -54,7 +56,7 @@ public class HomeFragment extends Fragment {
         handler = new Handler();
         SettingsManager settingsManager = SettingsManager.getSettingsManager();
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
-        View view = inflater.inflate(R.layout.fragment_only_xrecyclerview, container, false);
+        View view = inflater.inflate(R.layout.fragment_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
@@ -112,7 +114,7 @@ public class HomeFragment extends Fragment {
                 }).into(((VideoCardHolder) holder).mIv);
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
-                    private String av = homePage.getData().getItems().get(position).getParam();
+                    private String aid = homePage.getData().getItems().get(position).getParam();
                     private String badge = homePage.getData().getItems().get(position).getBadge();
 
                     @Override
@@ -120,12 +122,43 @@ public class HomeFragment extends Fragment {
                         Intent intent = null;
                         if (badge == null) {
                             intent = new Intent(getContext(), PlayActivity.class);
-                            intent.putExtra("av", av);
+                            intent.putExtra("aid", aid);
                             startActivity(intent);
                         } else {
                             ToastUtil.sendMsg(getContext(), "暂不支持 " + badge);
                         }
 
+                    }
+                });
+                ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
+
+                    private String aid = homePage.getData().getItems().get(position).getParam();
+                    private String url = homePage.getData().getItems().get(position).getCover();
+
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        PopupMenu popupMenu = new PopupMenu(getContext(), ((VideoCardHolder) holder).mCv);
+                        popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
+                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.check_cover:
+                                        Intent intent = new Intent(getContext(), PhotoViewActivity.class);
+                                        intent.putExtra("url", url);
+                                        startActivity(intent);
+                                        break;
+                                    case R.id.add_to_watch_later:
+                                        // TODO: 20-2-27  
+                                        ToastUtil.sendMsg(getContext(), "还没有做");
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        popupMenu.show();
+                        return true;
                     }
                 });
 
@@ -206,7 +239,9 @@ public class HomeFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
                 Looper.prepare();
-                ToastUtil.sendMsg(getContext(), e.getMessage());
+                if (getContext() != null) {
+                    ToastUtil.sendMsg(getContext(), e.getMessage());
+                }
                 Looper.loop();
             }
             handler.sendEmptyMessage(0);

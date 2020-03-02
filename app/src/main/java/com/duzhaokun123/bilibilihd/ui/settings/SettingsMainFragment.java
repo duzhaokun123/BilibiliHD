@@ -22,7 +22,7 @@ public class SettingsMainFragment extends Fragment {
 
     private NavigationView mNavSettingsMain;
 
-    private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout;
+    private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout, mFragmentSettingsDownload;
 
     private PBilibiliClient pBilibiliClient;
 
@@ -47,6 +47,12 @@ public class SettingsMainFragment extends Fragment {
                             mFragmentSettingsLayout = new SettingLayoutFragment();
                         }
                         setSecondFrameLayout(mFragmentSettingsLayout, "layout");
+                        break;
+                    case R.id.download:
+                        if (mFragmentSettingsDownload == null) {
+                            mFragmentSettingsDownload = new SettingsDownloadFragment();
+                        }
+                        setSecondFrameLayout(mFragmentSettingsDownload, "download");
                         break;
                     case R.id.develop:
                         if (mFragmentSettingsDevelop == null) {
