@@ -5,8 +5,8 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +28,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.myBilibiliApi.history.HistoryApi;
-import com.duzhaokun123.bilibilihd.myBilibiliApi.history.model.History;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
@@ -49,7 +50,7 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
         SettingsManager settingsManager = SettingsManager.getSettingsManager();
-        View view = inflater.inflate(R.layout.fragment_xrecyclerview_only, container, false);
+        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
@@ -172,12 +173,12 @@ public class HistoryFragment extends Fragment {
         mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                new Thread(new Refresh()).start();
+                new Refresh().start();
             }
 
             @Override
             public void onLoadMore() {
-                new Thread(new LoadMore()).start();
+                new LoadMore().start();
             }
         });
         mXrv.setPullRefreshEnabled(true);
@@ -188,7 +189,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new Thread(new Refresh()).start();
+        new Refresh().start();
     }
 
     class Handler extends android.os.Handler {
@@ -206,35 +207,44 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    class Refresh implements Runnable {
+    class Refresh extends Thread {
         @Override
         public void run() {
             page = 1;
-            HistoryApi.getHistoryApi().getHistory("all", new HistoryApi.Callback() {
+            HistoryApi.getHistoryApi().getHistory("all", new MyBilibiliClient.CallBack<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
+                    Looper.loop();
                 }
 
                 @Override
                 public void onSuccess(History history) {
                     mHistory = history;
+                    LoadMore loadMore = new LoadMore();
+                    for (int i = 0; i < 2; i++) {
+                        loadMore.run();
+                    }
                     handler.sendEmptyMessage(0);
                 }
             });
         }
     }
 
-    class LoadMore implements Runnable {
+    class LoadMore extends Thread {
         @Override
         public void run() {
             page ++;
-            HistoryApi.getHistoryApi().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(), "all", new HistoryApi.Callback() {
+            HistoryApi.getHistoryApi().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
+                    "all", new MyBilibiliClient.CallBack<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
+                    Looper.loop();
                 }
 
                 @Override

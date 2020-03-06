@@ -8,58 +8,9 @@
     android:longClickable="true"
     app:cardCornerRadius="1dp">
 
-    <RelativeLayout
+    <include layout="@layout/layout_video"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-
-        <ImageView
-            android:id="@+id/iv"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:scaleType="fitCenter" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/iv"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/bg_text"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/iv"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@id/tv_duration"
-            android:background="@drawable/bg_text"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tv_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"/>
 
 
 </androidx.cardview.widget.CardView>

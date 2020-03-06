@@ -1,17 +1,14 @@
 package com.duzhaokun123.bilibilihd.utils;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

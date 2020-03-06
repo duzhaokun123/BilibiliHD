@@ -3,17 +3,15 @@ package com.duzhaokun123.bilibilihd.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.strings.BilibiliApiExceptionStrings;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.utils.BilibiliApiExceptionUtil;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.strings.BilibiliApiExceptionStrings;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.utils.BilibiliApiExceptionUtil;
 import com.duzhaokun123.bilibilihd.utils.GeetestUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;

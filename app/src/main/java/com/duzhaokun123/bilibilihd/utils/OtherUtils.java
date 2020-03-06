@@ -5,7 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 import java.io.FileInputStream;

@@ -30,7 +30,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
         handler = new Handler();
         SettingsManager settingsManager = SettingsManager.getSettingsManager();
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
-        View view = inflater.inflate(R.layout.fragment_xrecyclerview_only, container, false);
+        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
@@ -194,16 +194,16 @@ public class HomeFragment extends Fragment {
         mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                new Thread(new Refresh()).start();
+                new Refresh().start();
             }
 
             @Override
             public void onLoadMore() {
-                new Thread(new LoadMore()).start();
+                new LoadMore().start();
             }
         });
         mXrv.setBackgroundResource(android.R.color.white);
-        new Thread(new Refresh()).start();
+        new Refresh().start();
         return view;
     }
 
@@ -226,7 +226,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    class Refresh implements Runnable {
+    class Refresh extends Thread {
         @Override
         public void run() {
             Log.d("HomePage", "Refresh");
@@ -248,7 +248,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    class LoadMore implements Runnable {
+    class LoadMore extends Thread {
         @Override
         public void run() {
             Log.d("HomePage", "LoadMore");

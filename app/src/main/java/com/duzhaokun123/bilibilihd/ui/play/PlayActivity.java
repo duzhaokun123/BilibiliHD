@@ -4,19 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
-import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.hiczp.bilibili.api.app.model.View;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -68,14 +63,14 @@ public class PlayActivity extends AppCompatActivity {
         setTitle("av" + getIntent().getExtras().getString("aid"));
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
 
-        new Thread(new Runnable() {
+        new Thread() {
             @Override
             public void run() {
                 mView = pBilibiliClient.getPAppAPI().view(Long.parseLong(getIntent().getExtras().getString("aid")));
                 videoPlayUrl = pBilibiliClient.getPPlayerAPI().videoPlayUrl(Long.parseLong(getIntent().getExtras().getString("aid")), mView.getData().getCid());
                 handler.sendEmptyMessage(0);
             }
-        }).start();
+        }.start();
     }
 
     class Handler extends android.os.Handler {

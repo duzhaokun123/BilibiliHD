@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -19,10 +18,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pBilibiliApi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.JumpActivity;
 import com.duzhaokun123.bilibilihd.ui.LoginActivity;
-import com.duzhaokun123.bilibilihd.ui.userSpace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.navigation.NavigationView;
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void reloadMyInfo() {
         if (pBilibiliClient.getBilibiliClient().isLogin()) {
-            new Thread(new Runnable() {
+            new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                         handler.sendEmptyMessage(0);
                     }
                 }
-            }).start();
+            }.start();
 
         } else {
             handler.sendEmptyMessage(1);
