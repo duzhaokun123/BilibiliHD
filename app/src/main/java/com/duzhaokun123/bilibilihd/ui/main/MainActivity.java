@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CircleImageView mCivFace;
     private DrawerLayout mDlMain;
-    private TextView mTvUsername;
+    private TextView mTvUsername, mTvBBi, mTvCoins;
     private NavigationView mNavMain;
     private RelativeLayout mRlMyInfo;
     private ImageView mIvLevel;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         mNavMain = findViewById(R.id.nav_main);
         mRlMyInfo = findViewById(R.id.rl_myInfo);
         mIvLevel = findViewById(R.id.iv_level);
+        mTvBBi = findViewById(R.id.tv_bBi);
+        mTvCoins = findViewById(R.id.tv_coins);
 
         setTitle(R.string.home);
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class Handler extends android.os.Handler {
+        @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -193,11 +197,18 @@ public class MainActivity extends AppCompatActivity {
                     Glide.with(mCivFace).load(myInfo.getData().getFace()).into(mCivFace);
                     mTvUsername.setText(myInfo.getData().getName());
                     setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
+//                    mTvBBi.setText(getString(R.string.b_bi) + ": " + myInfo.getData().get);
+                    mTvCoins.setText(getString(R.string.coins) + ": " + myInfo.getData().getCoins());
+                    if (myInfo.getData().getVip().getType() != 0) {
+                        mTvUsername.setTextColor(getColor(R.color.colorAccent));
+                    }
                     break;
                 case 1:
                     mCivFace.setImageResource(R.mipmap.ic_launcher);
                     mTvUsername.setText(R.string.not_logged_in);
                     mIvLevel.setImageDrawable(null);
+                    mTvBBi.setText(getString(R.string.b_bi) + ": --");
+                    mTvCoins.setText(getString(R.string.coins) + ": --");
                     break;
             }
         }

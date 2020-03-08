@@ -38,14 +38,32 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@id/tv_username"
             android:src="@drawable/ic_user_level_0" />
-    </RelativeLayout>
 
+        <TextView
+            android:id="@+id/tv_bBi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_username"
+            android:layout_alignStart="@id/tv_username"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/tv_coins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_username"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/tv_bBi" />
+
+
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_main"
-        android:theme="@style/AppTheme.Navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@android:color/white"
+        android:theme="@style/AppTheme.Navigation"
         app:menu="@menu/main" />
 </LinearLayout>

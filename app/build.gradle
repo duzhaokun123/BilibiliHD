@@ -11,7 +11,7 @@ android {
         minSdkVersion 28
         targetSdkVersion 29
         versionCode 1
-        versionName "0.0.1-alpha01"
+        versionName "0.1.0-alpha.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -54,7 +54,7 @@ dependencies {
     //browser
     implementation 'androidx.browser:browser:1.2.0'
     //bilibili-api
-    implementation group: 'com.hiczp', name: 'bilibili-api', version: '0.1.1'
+    implementation group: 'com.hiczp', name: 'bilibili-api', version: '0.1.2'
     //DrawerLayout
     implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha04'
     //CircleImageView

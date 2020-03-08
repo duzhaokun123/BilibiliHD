@@ -35,4 +35,6 @@
     <string name="add_to_watch_later">add to watch later</string>
     <string name="okhttp" translatable="false">okhttp</string>
     <string name="download_manager" translatable="false">download manager</string>
+    <string name="b_bi">B Bi</string>
+    <string name="coins">coins</string>
 </resources>

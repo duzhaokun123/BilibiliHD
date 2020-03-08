@@ -33,4 +33,6 @@
     <string name="download">下载</string>
     <string name="check_cover">检查封面</string>
     <string name="add_to_watch_later">添加至稍后再看</string>
+    <string name="b_bi">B币</string>
+    <string name="coins">硬币</string>
 </resources>

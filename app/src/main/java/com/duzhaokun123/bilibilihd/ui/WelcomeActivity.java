@@ -3,8 +3,10 @@ package com.duzhaokun123.bilibilihd.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.TextView;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
@@ -20,22 +22,28 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        TextView mTvVersion = findViewById(R.id.tv_version);
+        try {
+            mTvVersion.setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
 
-        new Thread(new Runnable() {
+        new Thread() {
             @Override
             public void run() {
                 SettingsManager.init(getApplicationContext());
             }
-        }).start();
+        }.start();
 
-        new Thread(new Runnable() {
+        new Thread() {
             @Override
             public void run() {
                 OtherUtils.loadLoginResponse(WelcomeActivity.this, pBilibiliClient);
             }
-        }).start();
+        }.start();
 
          new Handler().postDelayed(new Runnable() {
             @Override
