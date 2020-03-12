@@ -102,7 +102,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 ((VideoCardHolder) holder).mTvTitle.setText("av" + item.getCover().get(position).getAid());
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
-                    private String aid = String.valueOf(item.getCover().get(position).getAid());
+                    private long aid = Long.parseLong(String.valueOf(item.getCover().get(position).getAid()));
 
                     @Override
                     public void onClick(View v) {
@@ -113,7 +113,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-                    private String aid = String.valueOf(item.getCover().get(position).getAid());
+                    private long aid = Long.parseLong(String.valueOf(item.getCover().get(position).getAid()));
                     private String url = item.getCover().get(position).getPic();
 
                     @Override

@@ -9,7 +9,6 @@ import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 public class SpaceAPI {
     private static SpaceAPI spaceAPI;
@@ -32,7 +31,6 @@ public class SpaceAPI {
         if (pBilibiliClient == null) {
             pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
         }
-        BilibiliClientProperties bilibiliClientProperties = pBilibiliClient.getBilibiliClient().getBillingClientProperties();
         try {
             String response = MyBilibiliClient.getMyBilibiliClient().getResponse(new MyBilibiliClient.GetRequest() {
                 @Override
@@ -41,21 +39,11 @@ public class SpaceAPI {
                 }
 
                 @Override
-                public Map<String, String> getParams() {
-                    Map<String, String> map = new TreeMap<>();
-                    if (PBilibiliClient.Companion.getPBilibiliClient().getBilibiliClient().isLogin()) {
-                        map.put("access_key", pBilibiliClient.getBilibiliClient().getLoginResponse().getData().getTokenInfo().getAccessToken());
-                    }
-                    map.put("appkey", bilibiliClientProperties.getAppKey());
-                    map.put("build", bilibiliClientProperties.getBuild());
-                    map.put("channel", bilibiliClientProperties.getChannel());
-                    map.put("from", String.valueOf(0));
-                    map.put("mobi_app", "android");
-                    map.put("platform", bilibiliClientProperties.getPlatform());
-                    map.put("ps", String.valueOf(10));
-                    map.put("ts", String.valueOf(System.currentTimeMillis()));
-                    map.put("vmid", String.valueOf(uid));
-                    return map;
+                public void addUserParams(Map<String, String> paramsMap) {
+                    paramsMap.put("from", String.valueOf(0));
+                    paramsMap.put("mobi_app", "android");
+                    paramsMap.put("ps", String.valueOf(10));
+                    paramsMap.put("vmid", String.valueOf(uid));
                 }
             });
             if (gson == null) {

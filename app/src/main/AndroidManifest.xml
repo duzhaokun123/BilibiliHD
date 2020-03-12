@@ -16,14 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.userspace.FavoriteActivity"></activity>
+        <activity android:name=".ui.settings.LicenseActivity"
+            android:label="@string/license"></activity>
+        <activity android:name=".ui.userspace.FavoriteActivity" />
         <activity android:name=".ui.play.PlayActivity" />
         <activity
             android:name=".ui.PhotoViewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
-            android:theme="@style/AppTheme.NoActionBar.Transparency" />
+            android:theme="@style/AppTheme.NoActionBar.Transparency.Fullscreen" />
         <activity android:name=".ui.JumpActivity" />
         <activity
             android:name=".ui.userspace.UserSpaceActivity"
@@ -37,8 +39,7 @@
             android:parentActivityName=".ui.main.MainActivity" />
         <activity
             android:name=".ui.LoginActivity"
-            android:label="@string/login"
-            android:parentActivityName=".ui.main.MainActivity" />
+            android:label="@string/login" />
         <activity android:name=".ui.main.MainActivity" />
         <activity
             android:name=".ui.WelcomeActivity"

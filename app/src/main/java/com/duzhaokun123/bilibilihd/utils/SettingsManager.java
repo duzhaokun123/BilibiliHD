@@ -3,6 +3,13 @@ package com.duzhaokun123.bilibilihd.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class SettingsManager {
     private SettingsManager() {
         develop = new Develop();
@@ -10,6 +17,7 @@ public class SettingsManager {
         download = new Download();
     }
 
+    private LoginUserInfoMap loginUserInfoMap;
     private static SettingsManager settingsManager;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -41,6 +49,64 @@ public class SettingsManager {
     public final Develop develop;
     public final Layout layout;
     public final Download download;
+
+    public LoginUserInfoMap getLoginUserInfoMap(Context context) {
+        if (loginUserInfoMap == null) {
+            File file = new File(context.getFilesDir(), "LoginUserInfoMap");
+            if (file.exists()) {
+                FileInputStream fileInputStream = null;
+                ObjectInputStream objectInputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    objectInputStream = new ObjectInputStream(fileInputStream);
+                    loginUserInfoMap = (LoginUserInfoMap) objectInputStream.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                    loginUserInfoMap = new LoginUserInfoMap();
+                } finally {
+                    try {
+                        if (objectInputStream != null) {
+                            objectInputStream.close();
+                        }
+                        if (fileInputStream != null) {
+                            fileInputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                loginUserInfoMap = new LoginUserInfoMap();
+            }
+        }
+        return loginUserInfoMap;
+    }
+
+    public void saveLoginUserInfoMap(Context context) {
+        if (loginUserInfoMap != null) {
+            File file = new File(context.getFilesDir(), "LoginUserInfoMap");
+            FileOutputStream fileOutputStream = null;
+            ObjectOutputStream objectOutputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream(file);
+                objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(loginUserInfoMap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (objectOutputStream != null) {
+                        objectOutputStream.close();
+                    }
+                    if (fileOutputStream != null) {
+                        fileOutputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public class Develop {
         private boolean test;

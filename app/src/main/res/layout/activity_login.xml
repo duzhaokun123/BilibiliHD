@@ -52,5 +52,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="@+id/et_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        android:theme="@style/AppTheme.Navigation"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

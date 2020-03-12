@@ -358,7 +358,7 @@ public class DynamicFragment extends Fragment {
             });
             relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
-//                private String aid = homePage.getData().getItems().get(position).getParam();
+//                private long aid = homePage.getData().getItems().get(position).getParam();
 
                 @Override
                 public boolean onLongClick(View v) {

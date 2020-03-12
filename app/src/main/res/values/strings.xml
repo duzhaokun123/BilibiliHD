@@ -37,4 +37,12 @@
     <string name="download_manager" translatable="false">download manager</string>
     <string name="b_bi">B Bi</string>
     <string name="coins">coins</string>
+    <string name="users">users</string>
+    <string name="delete">delete</string>
+    <string name="log_in_now">log in new</string>
+    <string name="add">add</string>
+    <string name="import_">import</string>
+    <string name="export">export</string>
+    <string name="bad_file">bad file</string>
+    <string name="failure">failure</string>
 </resources>

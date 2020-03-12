@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,9 +30,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.Util;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
+import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -102,18 +105,21 @@ public class HistoryFragment extends Fragment {
                         return false;
                     }
                 }).into(((VideoCardHolder) holder).mIv);
-//                ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
-//
-//                    private String aid = mHistory.getData().getList().get(position).getUri();
-//
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                    }
-//                });
+                ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
+
+                    private long aid = Util.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
+
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("aid", String.valueOf(aid));
+                        Intent intent = new Intent(getContext(), PlayActivity.class);
+                        intent.putExtra("aid", aid);
+                        startActivity(intent);
+                    }
+                });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-//                    private String aid = mHistory.getData().getList().get(position).getUri();
+                    private long aid = Util.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
                     private String url = mHistory.getData().getList().get(position).getCover();
 
                     @Override

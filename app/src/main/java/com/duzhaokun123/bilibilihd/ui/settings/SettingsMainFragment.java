@@ -1,7 +1,9 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +16,10 @@ import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.navigation.NavigationView;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.io.File;
 
@@ -23,6 +28,7 @@ public class SettingsMainFragment extends Fragment {
     private NavigationView mNavSettingsMain;
 
     private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout, mFragmentSettingsDownload;
+    private Fragment mFragmentSettingsUsers;
 
     private PBilibiliClient pBilibiliClient;
 
@@ -42,6 +48,12 @@ public class SettingsMainFragment extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.users:
+                        if (mFragmentSettingsUsers == null) {
+                            mFragmentSettingsUsers = new SettingsUsersFragment();
+                        }
+                        setSecondFrameLayout(mFragmentSettingsUsers, "users");
+                        break;
                     case R.id.layout:
                         if (mFragmentSettingsLayout == null) {
                             mFragmentSettingsLayout = new SettingLayoutFragment();
@@ -60,26 +72,9 @@ public class SettingsMainFragment extends Fragment {
                         }
                         setSecondFrameLayout(mFragmentSettingsDevelop, "develop");
                         break;
-                    case R.id.logout:
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(R.string.logout)
-                                .setMessage(R.string.logout_ask)
-                                .setIcon(R.drawable.ic_info)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        pBilibiliClient.logout();
-                                        File file = new File(getContext().getFilesDir(), "LoginResponse");
-                                        file.delete();
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                })
-                                .show();
+                    case R.id.license:
+                        Intent intent = new Intent(getContext(), LicenseActivity.class);
+                        startActivity(intent);
                         break;
                 }
                 return false;
@@ -87,8 +82,8 @@ public class SettingsMainFragment extends Fragment {
         });
     }
 
-    private void setSecondFrameLayout(Fragment fragment, String name){
-        if (((SettingsActivity)getActivity()).getmFlSettingSecond() == null){
+    private void setSecondFrameLayout(Fragment fragment, String name) {
+        if (((SettingsActivity) getActivity()).getmFlSettingSecond() == null) {
             getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
         } else {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();

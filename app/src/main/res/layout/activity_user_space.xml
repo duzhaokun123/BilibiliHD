@@ -146,6 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_sign"
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:theme="@style/AppTheme.Navigation"
             app:tabGravity="center" />
     </RelativeLayout>
 

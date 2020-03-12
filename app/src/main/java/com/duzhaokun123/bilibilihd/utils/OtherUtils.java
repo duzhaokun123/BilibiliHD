@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -8,9 +9,13 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -51,37 +56,6 @@ public class OtherUtils {
         }
     }
 
-    public static boolean loadLoginResponse(Context context, PBilibiliClient pBilibiliClient) {
-        LoginResponse loginResponse = null;
-        FileInputStream fileInputStream = null;
-        ObjectInputStream objectInputStream = null;
-        try {
-            fileInputStream = context.openFileInput("LoginResponse");
-            objectInputStream = new ObjectInputStream(fileInputStream);
-            loginResponse = (LoginResponse) objectInputStream.readObject();
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (objectInputStream != null) {
-                    objectInputStream.close();
-                }
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (loginResponse != null) {
-            pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
-            Log.d("LoginResponse", loginResponse.getData().getTokenInfo().getAccessToken());
-
-            return true;
-        }
-        return false;
-    }
-
     public static String MD5(String key) {
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
@@ -102,5 +76,56 @@ public class OtherUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static LoginResponse readLoginResponseFromUri(Context context, Uri uri) {
+        InputStream inputStream = null;
+        ObjectInputStream objectInputStream = null;
+        LoginResponse loginResponse = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(uri);
+            objectInputStream = new ObjectInputStream(inputStream);
+            loginResponse = (LoginResponse) objectInputStream.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (objectInputStream != null) {
+                    objectInputStream.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return loginResponse;
+    }
+
+    public static boolean writeLoginResponseToUri(Context context, LoginResponse loginResponse, Uri uri) {
+        boolean re = false;
+        OutputStream outputStream = null;
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            outputStream = context.getContentResolver().openOutputStream(uri);
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(loginResponse);
+            re = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (objectOutputStream != null) {
+                    objectOutputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return re;
     }
 }

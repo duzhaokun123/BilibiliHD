@@ -202,7 +202,7 @@ public class UserSpaceActivity extends AppCompatActivity {
             mTvFans.setText(String.valueOf(mSpace.getData().getCard().getFans()));
             mTvSign.setText(mSpace.getData().getCard().getSign());
             mTvWatching.setText(String.valueOf(mSpace.getData().getCard().getAttention()));
-            if (mSpace.getData().getCard().getVip().getVipType() != 1) {
+            if (mSpace.getData().getCard().getVip().getVipType() != 0) {
                 mTvName.setTextColor(getColor(R.color.colorAccent));
             }
             // TODO: 20-2-22 试出 mTvLike 对应的键

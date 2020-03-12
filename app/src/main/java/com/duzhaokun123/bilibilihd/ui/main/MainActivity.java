@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.main;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -8,12 +9,14 @@ import androidx.fragment.app.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,18 +55,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCivFace = findViewById(R.id.civ_face);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
         try {// FIXME: 20-2-21 这里一定有更优解
             mDlMain = findViewById(R.id.dl_main);
         } catch (IllegalArgumentException e) {
 
         }
-        mTvUsername = findViewById(R.id.tv_username);
         mNavMain = findViewById(R.id.nav_main);
-        mRlMyInfo = findViewById(R.id.rl_myInfo);
-        mIvLevel = findViewById(R.id.iv_level);
-        mTvBBi = findViewById(R.id.tv_bBi);
-        mTvCoins = findViewById(R.id.tv_coins);
+        mRlMyInfo = (RelativeLayout) mNavMain.getHeaderView(0);
+        mTvUsername = mRlMyInfo.findViewById(R.id.tv_username);
+        mIvLevel = mRlMyInfo.findViewById(R.id.iv_level);
+        mTvBBi = mRlMyInfo.findViewById(R.id.tv_bBi);
+        mTvCoins = mRlMyInfo.findViewById(R.id.tv_coins);
+        mCivFace = mRlMyInfo.findViewById(R.id.civ_face);
 
         setTitle(R.string.home);
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
@@ -194,23 +204,43 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    Glide.with(mCivFace).load(myInfo.getData().getFace()).into(mCivFace);
+                    Glide.with(MainActivity.this).load(myInfo.getData().getFace()).into(mCivFace);
                     mTvUsername.setText(myInfo.getData().getName());
                     setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
 //                    mTvBBi.setText(getString(R.string.b_bi) + ": " + myInfo.getData().get);
+                    mTvBBi.setText(getString(R.string.b_bi) + ": --");
                     mTvCoins.setText(getString(R.string.coins) + ": " + myInfo.getData().getCoins());
                     if (myInfo.getData().getVip().getType() != 0) {
                         mTvUsername.setTextColor(getColor(R.color.colorAccent));
                     }
                     break;
                 case 1:
-                    mCivFace.setImageResource(R.mipmap.ic_launcher);
+                    mCivFace.setImageDrawable(null);
                     mTvUsername.setText(R.string.not_logged_in);
                     mIvLevel.setImageDrawable(null);
                     mTvBBi.setText(getString(R.string.b_bi) + ": --");
                     mTvCoins.setText(getString(R.string.coins) + ": --");
                     break;
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (mDlMain != null) {
+                    if (mDlMain.isOpen()) {
+                        mDlMain.close();
+                    } else {
+                        mDlMain.open();
+                    }
+                } else {
+                    // TODO: 20-3-10  
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

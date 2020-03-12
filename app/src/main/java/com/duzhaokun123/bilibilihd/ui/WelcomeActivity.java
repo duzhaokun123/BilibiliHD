@@ -13,6 +13,7 @@ import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -35,13 +36,10 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SettingsManager.init(getApplicationContext());
-            }
-        }.start();
-
-        new Thread() {
-            @Override
-            public void run() {
-                OtherUtils.loadLoginResponse(WelcomeActivity.this, pBilibiliClient);
+                LoginResponse loginResponse = SettingsManager.getSettingsManager().getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
+                if (loginResponse != null) {
+                    pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+                }
             }
         }.start();
 

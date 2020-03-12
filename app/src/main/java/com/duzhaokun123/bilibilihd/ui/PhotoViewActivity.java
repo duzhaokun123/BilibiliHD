@@ -10,9 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Rational;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
@@ -26,6 +28,7 @@ public class PhotoViewActivity extends AppCompatActivity {
 
     private PhotoView mPv;
     private ImageButton mIbPip, mIbDl;
+    private RelativeLayout mRl;
 
     private Intent intent;
 
@@ -36,6 +39,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         mPv = findViewById(R.id.pv);
         mIbPip = findViewById(R.id.ib_pip);
         mIbDl = findViewById(R.id.ib_dl);
+        mRl = findViewById(R.id.rl);
 
         intent = getIntent();
         String url;
@@ -66,6 +70,23 @@ public class PhotoViewActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mRl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+
+            private boolean changed;
+
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                DisplayCutout displayCutout = v.getRootWindowInsets().getDisplayCutout();
+                if (displayCutout != null && !changed) {
+                    changed = true;
+                    v.setPadding(v.getPaddingLeft() + displayCutout.getSafeInsetLeft(),
+                            v.getPaddingTop(),
+                            v.getPaddingRight() + displayCutout.getSafeInsetRight(),
+                            v.getPaddingBottom() + displayCutout.getSafeInsetBottom());
+                }
+            }
+        });
     }
 
     @Override
@@ -74,6 +95,9 @@ public class PhotoViewActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        getWindow().setAttributes(lp);
     }
 
     @Override

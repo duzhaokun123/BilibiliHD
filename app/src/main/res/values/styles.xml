@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,7 +10,7 @@
         <item name="android:navigationBarDividerColor">#DCDCDC</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowLightStatusBar">true</item>
-
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -24,6 +24,14 @@
 
     <style name="AppTheme.NoActionBar.Transparency" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.Transparency.Fullscreen" parent="AppTheme.NoActionBar.Transparency">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
 </resources>

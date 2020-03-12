@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="none">
         <item
+            android:id="@+id/users"
+            android:icon="@drawable/ic_account_circle"
+            android:title="@string/users" />
+        <item
             android:id="@+id/layout"
             android:title="@string/layout" />
         <item
@@ -14,8 +18,8 @@
             android:icon="@drawable/ic_code"
             android:title="@string/develop" />
         <item
-            android:id="@+id/logout"
-            android:title="@string/logout" />
+            android:id="@+id/license"
+            android:title="@string/license" />
     </group>
 
 </menu>

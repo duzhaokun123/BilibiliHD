@@ -10,10 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <include
-        layout="@layout/drawer_main"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_main"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:theme="@style/AppTheme.Navigation"
+        app:headerLayout="@layout/drawer_main_header"
+        app:menu="@menu/main" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

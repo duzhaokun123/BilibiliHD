@@ -3,7 +3,6 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi.history;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.google.gson.Gson;
 import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
@@ -11,7 +10,6 @@ import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 public class HistoryApi {
 
@@ -37,7 +35,6 @@ public class HistoryApi {
         if (loginResponse == null) {
             return;
         }
-        BilibiliClientProperties bilibiliClientProperties = PBilibiliClient.Companion.getPBilibiliClient().getBilibiliClient().getBillingClientProperties();
         try {
             String response = MyBilibiliClient.getMyBilibiliClient().getResponse(new MyBilibiliClient.GetRequest() {
                 @Override
@@ -46,21 +43,13 @@ public class HistoryApi {
                 }
 
                 @Override
-                public Map<String, String> getParams() {
-                    Map<String, String> map = new TreeMap<>();
-                    map.put("access_key", loginResponse.getData().getTokenInfo().getAccessToken());
-                    map.put("appkey", bilibiliClientProperties.getAppKey());
-                    map.put("build", bilibiliClientProperties.getBuild());
-                    map.put("business", business);
-                    map.put("channel", bilibiliClientProperties.getChannel());
-                    map.put("max", String.valueOf(max));
-                    map.put("max_tp", String.valueOf(maxTp));
-                    map.put("mobi_app", "android");
-                    map.put("platform", bilibiliClientProperties.getPlatform());
-                    map.put("ps", String.valueOf(20));
-                    map.put("ts", String.valueOf(System.currentTimeMillis()));
-                    return map;
+                public void addUserParams(Map<String, String> paramsMap) {
+                    paramsMap.put("business", business);
+                    paramsMap.put("max", String.valueOf(max));
+                    paramsMap.put("max_tp", String.valueOf(maxTp));
+                    paramsMap.put("ps", String.valueOf(20));
                 }
+
             });
             if (gson == null) {
                 gson = new Gson();

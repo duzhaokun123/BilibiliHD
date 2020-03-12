@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'com.mikepenz.aboutlibraries.plugin'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
     compileSdkVersion 29
@@ -24,7 +24,7 @@ android {
         debug {
             zipAlignEnabled false
         }
-    
+
     }
     packagingOptions {
         pickFirst 'META-INF/kotlinx-io.kotlin_module'
@@ -41,7 +41,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -67,8 +67,8 @@ dependencies {
     //XRecyclerView
     implementation 'com.jcodecraeer:xrecyclerview:1.6.0'
     //AboutLibraries 由于奇怪的 BUG 无法使用, 为什么这么多 BUG 的
-//    implementation 'com.mikepenz:aboutlibraries-core:8.0.0-rc01'
-//    implementation 'com.mikepenz:aboutlibraries:8.0.0-rc01'
+    implementation 'com.mikepenz:aboutlibraries-core:8.0.0-rc01'
+    implementation 'com.mikepenz:aboutlibraries:8.0.0-rc01'
 //    implementation "androidx.cardview:cardview:1.0.0"
 //    implementation "com.google.android.material:material:1.1.0"
     //PhotoView

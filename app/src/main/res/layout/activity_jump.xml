@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Action"
-        android:text="com.duzhaokun123.bilibilihd.ui"/>
+        android:text="com.duzhaokun123.bilibilihd.ui" />
 
     <RadioGroup
         android:id="@+id/rg_choose"
@@ -44,8 +44,8 @@
             android:id="@+id/rb_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="String"
-            android:checked="true"/>
+            android:checked="true"
+            android:text="String" />
 
     </RadioGroup>
 
@@ -71,14 +71,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="add" />
+            android:background="@android:color/white"
+            android:text="add"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/btn_start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="start" />
+            android:background="@android:color/white"
+            android:text="start"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 

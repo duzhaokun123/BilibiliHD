@@ -48,19 +48,19 @@ class PBilibiliClient {
         GlobalScope.future { bilibiliClient.logout() }.get()
     }
 
-    @Throws(BilibiliApiException::class)
+    @Throws(Exception::class)
     fun login(username: String, password: String): LoginResponse? {
-        var bilibiliApiException: BilibiliApiException? = null
+        var exception: Exception? = null
         var loginResponse: LoginResponse? = null
         GlobalScope.future {
             try {
                 loginResponse = bilibiliClient.login(username, password)
-            } catch (e: BilibiliApiException) {
-                bilibiliApiException = e
+            } catch (e: Exception) {
+                exception = e
             }}.get()
 
-        if (bilibiliApiException != null) {
-            throw bilibiliApiException as BilibiliApiException
+        if (exception != null) {
+            throw exception as Exception
         }
 
         return loginResponse

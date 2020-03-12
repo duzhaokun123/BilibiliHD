@@ -4,7 +4,7 @@
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
 ### 将支持的功能
-- [x] 登录 (不完全, 无法通过验证, 不总是影响登录)
+- [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
 - [x] 横屏 (转屏就崩)
 - [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取满级用户的信息, 重写了 Bilibili-api 的部分代码)
 - [x] 首页推荐
@@ -34,19 +34,24 @@
 - 在收藏界面转屏~~会崩溃~~收藏内容会消失
 - ~~崩溃恢复后会失去登录状态 (可去登录界面直接点登录恢复)~~这不会表现出来因为恢复后`getSettingsManager`为`null`就崩了
 - 主页快速反复刷新会崩溃
-- 如果 XRecyclerView 一次刷新后内容不满屏幕会崩溃
+- 在打屏幕设备上容易崩溃
 - 动态加载错位
 - 动态无法加载更多
 - 动态时间错误, 似乎是因为返回的时间截就是错的
 - `Download Manager`模式似乎只在连接了`VPN`时正常工作
+- 试图播放某些视频时崩溃, 因为服务器返回与期望不同
 - 更多 BUG 等你发现
 
 ### TODO
 - 提高代码可读性
 - 解决代码重复的问题
 
+为什么依赖里有支持库, 这可能是间接依赖出来的
+
 ### 鸣谢
 [AOSP](https://source.android.com)
+
+[AboutLibraries](https://mikepenz.github.io/AboutLibraries/)
 
 [BilibiliAPIDocs](https://github.com/fython/BilibiliAPIDocs)
 

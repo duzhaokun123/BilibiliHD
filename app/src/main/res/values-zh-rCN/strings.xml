@@ -35,4 +35,12 @@
     <string name="add_to_watch_later">添加至稍后再看</string>
     <string name="b_bi">B币</string>
     <string name="coins">硬币</string>
+    <string name="users">用户</string>
+    <string name="delete">删除</string>
+    <string name="log_in_now">现在登录</string>
+    <string name="add">添加</string>
+    <string name="import_">导入</string>
+    <string name="export">导出</string>
+    <string name="bad_file">坏文件</string>
+    <string name="failure">失败</string>
 </resources>

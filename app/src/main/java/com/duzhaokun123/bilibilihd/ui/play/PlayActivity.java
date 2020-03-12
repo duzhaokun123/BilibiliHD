@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.app.model.View;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
+import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -60,15 +63,22 @@ public class PlayActivity extends AppCompatActivity {
         });
         mGsy.startPlayLogic();
 
-        setTitle("av" + getIntent().getExtras().getString("aid"));
+        setTitle("av" + getIntent().getExtras().getLong("aid", 0));
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
 
         new Thread() {
             @Override
             public void run() {
-                mView = pBilibiliClient.getPAppAPI().view(Long.parseLong(getIntent().getExtras().getString("aid")));
-                videoPlayUrl = pBilibiliClient.getPPlayerAPI().videoPlayUrl(Long.parseLong(getIntent().getExtras().getString("aid")), mView.getData().getCid());
-                handler.sendEmptyMessage(0);
+                try {
+                    mView = pBilibiliClient.getPAppAPI().view(getIntent().getExtras().getLong("aid", 0));
+                    videoPlayUrl = pBilibiliClient.getPPlayerAPI().videoPlayUrl(getIntent().getExtras().getLong("aid", 0), mView.getData().getCid());
+                    handler.sendEmptyMessage(0);
+                } catch (BilibiliApiException e) {
+                    e.printStackTrace();
+                    Looper.prepare();
+                    ToastUtil.sendMsg(PlayActivity.this, e.getMessage());
+                    Looper.loop();
+                }
             }
         }.start();
     }
@@ -78,7 +88,13 @@ public class PlayActivity extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             mTv.setText(videoPlayUrl.toString());
-            mGsy.setUp(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(), true, mView.getData().getTitle());
+            mGsy.setUp(videoPlayUrl
+                    .getData()
+                    .getDash()
+                    .getVideo()
+                    .get(0)
+                    .getBaseUrl(),
+                    true, mView.getData().getTitle());
             Glide.with(PlayActivity.this).load(mView.getData().getPic()).into(mIv);
         }
     }

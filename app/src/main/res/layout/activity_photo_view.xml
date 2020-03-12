@@ -11,28 +11,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageButton
-        android:id="@+id/ib_pip"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/bg_text"
-        android:foreground="?selectableItemBackground"
-        android:src="@drawable/ic_pip" />
+        android:paddingBottom="40dp">
 
-    <ImageButton
-        android:id="@+id/ib_dl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="40dp"
-        android:layout_toStartOf="@id/ib_pip"
-        android:background="@drawable/bg_text"
-        android:foreground="?selectableItemBackground"
-        android:src="@drawable/ic_dl" />
+        <ImageButton
+            android:id="@+id/ib_pip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/bg_text"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/ic_pip" />
+
+        <ImageButton
+            android:id="@+id/ib_dl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="30dp"
+            android:layout_toStartOf="@id/ib_pip"
+            android:background="@drawable/bg_text"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/ic_dl" />
+    </RelativeLayout>
 
 </RelativeLayout>

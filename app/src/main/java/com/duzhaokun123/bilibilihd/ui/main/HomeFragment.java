@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment {
                 ((VideoCardHolder) holder).mTvBadge.setText(homePage.getData().getItems().get(position).getBadge());
                 Glide.with(((VideoCardHolder) holder).mIv).load(homePage.getData().getItems().get(position).getCover()).listener(new RequestListener<Drawable>() {
                     private ImageView imageView = ((VideoCardHolder) holder).mIv;
+
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
@@ -114,8 +115,16 @@ public class HomeFragment extends Fragment {
                 }).into(((VideoCardHolder) holder).mIv);
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
-                    private String aid = homePage.getData().getItems().get(position).getParam();
+                    private long aid;
                     private String badge = homePage.getData().getItems().get(position).getBadge();
+
+                    {
+                        try {
+                            aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                     @Override
                     public void onClick(View v) {
@@ -132,8 +141,16 @@ public class HomeFragment extends Fragment {
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-                    private String aid = homePage.getData().getItems().get(position).getParam();
+                    private long aid;
                     private String url = homePage.getData().getItems().get(position).getCover();
+
+                    {
+                        try {
+                            aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                     @Override
                     public boolean onLongClick(View v) {
@@ -185,7 +202,7 @@ public class HomeFragment extends Fragment {
                     mTvTitle = itemView.findViewById(R.id.tv_title);
                     mTvCount = itemView.findViewById(R.id.tv_count);
                     mTvDuration = itemView.findViewById(R.id.tv_duration);
-                    mTvBadge =  itemView.findViewById(R.id.tv_badge);
+                    mTvBadge = itemView.findViewById(R.id.tv_badge);
                     mCv = itemView.findViewById(R.id.cv);
                 }
             }
@@ -210,6 +227,7 @@ public class HomeFragment extends Fragment {
     class Handler extends android.os.Handler {
         /**
          * msg.what 0: 下拉刷新 1: 加载更多
+         *
          * @param msg
          */
         @Override

@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
 import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.app.model.*
+import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
@@ -40,7 +41,21 @@ class PAppAPI {
         return GlobalScope.future { appAPI.homePage(pull = pull).await() }.get()
     }
 
-    fun view(aid: Long): View {
-        return GlobalScope.future { appAPI.view(aid = aid).await() }.get()
+    @Throws(BilibiliApiException::class)
+    fun view(aid: Long): View? {
+        var exception: Exception? = null
+        var view: View? = null
+        GlobalScope.future {
+            try {
+                view = appAPI.view(aid = aid).await()
+            } catch (e: Exception) {
+                exception = e
+            }
+        }.get()
+        if (exception != null) {
+            throw exception as Exception;
+        }
+
+        return view
     }
 }
