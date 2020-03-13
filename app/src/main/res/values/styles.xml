@@ -24,6 +24,7 @@
 
     <style name="AppTheme.NoActionBar.Transparency" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar.Transparency.Fullscreen" parent="AppTheme.NoActionBar.Transparency">
@@ -32,6 +33,25 @@
 
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.TransparencyActionBar" parent="AppTheme">
+        <item name="actionBarTheme">@style/AppTheme.Transparency</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="AppTheme.Transparency" parent="AppTheme">
+        <item name="colorPrimary">@color/colorTransparency</item>
+        <item name="colorPrimaryDark">@color/colorTransparency</item>
+        <item name="colorAccent">@color/colorTransparency</item>
+        <item name="android:navigationBarColor">@color/colorTransparency</item>
+        <item name="android:navigationBarDividerColor">@color/colorTransparency</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.TransparencyStatus" parent="AppTheme.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>

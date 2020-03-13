@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
+import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
@@ -34,7 +35,7 @@ import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class FavoriteActivity extends MyBaseActivity {
 
     private XRecyclerView mXrv;
 

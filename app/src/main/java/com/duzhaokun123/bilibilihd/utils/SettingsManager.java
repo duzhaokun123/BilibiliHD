@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Set;
 
 public class SettingsManager {
     private SettingsManager() {
@@ -23,9 +25,18 @@ public class SettingsManager {
     private SharedPreferences.Editor editor;
     private boolean inited = false;
 
+    private static final int INT = 0;
+    private static final int FLOAT = 1;
+    private static final int STRING = 2;
+    private static final int BOOLEAN = 3;
+    private static final int STRING_SET = 4;
+
+    private static final String TAG = "SettingsManager";
+
     public boolean isInited() {
         return inited;
     }
+
 
     public static void init(Context context) {
         settingsManager = new SettingsManager();
@@ -43,6 +54,13 @@ public class SettingsManager {
 
 
     public static SettingsManager getSettingsManager() {
+        if (settingsManager == null) {
+            settingsManager = new SettingsManager();
+            Log.w(TAG, "hadnot call SettingsManager.init()");
+        }
+        if (!settingsManager.inited) {
+            Log.w(TAG, "SettingsManager is uninitialized");
+        }
         return settingsManager;
     }
 
@@ -108,6 +126,34 @@ public class SettingsManager {
         }
     }
 
+    private void save(String key, int type, Object value) {
+        if (editor == null) {
+            Log.e(TAG, "editor is null, settings cannot be saved");
+        } else {
+            switch (type) {
+                case INT:
+                    editor.putInt(key, Integer.parseInt(value.toString()));
+                    break;
+                case FLOAT:
+                    editor.putFloat(key, Float.parseFloat(value.toString()));
+                    break;
+                case BOOLEAN:
+                    editor.putBoolean(key, Boolean.parseBoolean(value.toString()));
+                    break;
+                case STRING:
+                    editor.putString(key, (String) value);
+                    break;
+                case STRING_SET:
+                    editor.putStringSet(key, (Set<String>) value);
+                    break;
+                default:
+                    Log.wtf(TAG, type + " is not defined");
+                    break;
+            }
+            editor.apply();
+        }
+    }
+
     public class Develop {
         private boolean test;
 
@@ -117,7 +163,7 @@ public class SettingsManager {
 
         public void setTest(boolean test) {
             this.test = test;
-            editor.putBoolean("test", test).apply();
+            save("test", BOOLEAN, test);
         }
     }
 
@@ -128,7 +174,7 @@ public class SettingsManager {
 
         public void setColumn(int column) {
             this.column = column;
-            editor.putInt("column", column).apply();
+            save("column", INT, column);
         }
 
         public int getColumnLand() {
@@ -137,7 +183,7 @@ public class SettingsManager {
 
         public void setColumnLand(int columnLand) {
             this.columnLand = columnLand;
-            editor.putInt("column_land", columnLand).apply();
+            save("column_land", INT, columnLand);
         }
 
         private int column;
@@ -156,7 +202,7 @@ public class SettingsManager {
 
         public void setDownloader(int downloader) {
             this.downloader = downloader;
-            editor.putInt("downloader", downloader).apply();
+            save("downloader", INT, downloader);
         }
     }
 }

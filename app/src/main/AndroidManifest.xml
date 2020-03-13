@@ -19,7 +19,8 @@
         <activity android:name=".ui.settings.LicenseActivity"
             android:label="@string/license"></activity>
         <activity android:name=".ui.userspace.FavoriteActivity" />
-        <activity android:name=".ui.play.PlayActivity" />
+        <activity android:name=".ui.play.PlayActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.PhotoViewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -29,14 +30,13 @@
         <activity android:name=".ui.JumpActivity" />
         <activity
             android:name=".ui.userspace.UserSpaceActivity"
-            android:theme="@style/AppTheme.NoActionBar.Transparency" />
+            android:theme="@style/AppTheme.TransparencyActionBar" />
         <activity
             android:name=".ui.VideoSearchActivity"
             android:label="@string/search" />
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".ui.main.MainActivity" />
+            android:label="@string/settings" />
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login" />

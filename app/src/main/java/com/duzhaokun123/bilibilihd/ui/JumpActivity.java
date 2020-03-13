@@ -1,7 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +11,7 @@ import android.widget.RadioGroup;
 
 import com.duzhaokun123.bilibilihd.R;
 
-public class JumpActivity extends AppCompatActivity {
+public class JumpActivity extends MyBaseActivity {
 
     private EditText mEtComponent, mEtKey, mEtValue;
     private Button mBtnAdd, mBtnStart;

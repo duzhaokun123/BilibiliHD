@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Looper;
@@ -21,7 +20,7 @@ import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends MyBaseActivity {
 
     private EditText mEtUsername, mEtPassword;
     private Button mBtnLogin;

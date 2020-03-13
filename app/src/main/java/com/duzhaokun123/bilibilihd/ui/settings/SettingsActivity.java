@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
 
 /**
  * FIXME:写的太恶心了，想办法重写
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends MyBaseActivity {
 
     private Fragment mFragmentSettingFirst;
 

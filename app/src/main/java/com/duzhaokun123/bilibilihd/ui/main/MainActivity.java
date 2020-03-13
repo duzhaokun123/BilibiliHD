@@ -197,6 +197,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+
     class Handler extends android.os.Handler {
         @SuppressLint("SetTextI18n")
         @Override

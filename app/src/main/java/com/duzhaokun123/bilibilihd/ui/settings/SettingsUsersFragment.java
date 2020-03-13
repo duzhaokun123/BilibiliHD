@@ -37,6 +37,7 @@ import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
+import com.hiczp.bilibili.api.app.model.MyInfo;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -52,7 +53,7 @@ public class SettingsUsersFragment extends Fragment {
     private LoginUserInfoMap loginUserInfoMap;
     private SettingsManager settingsManager;
     private Handler handler;
-    private Space mSpace;
+    private MyInfo myInfo;
     private LoginResponse exportLoginResponse;
 
     @Nullable
@@ -161,7 +162,9 @@ public class SettingsUsersFragment extends Fragment {
                                 Message message = Message.obtain(null, new Runnable() {
                                     @Override
                                     public void run() {
-                                        Glide.with(getContext()).load(space.getData().getCard().getFace()).into(((UserCardHolder) holder).mCivFace);
+                                        if (getContext() != null) {
+                                            Glide.with(getContext()).load(space.getData().getCard().getFace()).into(((UserCardHolder) holder).mCivFace);
+                                        }
                                         ((UserCardHolder) holder).mTvName.setText(space.getData().getCard().getName());
                                     }
                                 });
@@ -282,26 +285,23 @@ public class SettingsUsersFragment extends Fragment {
             new Thread() {
                 @Override
                 public void run() {
-                    SpaceAPI.getSpaceAPI().getSpace(loginUserInfoMap.getLoggedUdi(), new MyBilibiliClient.CallBack<Space>() {
-                        @Override
-                        public void onException(Exception e) {
-                            e.printStackTrace();
+                    try {
+                        myInfo = PBilibiliClient.Companion.getPBilibiliClient().getPAppAPI().getMyInfo();
+                        handler.sendEmptyMessage(2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getContext() != null) {
                             Looper.prepare();
                             ToastUtil.sendMsg(getContext(), e.getMessage());
                             Looper.loop();
                         }
-
-                        @Override
-                        public void onSuccess(Space space) {
-                            mSpace = space;
-                            handler.sendEmptyMessage(2);
-                        }
-                    });
+                    }
                 }
             }.start();
         } else {
             mTvContent.setText(null);
-            handler.sendEmptyMessage(3);
+            mTvName.setText(R.string.not_logged_in);
+            mCivFace.setImageDrawable(null);
         }
     }
 
@@ -314,12 +314,10 @@ public class SettingsUsersFragment extends Fragment {
                     msg.getCallback().run();
                     break;
                 case 2:
-                    mTvName.setText(mSpace.getData().getCard().getName());
-                    Glide.with(getContext()).load(mSpace.getData().getCard().getFace()).into(mCivFace);
-                    break;
-                case 3:
-                    mTvName.setText(R.string.not_logged_in);
-                    mCivFace.setImageDrawable(null);
+                    mTvName.setText(myInfo.getData().getName());
+                    if (getContext() != null) {
+                        Glide.with(getContext()).load(myInfo.getData().getFace()).into(mCivFace);
+                    }
                     break;
             }
         }

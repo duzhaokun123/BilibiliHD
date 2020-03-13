@@ -1,14 +1,13 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
-public class LicenseActivity extends AppCompatActivity {
+public class LicenseActivity extends MyBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

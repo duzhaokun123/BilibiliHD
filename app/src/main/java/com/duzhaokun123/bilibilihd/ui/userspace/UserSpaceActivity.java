@@ -22,6 +22,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.material.tabs.TabLayout;
@@ -32,7 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.duzhaokun123.bilibilihd.utils.OtherUtils.setLevelDrawable;
 import static com.duzhaokun123.bilibilihd.utils.OtherUtils.setSixDrawable;
 
-public class UserSpaceActivity extends AppCompatActivity {
+public class UserSpaceActivity extends MyBaseActivity {
 
     private ImageView mIvSpaceImage, mIvSex,mIvLevel;
     private CircleImageView mCivFace;
@@ -110,6 +111,8 @@ public class UserSpaceActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        setTitle(null);
     }
 
     class MyFragmentPagerAdapter extends FragmentPagerAdapter {

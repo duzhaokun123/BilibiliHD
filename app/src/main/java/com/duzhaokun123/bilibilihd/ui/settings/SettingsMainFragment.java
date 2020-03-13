@@ -83,10 +83,12 @@ public class SettingsMainFragment extends Fragment {
     }
 
     private void setSecondFrameLayout(Fragment fragment, String name) {
-        if (((SettingsActivity) getActivity()).getmFlSettingSecond() == null) {
-            getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
-        } else {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();
+        if (getActivity() != null) {
+            if (((SettingsActivity) getActivity()).getmFlSettingSecond() == null) {
+                getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
+            } else {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();
+            }
         }
     }
 }
