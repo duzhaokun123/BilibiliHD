@@ -59,7 +59,7 @@ public class DynamicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
         SettingsManager settingsManager = SettingsManager.getSettingsManager();
-        simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss SSS");
+        simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
         View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
