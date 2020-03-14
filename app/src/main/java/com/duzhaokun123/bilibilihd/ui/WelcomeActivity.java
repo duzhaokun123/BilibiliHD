@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
 
+import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
@@ -24,12 +25,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         TextView mTvVersion = findViewById(R.id.tv_version);
-        try {
-            mTvVersion.setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        mTvVersion.setText(BuildConfig.VERSION_NAME);
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
 
         new Thread() {

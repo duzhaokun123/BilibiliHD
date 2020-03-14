@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">bilibili HD</string>
     <string name="keyword">关键字</string>
     <string name="search">搜索</string>
@@ -44,4 +44,8 @@
     <string name="bad_file">坏文件</string>
     <string name="failure">失败</string>
     <string name="exception_warning">严重运行时异常，请重启应用</string>
+    <string name="about">关于</string>
+    <string name="build_type">构建类型</string>
+    <string name="version" tools:ignore="ExtraTranslation">版本</string>
+    <string name="project_home">项目主页</string>
 </resources>

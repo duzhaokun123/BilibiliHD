@@ -28,9 +28,7 @@ public class SettingsMainFragment extends Fragment {
     private NavigationView mNavSettingsMain;
 
     private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout, mFragmentSettingsDownload;
-    private Fragment mFragmentSettingsUsers;
-
-    private PBilibiliClient pBilibiliClient;
+    private Fragment mFragmentSettingsUsers, mFragmentAbout;
 
     @Nullable
     @Override
@@ -43,7 +41,6 @@ public class SettingsMainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavSettingsMain = view.findViewById(R.id.nav_settings_main);
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
         mNavSettingsMain.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -72,10 +69,11 @@ public class SettingsMainFragment extends Fragment {
                         }
                         setSecondFrameLayout(mFragmentSettingsDevelop, "develop");
                         break;
-                    case R.id.license:
-                        Intent intent = new Intent(getContext(), LicenseActivity.class);
-                        startActivity(intent);
-                        break;
+                    case R.id.about:
+                        if (mFragmentAbout == null) {
+                            mFragmentAbout = new AboutFragment();
+                        }
+                        setSecondFrameLayout(mFragmentAbout, "about");
                 }
                 return false;
             }

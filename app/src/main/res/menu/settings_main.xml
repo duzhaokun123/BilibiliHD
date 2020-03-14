@@ -18,8 +18,9 @@
             android:icon="@drawable/ic_code"
             android:title="@string/develop" />
         <item
-            android:id="@+id/license"
-            android:title="@string/license" />
+            android:id="@+id/about"
+            android:icon="@drawable/ic_info"
+            android:title="@string/about" />
     </group>
 
 </menu>
