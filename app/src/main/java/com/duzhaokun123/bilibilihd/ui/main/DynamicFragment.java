@@ -3,11 +3,11 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,23 +20,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.DynamicAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
@@ -56,7 +50,8 @@ public class DynamicFragment extends Fragment {
     private Handler handler;
     private List<DynamicPage.Data.Card> mCards;
 
-    private int page = 1;
+    private int page = 0;
+    private long offsetDynamicId = 0;
     private SimpleDateFormat simpleDateFormat;
 
     @Nullable
@@ -102,7 +97,7 @@ public class DynamicFragment extends Fragment {
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 Glide.with(mXrv).load(mCards.get(position).getDesc().getUser_profile().getInfo().getFace()).into(((DynamicCardHolder) holder).mCivFace);
                 ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
-                ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(new Date(mCards.get(position).getDesc().getTimestamp())));
+                ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(new Date(mCards.get(position).getDesc().getTimestamp() * 1000)));
 //                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
                 if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1) {//1: 不是 VIP, 2: 是 VIP
                     ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
@@ -211,8 +206,8 @@ public class DynamicFragment extends Fragment {
     class Refresh extends Thread {
         @Override
         public void run() {
-            page = 1;
-            DynamicAPI.getDynamicAPI().getDynamic(page, new MyBilibiliClient.CallBack<DynamicPage>() {
+            page = 0;
+            DynamicAPI.getDynamicAPI().getDynamic(page, new MyBilibiliClient.Callback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -224,6 +219,7 @@ public class DynamicFragment extends Fragment {
                 @Override
                 public void onSuccess(DynamicPage dynamicPage) {
                     mCards = dynamicPage.getData().getCards();
+                    offsetDynamicId = dynamicPage.getData().getHistory_offset();
                     LoadMore loadMore = new LoadMore();
                     for (int i = 0; i <  2; i++) {
                         loadMore.run();
@@ -238,7 +234,7 @@ public class DynamicFragment extends Fragment {
         @Override
         public void run() {
             page++;
-            DynamicAPI.getDynamicAPI().getDynamic(page, new MyBilibiliClient.CallBack<DynamicPage>() {
+            DynamicAPI.getDynamicAPI().getDynamic(page, String.valueOf(offsetDynamicId), new MyBilibiliClient.Callback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -250,6 +246,7 @@ public class DynamicFragment extends Fragment {
                 @Override
                 public void onSuccess(DynamicPage dynamicPage) {
                     mCards.addAll(dynamicPage.getData().getCards());
+                    offsetDynamicId = dynamicPage.getData().getHistory_offset();
                     handler.sendEmptyMessage(1);
                 }
             });

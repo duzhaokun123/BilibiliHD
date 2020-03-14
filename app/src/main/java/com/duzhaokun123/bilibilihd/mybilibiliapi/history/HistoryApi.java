@@ -4,7 +4,6 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.google.gson.Gson;
-import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
@@ -26,11 +25,11 @@ public class HistoryApi {
 
     private Gson gson;
 
-    public void getHistory(String business, MyBilibiliClient.CallBack<History> callback) {
+    public void getHistory(String business, MyBilibiliClient.Callback<History> callback) {
         getHistory(0, 0, business, callback);
     }
 
-    public void getHistory(long max, int maxTp, String business, MyBilibiliClient.CallBack<History> callback) {
+    public void getHistory(long max, int maxTp, String business, MyBilibiliClient.Callback<History> callback) {
         LoginResponse loginResponse = PBilibiliClient.Companion.getPBilibiliClient().getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;

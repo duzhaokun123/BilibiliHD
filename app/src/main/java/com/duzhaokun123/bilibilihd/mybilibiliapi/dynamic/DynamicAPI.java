@@ -1,5 +1,7 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic;
 
+import android.icu.text.SimpleDateFormat;
+
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
@@ -32,10 +34,18 @@ public class DynamicAPI {
 
     private PBilibiliClient pBilibiliClient;
     private Gson gson;
+    private SimpleDateFormat simpleDateFormat;
 
-    public void getDynamic(int page, MyBilibiliClient.CallBack<DynamicPage> callback) {
+    public void getDynamic(int page, MyBilibiliClient.Callback<DynamicPage> callback) {
+        getDynamic(page,"" , callback);
+    }
+
+    public void getDynamic(int page,String offsetDynamicId, MyBilibiliClient.Callback<DynamicPage> callback) {
         if (pBilibiliClient == null) {
             pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        }
+        if (simpleDateFormat == null) {
+            simpleDateFormat = new SimpleDateFormat("YYYYMMDDhhmm000ss");
         }
         LoginResponse loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         try {
@@ -49,7 +59,7 @@ public class DynamicAPI {
                 public void addUserParams(Map<String, String> paramsMap) {
                     paramsMap.put("from", "feed");
                     paramsMap.put("mobi_app", "android");
-                    paramsMap.put("offset_dynamic_id", "");
+                    paramsMap.put("offset_dynamic_id", offsetDynamicId);
                     paramsMap.put("page", String.valueOf(page));
                     paramsMap.put("qn", "32");
                     paramsMap.put("rsp_type", "2");
@@ -57,7 +67,10 @@ public class DynamicAPI {
                     paramsMap.put("statistics", "%7B%22appId%22%3A1%2C%22platform%22%3A3%2C%22version%22%3A%225.54.0%22%2C%22abtest%22%3A%22%22%7D");
                     paramsMap.put("type_list", "268435455");
                     paramsMap.put("video_meta", "fourk%3A1%2Cfnval%3A16%2Cfnver%3A0%2Cqn%3A32");
-                    paramsMap.put("uid", String.valueOf(loginResponse.getUserId()));
+                    if (loginResponse != null) {
+                        paramsMap.put("uid", String.valueOf(loginResponse.getUserId()));
+                    }
+                    paramsMap.put("trace_id", simpleDateFormat.format(paramsMap.get("ts")));
                 }
             });
             if (gson == null) {

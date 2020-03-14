@@ -4,7 +4,6 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.google.gson.Gson;
-import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
@@ -26,7 +25,7 @@ public class SpaceAPI {
     private PBilibiliClient pBilibiliClient;
     private Gson gson;
 
-    public void getSpace(long uid, MyBilibiliClient.CallBack<Space> callback) {
+    public void getSpace(long uid, MyBilibiliClient.Callback<Space> callback) {
 
         if (pBilibiliClient == null) {
             pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();

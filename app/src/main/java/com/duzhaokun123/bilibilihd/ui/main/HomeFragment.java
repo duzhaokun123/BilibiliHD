@@ -48,13 +48,14 @@ public class HomeFragment extends Fragment {
     private HomePage homePage;
     private Handler handler;
 
-    private int limitNumber = 1;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
         SettingsManager settingsManager = SettingsManager.getSettingsManager();
+        if (!settingsManager.isInited()) {
+            ToastUtil.sendMsg(getContext(), R.string.exception_warning);
+        }
         pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
         View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
@@ -248,7 +249,6 @@ public class HomeFragment extends Fragment {
         @Override
         public void run() {
             Log.d("HomePage", "Refresh");
-            limitNumber = 1;
             try {
                 homePage = pBilibiliClient.getPAppAPI().homePage(true);
                 for (int i = 0; i < 2; i++) {
@@ -270,8 +270,6 @@ public class HomeFragment extends Fragment {
         @Override
         public void run() {
             Log.d("HomePage", "LoadMore");
-            limitNumber++;
-            mXrv.setLimitNumberToCallLoadMore(limitNumber);
             try {
                 homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
             } catch (Exception e) {

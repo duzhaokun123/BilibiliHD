@@ -217,7 +217,7 @@ public class HistoryFragment extends Fragment {
         @Override
         public void run() {
             page = 1;
-            HistoryApi.getHistoryApi().getHistory("all", new MyBilibiliClient.CallBack<History>() {
+            HistoryApi.getHistoryApi().getHistory("all", new MyBilibiliClient.Callback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -244,7 +244,7 @@ public class HistoryFragment extends Fragment {
         public void run() {
             page ++;
             HistoryApi.getHistoryApi().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
-                    "all", new MyBilibiliClient.CallBack<History>() {
+                    "all", new MyBilibiliClient.Callback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();

@@ -80,7 +80,7 @@ public class MyBilibiliClient {
         void addUserParams(Map<String, String> paramsMap);
     }
 
-    public interface CallBack<T> {
+    public interface Callback<T> {
         void onException(Exception e);
 
         void onSuccess(T t);

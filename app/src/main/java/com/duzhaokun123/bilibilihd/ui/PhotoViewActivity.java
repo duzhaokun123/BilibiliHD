@@ -77,13 +77,16 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                DisplayCutout displayCutout = v.getRootWindowInsets().getDisplayCutout();
-                if (displayCutout != null && !changed) {
-                    changed = true;
-                    v.setPadding(v.getPaddingLeft() + displayCutout.getSafeInsetLeft(),
-                            v.getPaddingTop(),
-                            v.getPaddingRight() + displayCutout.getSafeInsetRight(),
-                            v.getPaddingBottom() + displayCutout.getSafeInsetBottom());
+                DisplayCutout displayCutout = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    displayCutout = v.getRootWindowInsets().getDisplayCutout();
+                    if (displayCutout != null && !changed) {
+                        changed = true;
+                        v.setPadding(v.getPaddingLeft() + displayCutout.getSafeInsetLeft(),
+                                v.getPaddingTop(),
+                                v.getPaddingRight() + displayCutout.getSafeInsetRight(),
+                                v.getPaddingBottom() + displayCutout.getSafeInsetBottom());
+                    }
                 }
             }
         });
@@ -95,9 +98,11 @@ public class PhotoViewActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-        getWindow().setAttributes(lp);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
     }
 
     @Override

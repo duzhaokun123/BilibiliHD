@@ -43,7 +43,10 @@ public class DynamicPage {
 
     public class Data {
         private List<Card> cards;
-        private Attention attention;
+        private Attentions attentions;
+        private long history_offset;
+        private long max_dynamic_id;
+        private int _gt_;
 
         public List<Card> getCards() {
             return cards;
@@ -53,12 +56,12 @@ public class DynamicPage {
             this.cards = cards;
         }
 
-        public Attention getAttention() {
-            return attention;
+        public Attentions getAttentions() {
+            return attentions;
         }
 
-        public void setAttention(Attention attention) {
-            this.attention = attention;
+        public void setAttentions(Attentions attentions) {
+            this.attentions = attentions;
         }
 
 
@@ -891,8 +894,8 @@ public class DynamicPage {
                 }
             }
         }
+        public class Attentions {
 
-        public class Attention {
             private List<Long> uids;
 
             public List<Long> getUids() {
@@ -911,34 +914,7 @@ public class DynamicPage {
                 this.bangumis = bangumis;
             }
 
-            public long getMax_dynamic_id() {
-                return max_dynamic_id;
-            }
-
-            public void setMax_dynamic_id(long max_dynamic_id) {
-                this.max_dynamic_id = max_dynamic_id;
-            }
-
-            public long getHistory_offset() {
-                return history_offset;
-            }
-
-            public void setHistory_offset(long history_offset) {
-                this.history_offset = history_offset;
-            }
-
-            public int get_gt_() {
-                return _gt_;
-            }
-
-            public void set_gt_(int _gt_) {
-                this._gt_ = _gt_;
-            }
-
             private List<Bangumis> bangumis;
-            private long max_dynamic_id;
-            private long history_offset;
-            private int _gt_;
 
             public class Bangumis {
                 public int getSeason_id() {
@@ -960,6 +936,29 @@ public class DynamicPage {
                 private int season_id;
                 private int type;
             }
+        }
+
+        public long getHistory_offset() {
+            return history_offset;
+        }
+
+        public void setHistory_offset(long history_offset) {
+            this.history_offset = history_offset;
+        }
+
+        public long getMax_dynamic_id() {
+            return max_dynamic_id;
+        }
+
+        public void setMax_dynamic_id(long max_dynamic_id) {
+            this.max_dynamic_id = max_dynamic_id;
+        }
+
+        public int get_gt_() {
+            return _gt_;
+        }
+        public void set_gt_(int _gt_) {
+            this._gt_ = _gt_;
         }
     }
 }

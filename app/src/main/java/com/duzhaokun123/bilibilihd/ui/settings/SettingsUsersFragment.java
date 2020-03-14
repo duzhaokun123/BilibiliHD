@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -148,7 +147,7 @@ public class SettingsUsersFragment extends Fragment {
 
                     @Override
                     public void run() {
-                        SpaceAPI.getSpaceAPI().getSpace(uid, new MyBilibiliClient.CallBack<Space>() {
+                        SpaceAPI.getSpaceAPI().getSpace(uid, new MyBilibiliClient.Callback<Space>() {
                             @Override
                             public void onException(Exception e) {
                                 e.printStackTrace();

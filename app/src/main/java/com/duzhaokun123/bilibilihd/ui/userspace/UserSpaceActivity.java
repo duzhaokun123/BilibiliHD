@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.ui.userspace;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -82,7 +81,7 @@ public class UserSpaceActivity extends MyBaseActivity {
 //
 //                }
                 SpaceAPI spaceAPI = SpaceAPI.getSpaceAPI();
-                spaceAPI.getSpace(bundle.getLong("uid"), new MyBilibiliClient.CallBack<Space>() {
+                spaceAPI.getSpace(bundle.getLong("uid"), new MyBilibiliClient.Callback<Space>() {
                     @Override
                     public void onException(Exception e) {
                         e.printStackTrace();
