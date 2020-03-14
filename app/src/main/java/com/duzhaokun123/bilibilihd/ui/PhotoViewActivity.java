@@ -70,16 +70,14 @@ public class PhotoViewActivity extends AppCompatActivity {
                 }
             }
         });
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
         mRl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
             private boolean changed;
 
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                DisplayCutout displayCutout = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                    displayCutout = v.getRootWindowInsets().getDisplayCutout();
+                    DisplayCutout displayCutout = v.getRootWindowInsets().getDisplayCutout();
                     if (displayCutout != null && !changed) {
                         changed = true;
                         v.setPadding(v.getPaddingLeft() + displayCutout.getSafeInsetLeft(),
@@ -88,8 +86,8 @@ public class PhotoViewActivity extends AppCompatActivity {
                                 v.getPaddingBottom() + displayCutout.getSafeInsetBottom());
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

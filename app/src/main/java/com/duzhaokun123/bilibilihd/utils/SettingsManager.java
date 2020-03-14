@@ -155,7 +155,7 @@ public class SettingsManager {
     }
 
     public class Develop {
-        private boolean test;
+        private boolean test = true;
 
         public boolean isTest() {
             return test;
@@ -186,15 +186,15 @@ public class SettingsManager {
             save("column_land", INT, columnLand);
         }
 
-        private int column;
-        private int columnLand;
+        private int column = 0;
+        private int columnLand = 0;
     }
 
     public class Download {
         public static final int OKHTTP = 0;
         public static final int DOWNLOAD_MANAGER = 1;
 
-        private int downloader;
+        private int downloader = OKHTTP;
 
         public int getDownloader() {
             return downloader;
