@@ -3,7 +3,6 @@ package com.duzhaokun123.bilibilihd.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
@@ -12,7 +11,6 @@ import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
-import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
@@ -26,13 +24,13 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         TextView mTvVersion = findViewById(R.id.tv_version);
         mTvVersion.setText(BuildConfig.VERSION_NAME);
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
 
         new Thread() {
             @Override
             public void run() {
                 SettingsManager.init(getApplicationContext());
-                LoginResponse loginResponse = SettingsManager.getSettingsManager().getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
+                LoginResponse loginResponse = SettingsManager.getInstance().getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
                 if (loginResponse != null) {
                     pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
                 }

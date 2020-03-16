@@ -42,11 +42,11 @@
     </style>
 
     <style name="AppTheme.Transparency" parent="AppTheme">
-        <item name="colorPrimary">@color/colorTransparency</item>
-        <item name="colorPrimaryDark">@color/colorTransparency</item>
-        <item name="colorAccent">@color/colorTransparency</item>
-        <item name="android:navigationBarColor">@color/colorTransparency</item>
-        <item name="android:navigationBarDividerColor">@color/colorTransparency</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoActionBar.TransparencyStatus" parent="AppTheme.NoActionBar">

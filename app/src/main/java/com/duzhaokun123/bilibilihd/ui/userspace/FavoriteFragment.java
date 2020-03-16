@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 //import com.hiczp.bilibili.api.app.model.Space;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -69,7 +70,7 @@ public class FavoriteFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), FavoriteActivity.class);
-                        intent.putExtra("item", new Gson().toJson(item, Space.Data.Favourite.Item.class));
+                        intent.putExtra("item", GsonUtil.getGsonInstance().toJson(item, Space.Data.Favourite.Item.class));
                         startActivity(intent);
                     }
                 });

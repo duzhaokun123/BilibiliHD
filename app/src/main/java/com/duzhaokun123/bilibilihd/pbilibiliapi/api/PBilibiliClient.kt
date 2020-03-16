@@ -2,30 +2,24 @@ package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
 import com.hiczp.bilibili.api.BilibiliClient
 import com.hiczp.bilibili.api.passport.model.LoginResponse
-import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
-class PBilibiliClient {
-    private var bilibiliClient: BilibiliClient
+class PBilibiliClient private constructor() {
+    private var bilibiliClient: BilibiliClient = BilibiliClient()
 
     private lateinit var pAppAPI: PAppAPI
     private lateinit var pPlayerAPI: PPlayerAPI
 
     companion object{
         private lateinit var pBilibiliClient: PBilibiliClient
-        fun getPBilibiliClient(): PBilibiliClient {
+        fun getInstance(): PBilibiliClient {
             if (::pBilibiliClient.isInitialized.not()) {
                 pBilibiliClient = PBilibiliClient()
             }
 
             return pBilibiliClient
         }
-    }
-
-    private constructor() {
-        bilibiliClient = BilibiliClient()
-
     }
 
     fun getBilibiliClient() = bilibiliClient

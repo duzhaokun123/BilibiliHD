@@ -33,7 +33,7 @@ public class SettingLayoutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        settingsManager = SettingsManager.getSettingsManager();
+        settingsManager = SettingsManager.getInstance();
         mEtColumn.setText(String.valueOf(settingsManager.layout.getColumn()));
         mEtColumnLand.setText(String.valueOf(settingsManager.layout.getColumnLand()));
 

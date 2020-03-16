@@ -33,8 +33,8 @@ public class AboutFragment extends Fragment {
         Button mBtnLicense = view.findViewById(R.id.btn_license);
         Button mBtnProjectHome = view.findViewById(R.id.btn_projectHome);
 
-        mTvVersion.setText(getString(R.string.version) + ": " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
-        mTvBuildType.setText(getString(R.string.build_type) + ": " + BuildConfig.BUILD_TYPE);
+        mTvVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
+        mTvBuildType.setText(getString(R.string.build_type) + " " + BuildConfig.BUILD_TYPE);
         mBtnLicense.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LicenseActivity.class);
             startActivity(intent);

@@ -25,7 +25,7 @@ public class LoginActivity extends MyBaseActivity {
     private EditText mEtUsername, mEtPassword;
     private Button mBtnLogin;
 
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
     private Handler handler;
 
     @Override
@@ -65,12 +65,22 @@ public class LoginActivity extends MyBaseActivity {
                         }
 
                         if (loginResponse != null) {
-                            SettingsManager settingsManager = SettingsManager.getSettingsManager();
-                            LoginUserInfoMap loginUserInfoMap = settingsManager.getLoginUserInfoMap(LoginActivity.this);
-                            loginUserInfoMap.put(loginResponse.getUserId(), loginResponse);
-                            loginUserInfoMap.setLoggedUid(loginResponse.getUserId());
-                            settingsManager.saveLoginUserInfoMap(LoginActivity.this);
-                            finish();
+                            if (loginResponse.getData().getUrl() == null) {
+                                SettingsManager settingsManager = SettingsManager.getInstance();
+                                LoginUserInfoMap loginUserInfoMap = settingsManager.getLoginUserInfoMap(LoginActivity.this);
+                                loginUserInfoMap.put(loginResponse.getUserId(), loginResponse);
+                                loginUserInfoMap.setLoggedUid(loginResponse.getUserId());
+                                settingsManager.saveLoginUserInfoMap(LoginActivity.this);
+                                finish();
+                            } else {
+                                pBilibiliClient.getBilibiliClient().setLoginResponse(null);
+                                Message message = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("url", loginResponse.getData().getUrl());
+                                message.what = 0;
+                                message.setData(bundle);
+                                handler.sendMessage(message);
+                            }
                         }
                     }
                 }.start();

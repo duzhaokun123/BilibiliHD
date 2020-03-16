@@ -15,9 +15,9 @@ import okhttp3.Request;
 public class MyBilibiliClient {
     private static MyBilibiliClient myBilibiliClient;
 
-    public static MyBilibiliClient getMyBilibiliClient() {
+    public static MyBilibiliClient getInstance() {
         if (myBilibiliClient == null) {
-            myBilibiliClient = new MyBilibiliClient(PBilibiliClient.Companion.getPBilibiliClient());
+            myBilibiliClient = new MyBilibiliClient(PBilibiliClient.Companion.getInstance());
         }
         return myBilibiliClient;
     }
@@ -80,7 +80,7 @@ public class MyBilibiliClient {
         void addUserParams(Map<String, String> paramsMap);
     }
 
-    public interface Callback<T> {
+    public interface ICallback<T> {
         void onException(Exception e);
 
         void onSuccess(T t);

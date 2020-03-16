@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -40,5 +39,11 @@ public class SettingsActivity extends MyBaseActivity {
 
     public FrameLayout getmFlSettingSecond() {
         return mFlSettingSecond;
+    }
+
+    @Override
+    public void onBackPressed() {
+        setTitle(R.string.settings);
+        super.onBackPressed();
     }
 }

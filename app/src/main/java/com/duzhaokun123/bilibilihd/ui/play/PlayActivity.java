@@ -64,7 +64,7 @@ public class PlayActivity extends AppCompatActivity {
         mGsy.startPlayLogic();
 
         setTitle("av" + getIntent().getExtras().getLong("aid", 0));
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
 
         new Thread() {
             @Override

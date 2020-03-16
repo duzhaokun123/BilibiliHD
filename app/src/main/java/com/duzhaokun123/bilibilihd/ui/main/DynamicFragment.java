@@ -3,11 +3,11 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.DynamicAPI;
@@ -32,6 +31,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -58,7 +58,7 @@ public class DynamicFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getSettingsManager();
+        SettingsManager settingsManager = SettingsManager.getInstance();
         simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
         View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
@@ -95,7 +95,7 @@ public class DynamicFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                Glide.with(mXrv).load(mCards.get(position).getDesc().getUser_profile().getInfo().getFace()).into(((DynamicCardHolder) holder).mCivFace);
+                GlideUtil.loadUrlInto(getContext(), mCards.get(position).getDesc().getUser_profile().getInfo().getFace(), ((DynamicCardHolder) holder).mCivFace, false);
                 ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
                 ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(new Date(mCards.get(position).getDesc().getTimestamp() * 1000)));
 //                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
@@ -207,7 +207,7 @@ public class DynamicFragment extends Fragment {
         @Override
         public void run() {
             page = 0;
-            DynamicAPI.getDynamicAPI().getDynamic(page, new MyBilibiliClient.Callback<DynamicPage>() {
+            DynamicAPI.getInstance().getDynamic(page, new MyBilibiliClient.ICallback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -234,7 +234,7 @@ public class DynamicFragment extends Fragment {
         @Override
         public void run() {
             page++;
-            DynamicAPI.getDynamicAPI().getDynamic(page, String.valueOf(offsetDynamicId), new MyBilibiliClient.Callback<DynamicPage>() {
+            DynamicAPI.getInstance().getDynamic(page, String.valueOf(offsetDynamicId), new MyBilibiliClient.ICallback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -303,7 +303,7 @@ public class DynamicFragment extends Fragment {
 
                 @Override
                 public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                    Glide.with(getContext()).load(card.getItem().getPictures().get(position).getImg_src()).into(((PictureHolder) holder).mIv);
+                    GlideUtil.loadUrlInto(getContext(), card.getItem().getPictures().get(position).getImg_src(), ((PictureHolder) holder).mIv,true);
                     ((PictureHolder) holder).mIv.setOnClickListener(new View.OnClickListener() {
 
                         private String url = card.getItem().getPictures().get(position).getImg_src();
@@ -345,7 +345,7 @@ public class DynamicFragment extends Fragment {
                 ((TextView)view1.findViewById(R.id.tv_title)).setText(nestedCard.getItem().getDynamic());
             }
             ImageView imageView1 = view1.findViewById(R.id.iv);
-            Glide.with(getContext()).load(nestedCard.getPic()).into(imageView1);
+            GlideUtil.loadUrlInto(getContext(), nestedCard.getPic(), imageView1, false);
             RelativeLayout relativeLayout = view1.findViewById(R.id.rl);
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -30,7 +30,7 @@ public class SettingsDevelopFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCbTest = view.findViewById(R.id.cb_test);
-        settingsManager = SettingsManager.getSettingsManager();
+        settingsManager = SettingsManager.getInstance();
         mCbTest.setChecked(settingsManager.develop.isTest());
         mCbTest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

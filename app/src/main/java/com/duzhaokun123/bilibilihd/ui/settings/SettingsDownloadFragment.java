@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -36,7 +34,7 @@ public class SettingsDownloadFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        settingsManager = SettingsManager.getSettingsManager();
+        settingsManager = SettingsManager.getInstance();
         switch (settingsManager.download.getDownloader()) {
             case SettingsManager.Download.OKHTTP:
                 mRbOkhttp.setChecked(true);

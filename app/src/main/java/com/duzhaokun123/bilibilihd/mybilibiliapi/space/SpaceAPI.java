@@ -3,6 +3,7 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi.space;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.google.gson.Gson;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class SpaceAPI {
     private static SpaceAPI spaceAPI;
 
-    public static SpaceAPI getSpaceAPI() {
+    public static SpaceAPI getInstance() {
         if (spaceAPI == null) {
             spaceAPI = new SpaceAPI();
         }
@@ -25,13 +26,13 @@ public class SpaceAPI {
     private PBilibiliClient pBilibiliClient;
     private Gson gson;
 
-    public void getSpace(long uid, MyBilibiliClient.Callback<Space> callback) {
+    public void getSpace(long uid, MyBilibiliClient.ICallback<Space> callback) {
 
         if (pBilibiliClient == null) {
-            pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+            pBilibiliClient = PBilibiliClient.Companion.getInstance();
         }
         try {
-            String response = MyBilibiliClient.getMyBilibiliClient().getResponse(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponse(new MyBilibiliClient.GetRequest() {
                 @Override
                 public String getUrl() {
                     return "https://app.bilibili.com/x/v2/space";
@@ -46,7 +47,7 @@ public class SpaceAPI {
                 }
             });
             if (gson == null) {
-                gson = new Gson();
+                gson = GsonUtil.getGsonInstance();
             }
             Space space = gson.fromJson(response, Space.class);
             if (space.getCode() == 0) {

@@ -58,8 +58,8 @@ public class SettingsUsersFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        loginUserInfoMap = SettingsManager.getSettingsManager().getLoginUserInfoMap(getContext());
-        settingsManager = SettingsManager.getSettingsManager();
+        loginUserInfoMap = SettingsManager.getInstance().getLoginUserInfoMap(getContext());
+        settingsManager = SettingsManager.getInstance();
         handler = new Handler();
         return inflater.inflate(R.layout.fragment_settings_users, container, false);
     }
@@ -95,7 +95,7 @@ public class SettingsUsersFragment extends Fragment {
                 ((UserCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PBilibiliClient.Companion.getPBilibiliClient().getBilibiliClient().setLoginResponse(loginUserInfoMap.getByIndex(position));
+                        PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getByIndex(position));
                         loginUserInfoMap.setLoggedUid(loginUserInfoMap.getByIndex(position).getUserId());
                         settingsManager.saveLoginUserInfoMap(getContext());
                         reloadLoggedUserInfo();
@@ -147,7 +147,7 @@ public class SettingsUsersFragment extends Fragment {
 
                     @Override
                     public void run() {
-                        SpaceAPI.getSpaceAPI().getSpace(uid, new MyBilibiliClient.Callback<Space>() {
+                        SpaceAPI.getInstance().getSpace(uid, new MyBilibiliClient.ICallback<Space>() {
                             @Override
                             public void onException(Exception e) {
                                 e.printStackTrace();
@@ -285,7 +285,7 @@ public class SettingsUsersFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        myInfo = PBilibiliClient.Companion.getPBilibiliClient().getPAppAPI().getMyInfo();
+                        myInfo = PBilibiliClient.Companion.getInstance().getPAppAPI().getMyInfo();
                         handler.sendEmptyMessage(2);
                     } catch (Exception e) {
                         e.printStackTrace();

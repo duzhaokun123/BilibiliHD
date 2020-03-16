@@ -66,7 +66,7 @@ public class UserSpaceActivity extends MyBaseActivity {
 
         handler = new Handler();
 
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
         new Thread() {
             @Override
             public void run() {
@@ -80,8 +80,8 @@ public class UserSpaceActivity extends MyBaseActivity {
 //                    Looper.loop();
 //
 //                }
-                SpaceAPI spaceAPI = SpaceAPI.getSpaceAPI();
-                spaceAPI.getSpace(bundle.getLong("uid"), new MyBilibiliClient.Callback<Space>() {
+                SpaceAPI spaceAPI = SpaceAPI.getInstance();
+                spaceAPI.getSpace(bundle.getLong("uid"), new MyBilibiliClient.ICallback<Space>() {
                     @Override
                     public void onException(Exception e) {
                         e.printStackTrace();

@@ -53,7 +53,7 @@ public class SettingsManager {
     }
 
 
-    public static SettingsManager getSettingsManager() {
+    public static SettingsManager getInstance() {
         if (settingsManager == null) {
             settingsManager = new SettingsManager();
             Log.w(TAG, "hadnot call SettingsManager.init()");

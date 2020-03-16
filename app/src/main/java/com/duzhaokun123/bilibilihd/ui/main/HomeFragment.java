@@ -33,6 +33,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -52,11 +53,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getSettingsManager();
+        SettingsManager settingsManager = SettingsManager.getInstance();
         if (!settingsManager.isInited()) {
             ToastUtil.sendMsg(getContext(), R.string.exception_warning);
         }
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
         View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
@@ -107,10 +108,7 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                        params.height = imageView.getWidth() / resource.getIntrinsicWidth() * resource.getIntrinsicHeight() + imageView.getPaddingBottom() + imageView.getPaddingTop();
-//                        imageView.setMaxHeight(params.height);
-                        imageView.setLayoutParams(params);
+                        ImageViewUtil.autoAspectRation(imageView, resource);
                         return false;
                     }
                 }).into(((VideoCardHolder) holder).mIv);

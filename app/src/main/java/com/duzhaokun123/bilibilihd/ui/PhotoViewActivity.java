@@ -107,8 +107,8 @@ public class PhotoViewActivity extends AppCompatActivity {
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         if (isInPictureInPictureMode) {
-            mIbDl.setImageResource(R.color.colorTransparency);
-            mIbPip.setImageResource(R.color.colorTransparency);
+            mIbDl.setImageResource(android.R.color.transparent);
+            mIbPip.setImageResource(android.R.color.transparent);
         } else {
             mIbDl.setImageResource(R.drawable.ic_dl);
             mIbPip.setImageResource(R.drawable.ic_pip);

@@ -35,6 +35,8 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
+import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -52,7 +54,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getSettingsManager();
+        SettingsManager settingsManager = SettingsManager.getInstance();
         View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
         mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
@@ -89,22 +91,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((VideoCardHolder) holder).mTvTitle.setText(mHistory.getData().getList().get(position).getTitle());
-                Glide.with(((VideoCardHolder) holder).mIv).load(mHistory.getData().getList().get(position).getCover()).listener(new RequestListener<Drawable>() {
-                    private ImageView imageView = ((VideoCardHolder) holder).mIv;
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                        params.height = imageView.getWidth() / resource.getIntrinsicWidth() * resource.getIntrinsicHeight() + imageView.getPaddingBottom() + imageView.getPaddingTop();
-//                        imageView.setMaxHeight(params.height);
-                        imageView.setLayoutParams(params);
-                        return false;
-                    }
-                }).into(((VideoCardHolder) holder).mIv);
+                GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
                     private long aid = Util.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
@@ -217,7 +204,7 @@ public class HistoryFragment extends Fragment {
         @Override
         public void run() {
             page = 1;
-            HistoryApi.getHistoryApi().getHistory("all", new MyBilibiliClient.Callback<History>() {
+            HistoryApi.getInstance().getHistory("all", new MyBilibiliClient.ICallback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -243,8 +230,8 @@ public class HistoryFragment extends Fragment {
         @Override
         public void run() {
             page ++;
-            HistoryApi.getHistoryApi().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
-                    "all", new MyBilibiliClient.Callback<History>() {
+            HistoryApi.getInstance().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
+                    "all", new MyBilibiliClient.ICallback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();

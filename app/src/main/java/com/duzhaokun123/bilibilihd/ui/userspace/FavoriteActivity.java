@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.ui.userspace;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -30,6 +29,8 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.SettingsManager;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.gson.Gson;
@@ -46,8 +47,8 @@ public class FavoriteActivity extends MyBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_xrecyclerview_only);
         mXrv = findViewById(R.id.xrv);
-        SettingsManager settingsManager = SettingsManager.getSettingsManager();
-        item = new Gson().fromJson(getIntent().getStringExtra("item"), Space.Data.Favourite.Item.class);
+        SettingsManager settingsManager = SettingsManager.getInstance();
+        item = GsonUtil.getGsonInstance().fromJson(getIntent().getStringExtra("item"), Space.Data.Favourite.Item.class);
 
         setTitle(item.getName());
 
@@ -84,22 +85,7 @@ public class FavoriteActivity extends MyBaseActivity {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                Glide.with(FavoriteActivity.this).load(item.getCover().get(position).getPic()).listener(new RequestListener<Drawable>() {
-                    private ImageView imageView = ((VideoCardHolder) holder).mIv;
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                        params.height = imageView.getWidth() / resource.getIntrinsicWidth() * resource.getIntrinsicHeight() + imageView.getPaddingBottom() + imageView.getPaddingTop();
-//                        imageView.setMaxHeight(params.height);
-                        imageView.setLayoutParams(params);
-                        return false;
-                    }
-                }).into(((VideoCardHolder) holder).mIv);
+                GlideUtil.loadUrlInto(FavoriteActivity.this, item.getCover().get(0).getPic(), ((VideoCardHolder) holder).mIv, false);
                 ((VideoCardHolder) holder).mTvTitle.setText("av" + item.getCover().get(position).getAid());
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 

@@ -49,4 +49,7 @@
     <string name="about">about</string>
     <string name="build_type">build type</string>
     <string name="project_home">project home</string>
+    <string name="settings_manager_uninited_warning">TODO</string>
+    <string name="version">version</string>
+    <string name="using_gpl_3.0">using GPL-3.0</string>
 </resources>

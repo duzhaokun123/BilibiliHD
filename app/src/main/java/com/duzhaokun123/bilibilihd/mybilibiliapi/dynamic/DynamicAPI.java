@@ -6,6 +6,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.google.gson.Gson;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
@@ -17,7 +18,7 @@ public class DynamicAPI {
 
     private static DynamicAPI dynamicAPI;
 
-    public static DynamicAPI getDynamicAPI() {
+    public static DynamicAPI getInstance() {
         if (dynamicAPI == null) {
             dynamicAPI = new DynamicAPI();
         }
@@ -25,7 +26,7 @@ public class DynamicAPI {
     }
 
     public static NestedCard getNestedCard(String card) {
-        Gson gson = new Gson();
+        Gson gson = GsonUtil.getGsonInstance();
         return gson.fromJson(card, NestedCard.class);
     }
 
@@ -36,20 +37,20 @@ public class DynamicAPI {
     private Gson gson;
     private SimpleDateFormat simpleDateFormat;
 
-    public void getDynamic(int page, MyBilibiliClient.Callback<DynamicPage> callback) {
+    public void getDynamic(int page, MyBilibiliClient.ICallback<DynamicPage> callback) {
         getDynamic(page,"" , callback);
     }
 
-    public void getDynamic(int page,String offsetDynamicId, MyBilibiliClient.Callback<DynamicPage> callback) {
+    public void getDynamic(int page,String offsetDynamicId, MyBilibiliClient.ICallback<DynamicPage> callback) {
         if (pBilibiliClient == null) {
-            pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+            pBilibiliClient = PBilibiliClient.Companion.getInstance();
         }
         if (simpleDateFormat == null) {
             simpleDateFormat = new SimpleDateFormat("YYYYMMDDhhmm000ss");
         }
         LoginResponse loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         try {
-            String response = MyBilibiliClient.getMyBilibiliClient().getResponse(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponse(new MyBilibiliClient.GetRequest() {
                 @Override
                 public String getUrl() {
                     return "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new";
@@ -70,11 +71,11 @@ public class DynamicAPI {
                     if (loginResponse != null) {
                         paramsMap.put("uid", String.valueOf(loginResponse.getUserId()));
                     }
-                    paramsMap.put("trace_id", simpleDateFormat.format(paramsMap.get("ts")));
+                    paramsMap.put("trace_id", simpleDateFormat.format(Long.parseLong(paramsMap.get("ts"))));
                 }
             });
             if (gson == null) {
-                gson = new Gson();
+                gson = GsonUtil.getGsonInstance();
             }
             DynamicPage dynamicPage = gson.fromJson(response, DynamicPage.class);
             if (dynamicPage.getCode() != 0) {

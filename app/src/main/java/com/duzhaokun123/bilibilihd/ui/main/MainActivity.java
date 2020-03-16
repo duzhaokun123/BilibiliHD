@@ -9,14 +9,12 @@ import androidx.fragment.app.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         mCivFace = mRlMyInfo.findViewById(R.id.civ_face);
 
         setTitle(R.string.home);
-        pBilibiliClient = PBilibiliClient.Companion.getPBilibiliClient();
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
         handler = new Handler();
 
         if (homeFragment == null) {
