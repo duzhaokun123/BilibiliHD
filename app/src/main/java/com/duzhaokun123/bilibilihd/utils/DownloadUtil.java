@@ -20,8 +20,8 @@ import okhttp3.Response;
 public class DownloadUtil {
     public static void picturesDownload(Context context, String url) {
 //        ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        switch (SettingsManager.getInstance().download.getDownloader()) {
-            case SettingsManager.Download.OKHTTP:
+        switch (Settings.download.getDownloader()) {
+            case Settings.Download.OKHTTP:
                 OkHttpClient client = new OkHttpClient();
                 Request okRequest = new Request.Builder()
                         .url(url)
@@ -56,7 +56,7 @@ public class DownloadUtil {
                     }
                 }).start();
                 break;
-            case SettingsManager.Download.DOWNLOAD_MANAGER:
+            case Settings.Download.DOWNLOAD_MANAGER:
                 DownloadManager.Request dmRequest = new DownloadManager.Request(Uri.parse(url))
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                         .setTitle(context.getString(R.string.download))

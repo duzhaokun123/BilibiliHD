@@ -3,11 +3,11 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,57 +20,60 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.Util;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.DynamicAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
+import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 
-import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DynamicFragment extends Fragment {
+public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
-    private XRecyclerView mXrv;
-
-    private Handler handler;
     private List<DynamicPage.Data.Card> mCards;
 
     private int page = 0;
     private long offsetDynamicId = 0;
-    private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getInstance();
-        simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
+    protected int initConfig() {
+        return NEED_HANDLER;
+    }
+
+    @Override
+    protected int initLayout() {
+        return R.layout.layout_xrecyclerview_only;
+    }
+
+    @Override
+    protected void initView() {
         int spanCount = getResources().getInteger(R.integer.column_medium);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
-            spanCount = settingsManager.layout.getColumn();
-        } else if (settingsManager.layout.getColumnLand() != 0) {
-            spanCount = settingsManager.layout.getColumnLand();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
+            spanCount = Settings.layout.getColumn();
+        } else if (Settings.layout.getColumnLand() != 0) {
+            spanCount = Settings.layout.getColumnLand();
         }
-        mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        baseBind.xrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -78,7 +81,7 @@ public class DynamicFragment extends Fragment {
                 }
             });
         } else {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -86,7 +89,7 @@ public class DynamicFragment extends Fragment {
                 }
             });
         }
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -95,9 +98,11 @@ public class DynamicFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+                ((DynamicCardHolder) holder).mLl.removeAllViews();
+
                 GlideUtil.loadUrlInto(getContext(), mCards.get(position).getDesc().getUser_profile().getInfo().getFace(), ((DynamicCardHolder) holder).mCivFace, false);
                 ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
-                ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(new Date(mCards.get(position).getDesc().getTimestamp() * 1000)));
+                ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(mCards.get(position).getDesc().getTimestamp() * 1000));
 //                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
                 if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1) {//1: 不是 VIP, 2: 是 VIP
                     ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
@@ -117,6 +122,8 @@ public class DynamicFragment extends Fragment {
                     } else if (nestedCard.getItem().getDynamic() != null) {
                         ((DynamicCardHolder) holder).mTvContent.setText(nestedCard.getItem().getDynamic());
                     }
+                } else if (nestedCard.getDynamic() != null && !nestedCard.getDynamic().equals("")) {
+                    ((DynamicCardHolder) holder).mTvContent.setText(nestedCard.getDynamic());
                 }
                 handleNestedCard(nestedCard, ((DynamicCardHolder) holder).mLl);
 
@@ -132,6 +139,14 @@ public class DynamicFragment extends Fragment {
                     return mCards.size();
                 }
             }
+
+//            @Override
+//            public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+//                if (holder instanceof DynamicCardHolder) {
+//                    ((DynamicCardHolder) holder).mLl.removeAllViews();
+//                    ((DynamicCardHolder) holder).mTvContent.setText("");
+//                }
+//            }
 
             class DynamicCardHolder extends RecyclerView.ViewHolder {
 
@@ -165,10 +180,10 @@ public class DynamicFragment extends Fragment {
                 }
             }
         });
-        mXrv.setLoadingMoreEnabled(true);
-        mXrv.setPullRefreshEnabled(true);
-        mXrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
+        baseBind.xrv.setLoadingMoreEnabled(true);
+        baseBind.xrv.setPullRefreshEnabled(true);
+        baseBind.xrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+        baseBind.xrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 new Refresh().start();
@@ -179,8 +194,12 @@ public class DynamicFragment extends Fragment {
                 new LoadMore().start();
             }
         });
-        new Refresh().start();
-        return view;
+        baseBind.xrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+    }
+
+    @Override
+    protected void initData() {
+        baseBind.xrv.refresh();
     }
 
     @Override
@@ -188,18 +207,19 @@ public class DynamicFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    class Handler extends android.os.Handler {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case 0:
-                    mXrv.refreshComplete();
-                    XRecyclerViewUtil.notifyItemsChanged(mXrv, mCards.size() - 1);
-                    break;
-                case 1:
-                    mXrv.loadMoreComplete();
-                    break;
-            }
+    @Override
+    public void handlerCallback(@NonNull Message msg) {
+        switch (msg.what) {
+            case 0:
+                baseBind.xrv.refreshComplete();
+                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, mCards.size() - 1);
+                break;
+            case 1:
+                baseBind.xrv.loadMoreComplete();
+                break;
+            case 2:
+                baseBind.xrv.loadMoreComplete();
+                baseBind.xrv.refreshComplete();
         }
     }
 
@@ -207,10 +227,13 @@ public class DynamicFragment extends Fragment {
         @Override
         public void run() {
             page = 0;
-            DynamicAPI.getInstance().getDynamic(page, new MyBilibiliClient.ICallback<DynamicPage>() {
+            DynamicAPI.getInstance().getDynamicNew(new MyBilibiliClient.ICallback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(2);
+                    }
                     Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
                     Looper.loop();
@@ -224,7 +247,9 @@ public class DynamicFragment extends Fragment {
                     for (int i = 0; i <  2; i++) {
                         loadMore.run();
                     }
-                    handler.sendEmptyMessage(0);
+                    if (handler != null) {
+                        handler.sendEmptyMessage(0);
+                    }
                 }
             });
         }
@@ -234,10 +259,13 @@ public class DynamicFragment extends Fragment {
         @Override
         public void run() {
             page++;
-            DynamicAPI.getInstance().getDynamic(page, String.valueOf(offsetDynamicId), new MyBilibiliClient.ICallback<DynamicPage>() {
+            DynamicAPI.getInstance().getDynamicHistory(page, offsetDynamicId, new MyBilibiliClient.ICallback<DynamicPage>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(2);
+                    }
                     Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
                     Looper.loop();
@@ -246,8 +274,14 @@ public class DynamicFragment extends Fragment {
                 @Override
                 public void onSuccess(DynamicPage dynamicPage) {
                     mCards.addAll(dynamicPage.getData().getCards());
+                    Log.d("test", String.valueOf(dynamicPage.getData().getNext_offset()));
                     offsetDynamicId = dynamicPage.getData().getHistory_offset();
-                    handler.sendEmptyMessage(1);
+                    if (dynamicPage.getData().getNext_offset() != 0) {
+                        offsetDynamicId = dynamicPage.getData().getNext_offset();
+                    }
+                    if (handler != null) {
+                        handler.sendEmptyMessage(1);
+                    }
                 }
             });
         }
@@ -355,7 +389,7 @@ public class DynamicFragment extends Fragment {
             });
             relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
-//                private long aid = homePage.getData().getItems().get(position).getParam();
+                private long aid = Util.getAidFromBilibiliLink(nestedCard.getJump_url());
 
                 @Override
                 public boolean onLongClick(View v) {
@@ -383,7 +417,11 @@ public class DynamicFragment extends Fragment {
                     return true;
                 }
             });
-            // TODO: 20-3-5
+            relativeLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), PlayActivity.class);
+                intent.putExtra("aid", Util.getAidFromBilibiliLink(nestedCard.getJump_url()));
+                startActivity(intent);
+            });
         }
         if (nestedCard.getOrigin() != null) {
             NestedCard nestedNestedCard = DynamicAPI.getNestedCard(nestedCard.getOrigin());

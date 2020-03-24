@@ -11,50 +11,21 @@ import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.CharBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class OtherUtils {
-    public static void setLevelDrawable(ImageView imageView, int level) {
-        switch (level) {
-            case 0:
-                imageView.setImageResource(R.drawable.ic_user_level_0);
-                break;
-            case 1:
-                imageView.setImageResource(R.drawable.ic_user_level_1);
-                break;
-            case 2:
-                imageView.setImageResource(R.drawable.ic_user_level_2);
-                break;
-            case 3:
-                imageView.setImageResource(R.drawable.ic_user_level_3);
-                break;
-            case 4:
-                imageView.setImageResource(R.drawable.ic_user_level_4);
-                break;
-            case 5:
-                imageView.setImageResource(R.drawable.ic_user_level_5);
-                break;
-            case 6:
-                imageView.setImageResource(R.drawable.ic_user_level_6);
-                break;
-        }
-    }
-
-    public static void setSixDrawable(ImageView imageView, String sex) {
-        if (sex.equals("男")) {
-            imageView.setImageResource(R.drawable.ic_m);
-        } else if (sex.equals("女")) {
-            imageView.setImageResource(R.drawable.ic_f);
-        } else {
-            imageView.setImageDrawable(null);
-        }
-    }
 
     public static String MD5(String key) {
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -80,18 +51,18 @@ public class OtherUtils {
 
     public static LoginResponse readLoginResponseFromUri(Context context, Uri uri) {
         InputStream inputStream = null;
-        ObjectInputStream objectInputStream = null;
+        InputStreamReader inputStreamReader = null;
         LoginResponse loginResponse = null;
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
-            objectInputStream = new ObjectInputStream(inputStream);
-            loginResponse = (LoginResponse) objectInputStream.readObject();
+            inputStreamReader = new InputStreamReader(inputStream);
+            loginResponse = GsonUtil.getGsonInstance().fromJson(inputStreamReader, LoginResponse.class);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if (objectInputStream != null) {
-                    objectInputStream.close();
+                if (inputStreamReader != null) {
+                    inputStreamReader.close();
                 }
                 if (inputStream != null) {
                     inputStream.close();
@@ -106,18 +77,18 @@ public class OtherUtils {
     public static boolean writeLoginResponseToUri(Context context, LoginResponse loginResponse, Uri uri) {
         boolean re = false;
         OutputStream outputStream = null;
-        ObjectOutputStream objectOutputStream = null;
+        OutputStreamWriter outputStreamWriter = null;
         try {
-            outputStream = context.getContentResolver().openOutputStream(uri);
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(loginResponse);
-            re = true;
+          outputStream = context.getContentResolver().openOutputStream(uri);
+          outputStreamWriter = new OutputStreamWriter(outputStream);
+          outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse));
+          re = true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if (objectOutputStream != null) {
-                    objectOutputStream.close();
+                if (outputStreamWriter != null) {
+                    outputStreamWriter.close();
                 }
                 if (outputStream != null) {
                     outputStream.close();

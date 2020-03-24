@@ -12,18 +12,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Set;
 
-public class SettingsManager {
-    private SettingsManager() {
-        develop = new Develop();
-        layout = new Layout();
-        download = new Download();
-    }
-
-    private LoginUserInfoMap loginUserInfoMap;
-    private static SettingsManager settingsManager;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private boolean inited = false;
+public class Settings {
+    private static LoginUserInfoMap loginUserInfoMap;
+    private static Settings settingsManager;
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
+    private static boolean inited = false;
 
     private static final int INT = 0;
     private static final int FLOAT = 1;
@@ -33,42 +27,28 @@ public class SettingsManager {
 
     private static final String TAG = "SettingsManager";
 
-    public boolean isInited() {
+    public static boolean isInited() {
         return inited;
     }
 
 
     public static void init(Context context) {
-        settingsManager = new SettingsManager();
+        Settings.sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        Settings.editor = sharedPreferences.edit();
 
-        settingsManager.sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        settingsManager.editor = settingsManager.sharedPreferences.edit();
+        Settings.develop.test = sharedPreferences.getBoolean("test", true);
+        Settings.layout.column = sharedPreferences.getInt("column", 0);
+        Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
+        Settings.download.downloader = sharedPreferences.getInt("downloader", Download.OKHTTP);
 
-        settingsManager.develop.test = settingsManager.sharedPreferences.getBoolean("test", true);
-        settingsManager.layout.column = settingsManager.sharedPreferences.getInt("column", 0);
-        settingsManager.layout.columnLand = settingsManager.sharedPreferences.getInt("column_land", 0);
-        settingsManager.download.downloader = settingsManager.sharedPreferences.getInt("downloader", Download.OKHTTP);
-
-        settingsManager.inited = true;
+        Settings.inited = true;
     }
 
+    public static final Develop develop = new Develop();
+    public static final Layout layout = new Layout();
+    public static final Download download = new Download();
 
-    public static SettingsManager getInstance() {
-        if (settingsManager == null) {
-            settingsManager = new SettingsManager();
-            Log.w(TAG, "hadnot call SettingsManager.init()");
-        }
-        if (!settingsManager.inited) {
-            Log.w(TAG, "SettingsManager is uninitialized");
-        }
-        return settingsManager;
-    }
-
-    public final Develop develop;
-    public final Layout layout;
-    public final Download download;
-
-    public LoginUserInfoMap getLoginUserInfoMap(Context context) {
+    public static LoginUserInfoMap getLoginUserInfoMap(Context context) {
         if (loginUserInfoMap == null) {
             File file = new File(context.getFilesDir(), "LoginUserInfoMap");
             if (file.exists()) {
@@ -100,7 +80,7 @@ public class SettingsManager {
         return loginUserInfoMap;
     }
 
-    public void saveLoginUserInfoMap(Context context) {
+    public static void saveLoginUserInfoMap(Context context) {
         if (loginUserInfoMap != null) {
             File file = new File(context.getFilesDir(), "LoginUserInfoMap");
             FileOutputStream fileOutputStream = null;
@@ -126,7 +106,7 @@ public class SettingsManager {
         }
     }
 
-    private void save(String key, int type, Object value) {
+    private static void save(String key, int type, Object value) {
         if (editor == null) {
             Log.e(TAG, "editor is null, settings cannot be saved");
         } else {
@@ -154,7 +134,7 @@ public class SettingsManager {
         }
     }
 
-    public class Develop {
+    public static class Develop {
         private boolean test = true;
 
         public boolean isTest() {
@@ -167,7 +147,7 @@ public class SettingsManager {
         }
     }
 
-    public class Layout {
+    public static class Layout {
         public int getColumn() {
             return column;
         }
@@ -190,7 +170,7 @@ public class SettingsManager {
         private int columnLand = 0;
     }
 
-    public class Download {
+    public static class Download {
         public static final int OKHTTP = 0;
         public static final int DOWNLOAD_MANAGER = 1;
 

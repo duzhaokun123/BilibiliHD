@@ -24,7 +24,6 @@ public class SpaceAPI {
 
 
     private PBilibiliClient pBilibiliClient;
-    private Gson gson;
 
     public void getSpace(long uid, MyBilibiliClient.ICallback<Space> callback) {
 
@@ -46,10 +45,7 @@ public class SpaceAPI {
                     paramsMap.put("vmid", String.valueOf(uid));
                 }
             });
-            if (gson == null) {
-                gson = GsonUtil.getGsonInstance();
-            }
-            Space space = gson.fromJson(response, Space.class);
+            Space space = GsonUtil.getGsonInstance().fromJson(response, Space.class);
             if (space.getCode() == 0) {
                 callback.onSuccess(space);
             } else {

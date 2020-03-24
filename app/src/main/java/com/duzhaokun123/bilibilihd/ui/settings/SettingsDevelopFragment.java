@@ -12,12 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 
 public class SettingsDevelopFragment extends Fragment {
 
     private CheckBox mCbTest;
-    private SettingsManager settingsManager;
 
     @Nullable
     @Override
@@ -30,12 +29,11 @@ public class SettingsDevelopFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCbTest = view.findViewById(R.id.cb_test);
-        settingsManager = SettingsManager.getInstance();
-        mCbTest.setChecked(settingsManager.develop.isTest());
+        mCbTest.setChecked(Settings.develop.isTest());
         mCbTest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settingsManager.develop.setTest(isChecked);
+                Settings.develop.setTest(isChecked);
             }
         });
     }

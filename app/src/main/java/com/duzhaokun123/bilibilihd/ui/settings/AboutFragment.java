@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.BuildConfig;
@@ -30,19 +31,17 @@ public class AboutFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TextView mTvVersion = view.findViewById(R.id.version);
         TextView mTvBuildType = view.findViewById(R.id.build_type);
-        Button mBtnLicense = view.findViewById(R.id.btn_license);
-        Button mBtnProjectHome = view.findViewById(R.id.btn_projectHome);
+        RelativeLayout mRlLicense = view.findViewById(R.id.rl_license);
+        RelativeLayout mRlProjectHome = view.findViewById(R.id.rl_projectHome);
 
         mTvVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
         mTvBuildType.setText(getString(R.string.build_type) + " " + BuildConfig.BUILD_TYPE);
-        mBtnLicense.setOnClickListener(v -> {
+        mRlLicense.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LicenseActivity.class);
             startActivity(intent);
         });
-        mBtnProjectHome.setOnClickListener(v -> {
-                Uri uri = Uri.parse(BuildConfig.PROJECT_HOME_URL);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+        mRlProjectHome.setOnClickListener(v -> {
+            new CustomTabsIntent.Builder().setToolbarColor(getContext().getColor(R.color.colorPrimary)).build().launchUrl(getContext(), Uri.parse(getString(R.string.project_home_url)));
         });
     }
 }

@@ -1,56 +1,46 @@
 package com.duzhaokun123.bilibilihd.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.PictureInPictureParams;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.Log;
 import android.util.Rational;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.ActivityPhotoViewBinding;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.github.chrisbanes.photoview.PhotoView;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
-
-public class PhotoViewActivity extends AppCompatActivity {
-
-    private PhotoView mPv;
-    private ImageButton mIbPip, mIbDl;
-    private RelativeLayout mRl;
-
-    private Intent intent;
+public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_view);
-        mPv = findViewById(R.id.pv);
-        mIbPip = findViewById(R.id.ib_pip);
-        mIbDl = findViewById(R.id.ib_dl);
-        mRl = findViewById(R.id.rl);
+    protected int initConfig() {
+        return FULLSCREEN;
+    }
 
-        intent = getIntent();
-        String url;
-        if ((url = intent.getExtras().getString("url", null)) != null) {
-            Glide.with(mPv).load(url).into(mPv);
-        }
+    @Override
+    protected int initLayout() {
+        return R.layout.activity_photo_view;
+    }
 
-        mIbPip.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void initView() {
+        baseBind.ibPip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Rational rational = new Rational(mPv.getDrawable().getIntrinsicWidth(), mPv.getDrawable().getIntrinsicHeight());
+                Rational rational = new Rational(baseBind.pv.getDrawable().getIntrinsicWidth(), baseBind.pv.getDrawable().getIntrinsicHeight());
                 if (rational.doubleValue() > 0.418410 && rational.doubleValue() < 2.390000) {
                     PictureInPictureParams pictureInPictureParams = new PictureInPictureParams.Builder()
                             .setAspectRatio(rational)
@@ -62,21 +52,19 @@ public class PhotoViewActivity extends AppCompatActivity {
             }
         });
 
-        mIbDl.setOnClickListener(new View.OnClickListener() {
+        baseBind.ibDl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((intent.getExtras().getString("url", null)) != null) {
-                    DownloadUtil.picturesDownload(PhotoViewActivity.this, intent.getExtras().getString("url"));
-                }
+                    DownloadUtil.picturesDownload(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
             }
         });
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-        mRl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            baseBind.rl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
-            private boolean changed;
+                private boolean changed;
 
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     DisplayCutout displayCutout = v.getRootWindowInsets().getDisplayCutout();
                     if (displayCutout != null && !changed) {
                         changed = true;
@@ -91,15 +79,10 @@ public class PhotoViewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
+    protected void initData() {
+        String url;
+        if ((url = teleportIntent.getExtras().getString("url", null)) != null) {
+            Glide.with(this).load(url).into(baseBind.pv);
         }
     }
 
@@ -107,11 +90,11 @@ public class PhotoViewActivity extends AppCompatActivity {
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         if (isInPictureInPictureMode) {
-            mIbDl.setImageResource(android.R.color.transparent);
-            mIbPip.setImageResource(android.R.color.transparent);
+            baseBind.ibDl.setImageResource(android.R.color.transparent);
+            baseBind.ibPip.setImageResource(android.R.color.transparent);
         } else {
-            mIbDl.setImageResource(R.drawable.ic_dl);
-            mIbPip.setImageResource(R.drawable.ic_pip);
+            baseBind.ibDl.setImageResource(R.drawable.ic_dl);
+            baseBind.ibPip.setImageResource(R.drawable.ic_pip);
         }
     }
 }

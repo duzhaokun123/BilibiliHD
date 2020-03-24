@@ -16,11 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.settings.LicenseActivity"
+        <activity
+            android:name=".ui.settings.LicenseActivity"
             android:label="@string/license"></activity>
         <activity android:name=".ui.userspace.FavoriteActivity" />
-        <activity android:name=".ui.play.PlayActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.play.PlayActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme.NoActionBar.TransparencyStatus" />
         <activity
             android:name=".ui.PhotoViewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

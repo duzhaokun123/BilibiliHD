@@ -1,44 +1,43 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
+import com.duzhaokun123.bilibilihd.databinding.ActivitySettingsBinding;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 
-/**
- * FIXME:写的太恶心了，想办法重写
- */
-public class SettingsActivity extends MyBaseActivity {
-
-    private Fragment mFragmentSettingFirst;
-
-    private FragmentManager fragmentManager;
-
-    private FrameLayout mFlSettingSecond;
+public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        try {
-            mFlSettingSecond = findViewById(R.id.fl_settings_second);
-        } catch (IllegalArgumentException e) {
+    protected int initConfig() {
+        return 0;
+    }
 
-        }
+    @Override
+    public int initLayout() {
+        return R.layout.activity_settings;
+    }
 
-        mFragmentSettingFirst = new SettingsMainFragment();
+    @Override
+    public void initView() {
+        Fragment mFragmentSettingFirst = new SettingsMainFragment();
 
-        fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.fl_settings_first, mFragmentSettingFirst, "main").commitAllowingStateLoss();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.fl_settings_first, mFragmentSettingFirst, "main")
+                .commitAllowingStateLoss();
+    }
+
+    @Override
+    public void initData() {
 
     }
 
-    public FrameLayout getmFlSettingSecond() {
-        return mFlSettingSecond;
+    public FrameLayout getFlSettingSecond() {
+        return baseBind.flSettingsSecond;
     }
 
     @Override

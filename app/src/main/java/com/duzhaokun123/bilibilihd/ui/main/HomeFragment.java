@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -30,45 +28,53 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 // FIXME: 20-2-24 这么搞线程不安全啊
-public class HomeFragment extends Fragment {
-
-    private XRecyclerView mXrv;
-
-    private PBilibiliClient pBilibiliClient;
+public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
+    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
     private HomePage homePage;
-    private Handler handler;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getInstance();
-        if (!settingsManager.isInited()) {
+    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+        homePage = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("homePage"), HomePage.class);
+    }
+
+    @Override
+    protected int initConfig() {
+        return NEED_HANDLER;
+    }
+
+    @Override
+    protected int initLayout() {
+        return R.layout.layout_xrecyclerview_only;
+    }
+
+    @Override
+    protected void initView() {
+        if (!Settings.isInited()) {
             ToastUtil.sendMsg(getContext(), R.string.exception_warning);
         }
-        pBilibiliClient = PBilibiliClient.Companion.getInstance();
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
         int spanCount = getResources().getInteger(R.integer.column_medium);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
-            spanCount = settingsManager.layout.getColumn();
-        } else if (settingsManager.layout.getColumnLand() != 0) {
-            spanCount = settingsManager.layout.getColumnLand();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
+            spanCount = Settings.layout.getColumn();
+        } else if (Settings.layout.getColumnLand() != 0) {
+            spanCount = Settings.layout.getColumnLand();
         }
-        mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        baseBind.xrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -76,7 +82,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         } else {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -84,7 +90,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -127,7 +133,7 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = null;
+                        Intent intent;
                         if (badge == null) {
                             intent = new Intent(getContext(), PlayActivity.class);
                             intent.putExtra("aid", aid);
@@ -166,7 +172,7 @@ public class HomeFragment extends Fragment {
                                         startActivity(intent);
                                         break;
                                     case R.id.add_to_watch_later:
-                                        // TODO: 20-2-27  
+                                        // TODO: 20-2-27
                                         ToastUtil.sendMsg(getContext(), "还没有做");
                                         break;
                                 }
@@ -195,7 +201,7 @@ public class HomeFragment extends Fragment {
                 private TextView mTvTitle, mTvCount, mTvDuration, mTvBadge;
                 private CardView mCv;
 
-                public VideoCardHolder(@NonNull View itemView) {
+                VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
@@ -206,8 +212,8 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mXrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
+        baseBind.xrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+        baseBind.xrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 new Refresh().start();
@@ -218,35 +224,37 @@ public class HomeFragment extends Fragment {
                 new LoadMore().start();
             }
         });
-        mXrv.setBackgroundResource(android.R.color.white);
-        new Refresh().start();
-        return view;
     }
 
-    class Handler extends android.os.Handler {
-        /**
-         * msg.what 0: 下拉刷新 1: 加载更多
-         *
-         * @param msg
-         */
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case 0:
-                    mXrv.refreshComplete();
-                    XRecyclerViewUtil.notifyItemsChanged(mXrv, homePage.getData().getItems().size() - 1);
-                    break;
-                case 1:
-                    mXrv.loadMoreComplete();
-                    break;
-            }
+    @Override
+    protected void initData() {
+        if (homePage == null) {
+            baseBind.xrv.refresh();
         }
+    }
+
+    @Override
+    public void handlerCallback(@NonNull Message msg) {
+        switch (msg.what) {
+            case 0:
+                baseBind.xrv.refreshComplete();
+                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, homePage.getData().getItems().size() - 1);
+                break;
+            case 1:
+                baseBind.xrv.loadMoreComplete();
+                break;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("homePage", GsonUtil.getGsonInstance().toJson(homePage));
     }
 
     class Refresh extends Thread {
         @Override
         public void run() {
-            Log.d("HomePage", "Refresh");
             try {
                 homePage = pBilibiliClient.getPAppAPI().homePage(true);
                 for (int i = 0; i < 2; i++) {
@@ -260,23 +268,28 @@ public class HomeFragment extends Fragment {
                 }
                 Looper.loop();
             }
-            handler.sendEmptyMessage(0);
+            if (handler != null) {
+                handler.sendEmptyMessage(0);
+            }
         }
     }
 
     class LoadMore extends Thread {
         @Override
         public void run() {
-            Log.d("HomePage", "LoadMore");
             try {
                 homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
             } catch (Exception e) {
                 e.printStackTrace();
                 Looper.prepare();
-                ToastUtil.sendMsg(getContext(), e.getMessage());
+                if (getContext() != null) {
+                    ToastUtil.sendMsg(getContext(), e.getMessage());
+                }
                 Looper.loop();
             }
-            handler.sendEmptyMessage(1);
+            if (handler != null) {
+                handler.sendEmptyMessage(1);
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -17,55 +16,56 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.Util;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
-import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
-    private XRecyclerView mXrv;
-
-    private Handler handler;
     private History mHistory;
-    private int page;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        handler = new Handler();
-        SettingsManager settingsManager = SettingsManager.getInstance();
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
+    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+        mHistory = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("mHistory"), History.class);
+    }
+
+    @Override
+    protected int initConfig() {
+        return NEED_HANDLER;
+    }
+
+    @Override
+    protected int initLayout() {
+        return R.layout.layout_xrecyclerview_only;
+    }
+
+    @Override
+    protected void initView() {
         int spanCount = getResources().getInteger(R.integer.column_medium);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
-            spanCount = settingsManager.layout.getColumn();
-        } else if (settingsManager.layout.getColumnLand() != 0) {
-            spanCount = settingsManager.layout.getColumnLand();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
+            spanCount = Settings.layout.getColumn();
+        } else if (Settings.layout.getColumnLand() != 0) {
+            spanCount = Settings.layout.getColumnLand();
         }
-        mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        baseBind.xrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -73,7 +73,7 @@ public class HistoryFragment extends Fragment {
                 }
             });
         } else {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -81,7 +81,7 @@ public class HistoryFragment extends Fragment {
                 }
             });
         }
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -152,7 +152,7 @@ public class HistoryFragment extends Fragment {
                 private TextView mTvTitle, mTvCount, mTvDuration, mTvBadge;
                 private CardView mCv;
 
-                public VideoCardHolder(@NonNull View itemView) {
+                VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
@@ -163,7 +163,7 @@ public class HistoryFragment extends Fragment {
                 }
             }
         });
-        mXrv.setLoadingListener(new XRecyclerView.LoadingListener() {
+        baseBind.xrv.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 new Refresh().start();
@@ -174,40 +174,51 @@ public class HistoryFragment extends Fragment {
                 new LoadMore().start();
             }
         });
-        mXrv.setPullRefreshEnabled(true);
-        mXrv.setLoadingMoreEnabled(true);
-        return view;
+        baseBind.xrv.setPullRefreshEnabled(true);
+        baseBind.xrv.setLoadingMoreEnabled(true);
+        baseBind.xrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        new Refresh().start();
+    protected void initData() {
+        if (mHistory == null) {
+            baseBind.xrv.refresh();
+        }
     }
 
-    class Handler extends android.os.Handler {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case 0:
-                    mXrv.refreshComplete();
-                    XRecyclerViewUtil.notifyItemsChanged(mXrv, mHistory.getData().getList().size() - 1);
-                    break;
-                case 1:
-                    mXrv.loadMoreComplete();
-                    break;
-            }
+    @Override
+    public void handlerCallback(@NonNull Message msg) {
+        switch (msg.what) {
+            case 0:
+                baseBind.xrv.refreshComplete();
+                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, mHistory.getData().getList().size() - 1);
+                break;
+            case 1:
+                baseBind.xrv.loadMoreComplete();
+                break;
+            case 2:
+                baseBind.xrv.refreshComplete();
+                baseBind.xrv.loadMoreComplete();
+                break;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("mHistory", GsonUtil.getGsonInstance().toJson(mHistory));
     }
 
     class Refresh extends Thread {
         @Override
         public void run() {
-            page = 1;
             HistoryApi.getInstance().getHistory("all", new MyBilibiliClient.ICallback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(2);
+                    }
                     Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
                     Looper.loop();
@@ -220,7 +231,9 @@ public class HistoryFragment extends Fragment {
                     for (int i = 0; i < 2; i++) {
                         loadMore.run();
                     }
-                    handler.sendEmptyMessage(0);
+                    if (handler != null) {
+                        handler.sendEmptyMessage(0);
+                    }
                 }
             });
         }
@@ -229,12 +242,14 @@ public class HistoryFragment extends Fragment {
     class LoadMore extends Thread {
         @Override
         public void run() {
-            page ++;
             HistoryApi.getInstance().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
                     "all", new MyBilibiliClient.ICallback<History>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(2);
+                    }
                     Looper.prepare();
                     ToastUtil.sendMsg(getContext(), e.getMessage());
                     Looper.loop();
@@ -245,7 +260,9 @@ public class HistoryFragment extends Fragment {
                     mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
                     mHistory.getData().getCursor().setMax_tp(history.getData().getCursor().getMax_tp());
                     mHistory.getData().getList().addAll(history.getData().getList());
-                    handler.sendEmptyMessage(1);
+                    if (handler != null) {
+                        handler.sendEmptyMessage(1);
+                    }
                 }
             });
         }

@@ -5,7 +5,7 @@ public class Util {
         int qm;
         try {
             if ((qm = link.indexOf('?')) != -1) {
-                return Long.parseLong(link.substring(17, qm));
+                return Long.parseLong(link.substring(17, qm - 1));
             } else {
                 return Long.parseLong(link.substring(17));
             }

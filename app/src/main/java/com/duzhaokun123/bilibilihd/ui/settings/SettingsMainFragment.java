@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.google.android.material.navigation.NavigationView;
 
 public class SettingsMainFragment extends Fragment {
@@ -69,7 +69,7 @@ public class SettingsMainFragment extends Fragment {
                 return false;
             }
         });
-        if (!SettingsManager.getInstance().isInited()) {
+        if (!Settings.isInited()) {
             mNavSettingsMain.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.layout_settings_manager_uninited_warning, null, false));
         }
     }
@@ -77,10 +77,10 @@ public class SettingsMainFragment extends Fragment {
     private void setSecondFrameLayout(Fragment fragment, String name) {
         if (getActivity() != null) {
             getActivity().setTitle(name);
-            if (((SettingsActivity) getActivity()).getmFlSettingSecond() == null) {
-                getActivity().getSupportFragmentManager().beginTransaction().hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
+            if (((SettingsActivity) getActivity()).getFlSettingSecond() == null) {
+                getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).hide(getActivity().getSupportFragmentManager().findFragmentByTag("main")).replace(R.id.fl_settings_first, fragment).addToBackStack(name).commitAllowingStateLoss();
             } else {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();
+                getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.fl_settings_second, fragment).commitAllowingStateLoss();
             }
         }
     }

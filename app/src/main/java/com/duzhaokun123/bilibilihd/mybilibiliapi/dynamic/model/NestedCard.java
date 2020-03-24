@@ -8,6 +8,10 @@ public class NestedCard {
     private String title;
     private String pic;
     private String origin;
+    private String desc;
+    private Dimension dimension;
+    private String dynamic;
+    private String jump_url;
 
     public Item getItem() {
         return item;
@@ -57,6 +61,38 @@ public class NestedCard {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public Dimension getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension = dimension;
+    }
+
+    public String getDynamic() {
+        return dynamic;
+    }
+
+    public void setDynamic(String dynamic) {
+        this.dynamic = dynamic;
+    }
+
+    public String getJump_url() {
+        return jump_url;
+    }
+
+    public void setJump_url(String jump_url) {
+        this.jump_url = jump_url;
     }
 
     public class Item {
@@ -434,5 +470,35 @@ public class NestedCard {
                 }
             }
         }
+    }
+
+    public class Dimension {
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public int getRotate() {
+            return rotate;
+        }
+
+        public void setRotate(int rotate) {
+            this.rotate = rotate;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        private int height;
+        private int rotate;
+        private int width;
     }
 }

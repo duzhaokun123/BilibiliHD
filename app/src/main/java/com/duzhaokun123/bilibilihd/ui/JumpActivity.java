@@ -2,68 +2,70 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioGroup;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.ActivityJumpBinding;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 
-public class JumpActivity extends MyBaseActivity {
-
-    private EditText mEtComponent, mEtKey, mEtValue;
-    private Button mBtnAdd, mBtnStart;
-    private RadioGroup mRgChoose;
+public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
 
     private Intent intent;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jump);
+    protected int initConfig() {
+        return 0;
+    }
 
-        mEtComponent = findViewById(R.id.et_component);
-        mEtKey = findViewById(R.id.et_key);
-        mEtValue = findViewById(R.id.et_value);
-        mBtnAdd = findViewById(R.id.btn_add);
-        mBtnStart = findViewById(R.id.btn_start);
-        mRgChoose = findViewById(R.id.rg_choose);
+    @Override
+    public int initLayout() {
+        return R.layout.activity_jump;
+    }
 
+    @Override
+    public void initView() {
         intent = new Intent();
 
-        mBtnAdd.setOnClickListener(new View.OnClickListener() {
+        baseBind.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("JumpActivity", mEtKey.getText().toString() + ": " + mEtValue.getText().toString());
-                switch (mRgChoose.getCheckedRadioButtonId()) {
+                Log.d("JumpActivity", baseBind.etKey.getText().toString() + ": " + baseBind.etValue.getText().toString());
+                switch (baseBind.rgChoose.getCheckedRadioButtonId()) {
                     case R.id.rb_int:
-                        intent.putExtra(mEtKey.getText().toString(), Integer.parseInt(mEtValue.getText().toString()));
+                        intent.putExtra(baseBind.etKey.getText().toString(), Integer.parseInt(baseBind.etValue.getText().toString()));
                         break;
                     case R.id.rb_long:
-                        intent.putExtra(mEtKey.getText().toString(), Long.parseLong(mEtValue.getText().toString()));
+                        intent.putExtra(baseBind.etKey.getText().toString(), Long.parseLong(baseBind.etValue.getText().toString()));
                         break;
                     case R.id.rb_double:
-                        intent.putExtra(mEtKey.getText().toString(), Double.parseDouble(mEtValue.getText().toString()));
+                        intent.putExtra(baseBind.etKey.getText().toString(), Double.parseDouble(baseBind.etValue.getText().toString()));
+                        break;
+                    case R.id.rb_float:
+                        intent.putExtra(baseBind.etKey.getText().toString(), Float.parseFloat(baseBind.etValue.getText().toString()));
                         break;
                     case R.id.rb_boolean:
-                        intent.putExtra(mEtKey.getText().toString(), Boolean.parseBoolean(mEtValue.getText().toString()));
+                        intent.putExtra(baseBind.etKey.getText().toString(), Boolean.parseBoolean(baseBind.etValue.getText().toString()));
                         break;
                     case R.id.rb_string:
-                        intent.putExtra(mEtKey.getText().toString(), mEtValue.getText().toString());
+                        intent.putExtra(baseBind.etKey.getText().toString(), baseBind.etValue.getText().toString());
                         break;
                 }
             }
         });
 
-        mBtnStart.setOnClickListener(new View.OnClickListener() {
+        baseBind.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("JumpActivity", "start" + ": " + mEtComponent.getText().toString());
-                intent.setComponent(new ComponentName(JumpActivity.this, mEtComponent.getText().toString()));
+                Log.d("JumpActivity", "start" + ": " + baseBind.etComponent.getText().toString());
+                intent.setComponent(new ComponentName(JumpActivity.this, baseBind.etComponent.getText().toString()));
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

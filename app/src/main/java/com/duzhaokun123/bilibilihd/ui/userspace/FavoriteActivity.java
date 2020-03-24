@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,24 +17,18 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
-import com.duzhaokun123.bilibilihd.ui.MyBaseActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-public class FavoriteActivity extends MyBaseActivity {
+public class FavoriteActivity extends BaseActivity {
 
     private XRecyclerView mXrv;
 
@@ -45,18 +37,16 @@ public class FavoriteActivity extends MyBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_xrecyclerview_only);
         mXrv = findViewById(R.id.xrv);
-        SettingsManager settingsManager = SettingsManager.getInstance();
         item = GsonUtil.getGsonInstance().fromJson(getIntent().getStringExtra("item"), Space.Data.Favourite.Item.class);
 
         setTitle(item.getName());
 
         int spanCount = getResources().getInteger(R.integer.column_medium);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && settingsManager.layout.getColumn() != 0) {
-            spanCount = settingsManager.layout.getColumn();
-        } else if (settingsManager.layout.getColumnLand() != 0) {
-            spanCount = settingsManager.layout.getColumnLand();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
+            spanCount = Settings.layout.getColumn();
+        } else if (Settings.layout.getColumnLand() != 0) {
+            spanCount = Settings.layout.getColumnLand();
         }
         mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
@@ -152,5 +142,25 @@ public class FavoriteActivity extends MyBaseActivity {
         });
         mXrv.setLoadingMoreEnabled(false);
         mXrv.setPullRefreshEnabled(false);
+    }
+
+    @Override
+    protected int initConfig() {
+        return 0;
+    }
+
+    @Override
+    public int initLayout() {
+        return R.layout.layout_xrecyclerview_only;
+    }
+
+    @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

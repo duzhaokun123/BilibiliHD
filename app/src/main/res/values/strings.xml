@@ -52,4 +52,5 @@
     <string name="settings_manager_uninited_warning">TODO</string>
     <string name="version">version</string>
     <string name="using_gpl_3.0">using GPL-3.0</string>
+    <string name="project_home_url">https://github.com/duzhaokun123/BilibiliHD</string>
 </resources>

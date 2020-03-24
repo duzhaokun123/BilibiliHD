@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/column" />
+    </data>
 
-    <EditText
-        android:id="@+id/et_column"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/column"
-        android:inputType="number"
-        android:maxLines="1" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/column_land" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/column" />
 
-    <EditText
-        android:id="@+id/et_columnLand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/column_land"
-        android:inputType="number"
-        android:maxLines="1" />
-</LinearLayout>
+        <EditText
+            android:id="@+id/et_column"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/column"
+            android:inputType="number"
+            android:maxLines="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/column_land" />
+
+        <EditText
+            android:id="@+id/et_columnLand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/column_land"
+            android:inputType="number"
+            android:maxLines="1" />
+    </LinearLayout>
+</layout>

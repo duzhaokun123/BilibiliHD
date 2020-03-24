@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
@@ -7,8 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">#FFFFFF</item>
-        <item name="android:navigationBarDividerColor">#DCDCDC</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">#DCDCDC</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
@@ -46,7 +46,7 @@
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoActionBar.TransparencyStatus" parent="AppTheme.NoActionBar">

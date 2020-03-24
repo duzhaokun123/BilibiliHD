@@ -47,6 +47,7 @@ public class DynamicPage {
         private long history_offset;
         private long max_dynamic_id;
         private int _gt_;
+        private long next_offset;
 
         public List<Card> getCards() {
             return cards;
@@ -62,6 +63,14 @@ public class DynamicPage {
 
         public void setAttentions(Attentions attentions) {
             this.attentions = attentions;
+        }
+
+        public long getNext_offset() {
+            return next_offset;
+        }
+
+        public void setNext_offset(long next_offset) {
+            this.next_offset = next_offset;
         }
 
 

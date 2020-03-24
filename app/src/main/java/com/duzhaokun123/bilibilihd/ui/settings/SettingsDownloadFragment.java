@@ -12,14 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 
 public class SettingsDownloadFragment extends Fragment {
 
     private RadioGroup mRgDownloader;
     private RadioButton mRbOkhttp, mRbDownloadManager;
-
-    private SettingsManager settingsManager;
 
     @Nullable
     @Override
@@ -34,12 +32,11 @@ public class SettingsDownloadFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        settingsManager = SettingsManager.getInstance();
-        switch (settingsManager.download.getDownloader()) {
-            case SettingsManager.Download.OKHTTP:
+        switch (Settings.download.getDownloader()) {
+            case Settings.Download.OKHTTP:
                 mRbOkhttp.setChecked(true);
                 break;
-            case SettingsManager.Download.DOWNLOAD_MANAGER:
+            case Settings.Download.DOWNLOAD_MANAGER:
                 mRbDownloadManager.setChecked(true);
                 break;
         }
@@ -48,10 +45,10 @@ public class SettingsDownloadFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_okhttp:
-                        settingsManager.download.setDownloader(SettingsManager.Download.OKHTTP);
+                        Settings.download.setDownloader(Settings.Download.OKHTTP);
                         break;
                     case R.id.rb_downloadManager:
-                        settingsManager.download.setDownloader(SettingsManager.Download.DOWNLOAD_MANAGER);
+                        Settings.download.setDownloader(Settings.Download.DOWNLOAD_MANAGER);
                         break;
                 }
             }

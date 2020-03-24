@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rl_myInfo"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/browser_actions_context_menu_min_padding">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civ_face"
-        android:layout_width="@dimen/face_size"
-        android:layout_height="@dimen/face_size"
-        app:civ_border_color="@color/colorPrimaryDark"
-        app:civ_border_width="2dp" />
+    </data>
+    <RelativeLayout
+        android:id="@+id/rl_myInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/browser_actions_context_menu_min_padding">
 
-    <TextView
-        android:id="@+id/tv_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/civ_face"
-        android:layout_marginTop="5dp"
-        android:text="@string/not_logged_in"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_face"
+            android:layout_width="@dimen/face_size"
+            android:layout_height="@dimen/face_size"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="2dp" />
 
-    <ImageView
-        android:id="@+id/iv_level"
-        android:layout_width="@dimen/level_size"
-        android:layout_height="@dimen/level_size"
-        android:layout_below="@id/civ_face"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/tv_username"
-        android:src="@drawable/ic_user_level_0" />
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/civ_face"
+            android:layout_marginTop="5dp"
+            android:text="@string/not_logged_in"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/tv_bBi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_username"
-        android:layout_alignStart="@id/tv_username"
-        android:layout_marginTop="5dp" />
+        <ImageView
+            android:id="@+id/iv_level"
+            android:layout_width="@dimen/level_size"
+            android:layout_height="@dimen/level_size"
+            android:layout_below="@id/civ_face"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/tv_username"
+            android:src="@drawable/ic_user_level_0" />
 
-    <TextView
-        android:id="@+id/tv_coins"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_username"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/tv_bBi" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_bBi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_username"
+            android:layout_alignStart="@id/tv_username"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/tv_coins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_username"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/tv_bBi" />
+    </RelativeLayout>
+</layout>

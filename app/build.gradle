@@ -38,12 +38,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-            buildConfigField("String", "PROJECT_HOME_URL", "\"https://github.com/duzhaokun123/BilibiliHD\"")
+            buildConfigField("boolean", "GIT_VERSION", "true")
         }
 
         debug {
             zipAlignEnabled false
-            buildConfigField("String", "PROJECT_HOME_URL", "\"https://github.com/duzhaokun123/BilibiliHD\"")
+            buildConfigField("boolean", "GIT_VERSION", "true")
         }
 
     }
@@ -55,6 +55,10 @@ android {
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+    }
+    dataBinding {
+        //noinspection DataBindingWithoutKapt
+        enabled = true
     }
 }
 

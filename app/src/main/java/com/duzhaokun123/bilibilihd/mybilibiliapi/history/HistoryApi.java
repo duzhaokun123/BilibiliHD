@@ -24,8 +24,6 @@ public class HistoryApi {
 
     private HistoryApi() {}
 
-    private Gson gson;
-
     public void getHistory(String business, MyBilibiliClient.ICallback<History> callback) {
         getHistory(0, 0, business, callback);
     }
@@ -51,10 +49,7 @@ public class HistoryApi {
                 }
 
             });
-            if (gson == null) {
-                gson = GsonUtil.getGsonInstance();
-            }
-            History history = gson.fromJson(response, History.class);
+            History history = GsonUtil.getGsonInstance().fromJson(response, History.class);
             if (history.getCode() == 0) {
                 callback.onSuccess(history);
             } else {

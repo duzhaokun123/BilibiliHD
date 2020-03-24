@@ -13,13 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.utils.SettingsManager;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 
 public class SettingLayoutFragment extends Fragment {
 
     private EditText mEtColumn, mEtColumnLand;
-
-    private SettingsManager settingsManager;
 
     @Nullable
     @Override
@@ -33,9 +31,8 @@ public class SettingLayoutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        settingsManager = SettingsManager.getInstance();
-        mEtColumn.setText(String.valueOf(settingsManager.layout.getColumn()));
-        mEtColumnLand.setText(String.valueOf(settingsManager.layout.getColumnLand()));
+        mEtColumn.setText(String.valueOf(Settings.layout.getColumn()));
+        mEtColumnLand.setText(String.valueOf(Settings.layout.getColumnLand()));
 
         mEtColumn.addTextChangedListener(new TextWatcher() {
             @Override
@@ -51,7 +48,7 @@ public class SettingLayoutFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 try{
-                    settingsManager.layout.setColumn(Integer.parseInt(s.toString()));
+                    Settings.layout.setColumn(Integer.parseInt(s.toString()));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -72,7 +69,7 @@ public class SettingLayoutFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 try{
-                    settingsManager.layout.setColumnLand(Integer.parseInt(s.toString()));
+                    Settings.layout.setColumnLand(Integer.parseInt(s.toString()));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
