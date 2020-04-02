@@ -30,7 +30,7 @@
 - 修改用户信息
 - 游戏相关
 - 互动视频
-- 不要这玩意兼容电视和 Wear OS
+- 不要想这玩意兼容电视和 Wear OS
 
 明显还有为提及的，未提及的基本不会支持
 
@@ -61,7 +61,7 @@
 
 [GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)
 
-[Material](material.io)
+[Material](https://material.io)
 
 [PhotoView](https://github.com/chrisbanes/PhotoView)
 
