@@ -105,4 +105,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     //GSYVideoPlayer
     implementation 'com.shuyu:GSYVideoPlayer:7.1.2'
+    //FFmpeg Android
+    implementation 'nl.bravobit:android-ffmpeg:1.1.7'
+    //okdownload
+    // core
+    implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
+    // provide sqlite to store breakpoints
+    implementation 'com.liulishuo.okdownload:sqlite:1.0.7'
+    // provide okhttp to connect to backend
+    implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
 }

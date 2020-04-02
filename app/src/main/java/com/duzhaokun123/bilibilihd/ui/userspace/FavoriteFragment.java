@@ -78,7 +78,9 @@ public class FavoriteFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), FavoriteActivity.class);
-                        intent.putExtra("item", GsonUtil.getGsonInstance().toJson(item, Space.Data.Favourite.Item.class));
+                        intent.putExtra("mid", space.getData().getFavourite().getItem().get(position).getMid());
+                        intent.putExtra("media_id", space.getData().getFavourite().getItem().get(position).getMediaId());
+                        intent.putExtra("name", space.getData().getFavourite().getItem().get(position).getName());
                         startActivity(intent);
                     }
                 });

@@ -28,6 +28,7 @@
             android:layout_marginTop="5dp"
             android:text="@string/app_name"
             android:textColor="@android:color/black"
+            android:textIsSelectable="true"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/version"
+            android:textIsSelectable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -49,9 +51,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/build_type"
+            android:textIsSelectable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/version" />
+
+        <TextView
+            android:id="@+id/bilibiliApiClientVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/bilibili_api_client_version"
+            android:textIsSelectable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/build_type" />
 
         <TextView
             android:id="@+id/textView3"
@@ -59,11 +73,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/using_gpl_3.0"
+            android:textIsSelectable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/build_type" />
+            app:layout_constraintTop_toBottomOf="@+id/bilibiliApiClientVersion" />
+
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -97,21 +114,12 @@
                 android:layout_height="1dp"
                 android:background="@color/lightGray" />
 
-            <!--        <Button-->
-            <!--            android:id="@+id/btn_projectHome"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginTop="5dp"-->
-            <!--            android:background="@null"-->
-            <!--            android:text="@string/project_home"-->
-            <!--            android:textColor="@android:color/black"-->
-            <!--            android:textSize="18sp" />-->
             <RelativeLayout
                 android:id="@+id/rl_projectHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?selectableItemBackground"
-                android:padding="5dp">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/tv1"

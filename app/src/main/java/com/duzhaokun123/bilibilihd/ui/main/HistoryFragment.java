@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.Util;
+import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
@@ -94,7 +93,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
-                    private long aid = Util.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
+                    private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
 
                     @Override
                     public void onClick(View v) {
@@ -106,7 +105,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-                    private long aid = Util.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
+                    private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
                     private String url = mHistory.getData().getList().get(position).getCover();
 
                     @Override
@@ -219,9 +218,9 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     if (handler != null) {
                         handler.sendEmptyMessage(2);
                     }
-                    Looper.prepare();
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
-                    Looper.loop();
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    }
                 }
 
                 @Override
@@ -250,9 +249,9 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     if (handler != null) {
                         handler.sendEmptyMessage(2);
                     }
-                    Looper.prepare();
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
-                    Looper.loop();
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    }
                 }
 
                 @Override

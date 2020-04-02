@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,6 +119,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     popupMenu.show();
                     return true;
                 });
+                // FIXME: 20-3-31 有没有返回小一点的可以查指定uid的头像和用户名的接口
                 new Thread() {
 
                     private long uid = loginUserInfoMap.getByIndex(position).getUserId();
@@ -131,9 +131,9 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                             public void onException(Exception e) {
                                 e.printStackTrace();
                                 if (getContext() != null) {
-                                    Looper.prepare();
-                                    ToastUtil.sendMsg(getContext(), e.getMessage());
-                                    Looper.loop();
+                                    if (getActivity() != null) {
+                                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                                    }
                                 }
                             }
 
@@ -266,9 +266,9 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getContext() != null) {
-                            Looper.prepare();
-                            ToastUtil.sendMsg(getContext(), e.getMessage());
-                            Looper.loop();
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                            }
                         }
                     }
                 }

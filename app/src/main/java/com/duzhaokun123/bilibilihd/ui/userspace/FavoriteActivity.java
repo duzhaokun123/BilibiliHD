@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,29 +17,40 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.MediaListAPI;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-public class FavoriteActivity extends BaseActivity {
+public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBinding> {
 
-    private XRecyclerView mXrv;
-
-    private Space.Data.Favourite.Item item;
+    private Ids ids;
+    private Infos infos;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mXrv = findViewById(R.id.xrv);
-        item = GsonUtil.getGsonInstance().fromJson(getIntent().getStringExtra("item"), Space.Data.Favourite.Item.class);
+    protected int initConfig() {
+        return NEED_HANDLER;
+    }
 
-        setTitle(item.getName());
+    @Override
+    public int initLayout() {
+        return R.layout.layout_xrecyclerview_only;
+    }
+
+    @Override
+    public void initView() {
+        if (teleportIntent != null && teleportIntent.getExtras() != null) {
+            setTitle(teleportIntent.getExtras().getString("name"));
+        }
 
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
@@ -48,9 +58,9 @@ public class FavoriteActivity extends BaseActivity {
         } else if (Settings.layout.getColumnLand() != 0) {
             spanCount = Settings.layout.getColumnLand();
         }
-        mXrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        baseBind.xrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -58,7 +68,7 @@ public class FavoriteActivity extends BaseActivity {
                 }
             });
         } else {
-            mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -66,7 +76,7 @@ public class FavoriteActivity extends BaseActivity {
                 }
             });
         }
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,32 +85,29 @@ public class FavoriteActivity extends BaseActivity {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                GlideUtil.loadUrlInto(FavoriteActivity.this, item.getCover().get(0).getPic(), ((VideoCardHolder) holder).mIv, false);
-                ((VideoCardHolder) holder).mTvTitle.setText("av" + item.getCover().get(position).getAid());
-                ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
-
-                    private long aid = Long.parseLong(String.valueOf(item.getCover().get(position).getAid()));
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(FavoriteActivity.this, PlayActivity.class);
-                        intent.putExtra("aid", aid);
-                        startActivity(intent);
-                    }
+                if (infos == null) {
+                    ((VideoCardHolder) holder).mTvTitle.setText(ids.getData().get(position).getBvid());
+                } else {
+                    ((VideoCardHolder) holder).mTvTitle.setText(infos.getData().get(position).getTitle());
+                    GlideUtil.loadUrlInto(FavoriteActivity.this, infos.getData().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
+                }
+                ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
+                    Intent intent = new Intent(FavoriteActivity.this, PlayActivity.class);
+                    intent.putExtra("aid", ids.getData().get(position).getId());
+                    startActivity(intent);
                 });
-                ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
+                if (infos != null) {
+                    ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-                    private long aid = Long.parseLong(String.valueOf(item.getCover().get(position).getAid()));
-                    private String url = item.getCover().get(position).getPic();
+                        private String bvid = ids.getData().get(position).getBvid();
+                        private String url = infos.getData().get(position).getCover();
 
-                    @Override
-                    public boolean onLongClick(View v) {
+                        @Override
+                        public boolean onLongClick(View v) {
 
-                        PopupMenu popupMenu = new PopupMenu(FavoriteActivity.this, ((VideoCardHolder) holder).mCv);
-                        popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
+                            PopupMenu popupMenu = new PopupMenu(FavoriteActivity.this, ((VideoCardHolder) holder).mCv);
+                            popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(item -> {
                                 switch (item.getItemId()) {
                                     case R.id.check_cover:
                                         Intent intent = new Intent(FavoriteActivity.this, PhotoViewActivity.class);
@@ -113,17 +120,21 @@ public class FavoriteActivity extends BaseActivity {
                                         break;
                                 }
                                 return true;
-                            }
-                        });
-                        popupMenu.show();
-                        return true;
-                    }
-                });
+                            });
+                            popupMenu.show();
+                            return true;
+                        }
+                    });
+                }
             }
 
             @Override
             public int getItemCount() {
-                return item.getCover().size();
+                if (ids == null) {
+                    return 0;
+                } else {
+                    return ids.getData().size();
+                }
             }
 
             class VideoCardHolder extends RecyclerView.ViewHolder {
@@ -132,7 +143,7 @@ public class FavoriteActivity extends BaseActivity {
                 private ImageView mIv;
                 private TextView mTvTitle;
 
-                public VideoCardHolder(@NonNull View itemView) {
+                VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mCv =itemView.findViewById(R.id.cv);
                     mIv = itemView.findViewById(R.id.iv);
@@ -140,27 +151,72 @@ public class FavoriteActivity extends BaseActivity {
                 }
             }
         });
-        mXrv.setLoadingMoreEnabled(false);
-        mXrv.setPullRefreshEnabled(false);
-    }
+        baseBind.xrv.setLoadingMoreEnabled(false);
+        baseBind.xrv.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                new Refresh().start();
+            }
 
-    @Override
-    protected int initConfig() {
-        return 0;
-    }
+            @Override
+            public void onLoadMore() {
 
-    @Override
-    public int initLayout() {
-        return R.layout.layout_xrecyclerview_only;
-    }
-
-    @Override
-    public void initView() {
-
+            }
+        });
     }
 
     @Override
     public void initData() {
+        baseBind.xrv.refresh();
+    }
 
+    @Override
+    public void handlerCallback(@NonNull Message msg) {
+        if (msg.what == 0) {
+            baseBind.xrv.refreshComplete();
+            XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, ids.getData().size());
+        }
+    }
+
+    class Refresh extends Thread {
+        @Override
+        public void run() {
+            if (teleportIntent != null && teleportIntent.getExtras() != null) {
+                MediaListAPI.getInstance().getIds(teleportIntent.getExtras().getLong("media_id"),
+                        teleportIntent.getExtras().getLong("mid"), new MyBilibiliClient.ICallback<Ids>() {
+                    @Override
+                    public void onException(Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
+                    }
+
+                    @Override
+                    public void onSuccess(Ids ids) {
+                        FavoriteActivity.this.ids = ids;
+                        if (handler != null) {
+                            handler.sendEmptyMessage(0);
+                        }
+                    }
+                });
+                if (ids != null) {
+                    MediaListAPI.getInstance().getInfos(teleportIntent.getExtras().getLong("media_id"),
+                            teleportIntent.getExtras().getLong("mid"), ids, new MyBilibiliClient.ICallback<Infos>() {
+                                @Override
+                                public void onException(Exception e) {
+                                    e.printStackTrace();
+                                    runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
+                                }
+
+                                @Override
+                                public void onSuccess(Infos infos) {
+                                    FavoriteActivity.this.infos = infos;
+                                    if (handler != null) {
+                                        handler.sendEmptyMessage(0);
+                                    }
+                                }
+                            });
+                }
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@
     <string name="not_logged_in">未登录</string>
     <string name="home">主页</string>
     <string name="logout">登出</string>
-    <string name="logout_ask">确定要登出吗？</string>
+    <string name="logout_ask">确定要登出吗？\n这将导致登出的LoginResponse在所有客户端失效</string>
     <string name="history">历史记录</string>
     <string name="fans">粉丝</string>
     <string name="watching">关注</string>
@@ -50,4 +50,19 @@
     <string name="project_home">项目主页</string>
     <string name="settings_manager_uninited_warning">严重运行时异常，无法读取和保存设置信息，请重启应用</string>
     <string name="using_gpl_3.0">在 GPL-3.0 协议下发布</string>
+    <string name="logged_out">已登出</string>
+    <string name="bilibili_api_client_version">bilbili-api 客户端版本</string>
+    <string name="start">开始</string>
+    <string name="stop">停止</string>
+    <string name="glide_cache">Glide 缓存优先</string>
+    <string name="open_in_browser">在浏览器中打开</string>
+    <string name="request">需要</string>
+    <string name="video_download">视频下载</string>
+    <string name="merging">合并中</string>
+    <string name="success">成功</string>
+    <string name="pause">暂停</string>
+    <string name="resume">恢复</string>
+    <string name="moving">移动中</string>
+    <string name="downloading">下载中</string>
+    <string name="downloaded">已下载</string>
 </resources>

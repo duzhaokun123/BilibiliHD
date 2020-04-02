@@ -1,5 +1,7 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.history.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class History {
@@ -188,11 +190,20 @@ public class History {
             private int videos;
             private String name;
             private long mid;
-//            private String goto; tmd 还带占 java 关键字的
+            @SerializedName("goto")
+            private String goto_;
             private long view_at;
             private int progress;
             private int duration;
             private int display_attention;
+
+            public String getGoto_() {
+                return goto_;
+            }
+
+            public void setGoto_(String goto_) {
+                this.goto_ = goto_;
+            }
 
             public class History2 {
                 public long getOid() {

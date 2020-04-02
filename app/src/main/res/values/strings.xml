@@ -12,7 +12,7 @@
     <string name="not_logged_in">Not Logged In</string>
     <string name="home">home</string>
     <string name="logout">Logout</string>
-    <string name="logout_ask">Are you sure to LOGOUT?</string>
+    <string name="logout_ask">Are you sure to LOGOUT?\nThis will cause the logged out LoginResponse to fail on all clients</string>
     <string name="history">history</string>
     <string name="fans">fans</string>
     <string name="watching">watching</string>
@@ -33,7 +33,6 @@
     <string name="download">download</string>
     <string name="check_cover">check cover</string>
     <string name="add_to_watch_later">add to watch later</string>
-    <string name="okhttp" translatable="false">okhttp</string>
     <string name="download_manager" translatable="false">download manager</string>
     <string name="b_bi">B Bi</string>
     <string name="coins">coins</string>
@@ -52,5 +51,20 @@
     <string name="settings_manager_uninited_warning">TODO</string>
     <string name="version">version</string>
     <string name="using_gpl_3.0">using GPL-3.0</string>
-    <string name="project_home_url">https://github.com/duzhaokun123/BilibiliHD</string>
+    <string name="project_home_url" translatable="false">https://github.com/duzhaokun123/BilibiliHD</string>
+    <string name="logged_out">logged out</string>
+    <string name="bilibili_api_client_version">bilibili-api client version</string>
+    <string name="start">start</string>
+    <string name="stop">stop</string>
+    <string name="glide_cache">Glide cache first</string>
+    <string name="open_in_browser">open in browser</string>
+    <string name="request">request</string>
+    <string name="video_download">video download</string>
+    <string name="merging">merging</string>
+    <string name="success">success</string>
+    <string name="pause">pause</string>
+    <string name="resume">resume</string>
+    <string name="moving">moving</string>
+    <string name="downloading">downloading</string>
+    <string name="downloaded">downloaded</string>
 </resources>

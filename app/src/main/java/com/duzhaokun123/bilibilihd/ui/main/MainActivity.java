@@ -2,14 +2,12 @@ package com.duzhaokun123.bilibilihd.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -22,14 +20,15 @@ import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.ui.download.DownloadActivity;
 import com.duzhaokun123.bilibilihd.ui.JumpActivity;
 import com.duzhaokun123.bilibilihd.ui.LoginActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.google.android.material.navigation.NavigationView;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,6 +63,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             actionBar.setDisplayShowHomeEnabled(true);
+        }
+        if (Settings.isUninited()) {
+            ToastUtil.sendMsg(this, R.string.exception_warning);
         }
     }
 
@@ -104,9 +106,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Looper.prepare();
-                        ToastUtil.sendMsg(MainActivity.this, e.getMessage());
-                        Looper.loop();
+                        runOnUiThread(() -> ToastUtil.sendMsg(MainActivity.this, e.getMessage()));
                     }
 
                     if (myInfo != null && handler != null) {
@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             if (baseBind.dlMain != null) {
                 baseBind.dlMain.closeDrawers();
             }
-            Intent intent;
+            Intent intent = null;
             switch (item.getItemId()) {
                 case R.id.home:
                     if (homeFragment == null) {
@@ -209,14 +209,18 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     setTitle(R.string.history);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_main, historyFragment).commitAllowingStateLoss();
                     break;
+                case R.id.download:
+                    intent = new Intent(MainActivity.this, DownloadActivity.class);
+                    break;
                 case R.id.settings:
                     intent = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(intent);
                     break;
                 case R.id.junp:
                     intent = new Intent(MainActivity.this, JumpActivity.class);
-                    startActivity(intent);
                     break;
+            }
+            if (intent != null) {
+                startActivity(intent);
             }
             return true;
         });

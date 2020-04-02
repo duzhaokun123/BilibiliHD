@@ -13,28 +13,25 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsLayoutBinding;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 
-public class SettingLayoutFragment extends Fragment {
+public class SettingLayoutFragment extends BaseFragment<FragmentSettingsLayoutBinding> {
 
-    private EditText mEtColumn, mEtColumnLand;
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings_layout, container, false);
-        mEtColumn = view.findViewById(R.id.et_column);
-        mEtColumnLand = view.findViewById(R.id.et_columnLand);
-        return view;
+    protected int initConfig() {
+        return 0;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mEtColumn.setText(String.valueOf(Settings.layout.getColumn()));
-        mEtColumnLand.setText(String.valueOf(Settings.layout.getColumnLand()));
+    protected int initLayout() {
+        return R.layout.fragment_settings_layout;
+    }
 
-        mEtColumn.addTextChangedListener(new TextWatcher() {
+    @Override
+    protected void initView() {
+        baseBind.etColumn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -47,7 +44,7 @@ public class SettingLayoutFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try{
+                try {
                     Settings.layout.setColumn(Integer.parseInt(s.toString()));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -55,7 +52,7 @@ public class SettingLayoutFragment extends Fragment {
 
             }
         });
-        mEtColumnLand.addTextChangedListener(new TextWatcher() {
+        baseBind.etColumn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -68,12 +65,18 @@ public class SettingLayoutFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try{
+                try {
                     Settings.layout.setColumnLand(Integer.parseInt(s.toString()));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+        baseBind.etColumn.setText(String.valueOf(Settings.layout.getColumn()));
+        baseBind.etColumnLand.setText(String.valueOf(Settings.layout.getColumnLand()));
     }
 }

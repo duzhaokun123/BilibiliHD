@@ -69,7 +69,7 @@ public class SettingsMainFragment extends Fragment {
                 return false;
             }
         });
-        if (!Settings.isInited()) {
+        if (Settings.isUninited()) {
             mNavSettingsMain.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.layout_settings_manager_uninited_warning, null, false));
         }
     }

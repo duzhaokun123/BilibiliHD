@@ -31,7 +31,7 @@ public class MyBilibiliClient {
         this.pBilibiliClient = pBilibiliClient;
     }
 
-    public String getResponse(GetRequest getRequest) throws IOException {
+    public String getResponseByGet(GetRequest getRequest) throws IOException {
         bilibiliClientProperties = pBilibiliClient.getBilibiliClient().getBillingClientProperties();
         loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         StringBuilder paramsSB = new StringBuilder();

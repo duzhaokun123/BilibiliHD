@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
-    private static Settings settingsManager;
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static boolean inited = false;
@@ -27,19 +27,20 @@ public class Settings {
 
     private static final String TAG = "SettingsManager";
 
-    public static boolean isInited() {
-        return inited;
+    public static boolean isUninited() {
+        return !inited;
     }
 
-
+    @SuppressLint("CommitPrefEdits")
     public static void init(Context context) {
         Settings.sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         Settings.editor = sharedPreferences.edit();
 
+        Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
         Settings.develop.test = sharedPreferences.getBoolean("test", true);
         Settings.layout.column = sharedPreferences.getInt("column", 0);
         Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
-        Settings.download.downloader = sharedPreferences.getInt("downloader", Download.OKHTTP);
+        Settings.download.downloader = sharedPreferences.getInt("downloader", Download.GLIDE_CACHE_FIRST);
 
         Settings.inited = true;
     }
@@ -134,6 +135,17 @@ public class Settings {
         }
     }
 
+    private static boolean firstStart = true;
+
+    public static boolean isFirstStart() {
+        return firstStart;
+    }
+
+    public static void setFirstStart(boolean firstStart) {
+        Settings.firstStart = firstStart;
+        save("firstStart", BOOLEAN, firstStart);
+    }
+
     public static class Develop {
         private boolean test = true;
 
@@ -148,6 +160,10 @@ public class Settings {
     }
 
     public static class Layout {
+        private int column = 0;
+        private int columnLand = 0;
+
+
         public int getColumn() {
             return column;
         }
@@ -160,29 +176,27 @@ public class Settings {
         public int getColumnLand() {
             return columnLand;
         }
-
         public void setColumnLand(int columnLand) {
             this.columnLand = columnLand;
             save("column_land", INT, columnLand);
         }
 
-        private int column = 0;
-        private int columnLand = 0;
     }
 
     public static class Download {
-        public static final int OKHTTP = 0;
         public static final int DOWNLOAD_MANAGER = 1;
+        public static final int GLIDE_CACHE_FIRST = 2;
 
-        private int downloader = OKHTTP;
+        private int downloader = GLIDE_CACHE_FIRST;
+
 
         public int getDownloader() {
             return downloader;
         }
-
         public void setDownloader(int downloader) {
             this.downloader = downloader;
             save("downloader", INT, downloader);
         }
+
     }
 }

@@ -8,8 +8,12 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityWelcomeBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
+import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
+
+import nl.bravobit.ffmpeg.FFmpeg;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
@@ -40,6 +44,13 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 LoginResponse loginResponse = Settings.getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
                 if (loginResponse != null) {
                     pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+                }
+                if (!FFmpeg.getInstance(WelcomeActivity.this).isSupported()) {
+                    runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, "do not support your device"));
+                }
+                if (Settings.isFirstStart()) {
+                    NotificationUtil.init(getApplicationContext());
+                    Settings.setFirstStart(false);
                 }
             }
         }.start();

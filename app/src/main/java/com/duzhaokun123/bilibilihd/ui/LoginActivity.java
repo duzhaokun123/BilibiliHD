@@ -3,7 +3,6 @@ package com.duzhaokun123.bilibilihd.ui;
 import androidx.annotation.NonNull;
 
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -54,9 +53,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             handler.sendMessage(message);
                         }
                     }
-                    Looper.prepare();
-                    ToastUtil.sendMsg(LoginActivity.this, e.getMessage());
-                    Looper.loop();
+                    runOnUiThread(() -> ToastUtil.sendMsg(LoginActivity.this, e.getMessage()));
                 }
 
                 if (loginResponse != null) {

@@ -29,6 +29,8 @@
 - 会员购相关
 - 修改用户信息
 - 游戏相关
+- 互动视频
+- 不要这玩意兼容电视和 Wear OS
 
 明显还有为提及的，未提及的基本不会支持
 
@@ -55,6 +57,8 @@
 
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 
+[FFmpeg Android](https://github.com/bravobit/FFmpeg-Android)
+
 [GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)
 
 [Material](material.io)
@@ -68,5 +72,7 @@
 [glide](https://bumptech.github.io/glide/)
 
 [gson](https://github.com/google/gson)
+
+[okdownload](https://github.com/lingochamp/okdownload)
 
 [okttp](https://square.github.io/okhttp/)

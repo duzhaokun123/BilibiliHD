@@ -1,21 +1,13 @@
 package com.duzhaokun123.bilibilihd.ui.play;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.PictureInPictureParams;
-import android.content.res.Configuration;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
-import android.os.Parcelable;
 import android.util.Log;
 import android.util.Rational;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,17 +21,12 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.app.model.View;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
-import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
-import java.io.IOException;
 
 public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
-    private TextView mTv, mTvVideo, mTvAudio;
+    private TextView mTv;
     private StandardGSYVideoPlayer mGsyVideo;
     private ImageView mIv;
     private Button mBtnPip;
@@ -60,8 +47,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         }
 
         mTv = findViewById(R.id.tv);
-        mTvVideo = findViewById(R.id.tv_video);
-        mTvAudio = findViewById(R.id.tv_audio);
         mGsyVideo = findViewById(R.id.gsy);
         mBtnPip = findViewById(R.id.btn_pip);
 
@@ -92,6 +77,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 onBackPressed();
             }
         });
+        mGsyVideo.getBackButton().setImageResource(R.drawable.ic_arrow_back);
         mGsyVideo.startPlayLogic();
         mGsyVideo.getFullscreenButton().setOnClickListener(v -> mGsyVideo.startWindowFullscreen(PlayActivity.this, false, true));
 
@@ -110,19 +96,14 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                         handler.sendEmptyMessage(0);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Looper.prepare();
-                        ToastUtil.sendMsg(PlayActivity.this, e.getMessage());
-                        Looper.loop();
+                        runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
                     }
                 }
             }
         }.start();
 
-        if (baseBind.btnStart != null) {
-            baseBind.btnStart.setOnClickListener(v -> {
-                baseBind.gsy.getGSYVideoManager().start();
-            });
-        }
+        baseBind.btnStart.setOnClickListener(v -> baseBind.gsy.onVideoResume(false));
+        baseBind.btnPause.setOnClickListener(v -> baseBind.gsy.onVideoPause());
     }
 
     @Override
@@ -145,17 +126,18 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    mGsyVideo.setUp(videoPlayUrl
-                                    .getData()
-                                    .getDash()
-                                    .getVideo()
-                                    .get(0)
-                                    .getBaseUrl(),
+                    mGsyVideo.setUp(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(),
                             true, mView.getData().getTitle());
                     Glide.with(PlayActivity.this).load(mView.getData().getPic()).into(mIv);
-                    mTvVideo.setText(videoPlayUrl.getData().getAcceptDescription().get(0));
-                    mTvAudio.setText(String.valueOf(videoPlayUrl.getData().getDash().getAudio().get(0).getBandwidth()));
                     mTv.setText(videoPlayUrl.toString());
+
+                    Log.d(CLASS_NAME, "video " + videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                    Log.d(CLASS_NAME, "audio " + videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+
+                    baseBind.tvVideo.setText(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                    baseBind.tvAudio.setText(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+                    baseBind.tvDanmaku.setText(mView.getData().getPages().get(0).getDmlink());
+
                     break;
             }
         }
@@ -168,9 +150,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mGsyVideo.onVideoResume();
+    protected void onStart() {
+        super.onStart();
+        mGsyVideo.onVideoResume(false);
     }
 
     @Override
@@ -186,9 +168,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     @Override
     public void onBackPressed() {
-
-        mGsyVideo.setVideoAllCallBack(null);
         super.onBackPressed();
+        mGsyVideo.setVideoAllCallBack(null);
     }
 
     @Override

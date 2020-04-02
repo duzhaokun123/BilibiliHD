@@ -5,9 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +18,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.Util;
+import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.DynamicAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.DynamicPage;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.dynamic.model.NestedCard;
@@ -51,7 +50,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
     private int page = 0;
     private long offsetDynamicId = 0;
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 
     @Override
     protected int initConfig() {
@@ -100,13 +99,15 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((DynamicCardHolder) holder).mLl.removeAllViews();
 
-                GlideUtil.loadUrlInto(getContext(), mCards.get(position).getDesc().getUser_profile().getInfo().getFace(), ((DynamicCardHolder) holder).mCivFace, false);
-                ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
                 ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(mCards.get(position).getDesc().getTimestamp() * 1000));
-//                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
-                if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1) {//1: 不是 VIP, 2: 是 VIP
-                    ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
+                if (mCards.get(position).getDesc().getUser_profile() != null) {
+                    GlideUtil.loadUrlInto(getContext(), mCards.get(position).getDesc().getUser_profile().getInfo().getFace(), ((DynamicCardHolder) holder).mCivFace, false);
+                    ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
+                    if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1) {//1: 不是 VIP, 2: 是 VIP 吗?
+                        ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
+                    }
                 }
+//                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
 
                 OpenUserSpace openUserSpace = new OpenUserSpace(mCards.get(position).getDesc().getUid());
                 ((DynamicCardHolder) holder).mCivFace.setOnClickListener(openUserSpace);
@@ -125,7 +126,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 } else if (nestedCard.getDynamic() != null && !nestedCard.getDynamic().equals("")) {
                     ((DynamicCardHolder) holder).mTvContent.setText(nestedCard.getDynamic());
                 }
-                handleNestedCard(nestedCard, ((DynamicCardHolder) holder).mLl);
+                handleNestedCard(nestedCard, ((DynamicCardHolder) holder).mLl, 1);
 
 //                    ((DynamicCardHolder) holder).mTvContent.setText(mCards.get(position).getCard());
 
@@ -140,14 +141,6 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 }
             }
 
-//            @Override
-//            public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
-//                if (holder instanceof DynamicCardHolder) {
-//                    ((DynamicCardHolder) holder).mLl.removeAllViews();
-//                    ((DynamicCardHolder) holder).mTvContent.setText("");
-//                }
-//            }
-
             class DynamicCardHolder extends RecyclerView.ViewHolder {
 
                 private CircleImageView mCivFace;
@@ -156,7 +149,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
                 DynamicCardHolder(@NonNull View itemView) {
                     super(itemView);
-                    mCivFace = itemView.findViewById(R.id.cli_face);
+                    mCivFace = itemView.findViewById(R.id.civ_face);
                     mTvName = itemView.findViewById(R.id.tv_name);
                     mTvTime = itemView.findViewById(R.id.tv_time);
                     mTvContent = itemView.findViewById(R.id.tv_content);
@@ -234,9 +227,9 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     if (handler != null) {
                         handler.sendEmptyMessage(2);
                     }
-                    Looper.prepare();
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
-                    Looper.loop();
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    }
                 }
 
                 @Override
@@ -244,7 +237,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     mCards = dynamicPage.getData().getCards();
                     offsetDynamicId = dynamicPage.getData().getHistory_offset();
                     LoadMore loadMore = new LoadMore();
-                    for (int i = 0; i <  2; i++) {
+                    for (int i = 0; i < 2; i++) {
                         loadMore.run();
                     }
                     if (handler != null) {
@@ -266,19 +259,15 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     if (handler != null) {
                         handler.sendEmptyMessage(2);
                     }
-                    Looper.prepare();
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
-                    Looper.loop();
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    }
                 }
 
                 @Override
                 public void onSuccess(DynamicPage dynamicPage) {
                     mCards.addAll(dynamicPage.getData().getCards());
-                    Log.d("test", String.valueOf(dynamicPage.getData().getNext_offset()));
-                    offsetDynamicId = dynamicPage.getData().getHistory_offset();
-                    if (dynamicPage.getData().getNext_offset() != 0) {
-                        offsetDynamicId = dynamicPage.getData().getNext_offset();
-                    }
+                    offsetDynamicId = dynamicPage.getData().getNext_offset();
                     if (handler != null) {
                         handler.sendEmptyMessage(1);
                     }
@@ -287,10 +276,26 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
         }
     }
 
-    private void handleNestedCard(NestedCard nestedCard, ViewGroup viewGroup) {
+    private void handleNestedCard(NestedCard nestedCard, ViewGroup viewGroup, int depth) {
         if (nestedCard.getItem() != null && nestedCard.getItem().getPictures() != null) {
-            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_xrecyclerview_only, viewGroup);
-            XRecyclerView xRecyclerView = view1.findViewById(R.id.xrv);
+            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_dynamic_card_item, viewGroup);
+            View view2 = LayoutInflater.from(getContext()).inflate(R.layout.layout_xrecyclerview_only, view1.findViewById(R.id.ll));
+
+            CardView cardView = view1.findViewById(R.id.cv);
+            RelativeLayout relativeLayout = view1.findViewById(R.id.rl);
+            TextView tvContent = view1.findViewById(R.id.tv_content);
+
+            cardView.setBackgroundResource(android.R.color.transparent);
+            relativeLayout.removeView(view1.findViewById(R.id.civ_face));
+            relativeLayout.removeView(view1.findViewById(R.id.tv_name));
+            relativeLayout.removeView(view1.findViewById(R.id.tv_time));
+            if (depth == 1) {
+                relativeLayout.removeView(tvContent);
+            } else {
+                tvContent.setText(nestedCard.getItem().getDescription());
+            }
+
+            XRecyclerView xRecyclerView = view2.findViewById(R.id.xrv);
             xRecyclerView.setPullRefreshEnabled(false);
             xRecyclerView.setLoadingMoreEnabled(false);
 
@@ -337,7 +342,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
                 @Override
                 public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                    GlideUtil.loadUrlInto(getContext(), card.getItem().getPictures().get(position).getImg_src(), ((PictureHolder) holder).mIv,true);
+                    GlideUtil.loadUrlInto(getContext(), card.getItem().getPictures().get(position).getImg_src(), ((PictureHolder) holder).mIv, true);
                     ((PictureHolder) holder).mIv.setOnClickListener(new View.OnClickListener() {
 
                         private String url = card.getItem().getPictures().get(position).getImg_src();
@@ -374,9 +379,9 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
         if (nestedCard.getAid() != 0) {
             View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_video, viewGroup);
             if (nestedCard.getTitle() != null) {
-                ((TextView)view1.findViewById(R.id.tv_title)).setText(nestedCard.getTitle());
+                ((TextView) view1.findViewById(R.id.tv_title)).setText(nestedCard.getTitle());
             } else if (nestedCard.getItem() != null && nestedCard.getItem().getDynamic() != null) {
-                ((TextView)view1.findViewById(R.id.tv_title)).setText(nestedCard.getItem().getDynamic());
+                ((TextView) view1.findViewById(R.id.tv_title)).setText(nestedCard.getItem().getDynamic());
             }
             ImageView imageView1 = view1.findViewById(R.id.iv);
             GlideUtil.loadUrlInto(getContext(), nestedCard.getPic(), imageView1, false);
@@ -389,7 +394,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             });
             relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
-                private long aid = Util.getAidFromBilibiliLink(nestedCard.getJump_url());
+                private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(nestedCard.getJump_url());
 
                 @Override
                 public boolean onLongClick(View v) {
@@ -419,7 +424,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             });
             relativeLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), PlayActivity.class);
-                intent.putExtra("aid", Util.getAidFromBilibiliLink(nestedCard.getJump_url()));
+                intent.putExtra("aid", MyBilibiliClientUtil.getAidFromBilibiliLink(nestedCard.getJump_url()));
                 startActivity(intent);
             });
         }
@@ -428,7 +433,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_linearlayout_only, viewGroup);
             LinearLayout linearLayout = view.findViewById(R.id.ll);
             linearLayout.setBackgroundResource(R.color.lightGray);
-            handleNestedCard(nestedNestedCard, linearLayout);
+            handleNestedCard(nestedNestedCard, linearLayout, depth + 1);
         }
     }
 }

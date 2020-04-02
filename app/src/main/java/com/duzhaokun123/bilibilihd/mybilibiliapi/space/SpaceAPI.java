@@ -4,7 +4,6 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.google.gson.Gson;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
@@ -31,7 +30,7 @@ public class SpaceAPI {
             pBilibiliClient = PBilibiliClient.Companion.getInstance();
         }
         try {
-            String response = MyBilibiliClient.getInstance().getResponse(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
                 @Override
                 public String getUrl() {
                     return "https://app.bilibili.com/x/v2/space";

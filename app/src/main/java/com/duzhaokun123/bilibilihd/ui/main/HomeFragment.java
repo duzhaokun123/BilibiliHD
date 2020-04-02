@@ -6,10 +6,8 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,6 +39,8 @@ import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
+import java.util.ConcurrentModificationException;
+
 // FIXME: 20-2-24 这么搞线程不安全啊
 public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
@@ -63,9 +63,6 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
     @Override
     protected void initView() {
-        if (!Settings.isInited()) {
-            ToastUtil.sendMsg(getContext(), R.string.exception_warning);
-        }
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
             spanCount = Settings.layout.getColumn();
@@ -162,22 +159,19 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
                         PopupMenu popupMenu = new PopupMenu(getContext(), ((VideoCardHolder) holder).mCv);
                         popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.check_cover:
-                                        Intent intent = new Intent(getContext(), PhotoViewActivity.class);
-                                        intent.putExtra("url", url);
-                                        startActivity(intent);
-                                        break;
-                                    case R.id.add_to_watch_later:
-                                        // TODO: 20-2-27
-                                        ToastUtil.sendMsg(getContext(), "还没有做");
-                                        break;
-                                }
-                                return true;
+                        popupMenu.setOnMenuItemClickListener(item -> {
+                            switch (item.getItemId()) {
+                                case R.id.check_cover:
+                                    Intent intent = new Intent(getContext(), PhotoViewActivity.class);
+                                    intent.putExtra("url", url);
+                                    startActivity(intent);
+                                    break;
+                                case R.id.add_to_watch_later:
+                                    // TODO: 20-2-27
+                                    ToastUtil.sendMsg(getContext(), "还没有做");
+                                    break;
                             }
+                            return true;
                         });
                         popupMenu.show();
                         return true;
@@ -249,7 +243,11 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("homePage", GsonUtil.getGsonInstance().toJson(homePage));
+        try {
+            outState.putString("homePage", GsonUtil.getGsonInstance().toJson(homePage));
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        }
     }
 
     class Refresh extends Thread {
@@ -260,16 +258,14 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                 for (int i = 0; i < 2; i++) {
                     homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
                 }
+                if (handler != null) {
+                    handler.sendEmptyMessage(0);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-                Looper.prepare();
-                if (getContext() != null) {
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
                 }
-                Looper.loop();
-            }
-            if (handler != null) {
-                handler.sendEmptyMessage(0);
             }
         }
     }
@@ -281,11 +277,9 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                 homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
             } catch (Exception e) {
                 e.printStackTrace();
-                Looper.prepare();
-                if (getContext() != null) {
-                    ToastUtil.sendMsg(getContext(), e.getMessage());
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
                 }
-                Looper.loop();
             }
             if (handler != null) {
                 handler.sendEmptyMessage(1);
