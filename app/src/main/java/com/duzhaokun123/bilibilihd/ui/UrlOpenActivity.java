@@ -45,6 +45,8 @@ public class UrlOpenActivity extends AppCompatActivity {
             return Type.SPACE;
         } else if (host.startsWith("m")) {
             return Type.M;
+        } else if(host.startsWith("www")) {
+            return Type.WWW;
         } else {
             return Type.UNKNOWN;
         }
@@ -71,6 +73,7 @@ public class UrlOpenActivity extends AppCompatActivity {
         SPACE,
         VIDEO,
         M,
+        WWW,
         UNKNOWN
     }
 }

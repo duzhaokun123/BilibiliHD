@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,11 @@ import com.duzhaokun123.bilibilihd.utils.Handler;
 
 public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragment implements Handler.IHandlerMessageCallback {
 
-    protected static final String CLASS_NAME = BaseActivity.class.getSimpleName();
     protected static final int NEED_HANDLER = 0b010;
 
     private int config;
 
+    protected final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
     @Nullable
     public Handler handler;

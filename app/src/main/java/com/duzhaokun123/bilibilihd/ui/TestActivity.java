@@ -28,7 +28,7 @@ public class TestActivity extends BaseActivity<ActivityTestBinding> {
             baseBind.vv.setVideoPath(file.getPath());
             baseBind.vv.start();
         });
-        baseBind.btnDownload.setOnClickListener(v -> DownloadUtil.downloadVideo(this, baseBind.etVideo.getText().toString(), baseBind.etAudio.getText().toString(), baseBind.etDanmaku.getText().toString(), "测试", "test"));
+        baseBind.btnDownload.setOnClickListener(v -> DownloadUtil.downloadVideo(this, baseBind.etVideo.getText().toString(), baseBind.etAudio.getText().toString(), baseBind.etDanmaku.getText().toString(), "测试", "test", baseBind.cbVideoOnly.isChecked()));
     }
 
     @Override

@@ -88,7 +88,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/pb_danmaku"
+        android:id="@+id/pb_audio"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/pb_audio"
+        android:id="@+id/pb_danmaku"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

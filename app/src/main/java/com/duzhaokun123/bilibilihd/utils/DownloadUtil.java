@@ -78,7 +78,7 @@ public class DownloadUtil {
 
     }
 
-    public static void downloadVideo(Context context, String video, String audio, String danmaku, String title, String bvid) {
-        VideoDownloadService.downloadVideo(context, video, audio, danmaku, context.getCacheDir().getPath() + File.separator + bvid + "_" + title, title, bvid);
+    public static void downloadVideo(Context context, String video, String audio, String danmaku, String title, String bvid, boolean videoOnly) {
+        VideoDownloadService.downloadVideo(context, video, audio, danmaku, context.getCacheDir().getPath() + File.separator + bvid + "_" + title, title, bvid, videoOnly);
     }
 }

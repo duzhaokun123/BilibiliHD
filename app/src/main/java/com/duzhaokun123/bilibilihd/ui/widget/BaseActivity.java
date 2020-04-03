@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,12 +20,12 @@ import java.util.Map;
 
 public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCompatActivity implements Handler.IHandlerMessageCallback {
 
-    public static final String CLASS_NAME = BaseActivity.class.getSimpleName();
     protected static final int FULLSCREEN = 0b001;
     protected static final int NEED_HANDLER = 0b010;
 
     private int config;
 
+    public final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
     @Nullable
     public Handler handler;

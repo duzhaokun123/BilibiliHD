@@ -65,4 +65,5 @@
     <string name="moving">移动中</string>
     <string name="downloading">下载中</string>
     <string name="downloaded">已下载</string>
+    <string name="no_need">不需要</string>
 </resources>

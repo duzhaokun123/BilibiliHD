@@ -51,7 +51,7 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
             }
         });
 
-        baseBind.ibDl.setOnClickListener(v -> {
+        baseBind.ibDl.setOnClickListener(v ->
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, grantResults -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (teleportIntent != null && teleportIntent.getExtras() != null) {
@@ -60,8 +60,8 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
                 } else {
                     ToastUtil.sendMsg(PhotoViewActivity.this, getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
-            });
-        });
+            })
+        );
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             baseBind.rl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 

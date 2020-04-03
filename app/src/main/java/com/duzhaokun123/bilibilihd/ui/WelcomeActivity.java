@@ -37,29 +37,35 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
     @Override
     public void initData() {
         pBilibiliClient = PBilibiliClient.Companion.getInstance();
-        new Thread() {
-            @Override
-            public void run() {
-                Settings.init(getApplicationContext());
-                LoginResponse loginResponse = Settings.getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
-                if (loginResponse != null) {
-                    pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+        if (Settings.isUninited()) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Settings.init(getApplicationContext());
+                    LoginResponse loginResponse = Settings.getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
+                    if (loginResponse != null) {
+                        pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+                    }
+                    if (!FFmpeg.getInstance(WelcomeActivity.this).isSupported()) {
+                        runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, "do not support your device"));
+                    }
+                    if (Settings.isFirstStart()) {
+                        NotificationUtil.init(getApplicationContext());
+                        Settings.setFirstStart(false);
+                    }
                 }
-                if (!FFmpeg.getInstance(WelcomeActivity.this).isSupported()) {
-                    runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, "do not support your device"));
-                }
-                if (Settings.isFirstStart()) {
-                    NotificationUtil.init(getApplicationContext());
-                    Settings.setFirstStart(false);
-                }
+            }.start();
+            if (handler != null) {
+                handler.postDelayed(() -> {
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }, 2000);
             }
-        }.start();
-        if (handler != null) {
-            handler.postDelayed(() -> {
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }, 2000);
+        } else {
+            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

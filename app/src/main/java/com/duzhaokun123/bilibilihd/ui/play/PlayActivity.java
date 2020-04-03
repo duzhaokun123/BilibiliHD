@@ -126,16 +126,22 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    mGsyVideo.setUp(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(),
-                            true, mView.getData().getTitle());
+                    if (videoPlayUrl.getData().getDash() != null) {
+                        mGsyVideo.setUp(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(),
+                                true, mView.getData().getTitle());
+                        Log.d(CLASS_NAME, "video " + videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                        Log.d(CLASS_NAME, "audio " + videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+                        baseBind.tvVideo.setText(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                        baseBind.tvAudio.setText(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+                    }
+                    if (videoPlayUrl.getData().getDurl() != null) {
+                        mGsyVideo.setUp(videoPlayUrl.getData().getDurl().get(0).getUrl(), true,
+                                mView.getData().getTitle());
+                        baseBind.tvVideo.setText(videoPlayUrl.getData().getDurl().get(0).getUrl());
+                    }
                     Glide.with(PlayActivity.this).load(mView.getData().getPic()).into(mIv);
                     mTv.setText(videoPlayUrl.toString());
 
-                    Log.d(CLASS_NAME, "video " + videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
-                    Log.d(CLASS_NAME, "audio " + videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
-
-                    baseBind.tvVideo.setText(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
-                    baseBind.tvAudio.setText(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
                     baseBind.tvDanmaku.setText(mView.getData().getPages().get(0).getDmlink());
 
                     break;

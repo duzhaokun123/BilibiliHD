@@ -67,4 +67,5 @@
     <string name="moving">moving</string>
     <string name="downloading">downloading</string>
     <string name="downloaded">downloaded</string>
+    <string name="no_need">no need</string>
 </resources>

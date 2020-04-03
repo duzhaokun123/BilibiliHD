@@ -20,7 +20,7 @@
         <activity
             android:name=".ui.download.DownloadActivity"
             android:label="@string/download"
-            android:parentActivityName=".ui.main.MainActivity"></activity>
+            android:parentActivityName=".ui.WelcomeActivity"></activity>
 
         <service
             android:name=".services.VideoDownloadService"

@@ -94,4 +94,10 @@ public class NotificationUtil {
             notification.flags &= ~ Notification.FLAG_NO_CLEAR;
         }
     }
+
+    public static void unregister(int id) {
+        if (notificationMap != null) {
+            notificationMap.remove(id);
+        }
+    }
 }
