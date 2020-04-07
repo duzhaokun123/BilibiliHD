@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.duzhaokun123.bilibilihd.R;
@@ -89,6 +90,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                     ((VideoCardHolder) holder).mTvTitle.setText(ids.getData().get(position).getBvid());
                 } else {
                     ((VideoCardHolder) holder).mTvTitle.setText(infos.getData().get(position).getTitle());
+                    ((VideoCardHolder) holder).mTvUp.setText(infos.getData().get(position).getIntro());
                     GlideUtil.loadUrlInto(FavoriteActivity.this, infos.getData().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
                 }
                 ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
@@ -141,13 +143,15 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
                 private CardView mCv;
                 private ImageView mIv;
-                private TextView mTvTitle;
+                private TextView mTvTitle, mTvUp;
 
                 VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mCv =itemView.findViewById(R.id.cv);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
+                    mTvUp = itemView.findViewById(R.id.tv_up);
+                    ((RelativeLayout) itemView.findViewById(R.id.rl)).removeView(itemView.findViewById(R.id.civ_face));
                 }
             }
         });

@@ -40,42 +40,11 @@
             android:layout_height="wrap_content"
             android:text="video only" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_download"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_start"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/start"
-                android:textColor="@android:color/black" />
-
-            <Button
-                android:id="@+id/btn_download"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/download"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
-
-        <VideoView
-            android:id="@+id/vv"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </ScrollView>
-
+            android:text="@string/download"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 </layout>

@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 
 import android.annotation.SuppressLint;
 import android.app.PictureInPictureParams;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.util.Rational;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,23 +20,32 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
+import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.hiczp.bilibili.api.app.model.View;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+
+import java.util.Objects;
 
 public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     private TextView mTv;
-    private StandardGSYVideoPlayer mGsyVideo;
     private ImageView mIv;
     private Button mBtnPip;
 
+    private SimpleExoPlayer player;
+
     private PBilibiliClient pBilibiliClient;
     private VideoPlayUrl videoPlayUrl;
-    private Handler handler;
     private View mView;
 
     @SuppressLint("SetTextI18n")
@@ -47,14 +59,10 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         }
 
         mTv = findViewById(R.id.tv);
-        mGsyVideo = findViewById(R.id.gsy);
         mBtnPip = findViewById(R.id.btn_pip);
 
-        handler = new Handler();
-
         mBtnPip.setOnClickListener(v -> {
-            mGsyVideo.startWindowFullscreen(PlayActivity.this, false, true);
-            Rational rational = new Rational(mGsyVideo.getCurrentVideoWidth(), mGsyVideo.getCurrentVideoHeight());
+            Rational rational = new Rational(mView.getData().getPages().get(0).getDimension().getWidth(), mView.getData().getPages().get(0).getDimension().getHeight());
             if (rational.doubleValue() > 0.418410 && rational.doubleValue() < 2.390000) {
                 PictureInPictureParams pictureInPictureParams = new PictureInPictureParams.Builder()
                         .setAspectRatio(rational)
@@ -67,20 +75,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
         mIv = new ImageView(PlayActivity.this);
         mIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        mGsyVideo.setThumbImageView(mIv);
-        mGsyVideo.getTitleTextView().setVisibility(android.view.View.VISIBLE);
-        mGsyVideo.getBackButton().setVisibility(android.view.View.VISIBLE);
-        mGsyVideo.setIsTouchWiget(true);
-        mGsyVideo.getBackButton().setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                onBackPressed();
-            }
-        });
-        mGsyVideo.getBackButton().setImageResource(R.drawable.ic_arrow_back);
-        mGsyVideo.startPlayLogic();
-        mGsyVideo.getFullscreenButton().setOnClickListener(v -> mGsyVideo.startWindowFullscreen(PlayActivity.this, false, true));
-
 
         Log.d("PlayActivity", String.valueOf(getIntent().getExtras().getLong("aid", 0)));
         setTitle(String.valueOf(getIntent().getExtras().getLong("aid", 0)));
@@ -93,7 +87,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     try {
                         mView = pBilibiliClient.getPAppAPI().view(getIntent().getExtras().getLong("aid", 0));
                         videoPlayUrl = pBilibiliClient.getPPlayerAPI().videoPlayUrl(getIntent().getExtras().getLong("aid", 0), mView.getData().getCid());
-                        handler.sendEmptyMessage(0);
+                        if (handler != null) {
+                            handler.sendEmptyMessage(0);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
@@ -101,9 +97,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 }
             }
         }.start();
-
-        baseBind.btnStart.setOnClickListener(v -> baseBind.gsy.onVideoResume(false));
-        baseBind.btnPause.setOnClickListener(v -> baseBind.gsy.onVideoPause());
+        baseBind.btnStart.setOnClickListener(v -> player.setPlayWhenReady(true));
+        baseBind.btnPause.setOnClickListener(v -> player.setPlayWhenReady(false));
     }
 
     @Override
@@ -113,7 +108,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     @Override
     public void initView() {
-
+        player = new SimpleExoPlayer.Builder(this).build();
+        baseBind.pv.setPlayer(player);
     }
 
     @Override
@@ -121,61 +117,84 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     }
 
-    class Handler extends android.os.Handler {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case 0:
-                    if (videoPlayUrl.getData().getDash() != null) {
-                        mGsyVideo.setUp(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(),
-                                true, mView.getData().getTitle());
-                        Log.d(CLASS_NAME, "video " + videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
-                        Log.d(CLASS_NAME, "audio " + videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
-                        baseBind.tvVideo.setText(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
-                        baseBind.tvAudio.setText(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
-                    }
-                    if (videoPlayUrl.getData().getDurl() != null) {
-                        mGsyVideo.setUp(videoPlayUrl.getData().getDurl().get(0).getUrl(), true,
-                                mView.getData().getTitle());
-                        baseBind.tvVideo.setText(videoPlayUrl.getData().getDurl().get(0).getUrl());
-                    }
-                    Glide.with(PlayActivity.this).load(mView.getData().getPic()).into(mIv);
-                    mTv.setText(videoPlayUrl.toString());
-
-                    baseBind.tvDanmaku.setText(mView.getData().getPages().get(0).getDmlink());
-
-                    break;
-            }
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        ViewGroup.LayoutParams params = baseBind.pv.getLayoutParams();
+        if (isInPictureInPictureMode) {
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            Objects.requireNonNull(getSupportActionBar()).hide();
+        } else {
+            params.height = OtherUtils.dp2px(this, 250);
+            Objects.requireNonNull(getSupportActionBar()).show();
         }
+        baseBind.pv.setLayoutParams(params);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        mGsyVideo.onVideoPause();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGsyVideo.onVideoResume(false);
+    public void handlerCallback(@NonNull Message msg) {
+        switch (msg.what) {
+            case 0:
+                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)));
+                MediaSource mediaSource = null;
+                if (videoPlayUrl.getData().getDash() != null) {
+//                        mGsyVideo.setUp(, "");
+                    MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(Uri.parse(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl()));
+                    MediaSource audioSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(Uri.parse(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl()));
+                    mediaSource = new MergingMediaSource(videoSource, audioSource);
+                    Log.d(CLASS_NAME, "video " + videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                    Log.d(CLASS_NAME, "audio " + videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+                    baseBind.tvVideo.setText(videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl());
+                    baseBind.tvAudio.setText(videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl());
+                    baseBind.btnDownload.setOnClickListener(v -> DownloadUtil.downloadVideo(PlayActivity.this,
+                            videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl(),
+                            videoPlayUrl.getData().getDash().getAudio().get(0).getBaseUrl(),
+                            mView.getData().getPages().get(0).getPart(),
+                            mView.getData().getTitle(),
+                            mView.getData().getBvid(),
+                            false,
+                            1,
+                            mView.getData().getPages().get(0).getDmlink()));
+                }
+                if (videoPlayUrl.getData().getDurl() != null) {
+                    mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(Uri.parse(videoPlayUrl.getData().getDurl().get(0).getUrl()));
+                    baseBind.tvVideo.setText(videoPlayUrl.getData().getDurl().get(0).getUrl());
+                    baseBind.btnDownload.setOnClickListener(v -> DownloadUtil.downloadVideo(PlayActivity.this,
+                            videoPlayUrl.getData().getDurl().get(0).getUrl(),
+                            null,
+                            mView.getData().getPages().get(0).getPart(),
+                            mView.getData().getTitle(),
+                            mView.getData().getBvid(),
+                            true,
+                            1,
+                            mView.getData().getPages().get(0).getDmlink()));
+                }
+                player.prepare(mediaSource);
+                Glide.with(PlayActivity.this).load(mView.getData().getPic()).into(mIv);
+                mTv.setText(videoPlayUrl.toString());
+                baseBind.tvDanmaku.setText(mView.getData().getPages().get(0).getDmlink());
+                setTitle(mView.getData().getTitle());
+                break;
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GSYVideoManager.releaseAllVideos();
+        player.release();
     }
 
     @Override
     protected int initConfig() {
-        return 0;
+        return NEED_HANDLER;
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mGsyVideo.setVideoAllCallBack(null);
     }
 
     @Override

@@ -12,6 +12,8 @@ public class NestedCard {
     private Dimension dimension;
     private String dynamic;
     private String jump_url;
+    private Owner owner;
+    private User user;
 
     public Item getItem() {
         return item;
@@ -28,8 +30,6 @@ public class NestedCard {
     public void setUser(User user) {
         this.user = user;
     }
-
-    private User user;
 
     public long getAid() {
         return aid;
@@ -93,6 +93,14 @@ public class NestedCard {
 
     public void setJump_url(String jump_url) {
         this.jump_url = jump_url;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 
     public class Item {
@@ -500,5 +508,35 @@ public class NestedCard {
         private int height;
         private int rotate;
         private int width;
+    }
+
+    public class Owner {
+        public String getFace() {
+            return face;
+        }
+
+        public void setFace(String face) {
+            this.face = face;
+        }
+
+        public long getMid() {
+            return mid;
+        }
+
+        public void setMid(long mid) {
+            this.mid = mid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        private String face;
+        private long mid;
+        private String name;
     }
 }

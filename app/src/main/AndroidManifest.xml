@@ -17,10 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.article.ArticleActivity"
+            android:theme="@style/AppTheme.TransparencyActionBar"
+            android:label=""></activity>
         <activity
             android:name=".ui.download.DownloadActivity"
             android:label="@string/download"
-            android:parentActivityName=".ui.WelcomeActivity"></activity>
+            android:parentActivityName=".ui.WelcomeActivity" />
 
         <service
             android:name=".services.VideoDownloadService"
@@ -62,7 +65,7 @@
             android:name=".ui.play.PlayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:supportsPictureInPicture="true"
-            android:theme="@style/AppTheme.NoActionBar.TransparencyStatus" />
+            android:theme="@style/AppTheme.TransparencyActionBar" />
         <activity
             android:name=".ui.PhotoViewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

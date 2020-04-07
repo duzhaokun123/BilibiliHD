@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import android.content.Intent;
 
+import com.arthenica.mobileffmpeg.Config;
 import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityWelcomeBinding;
@@ -10,10 +11,8 @@ import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.google.android.exoplayer2.util.Log;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
-
-import nl.bravobit.ffmpeg.FFmpeg;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
@@ -46,9 +45,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                     if (loginResponse != null) {
                         pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
                     }
-                    if (!FFmpeg.getInstance(WelcomeActivity.this).isSupported()) {
-                        runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, "do not support your device"));
-                    }
+//                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
                     if (Settings.isFirstStart()) {
                         NotificationUtil.init(getApplicationContext());
                         Settings.setFirstStart(false);

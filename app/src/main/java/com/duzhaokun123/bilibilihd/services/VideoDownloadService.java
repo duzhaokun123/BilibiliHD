@@ -16,11 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.model.MainSavedVideoInfo;
+import com.duzhaokun123.bilibilihd.model.PageSavedVideoInfo;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.download.DownloadActivity;
 import com.duzhaokun123.bilibilihd.utils.DoubleDownloadListener;
 import com.duzhaokun123.bilibilihd.utils.FileUtil;
+import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.liulishuo.okdownload.DownloadContext;
 import com.liulishuo.okdownload.DownloadContextListener;
@@ -36,13 +41,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
-import nl.bravobit.ffmpeg.FFmpeg;
 
 public class VideoDownloadService extends IntentService {
     public static final String CLASS_NAME = VideoDownloadService.class.getSimpleName();
@@ -54,28 +57,32 @@ public class VideoDownloadService extends IntentService {
 
     private static final String EXTRA_VIDEO = "com.duzhaokun123.bilibilihd.services.extra.VIDEO";
     private static final String EXTRA_AUDIO = "com.duzhaokun123.bilibilihd.services.extra.AUDIO";
-    private static final String EXTRA_DANMAKU = "com.duzhaokun123.bilibilihd.services.extra.DANMAKU";
+    private static final String EXTRA_DANMAKU_URL = "com.duzhaokun123.bilibilihd.services.extra.DANMAKU_URL";
     private static final String EXTRA_CACHE_PATH = "com.duzhaokun123.bilibilihd.services.extra.CACHE_PATH";
-    private static final String EXTRA_TITLE = "com.duzhaokun123.bilibilihd.services.extra.TITLE";
+    private static final String EXTRA_VIDEO_TITLE = "com.duzhaokun123.bilibilihd.services.extra.VIDEO_TITLE";
+    private static final String EXTRA_MAIN_TITLE = "com.duzhaokun123.bilibilihd.services.extra.MAIN_TITLE";
     private static final String EXTRA_BVID = "com.duzhaokun123.bilibilihd.services.extra.BVID";
     private static final String EXTRA_TASK_ID = "com.duzhaokun123.bilibilihd.services.extra.TASK_ID";
     private static final String EXTRA_IS_VIDEO_ONLY = "com.duzhaokun123.bilibilihd.services.extra.IS_VIDEO_ONLY";
+    private static final String EXTRA_PAGE = "com.duzhaokun123.bilibilihd.services.extra.PAGE";
 
     public VideoDownloadService() {
         super("DownloadService");
     }
 
 
-    public static void downloadVideo(Context context, String video, String audio, String danmaku, String cachePath, String title, String bvid, boolean videoOnly) {
+    public static void downloadVideo(Context context, String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, String danmakuUrl) {
         Intent intent = new Intent(context, VideoDownloadService.class);
         intent.setAction(ACTION_START_TASK);
         intent.putExtra(EXTRA_VIDEO, video);
         intent.putExtra(EXTRA_AUDIO, audio);
-        intent.putExtra(EXTRA_DANMAKU, danmaku);
         intent.putExtra(EXTRA_CACHE_PATH, cachePath);
-        intent.putExtra(EXTRA_TITLE, title);
+        intent.putExtra(EXTRA_VIDEO_TITLE, videoTitle);
+        intent.putExtra(EXTRA_MAIN_TITLE, mainTitle);
         intent.putExtra(EXTRA_BVID, bvid);
         intent.putExtra(EXTRA_IS_VIDEO_ONLY, videoOnly);
+        intent.putExtra(EXTRA_PAGE, page);
+        intent.putExtra(EXTRA_DANMAKU_URL, danmakuUrl);
         context.startService(intent);
     }
 
@@ -107,11 +114,13 @@ public class VideoDownloadService extends IntentService {
             if (ACTION_START_TASK.equals(action)) {
                 handleDownloadVideo(intent.getStringExtra(EXTRA_VIDEO),
                         intent.getStringExtra(EXTRA_AUDIO),
-                        intent.getStringExtra(EXTRA_DANMAKU),
                         intent.getStringExtra(EXTRA_CACHE_PATH),
-                        intent.getStringExtra(EXTRA_TITLE),
+                        intent.getStringExtra(EXTRA_VIDEO_TITLE),
+                        intent.getStringExtra(EXTRA_MAIN_TITLE),
                         intent.getStringExtra(EXTRA_BVID),
-                        intent.getBooleanExtra(EXTRA_IS_VIDEO_ONLY, false));
+                        intent.getBooleanExtra(EXTRA_IS_VIDEO_ONLY, false),
+                        intent.getIntExtra(EXTRA_PAGE, 1),
+                        intent.getStringExtra(EXTRA_DANMAKU_URL));
             } else if (ACTION_CANCEL_TASK.equals(action)) {
                 handleCancelTask(intent.getIntExtra(EXTRA_TASK_ID, 0));
             } else if (ACTION_PAUSE_TASK.equals(action)) {
@@ -124,7 +133,7 @@ public class VideoDownloadService extends IntentService {
 
     private static Map<Integer, VideoTaskHolder> videoTaskHolderMap;
 
-    private void handleDownloadVideo(String video, String audio, String danmaku, String cachePath, String title, String bvid, boolean videoOnly) {
+    private void handleDownloadVideo(String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, String danmakuUrl) {
         DownloadContext.Builder builder = new DownloadContext.QueueSet()
                 .setParentPath(cachePath)
                 .setMinIntervalMillisCallbackProcess(1000)
@@ -147,12 +156,6 @@ public class VideoDownloadService extends IntentService {
             audioTask.setTag("audio");
             builder.bindSetTask(audioTask);
         }
-        DownloadTask danmakuTask = new DownloadTask.Builder(danmaku, cachePath, "danmaku.xml")
-                .setPassIfAlreadyCompleted(false)
-                .setHeaderMapFields(headerMapFields)
-                .build();
-        danmakuTask.setTag("danmaku");
-        builder.bindSetTask(danmakuTask);
         builder.setListener(new DownloadContextListener() {
             @Override
             public void taskEnd(@NonNull DownloadContext context, @NonNull DownloadTask task, @NonNull EndCause cause, @Nullable Exception realCause, int remainCount) {
@@ -175,11 +178,11 @@ public class VideoDownloadService extends IntentService {
             id = (int) System.currentTimeMillis();
         } while (videoTaskHolderMap.get(id) != null || !NotificationUtil.isIdUnregistered(id) || id == 0);
         int finalId = id;
-        DoubleDownloadListener douDownloadListener = new DoubleDownloadListener(new MyDownloadListener(remoteViews, finalId), null);
-        VideoTaskHolder videoTaskHolder = new VideoTaskHolder(downloadContext, douDownloadListener, finalId, remoteViews, cachePath, bvid, title, videoOnly);
+        DoubleDownloadListener doubleDownloadListener = new DoubleDownloadListener(new MyDownloadListener(remoteViews, finalId), null);
+        VideoTaskHolder videoTaskHolder = new VideoTaskHolder(downloadContext, doubleDownloadListener, finalId, remoteViews, cachePath, bvid, videoTitle, mainTitle, videoOnly, page, danmakuUrl);
         videoTaskHolderMap.put(id, videoTaskHolder);
 
-        remoteViews.setTextViewText(R.id.tv_title, title);
+        remoteViews.setTextViewText(R.id.tv_title, videoTitle);
         remoteViews.setTextViewText(R.id.tv_id, "id:" + finalId);
         if (videoOnly) {
             remoteViews.setProgressBar(R.id.pb_audio, 0, 0, false);
@@ -204,12 +207,11 @@ public class VideoDownloadService extends IntentService {
         pauseIntent.putExtra(EXTRA_TASK_ID, finalId);
         PendingIntent pausePendingIntent = PendingIntent.getService(this, finalId, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new Notification.Builder(this, "video_download")
+        Notification notification = new Notification.Builder(this, NotificationUtil.CHANNEL_ID_VIDEO_DOWNLOAD)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setColor(getColor(R.color.colorAccent))
                 .setShowWhen(false)
                 .setContentTitle(getString(R.string.download))
-                .setChannelId(NotificationUtil.CHANNEL_ID_VIDEO_DOWNLOAD)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setCustomContentView(remoteViews)
                 .setContentIntent(downloadActivityPendingIntent)
@@ -221,7 +223,7 @@ public class VideoDownloadService extends IntentService {
         NotificationUtil.show(this, finalId, notification);
 
         videoTaskHolder.status = VideoTaskHolder.Status.DOWNLOADING;
-        downloadContext.startOnParallel(douDownloadListener);
+        downloadContext.startOnParallel(doubleDownloadListener);
     }
 
     private void merge(@NonNull VideoTaskHolder videoTaskHolder) {
@@ -232,49 +234,45 @@ public class VideoDownloadService extends IntentService {
         videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getText(R.string.merging));
         videoTaskHolder.remoteViews.setProgressBar(R.id.pb_total, 0, 0, true);
         videoTaskHolder.status = VideoTaskHolder.Status.MERGING;
-        FFmpeg.getInstance(this).execute(
-                new String[]{
-                        "-i", videoTaskHolder.cachePath + File.separator + "video.m4s",
-                        "-i", videoTaskHolder.cachePath + File.separator + "audio.m4s",
-                        "-vcodec", "copy", "-acodec", "copy",
-                        videoTaskHolder.cachePath + File.separator + "out.mp4"},
-                new ExecuteBinaryResponseHandler() {
-                    @Override
-                    public void onProgress(String message) {
-                        Log.d(CLASS_NAME, message);
-                    }
-
-                    @Override
-                    public void onSuccess(String message) {
-                        videoTaskHolder.remoteViews.setProgressBar(R.id.pb_total, 1, 1, false);
-                        videoTaskHolder.status = VideoTaskHolder.Status.UNKNOWN;
-                        moveVideoToPublicDir(videoTaskHolder);
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.failure));
-                        videoTaskHolder.remoteViews.setProgressBar(R.id.pb_total, 1, 0, false);
-                        Notification notification = NotificationUtil.getNotification(videoTaskHolder.id);
-                        if (notification != null) {
-                            notification = Notification.Builder.recoverBuilder(VideoDownloadService.this, notification)
-                                    .setSmallIcon(android.R.drawable.stat_sys_warning)
-                                    .setShowWhen(true)
-                                    .setAutoCancel(false)
-                                    .build();
-                            NotificationUtil.makeNotificationCleanable(notification);
-                            NotificationUtil.reshow(VideoDownloadService.this, videoTaskHolder.id, notification);
-                        }
-                    }
-                });
+        int rc = FFmpeg.execute(new String[]{
+                "-i", videoTaskHolder.cachePath + File.separator + "video.m4s",
+                "-i", videoTaskHolder.cachePath + File.separator + "audio.m4s",
+                "-vcodec", "copy", "-acodec", "copy",
+                videoTaskHolder.cachePath + File.separator + "out.flv"});
+        if (rc == Config.RETURN_CODE_SUCCESS) {
+            Log.i(Config.TAG, "Command execution completed successfully.");
+            videoTaskHolder.remoteViews.setProgressBar(R.id.pb_total, 1, 1, false);
+            videoTaskHolder.status = VideoTaskHolder.Status.UNKNOWN;
+            moveVideoToPublicDir(videoTaskHolder);
+        } else if (rc == Config.RETURN_CODE_CANCEL) {
+            Log.i(Config.TAG, "Command execution cancelled by user.");
+        } else {
+            Log.i(Config.TAG, String.format("Command execution failed with rc=%d and the output below.", rc));
+            Config.printLastCommandOutput(Log.INFO);
+            videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.failure));
+            videoTaskHolder.remoteViews.setProgressBar(R.id.pb_total, 1, 0, false);
+            Notification notification = NotificationUtil.getNotification(videoTaskHolder.id);
+            if (notification != null) {
+                notification = Notification.Builder.recoverBuilder(VideoDownloadService.this, notification)
+                        .setSmallIcon(android.R.drawable.stat_sys_warning)
+                        .setShowWhen(true)
+                        .setAutoCancel(false)
+                        .build();
+                NotificationUtil.makeNotificationCleanable(notification);
+                NotificationUtil.reshow(VideoDownloadService.this, videoTaskHolder.id, notification);
+            }
+        }
     }
 
     private void moveVideoToPublicDir(VideoTaskHolder videoTaskHolder) {
+        videoTaskHolder.status = VideoTaskHolder.Status.MOVING;
+        videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.moving));
+
         File dir;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            dir = new File(getExternalFilesDir(Environment.DIRECTORY_MOVIES) + File.separator + "bilibili HD" + File.separator + videoTaskHolder.bvid + File.separator + videoTaskHolder.title);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dir = new File(getExternalFilesDir(Environment.DIRECTORY_MOVIES) + File.separator + "bilibili HD" + File.separator + videoTaskHolder.bvid);
         } else {
-            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + File.separator + "bilibili HD" + File.separator + videoTaskHolder.bvid + File.separator + videoTaskHolder.title);
+            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + File.separator + "bilibili HD" + File.separator + videoTaskHolder.bvid);
         }
         if (!dir.exists() && !dir.mkdirs()) {
             Notification notification = NotificationUtil.getNotification(videoTaskHolder.id);
@@ -288,23 +286,59 @@ public class VideoDownloadService extends IntentService {
             NotificationUtil.reshow(this, videoTaskHolder.id);
             return;
         }
-        videoTaskHolder.status = VideoTaskHolder.Status.MOVING;
-        videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.moving));
+
+        FileOutputStream mainSavedVideoInfoFileOutputStream = null;
+        OutputStreamWriter mainSavedVideoInfoOutputStreamWriter = null;
+        try {
+            mainSavedVideoInfoFileOutputStream = new FileOutputStream(new File(dir, "info.json"));
+            mainSavedVideoInfoOutputStreamWriter = new OutputStreamWriter(mainSavedVideoInfoFileOutputStream);
+            mainSavedVideoInfoOutputStreamWriter.write(GsonUtil.getGsonInstance().toJson(new MainSavedVideoInfo(videoTaskHolder.mainTitle, videoTaskHolder.bvid)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (mainSavedVideoInfoOutputStreamWriter != null) {
+                    mainSavedVideoInfoOutputStreamWriter.close();
+                }
+                if (mainSavedVideoInfoFileOutputStream != null) {
+                    mainSavedVideoInfoFileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dir = new File(dir, String.valueOf(videoTaskHolder.page));
+        if (!dir.exists() && !dir.mkdirs()) {
+            Notification notification = NotificationUtil.getNotification(videoTaskHolder.id);
+            if (notification != null) {
+                notification = Notification.Builder.recoverBuilder(VideoDownloadService.this, notification)
+                        .setSmallIcon(android.R.drawable.stat_sys_warning)
+                        .build();
+                videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, "cannot mkdirs() " + dir.getPath());
+                NotificationUtil.reshow(VideoDownloadService.this, videoTaskHolder.id, notification);
+            }
+            NotificationUtil.reshow(this, videoTaskHolder.id);
+            return;
+        }
+
+        FileOutputStream pageSavedVideoInfoFileOutPutStream = null;
+        OutputStreamWriter pageSavedVideoInfoOutPutStreamWriter = null;
         FileInputStream videoFileInputStream = null;
         FileOutputStream videoFileOutputStream = null;
-        FileInputStream danmakuFileInputStream = null;
-        FileOutputStream danmakuFileOutputStream = null;
         try {
             if (videoTaskHolder.videoOnly) {
                 videoFileInputStream = new FileInputStream(new File(videoTaskHolder.cachePath, "video.m4s"));
             } else {
-                videoFileInputStream = new FileInputStream(new File(videoTaskHolder.cachePath, "out.mp4"));
+                videoFileInputStream = new FileInputStream(new File(videoTaskHolder.cachePath, "out.flv"));
             }
-            videoFileOutputStream = new FileOutputStream(new File(dir, "video.mp4"));
+            videoFileOutputStream = new FileOutputStream(new File(dir, "video.flv"));
             FileUtil.copy(videoFileInputStream, videoFileOutputStream);
-            danmakuFileInputStream = new FileInputStream(new File(videoTaskHolder.cachePath, "danmaku.xml"));
-            danmakuFileOutputStream = new FileOutputStream(new File(dir, "danmaku.xml"));
-            FileUtil.copy(danmakuFileInputStream, danmakuFileOutputStream);
+
+            pageSavedVideoInfoFileOutPutStream = new FileOutputStream(new File(dir, "info.json"));
+            pageSavedVideoInfoOutPutStreamWriter = new OutputStreamWriter(pageSavedVideoInfoFileOutPutStream);
+            pageSavedVideoInfoOutPutStreamWriter.write(GsonUtil.getGsonInstance().toJson(new PageSavedVideoInfo(videoTaskHolder.page, videoTaskHolder.videoTitle, videoTaskHolder.danmakuUrl, System.currentTimeMillis())));
+
             videoTaskHolder.status = VideoTaskHolder.Status.FINISH;
             videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.success));
             Notification notification = NotificationUtil.getNotification(videoTaskHolder.id);
@@ -342,21 +376,22 @@ public class VideoDownloadService extends IntentService {
                     e.printStackTrace();
                 }
             }
-            if (danmakuFileInputStream != null) {
+            if (pageSavedVideoInfoOutPutStreamWriter != null) {
                 try {
-                    danmakuFileInputStream.close();
+                    pageSavedVideoInfoOutPutStreamWriter.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (danmakuFileOutputStream != null) {
+            if (pageSavedVideoInfoFileOutPutStream != null) {
                 try {
-                    danmakuFileOutputStream.close();
+                    pageSavedVideoInfoFileOutPutStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         NotificationUtil.unregister(videoTaskHolder.id);
         videoTaskHolderMap.remove(videoTaskHolder.id);
         if (!FileUtil.deleteDir(new File(videoTaskHolder.cachePath))) {
@@ -461,12 +496,13 @@ public class VideoDownloadService extends IntentService {
     }
 
     class MyDownloadListener extends DownloadListener4WithSpeed {
-        private RemoteViews remoteViews;
-        private final int finalId;
 
-        MyDownloadListener(RemoteViews remoteViews, int id) {
+        private RemoteViews remoteViews;
+        private int finalId;
+
+        MyDownloadListener(RemoteViews remoteViews, int finalId ) {
             this.remoteViews = remoteViews;
-            this.finalId = id;
+            this.finalId = finalId;
         }
 
         @Override
@@ -476,8 +512,6 @@ public class VideoDownloadService extends IntentService {
                 remoteViews.setProgressBar(R.id.pb_video, 0, 0, true);
             } else if ("audio".equals(task.getTag())) {
                 remoteViews.setProgressBar(R.id.pb_audio, 0, 0, true);
-            } else if ("danmaku".equals(task.getTag())) {
-                remoteViews.setProgressBar(R.id.pb_danmaku, 0, 0, true);
             }
             NotificationUtil.reshow(VideoDownloadService.this, finalId);
         }
@@ -507,9 +541,6 @@ public class VideoDownloadService extends IntentService {
             } else if ("audio".equals(task.getTag())) {
                 remoteViews.setProgressBar(R.id.pb_audio, (int) info.getTotalLength(), 0, false);
                 videoTaskHolder.audioLength = info.getTotalLength();
-            } else if ("danmaku".equals(task.getTag())) {
-                remoteViews.setProgressBar(R.id.pb_danmaku, (int) info.getTotalLength(), 0, false);
-                videoTaskHolder.danmakuLength = info.getTotalLength();
             }
             remoteViews.setProgressBar(R.id.pb_total, (int) videoTaskHolder.getTotalLength(), 0, false);
             NotificationUtil.reshow(VideoDownloadService.this, finalId);
@@ -536,10 +567,6 @@ public class VideoDownloadService extends IntentService {
                 remoteViews.setInt(R.id.pb_audio, "setProgress", (int) currentOffset);
                 remoteViews.setTextViewText(R.id.tv_audio_speed, taskSpeed.getSpeedWithSIAndFlush());
                 videoTaskHolder.audioCurrentOffset = currentOffset;
-            } else if ("danmaku".equals(task.getTag())) {
-                remoteViews.setInt(R.id.pb_danmaku, "setProgress", (int) currentOffset);
-                remoteViews.setTextViewText(R.id.tv_danmaku_speed, taskSpeed.getSpeedWithSIAndFlush());
-                videoTaskHolder.danmakuCurrentOffset = currentOffset;
             }
             remoteViews.setInt(R.id.pb_total, "setProgress", (int) videoTaskHolder.getTotalCurrentOffset());
             NotificationUtil.reshow(VideoDownloadService.this, finalId);
@@ -566,16 +593,17 @@ public class VideoDownloadService extends IntentService {
             } else if ("audio".equals(task.getTag())) {
                 remoteViews.setTextViewText(R.id.tv_audio_speed, cause.name());
                 videoTaskHolder.audioEndCause = cause;
-            } else if ("danmaku".equals(task.getTag())) {
-                remoteViews.setTextViewText(R.id.tv_danmaku_speed, cause.name());
-                videoTaskHolder.danmakuEndCause = cause;
+            }
+            if (videoTaskHolder.status == VideoTaskHolder.Status.PAUSING) {
+                remoteViews.setTextViewText(R.id.tv_total_info, VideoTaskHolder.Status.PAUSING.name());
             }
             if (cause != EndCause.COMPLETED) {
-                remoteViews.setTextViewText(R.id.tv_total_info, cause.name());
+                videoTaskHolder.status = VideoTaskHolder.Status.ERROR;
+                remoteViews.setTextViewText(R.id.tv_total_info, VideoTaskHolder.Status.ERROR.name());
             }
-            if (videoTaskHolder.videoEndCause != null && videoTaskHolder.audioEndCause != null && videoTaskHolder.danmakuEndCause != null) {
-                Notification notification = NotificationUtil.getNotification(finalId);
-                if (videoTaskHolder.videoEndCause == EndCause.COMPLETED && videoTaskHolder.audioEndCause == EndCause.COMPLETED && videoTaskHolder.danmakuEndCause == EndCause.COMPLETED) {
+            Notification notification = NotificationUtil.getNotification(finalId);
+            if (videoTaskHolder.videoEndCause != null && videoTaskHolder.audioEndCause != null) {
+                if (videoTaskHolder.videoEndCause == EndCause.COMPLETED && videoTaskHolder.audioEndCause == EndCause.COMPLETED) {
                     videoTaskHolder.status = VideoTaskHolder.Status.UNKNOWN;
                     merge(videoTaskHolder);
                 } else if (notification != null && videoTaskHolder.status != VideoTaskHolder.Status.PAUSING) {
@@ -590,18 +618,21 @@ public class VideoDownloadService extends IntentService {
             }
             NotificationUtil.reshow(VideoDownloadService.this, finalId);
         }
-    }
 
+    }
     public static class VideoTaskHolder {
-        VideoTaskHolder(DownloadContext downloadContext, DoubleDownloadListener douDownloadListener, int id, RemoteViews remoteViews, String cachePath, String bvid, String title, boolean videoOnly) {
+        VideoTaskHolder(DownloadContext downloadContext, DoubleDownloadListener douDownloadListener, int id, RemoteViews remoteViews, String cachePath, String bvid, String videoTitle, String mainTitle, boolean videoOnly, int page, String danmakuUrl) {
             this.downloadContext = downloadContext;
             this.doubleDownloadListener = douDownloadListener;
             this.id = id;
             this.remoteViews = remoteViews;
             this.cachePath = cachePath;
             this.bvid = bvid;
-            this.title = title;
+            this.videoTitle = videoTitle;
+            this.mainTitle = mainTitle;
             this.videoOnly = videoOnly;
+            this.page = page;
+            this.danmakuUrl = danmakuUrl;
         }
 
         DownloadContext downloadContext;
@@ -609,14 +640,23 @@ public class VideoDownloadService extends IntentService {
         RemoteViews remoteViews;
         String cachePath;
         @Nullable
-        EndCause videoEndCause, audioEndCause, danmakuEndCause;
+        EndCause videoEndCause, audioEndCause;
         String bvid;
-        String title;
+        String videoTitle, mainTitle;
+        String danmakuUrl;
         Status status = Status.UNKNOWN;
-        long videoLength, audioLength, danmakuLength;
-        long videoCurrentOffset, audioCurrentOffset, danmakuCurrentOffset;
-        int id;
+        long videoLength, audioLength;
+        long videoCurrentOffset, audioCurrentOffset;
+        int id, page;
         boolean videoOnly;
+
+        public long getTotalCurrentOffset() {
+            return videoCurrentOffset + audioCurrentOffset;
+        }
+
+        public long getTotalLength() {
+            return videoLength + audioLength;
+        }
 
         public DownloadContext getDownloadContext() {
             return downloadContext;
@@ -644,17 +684,20 @@ public class VideoDownloadService extends IntentService {
             return audioEndCause;
         }
 
-        @Nullable
-        public EndCause getDanmakuEndCause() {
-            return danmakuEndCause;
-        }
-
         public String getBvid() {
             return bvid;
         }
 
-        public String getTitle() {
-            return title;
+        public String getVideoTitle() {
+            return videoTitle;
+        }
+
+        public String getMainTitle() {
+            return mainTitle;
+        }
+
+        public String getDanmakuUrl() {
+            return danmakuUrl;
         }
 
         public Status getStatus() {
@@ -669,10 +712,6 @@ public class VideoDownloadService extends IntentService {
             return audioLength;
         }
 
-        public long getDanmakuLength() {
-            return danmakuLength;
-        }
-
         public long getVideoCurrentOffset() {
             return videoCurrentOffset;
         }
@@ -681,28 +720,20 @@ public class VideoDownloadService extends IntentService {
             return audioCurrentOffset;
         }
 
-        public long getDanmakuCurrentOffset() {
-            return danmakuCurrentOffset;
-        }
-
         public int getId() {
             return id;
+        }
+
+        public int getPage() {
+            return page;
         }
 
         public boolean isVideoOnly() {
             return videoOnly;
         }
 
-        public long getTotalLength() {
-            return videoLength + audioLength + danmakuLength;
-        }
-
-        public long getTotalCurrentOffset() {
-            return videoCurrentOffset + audioCurrentOffset + danmakuCurrentOffset;
-        }
-
         public enum Status {
-            DOWNLOADING, PAUSING, MERGING, MOVING, UNKNOWN, FINISH
+            DOWNLOADING, PAUSING, MERGING, MOVING, UNKNOWN, FINISH, ERROR
         }
     }
 }

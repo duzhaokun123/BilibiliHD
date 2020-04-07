@@ -20,19 +20,15 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -40,6 +36,8 @@ import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ConcurrentModificationException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 // FIXME: 20-2-24 这么搞线程不安全啊
 public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
@@ -98,27 +96,22 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((VideoCardHolder) holder).mTvTitle.setText(homePage.getData().getItems().get(position).getTitle());
-                ((VideoCardHolder) holder).mTvCount.setText(homePage.getData().getItems().get(position).getCoverLeftText1() + getString(R.string.watched));
-                ((VideoCardHolder) holder).mTvDuration.setText(homePage.getData().getItems().get(position).getCoverRightText());
-                ((VideoCardHolder) holder).mTvBadge.setText(homePage.getData().getItems().get(position).getBadge());
-                Glide.with(((VideoCardHolder) holder).mIv).load(homePage.getData().getItems().get(position).getCover()).listener(new RequestListener<Drawable>() {
-                    private ImageView imageView = ((VideoCardHolder) holder).mIv;
-
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
+                ((VideoCardHolder) holder).mTvCoverLeftText1.setText(homePage.getData().getItems().get(position).getCoverLeftText1());
+                ((VideoCardHolder) holder).mTvCoverLeftText2.setText(homePage.getData().getItems().get(position).getCoverLeftText2());
+                ((VideoCardHolder) holder).mTvCoverLeftText3.setText(homePage.getData().getItems().get(position).getCoverLeftText3());
+                ((VideoCardHolder) holder).mTvUp.setText(homePage.getData().getItems().get(position).getDesc());
+                if (getContext() != null) {
+                    GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
+                    if (homePage.getData().getItems().get(position).getMask() != null) {
+                        GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getCover(), ((VideoCardHolder) holder).mCivFace, false);
+                        ((VideoCardHolder) holder).mCivFace.setOnClickListener(v ->
+                                CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
+                        );
                     }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        ImageViewUtil.autoAspectRation(imageView, resource);
-                        return false;
-                    }
-                }).into(((VideoCardHolder) holder).mIv);
+                }
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
                     private long aid;
-                    private String badge = homePage.getData().getItems().get(position).getBadge();
 
                     {
                         try {
@@ -131,14 +124,9 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                     @Override
                     public void onClick(View v) {
                         Intent intent;
-                        if (badge == null) {
-                            intent = new Intent(getContext(), PlayActivity.class);
-                            intent.putExtra("aid", aid);
-                            startActivity(intent);
-                        } else {
-                            ToastUtil.sendMsg(getContext(), "暂不支持 " + badge);
-                        }
-
+                        intent = new Intent(getContext(), PlayActivity.class);
+                        intent.putExtra("aid", aid);
+                        startActivity(intent);
                     }
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
@@ -192,17 +180,20 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
             class VideoCardHolder extends RecyclerView.ViewHolder {
 
                 private ImageView mIv;
-                private TextView mTvTitle, mTvCount, mTvDuration, mTvBadge;
+                private TextView mTvTitle, mTvCoverLeftText1, mTvCoverLeftText2, mTvCoverLeftText3, mTvUp;
                 private CardView mCv;
+                private CircleImageView mCivFace;
 
                 VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
-                    mTvCount = itemView.findViewById(R.id.tv_count);
-                    mTvDuration = itemView.findViewById(R.id.tv_duration);
-                    mTvBadge = itemView.findViewById(R.id.tv_badge);
+                    mTvCoverLeftText1 = itemView.findViewById(R.id.tv_cover_left_text_1);
+                    mTvCoverLeftText2 = itemView.findViewById(R.id.tv_cover_left_text_2);
+                    mTvCoverLeftText3 = itemView.findViewById(R.id.tv_cover_left_text_3);
+                    mTvUp = itemView.findViewById(R.id.tv_up);
                     mCv = itemView.findViewById(R.id.cv);
+                    mCivFace = itemView.findViewById(R.id.civ_face);
                 }
             }
         });

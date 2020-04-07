@@ -74,6 +74,13 @@ public class MyBilibiliClient {
         paramsMap.put("ts", String.valueOf(System.currentTimeMillis()));
     }
 
+    public OkHttpClient getOkHttpClient() {
+        if (okHttpClient == null) {
+            okHttpClient = new OkHttpClient();
+        }
+        return okHttpClient;
+    }
+
     public interface GetRequest {
         String getUrl();
 

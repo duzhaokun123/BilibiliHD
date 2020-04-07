@@ -15,7 +15,7 @@ import java.util.Map;
 public class DoubleDownloadListener implements DownloadListener {
     private DownloadListener downloadListener1, downloadListener2;
 
-    public DoubleDownloadListener(DownloadListener downloadListener1, DownloadListener downloadListener2) {
+    public DoubleDownloadListener(@NonNull DownloadListener downloadListener1, @Nullable DownloadListener downloadListener2) {
         this.downloadListener1 = downloadListener1;
         this.downloadListener2 = downloadListener2;
     }
@@ -26,9 +26,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void taskStart(@NonNull DownloadTask task) {
-        if (downloadListener1 != null) {
-            downloadListener1.taskStart(task);
-        }
+        downloadListener1.taskStart(task);
         if (downloadListener2 != null) {
             downloadListener2.taskStart(task);
         }
@@ -36,9 +34,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void connectTrialStart(@NonNull DownloadTask task, @NonNull Map<String, List<String>> requestHeaderFields) {
-        if (downloadListener1 != null) {
-            downloadListener1.connectTrialStart(task, requestHeaderFields);
-        }
+        downloadListener1.connectTrialStart(task, requestHeaderFields);
         if (downloadListener2 != null) {
             downloadListener2.connectTrialStart(task, requestHeaderFields);
         }
@@ -46,9 +42,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void connectTrialEnd(@NonNull DownloadTask task, int responseCode, @NonNull Map<String, List<String>> responseHeaderFields) {
-        if (downloadListener1 != null) {
-            downloadListener1.connectTrialEnd(task, responseCode, responseHeaderFields);
-        }
+        downloadListener1.connectTrialEnd(task, responseCode, responseHeaderFields);
         if (downloadListener2 != null) {
             downloadListener2.connectTrialEnd(task, responseCode, responseHeaderFields);
         }
@@ -56,9 +50,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void downloadFromBeginning(@NonNull DownloadTask task, @NonNull BreakpointInfo info, @NonNull ResumeFailedCause cause) {
-        if (downloadListener1 != null) {
-            downloadListener1.downloadFromBeginning(task, info, cause);
-        }
+        downloadListener1.downloadFromBeginning(task, info, cause);
         if (downloadListener2 != null) {
             downloadListener2.downloadFromBeginning(task, info, cause);
         }
@@ -66,9 +58,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void downloadFromBreakpoint(@NonNull DownloadTask task, @NonNull BreakpointInfo info) {
-        if (downloadListener1 != null) {
-            downloadListener1.downloadFromBreakpoint(task, info);
-        }
+        downloadListener1.downloadFromBreakpoint(task, info);
         if (downloadListener2 != null) {
             downloadListener2.downloadFromBreakpoint(task, info);
         }
@@ -76,9 +66,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void connectStart(@NonNull DownloadTask task, int blockIndex, @NonNull Map<String, List<String>> requestHeaderFields) {
-        if (downloadListener1 != null) {
-            downloadListener1.connectStart(task, blockIndex, requestHeaderFields);
-        }
+        downloadListener1.connectStart(task, blockIndex, requestHeaderFields);
         if (downloadListener2 != null) {
             downloadListener2.connectStart(task, blockIndex, requestHeaderFields);
         }
@@ -86,9 +74,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void connectEnd(@NonNull DownloadTask task, int blockIndex, int responseCode, @NonNull Map<String, List<String>> responseHeaderFields) {
-        if (downloadListener1 != null) {
-            downloadListener1.connectEnd(task, blockIndex, responseCode, responseHeaderFields);
-        }
+        downloadListener1.connectEnd(task, blockIndex, responseCode, responseHeaderFields);
         if (downloadListener2 != null) {
             downloadListener2.connectEnd(task, blockIndex, responseCode, responseHeaderFields);
         }
@@ -96,9 +82,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void fetchStart(@NonNull DownloadTask task, int blockIndex, long contentLength) {
-        if (downloadListener1 != null) {
-            downloadListener1.fetchStart(task, blockIndex, contentLength);
-        }
+        downloadListener1.fetchStart(task, blockIndex, contentLength);
         if (downloadListener2 != null) {
             downloadListener2.fetchStart(task, blockIndex, contentLength);
         }
@@ -106,9 +90,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void fetchProgress(@NonNull DownloadTask task, int blockIndex, long increaseBytes) {
-        if (downloadListener1 != null) {
-            downloadListener1.fetchProgress(task, blockIndex, increaseBytes);
-        }
+        downloadListener1.fetchProgress(task, blockIndex, increaseBytes);
         if (downloadListener2 != null) {
             downloadListener2.fetchProgress(task, blockIndex, increaseBytes);
         }
@@ -116,9 +98,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void fetchEnd(@NonNull DownloadTask task, int blockIndex, long contentLength) {
-        if (downloadListener1 != null) {
-            downloadListener1.fetchEnd(task, blockIndex, contentLength);
-        }
+        downloadListener1.fetchEnd(task, blockIndex, contentLength);
         if (downloadListener2 != null) {
             downloadListener2.fetchEnd(task, blockIndex, contentLength);
         }
@@ -126,9 +106,7 @@ public class DoubleDownloadListener implements DownloadListener {
 
     @Override
     public void taskEnd(@NonNull DownloadTask task, @NonNull EndCause cause, @Nullable Exception realCause) {
-        if (downloadListener1 != null) {
-            downloadListener1.taskEnd(task, cause, realCause);
-        }
+        downloadListener1.taskEnd(task, cause, realCause);
         if (downloadListener2 != null) {
             downloadListener2.taskEnd(task, cause, realCause);
         }

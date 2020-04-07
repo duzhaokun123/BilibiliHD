@@ -31,6 +31,7 @@ android {
         versionCode "${getGitCommitCount}".toInteger()
         versionName "0.1-git.${getGitHash}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("boolean", "IS_GIT_VERSION", "true")
     }
     buildTypes {
 
@@ -38,12 +39,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-            buildConfigField("boolean", "GIT_VERSION", "true")
+            ndk {
+                abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+            }
         }
 
         debug {
             zipAlignEnabled false
-            buildConfigField("boolean", "GIT_VERSION", "true")
         }
 
     }
@@ -79,9 +81,9 @@ dependencies {
     //browser
     implementation 'androidx.browser:browser:1.2.0'
     //bilibili-api
-    implementation group: 'com.hiczp', name: 'bilibili-api', version: '0.1.4'
+    implementation group: 'com.hiczp', name: 'bilibili-api', version: '0.2.0'
     //DrawerLayout
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha04'
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-beta01'
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
@@ -98,15 +100,17 @@ dependencies {
 //    implementation "com.google.android.material:material:1.1.0"
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha02'
     //okhttp3
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
-    //GSYVideoPlayer
-    implementation 'com.shuyu:GSYVideoPlayer:7.1.2'
-    //FFmpeg Android
-    implementation 'nl.bravobit:android-ffmpeg:1.1.7'
+    //exoplayer
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.3'
+    implementation 'com.google.android.exoplayer:extension-rtmp:2.11.3'
+    //mobile-ffmpeg
+    implementation 'com.arthenica:mobile-ffmpeg-min:4.3.1'
     //okdownload
     // core
     implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
@@ -115,4 +119,3 @@ dependencies {
     // provide okhttp to connect to backend
     implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
 }
-

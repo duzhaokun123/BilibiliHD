@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,30 +8,84 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
+import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 
 public class UrlOpenActivity extends AppCompatActivity {
 
+    private String  TAG = "UrlOpenActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Intent intent = getIntent();
         Uri uri = intent.getData();
+        String scheme = uri.getScheme();
         String host = uri.getHost();
         String path = uri.getPath();
-        Log.d("UrlOpenActivity", uri.toString());
-
+        Log.d(TAG, uri.toString());
+        Log.d(TAG, "scheme: " + scheme);
+        Log.d(TAG, "host: " + host);
+        Log.d(TAG, "path: " + path);
         Intent intent1 = null;
-        switch (hostLooksLikeWhichType(host)) {
-            case SPACE:
-                intent1 = new Intent(this, UserSpaceActivity.class);
-                intent1.putExtra("uid", getUidFromPath(path));
-                break;
-            case UNKNOWN:
+        if (!"bilibili".equals(scheme)) {
+            switch (hostLooksLikeWhichType(host)) {
+                case SPACE:
+                    intent1 = new Intent(this, UserSpaceActivity.class);
+                    intent1.putExtra("uid", getUidFromPath(path));
+                    break;
+                case WWW:
+                case M:
+                    switch (pathLooksLikeWhichType(path)) {
+                        case READ_MOBILE:
+                            intent1 = new Intent(this, ArticleActivity.class);
+                            if (path != null) {
+                                intent1.putExtra("id", Long.parseLong(path.substring(13)));
+                            }
+                            break;
+                        case READ:
+                            intent1 = new Intent(this, ArticleActivity.class);
+                            if (path != null) {
+                                intent1.putExtra("id", Long.parseLong(path.substring(8)));
+                            }
+                            break;
+                        case VIDEO:
+                            intent1 = new Intent(this, PlayActivity.class);
+                            if (path != null) {
+                                try {
+                                    intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path.substring(7)));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    intent1.putExtra("aid", Long.parseLong(path.substring(9)));
+                                }
+                            }
+                            break;
+                        case UNKNOWN:
+                            ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
+                            break;
+                    }
+                    break;
+                case UNKNOWN:
+                    ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
+                    break;
+            }
+        } else {
+            if ("video".equals(host)) {
+                intent1 = new Intent(this, PlayActivity.class);
+                if (path != null) {
+                    intent1.putExtra("aid", Long.parseLong(path.substring(1)));
+                }
+            } else if ("article".equals(host)) {
+                intent1 = new Intent(this, ArticleActivity.class);
+                if (path != null) {
+                    intent1.putExtra("id", Long.parseLong(path.substring(1)));
+                }
+            } else {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
-                break;
+            }
         }
         if (intent1 != null) {
             startActivity(intent1);
@@ -38,7 +93,7 @@ public class UrlOpenActivity extends AppCompatActivity {
         finish();
     }
 
-    private Type hostLooksLikeWhichType(String host) {
+    private Type hostLooksLikeWhichType(@Nullable String host) {
         if (host == null) {
             return Type.UNKNOWN;
         } else if (host.startsWith("space")) {
@@ -47,6 +102,20 @@ public class UrlOpenActivity extends AppCompatActivity {
             return Type.M;
         } else if(host.startsWith("www")) {
             return Type.WWW;
+        } else {
+            return Type.UNKNOWN;
+        }
+    }
+
+    private Type pathLooksLikeWhichType(@Nullable String path) {
+        if (path == null) {
+            return Type.UNKNOWN;
+        } else if (path.startsWith("/read/mobile")) {
+            return Type.READ_MOBILE;
+        } else if (path.startsWith("/read/cv")) {
+            return Type.READ;
+        } else if (path.startsWith("/video")) {
+            return Type.VIDEO;
         } else {
             return Type.UNKNOWN;
         }
@@ -74,6 +143,9 @@ public class UrlOpenActivity extends AppCompatActivity {
         VIDEO,
         M,
         WWW,
+        ARTICLE,
+        READ,
+        READ_MOBILE,
         UNKNOWN
     }
 }

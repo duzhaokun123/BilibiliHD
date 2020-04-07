@@ -39,15 +39,18 @@ public class DownloadUtil {
                 new Thread() {
                     @Override
                     public void run() {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, "Please use " + activity.getString(R.string.download_manager)));
-                        } else {
+
                             FileInputStream fileInputStream = null;
                             FileOutputStream fileOutputStream = null;
                             try {
                                 File srcFile = Glide.with(activity).asFile().load(url).submit().get();
                                 fileInputStream = new FileInputStream(Objects.requireNonNull(srcFile));
-                                File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD");
+                                File dir;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    dir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "bilibili HD");
+                                } else {
+                                    dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD");
+                                }
                                 if (!dir.exists() && !dir.mkdirs()) {
                                     return;
                                 }
@@ -70,7 +73,7 @@ public class DownloadUtil {
                                     e.printStackTrace();
                                 }
                             }
-                        }
+
                     }
                 }.start();
                 break;
@@ -78,7 +81,7 @@ public class DownloadUtil {
 
     }
 
-    public static void downloadVideo(Context context, String video, String audio, String danmaku, String title, String bvid, boolean videoOnly) {
-        VideoDownloadService.downloadVideo(context, video, audio, danmaku, context.getCacheDir().getPath() + File.separator + bvid + "_" + title, title, bvid, videoOnly);
+    public static void downloadVideo(Context context, String video, String audio, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, String danmakuUrl) {
+        VideoDownloadService.downloadVideo(context, video, audio, context.getCacheDir().getPath() + File.separator + bvid + "_" + page, videoTitle, mainTitle, bvid, videoOnly, page, danmakuUrl);
     }
 }

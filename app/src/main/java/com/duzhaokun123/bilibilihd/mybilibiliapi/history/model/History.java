@@ -95,6 +95,22 @@ public class History {
         }
 
         public class List2 {
+            private String title;
+            private String cover;
+            private String uri;
+            private History2 history;
+            private int videos;
+            private String name;
+            private long mid;
+            @SerializedName("goto")
+            private String goto_;
+            private long view_at;
+            private int progress;
+            private int duration;
+            private int display_attention;
+            private List<String > covers;
+            private String badge;
+
             public String getTitle() {
                 return title;
             }
@@ -183,26 +199,28 @@ public class History {
                 this.display_attention = display_attention;
             }
 
-            private String title;
-            private String cover;
-            private String uri;
-            private History2 history;
-            private int videos;
-            private String name;
-            private long mid;
-            @SerializedName("goto")
-            private String goto_;
-            private long view_at;
-            private int progress;
-            private int duration;
-            private int display_attention;
-
             public String getGoto_() {
                 return goto_;
             }
 
             public void setGoto_(String goto_) {
                 this.goto_ = goto_;
+            }
+
+            public List<String> getCovers() {
+                return covers;
+            }
+
+            public void setCovers(List<String> covers) {
+                this.covers = covers;
+            }
+
+            public String getBadge() {
+                return badge;
+            }
+
+            public void setBadge(String badge) {
+                this.badge = badge;
             }
 
             public class History2 {

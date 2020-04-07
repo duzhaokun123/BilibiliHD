@@ -63,4 +63,16 @@ public class MyBilibiliClientUtil {
         }
         return String.valueOf(re);
     }
+
+    public static String getCvUrl(long id) {
+        return "https://www.bilibili.com/read/cv" + id;
+    }
+
+    public static String getB23Url(String bvid) {
+        return "https://b23.tv/" + bvid;
+    }
+
+    public static String getB23Url(long aid) {
+        return "https://b23.tv/av" + aid;
+    }
 }

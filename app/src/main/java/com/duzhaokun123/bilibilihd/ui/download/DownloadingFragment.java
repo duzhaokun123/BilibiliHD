@@ -75,7 +75,7 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                     return;
                 }
                 ((VideoDownloadHolder) holder).mPbTotal.setMax((int) videoTaskHolder.getTotalLength());
-                ((VideoDownloadHolder) holder).mTvTitle.setText(videoTaskHolder.getTitle());
+                ((VideoDownloadHolder) holder).mTvTitle.setText(videoTaskHolder.getVideoTitle());
                 ((VideoDownloadHolder) holder).mTvId.setText("id:" + videoTaskHolder.getId());
                 ((VideoDownloadHolder) holder).mPbVideo.setMax((int) videoTaskHolder.getVideoLength());
                 if (((VideoDownloadHolder) holder).mPbTotal.getMax() != 0) {
@@ -91,19 +91,11 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                     ((VideoDownloadHolder) holder).mPbAudio.setIndeterminate(false);
                     ((VideoDownloadHolder) holder).mPbAudio.setProgress((int) videoTaskHolder.getAudioCurrentOffset());
                 }
-                ((VideoDownloadHolder) holder).mPbDanmaku.setMax((int) videoTaskHolder.getDanmakuLength());
-                if (((VideoDownloadHolder) holder).mPbDanmaku.getMax() != 0) {
-                    ((VideoDownloadHolder) holder).mPbDanmaku.setIndeterminate(false);
-                    ((VideoDownloadHolder) holder).mPbDanmaku.setProgress((int) videoTaskHolder.getDanmakuCurrentOffset());
-                }
                 if (videoTaskHolder.getVideoEndCause() != null) {
                     ((VideoDownloadHolder) holder).mTvVideoSpeed.setText(videoTaskHolder.getVideoEndCause().name());
                 }
                 if (videoTaskHolder.getAudioEndCause() != null) {
                     ((VideoDownloadHolder) holder).mTvAudioSpeed.setText(videoTaskHolder.getAudioEndCause().name());
-                }
-                if (videoTaskHolder.getDanmakuEndCause() != null) {
-                    ((VideoDownloadHolder) holder).mTvDanmakuSpeed.setText(videoTaskHolder.getDanmakuEndCause().name());
                 }
                 ((VideoDownloadHolder) holder).mTvTotalInfo.setText(videoTaskHolder.getStatus().name());
                 if (videoTaskHolder.isVideoOnly()) {
@@ -134,9 +126,6 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                         } else if ("audio".equals(task.getTag())) {
                             ((VideoDownloadHolder) holder).mPbAudio.setMax((int) info.getTotalLength());
                             ((VideoDownloadHolder) holder).mPbAudio.setIndeterminate(false);
-                        } else if ("danmaku".equals(task.getTag())) {
-                            ((VideoDownloadHolder) holder).mPbDanmaku.setMax((int) info.getTotalLength());
-                            ((VideoDownloadHolder) holder).mPbDanmaku.setIndeterminate(false);
                         }
                         ((VideoDownloadHolder) holder).mPbTotal.setMax((int) videoTaskHolder.getTotalLength());
                         ((VideoDownloadHolder) holder).mPbTotal.setIndeterminate(false);
@@ -155,9 +144,6 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                         } else if ("audio".equals(task.getTag())) {
                             ((VideoDownloadHolder) holder).mPbAudio.setProgress((int) currentOffset);
                             ((VideoDownloadHolder) holder).mTvAudioSpeed.setText(taskSpeed.getSpeedWithSIAndFlush());
-                        } else if ("danmaku".equals(task.getTag())) {
-                            ((VideoDownloadHolder) holder).mPbDanmaku.setProgress((int) currentOffset);
-                            ((VideoDownloadHolder) holder).mTvDanmakuSpeed.setText(taskSpeed.getSpeedWithSIAndFlush());
                         }
                         ((VideoDownloadHolder) holder).mPbTotal.setProgress((int) videoTaskHolder.getTotalCurrentOffset());
                     }
@@ -173,8 +159,6 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                             ((VideoDownloadHolder) holder).mTvVideoSpeed.setText(cause.name());
                         } else if ("audio".equals(task.getTag())) {
                             ((VideoDownloadHolder) holder).mTvAudioSpeed.setText(cause.name());
-                        } else if ("danmaku".equals(task.getTag())) {
-                            ((VideoDownloadHolder) holder).mTvDanmakuSpeed.setText(cause.name());
                         }
                     }
                 });
@@ -198,8 +182,8 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
             }
 
             class VideoDownloadHolder extends RecyclerView.ViewHolder {
-                private ProgressBar mPbTotal, mPbVideo, mPbAudio, mPbDanmaku;
-                private TextView mTvTitle, mTvTotalInfo, mTvVideoSpeed, mTvAudioSpeed, mTvDanmakuSpeed, mTvId;
+                private ProgressBar mPbTotal, mPbVideo, mPbAudio;
+                private TextView mTvTitle, mTvTotalInfo, mTvVideoSpeed, mTvAudioSpeed, mTvId;
                 private CardView mCv;
 
                 VideoDownloadHolder(@NonNull View itemView) {
@@ -207,12 +191,10 @@ public class DownloadingFragment extends BaseFragment<LayoutXrecyclerviewOnlyBin
                     mPbTotal = itemView.findViewById(R.id.pb_total);
                     mPbVideo = itemView.findViewById(R.id.pb_video);
                     mPbAudio = itemView.findViewById(R.id.pb_audio);
-                    mPbDanmaku = itemView.findViewById(R.id.pb_danmaku);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
                     mTvTotalInfo = itemView.findViewById(R.id.tv_total_info);
                     mTvVideoSpeed = itemView.findViewById(R.id.tv_video_speed);
                     mTvAudioSpeed = itemView.findViewById(R.id.tv_audio_speed);
-                    mTvDanmakuSpeed = itemView.findViewById(R.id.tv_danmaku_speed);
                     mTvId = itemView.findViewById(R.id.tv_id);
                     mCv = itemView.findViewById(R.id.cv);
                 }

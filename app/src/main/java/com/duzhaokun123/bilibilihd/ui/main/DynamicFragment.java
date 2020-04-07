@@ -7,7 +7,6 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -107,8 +106,6 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
                     }
                 }
-//                ((DynamicCardHolder) holder).mTvTime.setText(String.valueOf(mCards.get(position).getDesc().getTimestamp()));
-
                 OpenUserSpace openUserSpace = new OpenUserSpace(mCards.get(position).getDesc().getUid());
                 ((DynamicCardHolder) holder).mCivFace.setOnClickListener(openUserSpace);
                 ((DynamicCardHolder) holder).mTvName.setOnClickListener(openUserSpace);
@@ -154,22 +151,6 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     mTvTime = itemView.findViewById(R.id.tv_time);
                     mTvContent = itemView.findViewById(R.id.tv_content);
                     mLl = itemView.findViewById(R.id.ll);
-                }
-            }
-
-            class OpenUserSpace implements View.OnClickListener {
-
-                private long uid;
-
-                OpenUserSpace(long uid) {
-                    this.uid = uid;
-                }
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), UserSpaceActivity.class);
-                    intent.putExtra("uid", uid);
-                    startActivity(intent);
                 }
             }
         });
@@ -284,16 +265,16 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             CardView cardView = view1.findViewById(R.id.cv);
             RelativeLayout relativeLayout = view1.findViewById(R.id.rl);
             TextView tvContent = view1.findViewById(R.id.tv_content);
-
-            cardView.setBackgroundResource(android.R.color.transparent);
-            relativeLayout.removeView(view1.findViewById(R.id.civ_face));
-            relativeLayout.removeView(view1.findViewById(R.id.tv_name));
-            relativeLayout.removeView(view1.findViewById(R.id.tv_time));
             if (depth == 1) {
                 relativeLayout.removeView(tvContent);
             } else {
                 tvContent.setText(nestedCard.getItem().getDescription());
             }
+
+            cardView.setBackgroundResource(android.R.color.transparent);
+            GlideUtil.loadUrlInto(getContext(), nestedCard.getUser().getHead_url(), view1.findViewById(R.id.civ_face), false);
+            ((TextView) view1.findViewById(R.id.tv_name)).setText(nestedCard.getUser().getName());
+            view1.findViewById(R.id.civ_face).setOnClickListener(new OpenUserSpace(nestedCard.getUser().getUid()));
 
             XRecyclerView xRecyclerView = view2.findViewById(R.id.xrv);
             xRecyclerView.setPullRefreshEnabled(false);
@@ -377,7 +358,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             });
         }
         if (nestedCard.getAid() != 0) {
-            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_video, viewGroup);
+            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_video, viewGroup, false);
             if (nestedCard.getTitle() != null) {
                 ((TextView) view1.findViewById(R.id.tv_title)).setText(nestedCard.getTitle());
             } else if (nestedCard.getItem() != null && nestedCard.getItem().getDynamic() != null) {
@@ -386,12 +367,9 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             ImageView imageView1 = view1.findViewById(R.id.iv);
             GlideUtil.loadUrlInto(getContext(), nestedCard.getPic(), imageView1, false);
             RelativeLayout relativeLayout = view1.findViewById(R.id.rl);
-            relativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: 20-3-5
-                }
-            });
+            ((TextView) relativeLayout.findViewById(R.id.tv_up)).setText(nestedCard.getOwner().getName());
+            GlideUtil.loadUrlInto(getContext(), nestedCard.getOwner().getFace(), relativeLayout.findViewById(R.id.civ_face), false);
+            relativeLayout.findViewById(R.id.civ_face).setOnClickListener(new OpenUserSpace(nestedCard.getOwner().getMid()));
             relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
                 private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(nestedCard.getJump_url());
@@ -401,22 +379,19 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
                     PopupMenu popupMenu = new PopupMenu(getContext(), relativeLayout);
                     popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.check_cover:
-                                    Intent intent = new Intent(getContext(), PhotoViewActivity.class);
-                                    intent.putExtra("url", nestedCard.getPic());
-                                    startActivity(intent);
-                                    break;
-                                case R.id.add_to_watch_later:
-                                    // TODO: 20-2-27
-                                    ToastUtil.sendMsg(getContext(), "还没有做");
-                                    break;
-                            }
-                            return true;
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.check_cover:
+                                Intent intent = new Intent(getContext(), PhotoViewActivity.class);
+                                intent.putExtra("url", nestedCard.getPic());
+                                startActivity(intent);
+                                break;
+                            case R.id.add_to_watch_later:
+                                // TODO: 20-2-27
+                                ToastUtil.sendMsg(getContext(), "还没有做");
+                                break;
                         }
+                        return true;
                     });
                     popupMenu.show();
                     return true;
@@ -434,6 +409,21 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             LinearLayout linearLayout = view.findViewById(R.id.ll);
             linearLayout.setBackgroundResource(R.color.lightGray);
             handleNestedCard(nestedNestedCard, linearLayout, depth + 1);
+        }
+    }
+    class OpenUserSpace implements View.OnClickListener {
+
+        private long uid;
+
+        OpenUserSpace(long uid) {
+            this.uid = uid;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), UserSpaceActivity.class);
+            intent.putExtra("uid", uid);
+            startActivity(intent);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
@@ -34,6 +36,10 @@ import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
@@ -91,44 +97,50 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((VideoCardHolder) holder).mTvTitle.setText(mHistory.getData().getList().get(position).getTitle());
                 GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
+                if (mHistory.getData().getList().get(position).getCovers() != null) {
+                    GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCovers().get(0), ((VideoCardHolder) holder).mIv, true);
+                }
+                ((VideoCardHolder) holder).mTvBadge.setText(mHistory.getData().getList().get(position).getBadge());
+                ((VideoCardHolder) holder).mTvUp.setText(mHistory.getData().getList().get(position).getName());
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
-                    private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
+                    private String url = mHistory.getData().getList().get(position).getUri();
 
                     @Override
                     public void onClick(View v) {
-                        Log.d("aid", String.valueOf(aid));
-                        Intent intent = new Intent(getContext(), PlayActivity.class);
-                        intent.putExtra("aid", aid);
-                        startActivity(intent);
+                        CustomTabUtil.openUrl(Objects.requireNonNull(getContext()), url);
                     }
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
-                    private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(mHistory.getData().getList().get(position).getUri());
-                    private String url = mHistory.getData().getList().get(position).getCover();
+                    private long aid = mHistory.getData().getList().get(position).getHistory().getOid();
+                    private String url;
+
+                    {
+                        url = mHistory.getData().getList().get(position).getCover();
+                        if (mHistory.getData().getList().get(position).getCovers() != null) {
+                            url = mHistory.getData().getList().get(position).getCovers().get(0);
+                        }
+                    }
 
                     @Override
                     public boolean onLongClick(View v) {
 
                         PopupMenu popupMenu = new PopupMenu(getContext(), ((VideoCardHolder) holder).mCv);
                         popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.check_cover:
-                                        Intent intent = new Intent(getContext(), PhotoViewActivity.class);
-                                        intent.putExtra("url", url);
-                                        startActivity(intent);
-                                        break;
-                                    case R.id.add_to_watch_later:
-                                        // TODO: 20-2-27
-                                        ToastUtil.sendMsg(getContext(), "还没有做");
-                                        break;
-                                }
-                                return true;
+                        popupMenu.setOnMenuItemClickListener(item -> {
+                            switch (item.getItemId()) {
+                                case R.id.check_cover:
+                                    Intent intent = new Intent(getContext(), PhotoViewActivity.class);
+                                    intent.putExtra("url", url);
+                                    startActivity(intent);
+                                    break;
+                                case R.id.add_to_watch_later:
+                                    // TODO: 20-2-27
+                                    ToastUtil.sendMsg(getContext(), "还没有做");
+                                    break;
                             }
+                            return true;
                         });
                         popupMenu.show();
                         return true;
@@ -148,17 +160,18 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             class VideoCardHolder extends RecyclerView.ViewHolder {
 
                 private ImageView mIv;
-                private TextView mTvTitle, mTvCount, mTvDuration, mTvBadge;
+                private TextView mTvTitle, mTvUp, mTvBadge;
                 private CardView mCv;
+
 
                 VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
-                    mTvCount = itemView.findViewById(R.id.tv_count);
-                    mTvDuration = itemView.findViewById(R.id.tv_duration);
-                    mTvBadge =  itemView.findViewById(R.id.tv_badge);
+                    mTvUp = itemView.findViewById(R.id.tv_up);
+                    mTvBadge = itemView.findViewById(R.id.tv_badge);
                     mCv = itemView.findViewById(R.id.cv);
+                    ((RelativeLayout) itemView.findViewById(R.id.rl)).removeView(itemView.findViewById(R.id.civ_face));
                 }
             }
         });
@@ -243,27 +256,27 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
         public void run() {
             HistoryApi.getInstance().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
                     "all", new MyBilibiliClient.ICallback<History>() {
-                @Override
-                public void onException(Exception e) {
-                    e.printStackTrace();
-                    if (handler != null) {
-                        handler.sendEmptyMessage(2);
-                    }
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
-                    }
-                }
+                        @Override
+                        public void onException(Exception e) {
+                            e.printStackTrace();
+                            if (handler != null) {
+                                handler.sendEmptyMessage(2);
+                            }
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                            }
+                        }
 
-                @Override
-                public void onSuccess(History history) {
-                    mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
-                    mHistory.getData().getCursor().setMax_tp(history.getData().getCursor().getMax_tp());
-                    mHistory.getData().getList().addAll(history.getData().getList());
-                    if (handler != null) {
-                        handler.sendEmptyMessage(1);
-                    }
-                }
-            });
+                        @Override
+                        public void onSuccess(History history) {
+                            mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
+                            mHistory.getData().getCursor().setMax_tp(history.getData().getCursor().getMax_tp());
+                            mHistory.getData().getList().addAll(history.getData().getList());
+                            if (handler != null) {
+                                handler.sendEmptyMessage(1);
+                            }
+                        }
+                    });
         }
     }
 }

@@ -14,6 +14,10 @@ import com.bumptech.glide.request.target.Target;
 
 public class GlideUtil {
     public static void loadUrlInto(Context context,String url , ImageView imageView, boolean autoAspectRation) {
+        if (url == null) {
+            imageView.setImageDrawable(null);
+            return;
+        }
         Glide.with(context).load(url).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

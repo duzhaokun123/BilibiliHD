@@ -6,12 +6,7 @@ import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
-class PAppAPI {
-    private var appAPI: AppAPI
-
-    constructor(appAPI: AppAPI) {
-        this.appAPI = appAPI
-    }
+class PAppAPI(private var appAPI: AppAPI) {
 
     fun getMyInfo(): MyInfo {
         return GlobalScope.future{ appAPI.myInfo().await() }.get()
