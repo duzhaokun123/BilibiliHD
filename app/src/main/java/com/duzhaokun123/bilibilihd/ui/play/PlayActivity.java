@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.util.Rational;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,8 +23,10 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
+import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -44,9 +49,27 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     private SimpleExoPlayer player;
 
-    private PBilibiliClient pBilibiliClient;
     private VideoPlayUrl videoPlayUrl;
     private View mView;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        new MenuInflater(this).inflate(R.menu.play_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.open_in_browser:
+                if (teleportIntent != null) {
+                    CustomTabUtil.openUrl(this, MyBilibiliClientUtil.getB23Url(teleportIntent.getLongExtra("aid", 0)));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -78,27 +101,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
         Log.d("PlayActivity", String.valueOf(getIntent().getExtras().getLong("aid", 0)));
         setTitle(String.valueOf(getIntent().getExtras().getLong("aid", 0)));
-        pBilibiliClient = PBilibiliClient.Companion.getInstance();
-
-        new Thread() {
-            @Override
-            public void run() {
-                if (videoPlayUrl == null) {
-                    try {
-                        mView = pBilibiliClient.getPAppAPI().view(getIntent().getExtras().getLong("aid", 0));
-                        videoPlayUrl = pBilibiliClient.getPPlayerAPI().videoPlayUrl(getIntent().getExtras().getLong("aid", 0), mView.getData().getCid());
-                        if (handler != null) {
-                            handler.sendEmptyMessage(0);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
-                    }
-                }
-            }
-        }.start();
-        baseBind.btnStart.setOnClickListener(v -> player.setPlayWhenReady(true));
-        baseBind.btnPause.setOnClickListener(v -> player.setPlayWhenReady(false));
     }
 
     @Override
@@ -110,11 +112,29 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     public void initView() {
         player = new SimpleExoPlayer.Builder(this).build();
         baseBind.pv.setPlayer(player);
+        baseBind.btnStart.setOnClickListener(v -> player.setPlayWhenReady(true));
+        baseBind.btnPause.setOnClickListener(v -> player.setPlayWhenReady(false));
     }
 
     @Override
     public void initData() {
-
+        new Thread() {
+            @Override
+            public void run() {
+                if (videoPlayUrl == null) {
+                    try {
+                        mView = PBilibiliClient.Companion.getInstance().getPAppAPI().view(getIntent().getExtras().getLong("aid", 0));
+                        videoPlayUrl = PBilibiliClient.Companion.getInstance().getPPlayerAPI().videoPlayUrl(getIntent().getExtras().getLong("aid", 0), mView.getData().getCid());
+                        if (handler != null) {
+                            handler.sendEmptyMessage(0);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                    }
+                }
+            }
+        }.start();
     }
 
     @Override

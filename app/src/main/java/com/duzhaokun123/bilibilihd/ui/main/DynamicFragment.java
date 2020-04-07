@@ -358,7 +358,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             });
         }
         if (nestedCard.getAid() != 0) {
-            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_video, viewGroup, false);
+            View view1 = LayoutInflater.from(getContext()).inflate(R.layout.layout_video, viewGroup);
             if (nestedCard.getTitle() != null) {
                 ((TextView) view1.findViewById(R.id.tv_title)).setText(nestedCard.getTitle());
             } else if (nestedCard.getItem() != null && nestedCard.getItem().getDynamic() != null) {

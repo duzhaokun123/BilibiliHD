@@ -73,6 +73,6 @@ public class MyBilibiliClientUtil {
     }
 
     public static String getB23Url(long aid) {
-        return "https://b23.tv/av" + aid;
+        return "https://b23.tv/" + av2bv(aid);
     }
 }
