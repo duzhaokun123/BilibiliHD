@@ -68,4 +68,6 @@
     <string name="downloading">downloading</string>
     <string name="downloaded">downloaded</string>
     <string name="no_need">no need</string>
+    <string name="danmaku">danmaku</string>
+    <string name="num_fans">%d fans</string>
 </resources>

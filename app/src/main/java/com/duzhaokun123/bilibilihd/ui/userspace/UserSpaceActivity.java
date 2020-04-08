@@ -55,7 +55,6 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
     @Override
     public void initView() {
-        baseBind.vp.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
         baseBind.tl.setupWithViewPager(baseBind.vp);
 
         baseBind.civFace.setOnClickListener(v -> {
@@ -97,6 +96,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
     @Override
     public void handlerCallback(@NonNull Message msg) {
+        baseBind.vp.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
         Glide.with(this).load(mSpace.getData().getCard().getFace()).into(baseBind.civFace);
         if (mSpace.getData().getImages().getImgUrl().equals("")) {
             Glide.with(this).load("https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png").into(baseBind.ivSpaceImage);
@@ -122,6 +122,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         if (mSpace.getData().getCard().getVip().getVipType() != 0) {
             baseBind.tvName.setTextColor(getColor(R.color.colorAccent));
         }
+        baseBind.tvLike.setText("-");
         // TODO: 20-2-22 试出 mTvLike 对应的键 不可能的, 你的版本不行, 去抓 web api 吧
     }
 

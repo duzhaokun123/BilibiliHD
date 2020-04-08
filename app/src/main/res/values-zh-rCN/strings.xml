@@ -66,4 +66,6 @@
     <string name="downloading">下载中</string>
     <string name="downloaded">已下载</string>
     <string name="no_need">不需要</string>
+    <string name="danmaku">弹幕</string>
+    <string name="num_fans">%d粉丝</string>
 </resources>

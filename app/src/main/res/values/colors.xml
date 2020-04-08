@@ -5,4 +5,5 @@
     <color name="colorAccent">#FB7299</color>
     <color name="lightGray">#F8F8F8</color>
     <color name="backgrand">@android:color/background_light</color>
+    <color name="colorTransparentBlack">#88000000</color>
 </resources>

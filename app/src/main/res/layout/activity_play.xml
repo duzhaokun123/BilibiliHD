@@ -16,7 +16,8 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/pv"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="300dp"
+            android:background="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,20 +32,6 @@
                 android:textColor="@android:color/black" />
 
             <Button
-                android:id="@+id/btn_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="start"
-                android:textColor="@android:color/black" />
-
-            <Button
-                android:id="@+id/btn_pause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="pause"
-                android:textColor="@android:color/black" />
-
-            <Button
                 android:id="@+id/btn_download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,34 +40,61 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_video"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="true" />
+        <include layout="@layout/layout_user" />
 
         <TextView
-            android:id="@+id/tv_audio"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true" />
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
+            android:textIsSelectable="true"
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_danmaku"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_watched"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textIsSelectable="true" />
-        </ScrollView>
+                android:layout_marginStart="5dp"
+                android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/tv_danmakuHas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_uptime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textIsSelectable="true"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            android:autoLink="web"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
     </LinearLayout>
 </layout>

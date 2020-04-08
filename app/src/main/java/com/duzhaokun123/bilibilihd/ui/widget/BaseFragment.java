@@ -24,7 +24,7 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     protected final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
     @Nullable
-    public Handler handler;
+    protected Handler handler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +68,11 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
         } else {
             return null;
         }
+    }
+
+    @Nullable
+    public Handler getHandler() {
+        return handler;
     }
 
     protected abstract int initConfig();

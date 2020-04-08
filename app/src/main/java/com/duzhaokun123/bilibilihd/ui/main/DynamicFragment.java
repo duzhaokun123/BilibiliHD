@@ -3,7 +3,6 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
+import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -49,7 +49,6 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
     private int page = 0;
     private long offsetDynamicId = 0;
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 
     @Override
     protected int initConfig() {
@@ -98,11 +97,11 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((DynamicCardHolder) holder).mLl.removeAllViews();
 
-                ((DynamicCardHolder) holder).mTvTime.setText(simpleDateFormat.format(mCards.get(position).getDesc().getTimestamp() * 1000));
+                ((DynamicCardHolder) holder).mTvTime.setText(SimpleDateFormatUtil.getFormat1().format(mCards.get(position).getDesc().getTimestamp() * 1000));
                 if (mCards.get(position).getDesc().getUser_profile() != null) {
                     GlideUtil.loadUrlInto(getContext(), mCards.get(position).getDesc().getUser_profile().getInfo().getFace(), ((DynamicCardHolder) holder).mCivFace, false);
                     ((DynamicCardHolder) holder).mTvName.setText(mCards.get(position).getDesc().getUser_profile().getInfo().getUname());
-                    if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1) {//1: 不是 VIP, 2: 是 VIP 吗?
+                    if (mCards.get(position).getDesc().getUser_profile().getVip().getVipType() != 1 && getContext() != null) {//1: 不是 VIP, 2: 是 VIP 吗?
                         ((DynamicCardHolder) holder).mTvName.setTextColor(getContext().getColor(R.color.colorAccent));
                     }
                 }

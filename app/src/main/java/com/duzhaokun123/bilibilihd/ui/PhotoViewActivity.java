@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.PictureInPictureParams;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.util.Rational;
 import android.view.DisplayCutout;
 import android.view.View;
@@ -97,11 +96,11 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         if (isInPictureInPictureMode) {
-            baseBind.ibDl.setImageResource(android.R.color.transparent);
-            baseBind.ibPip.setImageResource(android.R.color.transparent);
+            baseBind.ibDl.setVisibility(View.INVISIBLE);
+            baseBind.ibPip.setVisibility(View.INVISIBLE);
         } else {
-            baseBind.ibDl.setImageResource(R.drawable.ic_dl);
-            baseBind.ibPip.setImageResource(R.drawable.ic_pip);
+            baseBind.ibDl.setVisibility(View.VISIBLE);
+            baseBind.ibPip.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -28,7 +28,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     public final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
     @Nullable
-    public Handler handler;
+    protected Handler handler;
     @Nullable
     protected Intent teleportIntent;
 
@@ -43,7 +43,8 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
         config = initConfig();
         if ((config & FULLSCREEN) == FULLSCREEN) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
@@ -90,7 +91,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -125,6 +126,11 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
                 iRequestPermissionCallbackMap = null;
             }
         }
+    }
+
+    @Nullable
+    public Handler getHandler() {
+        return handler;
     }
 
     protected abstract int initConfig();
