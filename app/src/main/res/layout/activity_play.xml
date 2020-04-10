@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,88 +12,42 @@
         android:orientation="vertical"
         tools:context=".ui.play.PlayActivity">
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/pv"
+        <RelativeLayout
+            android:id="@+id/rl"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@android:color/black" />
+            android:layout_height="300dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/pv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
 
-            <Button
-                android:id="@+id/btn_pip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="pip"
-                android:textColor="@android:color/black" />
-
-            <Button
-                android:id="@+id/btn_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/download"
-                android:textColor="@android:color/black" />
-
-        </LinearLayout>
-
-        <include layout="@layout/layout_user" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/black"
-            android:textIsSelectable="true"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <master.flame.danmaku.ui.widget.DanmakuView
+                android:id="@+id/dv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="70dp" />
 
             <TextView
-                android:id="@+id/tv_watched"
+                android:id="@+id/tv_playerLog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textSize="12sp" />
+                android:textColor="#FFFFFF"
+                android:background="#66000000"/>
+        </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_danmakuHas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_uptime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textIsSelectable="true"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_desc"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="5dp"
-            android:autoLink="web"
-            android:textIsSelectable="true"
-            android:textSize="12sp" />
+            android:elevation="1dp"
+            android:theme="@style/AppTheme.Navigation" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 </layout>

@@ -37,7 +37,6 @@ public class Settings {
         Settings.editor = sharedPreferences.edit();
 
         Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
-        Settings.develop.test = sharedPreferences.getBoolean("test", true);
         Settings.layout.column = sharedPreferences.getInt("column", 0);
         Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
         Settings.download.downloader = sharedPreferences.getInt("downloader", Download.GLIDE_CACHE_FIRST);
@@ -45,7 +44,6 @@ public class Settings {
         Settings.inited = true;
     }
 
-    public static final Develop develop = new Develop();
     public static final Layout layout = new Layout();
     public static final Download download = new Download();
 
@@ -144,19 +142,6 @@ public class Settings {
     public static void setFirstStart(boolean firstStart) {
         Settings.firstStart = firstStart;
         save("firstStart", BOOLEAN, firstStart);
-    }
-
-    public static class Develop {
-        private boolean test = true;
-
-        public boolean isTest() {
-            return test;
-        }
-
-        public void setTest(boolean test) {
-            this.test = test;
-            save("test", BOOLEAN, test);
-        }
     }
 
     public static class Layout {

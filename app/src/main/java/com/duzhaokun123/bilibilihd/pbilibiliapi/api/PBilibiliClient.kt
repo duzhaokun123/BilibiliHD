@@ -10,6 +10,7 @@ class PBilibiliClient private constructor() {
 
     private lateinit var pAppAPI: PAppAPI
     private lateinit var pPlayerAPI: PPlayerAPI
+    private lateinit var pDanmakuAPI: PDanmakuAPI
 
     companion object{
         private lateinit var pBilibiliClient: PBilibiliClient
@@ -36,6 +37,13 @@ class PBilibiliClient private constructor() {
             pPlayerAPI = PPlayerAPI(bilibiliClient.playerAPI)
         }
         return pPlayerAPI
+    }
+
+    fun getPDanmakuAPI(): PDanmakuAPI {
+        if(::pDanmakuAPI.isInitialized.not()) {
+            pDanmakuAPI = PDanmakuAPI(bilibiliClient.danmakuAPI)
+        }
+        return pDanmakuAPI;
     }
 
     fun logout() {

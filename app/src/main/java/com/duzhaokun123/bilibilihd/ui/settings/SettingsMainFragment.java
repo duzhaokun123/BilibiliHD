@@ -18,7 +18,7 @@ public class SettingsMainFragment extends Fragment {
 
     private NavigationView mNavSettingsMain;
 
-    private Fragment mFragmentSettingsDevelop, mFragmentSettingsLayout, mFragmentSettingsDownload;
+    private Fragment mFragmentSettingsLayout, mFragmentSettingsDownload;
     private Fragment mFragmentSettingsUsers, mFragmentAbout;
 
     @Nullable
@@ -53,12 +53,6 @@ public class SettingsMainFragment extends Fragment {
                             mFragmentSettingsDownload = new SettingsDownloadFragment();
                         }
                         setSecondFrameLayout(mFragmentSettingsDownload, getString(R.string.download));
-                        break;
-                    case R.id.develop:
-                        if (mFragmentSettingsDevelop == null) {
-                            mFragmentSettingsDevelop = new SettingsDevelopFragment();
-                        }
-                        setSecondFrameLayout(mFragmentSettingsDevelop, getString(R.string.develop));
                         break;
                     case R.id.about:
                         if (mFragmentAbout == null) {

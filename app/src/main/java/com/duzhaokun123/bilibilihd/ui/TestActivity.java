@@ -23,7 +23,7 @@ public class TestActivity extends BaseActivity<ActivityTestBinding> {
                 baseBind.etAudio.getText().toString(),
                 "测试", "测试1", "test",
                 baseBind.cbVideoOnly.isChecked(), 1,
-                baseBind.etDanmaku.getText().toString()));
+                0));
     }
 
     @Override

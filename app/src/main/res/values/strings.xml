@@ -70,4 +70,6 @@
     <string name="no_need">no need</string>
     <string name="danmaku">danmaku</string>
     <string name="num_fans">%d fans</string>
+    <string name="intro">intro</string>
+    <string name="comment_num">comment (%d)</string>
 </resources>

@@ -406,7 +406,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             NestedCard nestedNestedCard = DynamicAPI.getNestedCard(nestedCard.getOrigin());
             View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_linearlayout_only, viewGroup);
             LinearLayout linearLayout = view.findViewById(R.id.ll);
-            linearLayout.setBackgroundResource(R.color.lightGray);
+            linearLayout.setBackgroundResource(R.color.lighterGray);
             handleNestedCard(nestedNestedCard, linearLayout, depth + 1);
         }
     }

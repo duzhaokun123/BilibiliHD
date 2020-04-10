@@ -14,10 +14,6 @@
             android:icon="@drawable/ic_dl"
             android:title="@string/download" />
         <item
-            android:id="@+id/develop"
-            android:icon="@drawable/ic_code"
-            android:title="@string/develop" />
-        <item
             android:id="@+id/about"
             android:icon="@drawable/ic_info"
             android:title="@string/about" />

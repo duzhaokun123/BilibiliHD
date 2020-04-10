@@ -5,20 +5,31 @@
 
 下载 demo https://pan.baidu.com/s/1usDwGbrNi9zAZ1AWU8G7dQ 密码: v9oa
 
+不再打包32位原生库, 有需求请自行编译
+
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
 - [x] 横屏 (转屏就崩)
 - [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取满级用户的信息, 重写了 Bilibili-api 的部分代码)
+    - [ ] 主页
+    - [ ] 动态
+    - [ ] 投稿 (?)
+    - [x] 收藏
 - [x] 首页推荐
 - [ ] 动态 (bilibili-api 里没有, 自己抓包实现的)
 - [ ] 专栏 (勉强)
 - [ ] 视频播放 (抱歉, 我不是大会员, 不能播放需要大会员的选项)
+    - [x] 能播出来
+    - [ ] 控制清晰度
+    - [ ] 播放器控制换p
 - [ ] 视频弹幕
+    - [ ] 显试
+    - [ ] 发送
 - [ ] 视频评论
 - [ ] 直播
 - [ ] 三连相关
 - [ ] 私信
-- [ ] 视频下载 (弹幕下载会乱码, 所以不下弹幕了)
+- [x] 视频下载 (弹幕下载会乱码, 所以不下弹幕了)
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
 
@@ -45,25 +56,29 @@
 ### TODO
 - 提高代码可读性
 - 解决代码重复的问题
+- DanmakuFlameMaster 64位原生库
 
 ### 从源代码构建注意
 ```shell script
 git clone https://github.com/duzhaokun123/BilibiliHD
 git clone https://github.com/duzhaokun123/bilibili-api
+git clone https://github.com/duzhaokun123/DanmakuFlameMaster
 ```
 
 在`BilibiliHD/settings.gradle`中
 
 ```groovy
 //...
-includeBuild '../../Kotlin/bilibili-api/'
+includeBuild '../../Kotlin/bilibili-api'
+includeBuild '../DanmakuFlameMaster'
 ```
 
 改为
 
 ```groovy
 //...
-includeBuild 'path/to/bilibili-api/'
+includeBuild 'path/to/bilibili-api'
+includeBuild 'path/to/DanmakuFlameMaster'
 ```
 
 ### 鸣谢
@@ -74,6 +89,8 @@ includeBuild 'path/to/bilibili-api/'
 [BilibiliAPIDocs](https://github.com/fython/BilibiliAPIDocs)
 
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
+
+[DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
 
 [ExoPlayer](https://exoplayer.dev/)
 

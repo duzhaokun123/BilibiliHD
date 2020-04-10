@@ -57,7 +57,6 @@ public class VideoDownloadService extends IntentService {
 
     private static final String EXTRA_VIDEO = "com.duzhaokun123.bilibilihd.services.extra.VIDEO";
     private static final String EXTRA_AUDIO = "com.duzhaokun123.bilibilihd.services.extra.AUDIO";
-    private static final String EXTRA_DANMAKU_URL = "com.duzhaokun123.bilibilihd.services.extra.DANMAKU_URL";
     private static final String EXTRA_CACHE_PATH = "com.duzhaokun123.bilibilihd.services.extra.CACHE_PATH";
     private static final String EXTRA_VIDEO_TITLE = "com.duzhaokun123.bilibilihd.services.extra.VIDEO_TITLE";
     private static final String EXTRA_MAIN_TITLE = "com.duzhaokun123.bilibilihd.services.extra.MAIN_TITLE";
@@ -65,13 +64,15 @@ public class VideoDownloadService extends IntentService {
     private static final String EXTRA_TASK_ID = "com.duzhaokun123.bilibilihd.services.extra.TASK_ID";
     private static final String EXTRA_IS_VIDEO_ONLY = "com.duzhaokun123.bilibilihd.services.extra.IS_VIDEO_ONLY";
     private static final String EXTRA_PAGE = "com.duzhaokun123.bilibilihd.services.extra.PAGE";
+    private static final String EXTRA_CID = "com.duzhaokun123.bilibilihd.services.extra.CID";
+
 
     public VideoDownloadService() {
         super("DownloadService");
     }
 
 
-    public static void downloadVideo(Context context, String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, String danmakuUrl) {
+    public static void downloadVideo(Context context, String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, long cid) {
         Intent intent = new Intent(context, VideoDownloadService.class);
         intent.setAction(ACTION_START_TASK);
         intent.putExtra(EXTRA_VIDEO, video);
@@ -82,7 +83,7 @@ public class VideoDownloadService extends IntentService {
         intent.putExtra(EXTRA_BVID, bvid);
         intent.putExtra(EXTRA_IS_VIDEO_ONLY, videoOnly);
         intent.putExtra(EXTRA_PAGE, page);
-        intent.putExtra(EXTRA_DANMAKU_URL, danmakuUrl);
+        intent.putExtra(EXTRA_CID, cid);
         context.startService(intent);
     }
 
@@ -120,7 +121,7 @@ public class VideoDownloadService extends IntentService {
                         intent.getStringExtra(EXTRA_BVID),
                         intent.getBooleanExtra(EXTRA_IS_VIDEO_ONLY, false),
                         intent.getIntExtra(EXTRA_PAGE, 1),
-                        intent.getStringExtra(EXTRA_DANMAKU_URL));
+                        intent.getLongExtra(EXTRA_CID, 0));
             } else if (ACTION_CANCEL_TASK.equals(action)) {
                 handleCancelTask(intent.getIntExtra(EXTRA_TASK_ID, 0));
             } else if (ACTION_PAUSE_TASK.equals(action)) {
@@ -133,7 +134,7 @@ public class VideoDownloadService extends IntentService {
 
     private static Map<Integer, VideoTaskHolder> videoTaskHolderMap;
 
-    private void handleDownloadVideo(String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, String danmakuUrl) {
+    private void handleDownloadVideo(String video, String audio, String cachePath, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, long cid) {
         DownloadContext.Builder builder = new DownloadContext.QueueSet()
                 .setParentPath(cachePath)
                 .setMinIntervalMillisCallbackProcess(1000)
@@ -179,7 +180,7 @@ public class VideoDownloadService extends IntentService {
         } while (videoTaskHolderMap.get(id) != null || !NotificationUtil.isIdUnregistered(id) || id == 0);
         int finalId = id;
         DoubleDownloadListener doubleDownloadListener = new DoubleDownloadListener(new MyDownloadListener(remoteViews, finalId), null);
-        VideoTaskHolder videoTaskHolder = new VideoTaskHolder(downloadContext, doubleDownloadListener, finalId, remoteViews, cachePath, bvid, videoTitle, mainTitle, videoOnly, page, danmakuUrl);
+        VideoTaskHolder videoTaskHolder = new VideoTaskHolder(downloadContext, doubleDownloadListener, finalId, remoteViews, cachePath, bvid, videoTitle, mainTitle, videoOnly, page, cid);
         videoTaskHolderMap.put(id, videoTaskHolder);
 
         remoteViews.setTextViewText(R.id.tv_title, videoTitle);
@@ -337,7 +338,7 @@ public class VideoDownloadService extends IntentService {
 
             pageSavedVideoInfoFileOutPutStream = new FileOutputStream(new File(dir, "info.json"));
             pageSavedVideoInfoOutPutStreamWriter = new OutputStreamWriter(pageSavedVideoInfoFileOutPutStream);
-            pageSavedVideoInfoOutPutStreamWriter.write(GsonUtil.getGsonInstance().toJson(new PageSavedVideoInfo(videoTaskHolder.page, videoTaskHolder.videoTitle, videoTaskHolder.danmakuUrl, System.currentTimeMillis())));
+            pageSavedVideoInfoOutPutStreamWriter.write(GsonUtil.getGsonInstance().toJson(new PageSavedVideoInfo(videoTaskHolder.page, videoTaskHolder.videoTitle, videoTaskHolder.cid, System.currentTimeMillis())));
 
             videoTaskHolder.status = VideoTaskHolder.Status.FINISH;
             videoTaskHolder.remoteViews.setTextViewText(R.id.tv_total_info, getString(R.string.success));
@@ -621,7 +622,7 @@ public class VideoDownloadService extends IntentService {
 
     }
     public static class VideoTaskHolder {
-        VideoTaskHolder(DownloadContext downloadContext, DoubleDownloadListener douDownloadListener, int id, RemoteViews remoteViews, String cachePath, String bvid, String videoTitle, String mainTitle, boolean videoOnly, int page, String danmakuUrl) {
+        VideoTaskHolder(DownloadContext downloadContext, DoubleDownloadListener douDownloadListener, int id, RemoteViews remoteViews, String cachePath, String bvid, String videoTitle, String mainTitle, boolean videoOnly, int page, long cid) {
             this.downloadContext = downloadContext;
             this.doubleDownloadListener = douDownloadListener;
             this.id = id;
@@ -632,7 +633,7 @@ public class VideoDownloadService extends IntentService {
             this.mainTitle = mainTitle;
             this.videoOnly = videoOnly;
             this.page = page;
-            this.danmakuUrl = danmakuUrl;
+            this.cid = cid;
         }
 
         DownloadContext downloadContext;
@@ -643,11 +644,11 @@ public class VideoDownloadService extends IntentService {
         EndCause videoEndCause, audioEndCause;
         String bvid;
         String videoTitle, mainTitle;
-        String danmakuUrl;
         Status status = Status.UNKNOWN;
         long videoLength, audioLength;
         long videoCurrentOffset, audioCurrentOffset;
         int id, page;
+        long cid;
         boolean videoOnly;
 
         public long getTotalCurrentOffset() {
@@ -696,8 +697,8 @@ public class VideoDownloadService extends IntentService {
             return mainTitle;
         }
 
-        public String getDanmakuUrl() {
-            return danmakuUrl;
+        public long getCid() {
+            return cid;
         }
 
         public Status getStatus() {

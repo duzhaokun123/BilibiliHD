@@ -7,8 +7,8 @@ data class PageSavedVideoInfo(
         var page: Int,
         @SerializedName("video_title")
         var videoTitle: String,
-        @SerializedName("danmaku_url")
-        var danmakuUrl: String,
+        @SerializedName("cid")
+        var cid: Long,
         @SerializedName("save_ts")
         var saveTs: Long
 )

@@ -91,7 +91,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lightGray" />
+                android:background="@color/lighterGray" />
 
             <RelativeLayout
                 android:id="@+id/rl_license"
@@ -112,7 +112,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lightGray" />
+                android:background="@color/lighterGray" />
 
             <RelativeLayout
                 android:id="@+id/rl_projectHome"
@@ -141,7 +141,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lightGray" />
+                android:background="@color/lighterGray" />
 
         </LinearLayout>
 

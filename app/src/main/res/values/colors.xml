@@ -3,7 +3,8 @@
     <color name="colorPrimary">#F5F5F5</color>
     <color name="colorPrimaryDark">#E0E0E0</color>
     <color name="colorAccent">#FB7299</color>
-    <color name="lightGray">#F8F8F8</color>
+    <color name="lighterGray">#F8F8F8</color>
+    <color name="lightGray">#CCCCCC</color>
     <color name="backgrand">@android:color/background_light</color>
     <color name="colorTransparentBlack">#88000000</color>
 </resources>

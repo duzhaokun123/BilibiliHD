@@ -68,4 +68,6 @@
     <string name="no_need">不需要</string>
     <string name="danmaku">弹幕</string>
     <string name="num_fans">%d粉丝</string>
+    <string name="intro">详情</string>
+    <string name="comment_num">评论(%d)</string>
 </resources>
