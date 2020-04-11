@@ -2,6 +2,8 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import android.content.Intent;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.arthenica.mobileffmpeg.Config;
 import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
@@ -50,6 +52,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                         NotificationUtil.init(getApplicationContext());
                         Settings.setFirstStart(false);
                     }
+                    AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
                 }
             }.start();
             if (handler != null) {

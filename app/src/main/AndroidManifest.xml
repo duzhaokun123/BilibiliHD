@@ -63,7 +63,7 @@
         <activity android:name=".ui.userspace.FavoriteActivity" />
         <activity
             android:name=".ui.play.PlayActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:supportsPictureInPicture="true"
             android:theme="@style/AppTheme.TransparencyActionBar.DarkActionBar" />
         <activity
@@ -80,14 +80,16 @@
             android:label="@string/search" />
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:label="@string/settings" />
+            android:label="@string/settings"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login" />
         <activity android:name=".ui.main.MainActivity" />
         <activity
             android:name=".ui.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

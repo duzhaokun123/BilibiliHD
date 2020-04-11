@@ -122,7 +122,6 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         if (mSpace.getData().getCard().getVip().getVipType() != 0) {
             baseBind.tvName.setTextColor(getColor(R.color.colorAccent));
         }
-        baseBind.tvLike.setText("-");
         // TODO: 20-2-22 试出 mTvLike 对应的键 不可能的, 你的版本不行, 去抓 web api 吧
     }
 

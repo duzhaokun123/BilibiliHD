@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_toEndOf="@id/civ_face"
-                android:textColor="@android:color/black"
+                android:textColor="@color/ordinaryText"
                 android:textSize="15sp" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_below="@id/civ_face"
                 android:layout_marginTop="10dp"
                 android:autoLink="web|email"
-                android:textColor="@android:color/black"
+                android:textColor="@color/ordinaryText"
                 android:textIsSelectable="true" />
 
             <LinearLayout

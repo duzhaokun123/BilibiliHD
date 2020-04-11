@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#1E1E1E</color>
+    <color name="lightBackground">#202020</color>
+    <color name="lighterBackground">#424242</color>
+    <color name="lightestBackground">#353535</color>
+    <color name="darkBackground">#1B1B1B</color>
+    <color name="darkerBackground">#151515</color>
+    <color name="darkestBackground">#121212</color>
+    <color name="ordinaryText">@android:color/white</color>
+    <color name="iconOnBackground">#a0a0a0</color>
+    <color name="colorTransparentBlack">#88000000</color>
+    <color name="ordinaryCivBorderColor">#000000</color>
+    <color name="lighterGray">@color/lightestBackground</color>
+    <color name="lightGray">@color/lighterBackground</color>
+</resources>

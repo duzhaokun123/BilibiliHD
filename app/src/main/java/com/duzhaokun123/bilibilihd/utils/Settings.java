@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,6 +42,7 @@ public class Settings {
         Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
         Settings.layout.column = sharedPreferences.getInt("column", 0);
         Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
+        Settings.layout.uiMode = sharedPreferences.getInt("ui_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         Settings.download.downloader = sharedPreferences.getInt("downloader", Download.GLIDE_CACHE_FIRST);
 
         Settings.inited = true;
@@ -147,7 +151,7 @@ public class Settings {
     public static class Layout {
         private int column = 0;
         private int columnLand = 0;
-
+        private int uiMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
         public int getColumn() {
             return column;
@@ -166,6 +170,14 @@ public class Settings {
             save("column_land", INT, columnLand);
         }
 
+        public int getUiMode() {
+            return uiMode;
+        }
+
+        public void setUiMode(int uiMode) {
+            this.uiMode = uiMode;
+            save("ui_mode", INT, uiMode);
+        }
     }
 
     public static class Download {

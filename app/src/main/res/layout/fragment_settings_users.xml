@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/log_in_now"
-                android:textColor="@android:color/black"
+                android:textColor="@color/ordinaryText"
                 android:textSize="28sp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/face_size"
                 android:layout_below="@id/tv1"
                 android:layout_marginTop="5dp"
-                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_color="@color/ordinaryCivBorderColor"
                 app:civ_border_width="2dp" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toEndOf="@id/civ_face"
-                android:textColor="@android:color/black"
+                android:textColor="@color/ordinaryText"
                 android:textSize="20sp" />
 
             <TextView

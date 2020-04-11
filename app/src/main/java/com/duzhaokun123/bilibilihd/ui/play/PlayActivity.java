@@ -27,6 +27,7 @@ import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
@@ -49,6 +50,10 @@ import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -165,17 +170,11 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 //            }
 //        });
         player = new SimpleExoPlayer.Builder(this).build();
-        player.addListener(new DebugTextViewHelper(player, baseBind.tvPlayerLog));
         player.addListener(new Player.EventListener() {
 
             @Override
             public void onSeekProcessed() {
                 baseBind.dv.seekTo(player.getContentPosition());
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-                // TODO: 20-4-10
             }
 
             @Override
@@ -259,21 +258,24 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         });
         baseBind.tl.setupWithViewPager(baseBind.vp);
 
-//        // 设置最大显示行数
-//        HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
-//        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 5); // 滚动弹幕最大显示5行
-//        // 设置是否禁止重叠
-//        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
-//        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
-//        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
-//        danmakuContext = DanmakuContext.create();
-//        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
-////                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
-////        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-//                .setMaximumLines(maxLinesPair)
-//                .preventOverlapping(overlappingEnablePair).setDanmakuMargin(40);
-//        baseBind.dv.showFPS(true);
-//        baseBind.dv.enableDanmakuDrawingCache(true);
+        // 设置最大显示行数
+        HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
+        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 10); // 滚动弹幕最大显示10行
+
+        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
+        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, false); // 允许从右至左的弹幕重合
+        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);// 不允许从顶部弹幕重合
+        danmakuContext = DanmakuContext.create();
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3)
+                .setDuplicateMergingEnabled(true)
+                .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
+//                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
+//        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
+                .setMaximumLines(maxLinesPair) //设置最大行数
+                .preventOverlapping(overlappingEnablePair)
+                .setDanmakuMargin(40);
+        baseBind.dv.showFPS(true);
+        baseBind.dv.enableDanmakuDrawingCache(true);
     }
 
     @Override
@@ -354,14 +356,12 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                              responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, biliView.getData().getPages().get(page - 1).getCid());
                         } catch (Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, "无法加载弹幕\n" + e.getMessage()));
                         }
                         if (responseBody != null) {
-                            Pair<Map<Long, Integer>, Sequence<Danmaku>> mapSequencePair = DanmakuParser.INSTANCE.parse(responseBody.byteStream());
-//                            mParser = createParser(responseBody.byteStream());
-//                            baseBind.dv.prepare(mParser, danmakuContext);
+                            mParser = createParser(DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream()));
+                            baseBind.dv.prepare(mParser, danmakuContext);
                         }
-
                     }
                 }.start();
                 break;

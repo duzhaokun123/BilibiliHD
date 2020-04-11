@@ -122,10 +122,8 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 } else if (nestedCard.getDynamic() != null && !nestedCard.getDynamic().equals("")) {
                     ((DynamicCardHolder) holder).mTvContent.setText(nestedCard.getDynamic());
                 }
+                ((DynamicCardHolder) holder).mTvContent.setTextIsSelectable(true);
                 handleNestedCard(nestedCard, ((DynamicCardHolder) holder).mLl, 1);
-
-//                    ((DynamicCardHolder) holder).mTvContent.setText(mCards.get(position).getCard());
-
             }
 
             @Override

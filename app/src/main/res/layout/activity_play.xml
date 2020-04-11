@@ -21,7 +21,14 @@
                 android:id="@+id/pv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/black" />
+                android:background="@android:color/black" >
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/pb_loading"/>
+            </com.google.android.exoplayer2.ui.PlayerView>
 
             <master.flame.danmaku.ui.widget.DanmakuView
                 android:id="@+id/dv"
@@ -29,12 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="70dp" />
 
-            <TextView
-                android:id="@+id/tv_playerLog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:background="#66000000"/>
+
         </RelativeLayout>
 
         <com.google.android.material.tabs.TabLayout

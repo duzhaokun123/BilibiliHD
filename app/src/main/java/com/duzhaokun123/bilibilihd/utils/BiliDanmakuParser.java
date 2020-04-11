@@ -90,38 +90,38 @@ public class BiliDanmakuParser extends BaseDanmakuParser {
         }
 
         @Override
-        public void startDocument() throws SAXException {
+        public void startDocument() {
             result = new Danmakus(ST_BY_TIME, false, mContext.getBaseComparator());
         }
 
         @Override
-        public void endDocument() throws SAXException {
+        public void endDocument() {
             completed = true;
         }
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes)
-                throws SAXException {
+        public void startElement(String uri, String localName, String qName, Attributes attributes) {
             String tagName = localName.length() != 0 ? localName : qName;
             tagName = tagName.toLowerCase(Locale.getDefault()).trim();
             if (tagName.equals("d")) {
                 // <d p="23.826000213623,1,25,16777215,1422201084,0,057075e9,757076900">我从未见过如此厚颜无耻之猴</d>
-                // 0:时间(弹幕出现时间)
-                // 1:类型(1从右至左滚动弹幕|6从左至右滚动弹幕|5顶端固定弹幕|4底端固定弹幕|7高级弹幕|8脚本弹幕)
-                // 2:字号
-                // 3:颜色
-                // 4:时间戳 ?
-                // 5:弹幕池id
-                // 6:用户hash
-                // 7:弹幕id
+                // <d p="23603665971445764,0,18087,1,25,16777215,1572162594,0,b5f39bc6">十周年了</d>
+                // 0:弹幕 id
+                // 1:下标 1, 不明属性
+                // 2:弹幕出现时间(播放器时间)(ms)
+                // 3:弹幕模式 (1从右至左滚动弹幕|6从左至右滚动弹幕|5顶端固定弹幕|4底端固定弹幕|7高级弹幕|8脚本弹幕)
+                // 4:字号
+                // 5:颜色
+                // 6:弹幕的发送时间(时间戳)(s)
+                // 7:下标 7, 不明属性
                 String pValue = attributes.getValue("p");
                 // parse p value to danmaku
                 String[] values = pValue.split(",");
-                if (values.length > 0) {
-                    long time = (long) (parseFloat(values[0]) * 1000); // 出现时间
-                    int type = parseInteger(values[1]); // 弹幕类型
-                    float textSize = parseFloat(values[2]); // 字体大小
-                    int color = (int) ((0x00000000ff000000 | parseLong(values[3])) & 0x00000000ffffffff); // 颜色
+                if (values.length >= 5) {
+                    long time = (long) (parseFloat(values[2])); // 出现时间
+                    int type = parseInteger(values[3]); // 弹幕模式
+                    float textSize = parseFloat(values[4]); // 字体大小
+                    int color = (int) ((0x00000000ff000000 | parseLong(values[5]))); // 颜色
                     // int poolType = parseInteger(values[5]); // 弹幕池类型（忽略
                     item = mContext.mDanmakuFactory.createDanmaku(type, mContext);
                     if (item != null) {
@@ -135,7 +135,7 @@ public class BiliDanmakuParser extends BaseDanmakuParser {
         }
 
         @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
+        public void endElement(String uri, String localName, String qName) {
             if (item != null && item.text != null) {
                 if (item.duration != null) {
                     String tagName = localName.length() != 0 ? localName : qName;
@@ -152,6 +152,7 @@ public class BiliDanmakuParser extends BaseDanmakuParser {
             }
         }
 
+        // TODO: 20-4-11 实现高级弹幕解析
         @Override
         public void characters(char[] ch, int start, int length) {
             if (item != null) {
@@ -254,7 +255,7 @@ public class BiliDanmakuParser extends BaseDanmakuParser {
                                             points[i][1] = parseFloat(pointArray[1]);
                                         }
                                     }
-                                    mContext.mDanmakuFactory.fillLinePathData(item, points, mDispScaleX,
+                                    DanmakuFactory.fillLinePathData(item, points, mDispScaleX,
                                             mDispScaleY);
                                 }
                             }

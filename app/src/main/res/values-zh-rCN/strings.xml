@@ -70,4 +70,8 @@
     <string name="num_fans">%d粉丝</string>
     <string name="intro">详情</string>
     <string name="comment_num">评论(%d)</string>
+    <string name="ui_mod">UI 模式</string>
+    <string name="night_no">浅色</string>
+    <string name="night_yes">深色</string>
+    <string name="follow_system">跟随系统</string>
 </resources>

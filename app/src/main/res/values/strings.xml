@@ -72,4 +72,8 @@
     <string name="num_fans">%d fans</string>
     <string name="intro">intro</string>
     <string name="comment_num">comment (%d)</string>
+    <string name="ui_mod">UI mod</string>
+    <string name="night_no">night no</string>
+    <string name="night_yes">night yes</string>
+    <string name="follow_system">follow_system</string>
 </resources>

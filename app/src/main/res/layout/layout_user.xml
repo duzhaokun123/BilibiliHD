@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/lightBackground"
+    android:padding="10dp">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_face"
+        android:layout_width="@dimen/face_size_small"
+        android:layout_height="@dimen/face_size_small"
+        app:civ_border_color="@color/ordinaryCivBorderColor"
+        app:civ_border_width="2dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_face"
-            android:layout_width="@dimen/face_size_small"
-            android:layout_height="@dimen/face_size_small"
-            app:civ_border_color="@color/colorPrimaryDark"
-            app:civ_border_width="2dp" />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/civ_face"
+        android:textColor="@color/ordinaryText"
+        android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/civ_face"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_name"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/civ_face" />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/civ_face" />
 </RelativeLayout>

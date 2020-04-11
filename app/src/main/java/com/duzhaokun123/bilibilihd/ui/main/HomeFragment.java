@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,6 +140,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.i(CLASS_NAME, homePage.getData().getItems().get(position).toString());
                         }
                     }
 

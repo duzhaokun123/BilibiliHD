@@ -5,6 +5,17 @@
     <color name="colorAccent">#FB7299</color>
     <color name="lighterGray">#F8F8F8</color>
     <color name="lightGray">#CCCCCC</color>
-    <color name="backgrand">@android:color/background_light</color>
+    <color name="background">@android:color/background_light</color>
+    <color name="lightBackground">@color/background</color>
+    <color name="lighterBackground">@color/background</color>
+    <color name="lightestBackground">@color/background</color>
+    <color name="darkBackground">@color/background</color>
+    <color name="darkerBackground">@color/background</color>
+    <color name="darkestBackground">@color/background</color>
+    <color name="ordinaryText">@android:color/black</color>
+    <color name="accentText">@color/colorAccent</color>
+    <color name="iconOnBackground">@android:color/black</color>
     <color name="colorTransparentBlack">#88000000</color>
+    <color name="ordinaryCivBorderColor">@color/colorPrimaryDark</color>
+    <color name="accentCivBorderColor">@color/colorAccent</color>
 </resources>

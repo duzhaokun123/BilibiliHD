@@ -1,16 +1,9 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsLayoutBinding;
@@ -72,11 +65,36 @@ public class SettingLayoutFragment extends BaseFragment<FragmentSettingsLayoutBi
                 }
             }
         });
+        baseBind.rgUiMod.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.rb_night_no:
+                    Settings.layout.setUiMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    break;
+                case R.id.rb_night_yes:
+                    Settings.layout.setUiMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    break;
+                case R.id.rb_night_follow_system:
+                    Settings.layout.setUiMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                    break;
+            }
+            AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
+        });
     }
 
     @Override
     protected void initData() {
         baseBind.etColumn.setText(String.valueOf(Settings.layout.getColumn()));
         baseBind.etColumnLand.setText(String.valueOf(Settings.layout.getColumnLand()));
+        switch (Settings.layout.getUiMode()) {
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                baseBind.rbNightNo.setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                baseBind.rbNightYes.setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+                baseBind.rbNightFollowSystem.setChecked(true);
+                break;
+        }
     }
 }

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/app_name"
-            android:textColor="@android:color/black"
+            android:textColor="@color/ordinaryText"
             android:textIsSelectable="true"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/license"
                     android:textAllCaps="true"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/ordinaryText"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/project_home"
                     android:textAllCaps="true"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/ordinaryText"
                     android:textSize="20sp" />
 
                 <TextView
