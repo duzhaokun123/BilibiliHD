@@ -152,7 +152,6 @@ public class BiliDanmakuParser extends BaseDanmakuParser {
             }
         }
 
-        // TODO: 20-4-11 实现高级弹幕解析
         @Override
         public void characters(char[] ch, int start, int length) {
             if (item != null) {

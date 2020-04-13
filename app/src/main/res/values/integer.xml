@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="column_medium">1</integer>
+    <integer name="danmaku_margin">40</integer>
+    <integer name="danmaku_scale_text_size">1</integer>
 </resources>

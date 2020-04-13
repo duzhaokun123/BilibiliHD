@@ -2,25 +2,52 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
+import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
+import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class UrlOpenActivity extends AppCompatActivity {
-
-    private String  TAG = "UrlOpenActivity";
-
+    private PBilibiliClient pBilibiliClient;
+    private String TAG = "UrlOpenActivity";
+    private boolean wait = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pBilibiliClient = PBilibiliClient.Companion.getInstance();
+        if (Settings.isUninited()) {
+            wait = true;
+            new Thread() {
+                @Override
+                public void run() {
+                    Settings.init(getApplicationContext());
+                    LoginResponse loginResponse = Settings.getLoginUserInfoMap(getApplicationContext()).getLoggedLoginResponse();
+                    if (loginResponse != null) {
+                        pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+                    }
+//                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
+                    if (Settings.isFirstStart()) {
+                        NotificationUtil.init(getApplicationContext());
+                        Settings.setFirstStart(false);
+                    }
+                    AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
+                }
+            }.start();
+        }
         Intent intent = getIntent();
         Uri uri = intent.getData();
         String scheme = uri.getScheme();
@@ -88,7 +115,11 @@ public class UrlOpenActivity extends AppCompatActivity {
             }
         }
         if (intent1 != null) {
-            startActivity(intent1);
+            if (wait) {
+                new Handler().postAtTime(() -> startActivity(intent), 100);
+            } else {
+                startActivity(intent1);
+            }
         }
         finish();
     }

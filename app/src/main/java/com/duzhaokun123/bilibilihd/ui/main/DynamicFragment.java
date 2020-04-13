@@ -364,9 +364,11 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             ImageView imageView1 = view1.findViewById(R.id.iv);
             GlideUtil.loadUrlInto(getContext(), nestedCard.getPic(), imageView1, false);
             RelativeLayout relativeLayout = view1.findViewById(R.id.rl);
-            ((TextView) relativeLayout.findViewById(R.id.tv_up)).setText(nestedCard.getOwner().getName());
-            GlideUtil.loadUrlInto(getContext(), nestedCard.getOwner().getFace(), relativeLayout.findViewById(R.id.civ_face), false);
-            relativeLayout.findViewById(R.id.civ_face).setOnClickListener(new OpenUserSpace(nestedCard.getOwner().getMid()));
+            if (nestedCard.getOrigin() != null) {
+                ((TextView) relativeLayout.findViewById(R.id.tv_up)).setText(nestedCard.getOwner().getName());
+                GlideUtil.loadUrlInto(getContext(), nestedCard.getOwner().getFace(), relativeLayout.findViewById(R.id.civ_face), false);
+                relativeLayout.findViewById(R.id.civ_face).setOnClickListener(new OpenUserSpace(nestedCard.getOwner().getMid()));
+            }
             relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
 
                 private long aid = MyBilibiliClientUtil.getAidFromBilibiliLink(nestedCard.getJump_url());

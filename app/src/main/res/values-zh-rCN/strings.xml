@@ -74,4 +74,7 @@
     <string name="night_no">浅色</string>
     <string name="night_yes">深色</string>
     <string name="follow_system">跟随系统</string>
+    <string name="not_vip">非大会员</string>
+    <string name="send">发送</string>
+    <string name="sended">已发送</string>
 </resources>

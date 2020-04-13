@@ -16,7 +16,7 @@ object DanmakuUtil {
      *
      * @return 返回弹幕的输入流
      */
-    fun toInputStream(inputStream: InputStream): BufferedInputStream {
+    fun toInputStream(inputStream: InputStream): Pair<Map<Long, Int>, BufferedInputStream> {
         //Json 的长度
         val jsonLength = inputStream.readUInt()
 
@@ -53,6 +53,6 @@ object DanmakuUtil {
         }
 
         //json 解析完毕后, 剩下的内容是一个 gzip 压缩过的 xml, 直接返回
-        return GZIPInputStream(inputStream).buffered()
+        return Pair(danmakuFlags, GZIPInputStream(inputStream).buffered())
     }
 }

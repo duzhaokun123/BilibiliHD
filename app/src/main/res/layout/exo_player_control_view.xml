@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:elevation="1dp">
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@+id/exo_progress"
@@ -40,12 +41,13 @@
             tools:ignore="ContentDescription" />
 
         <ImageButton
-            android:id="@+id/exo_next"
+            android:id="@+id/ib_next"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
             android:foreground="?selectableItemBackground"
-            android:src="@drawable/ic_skip_next"
+            android:src="@drawable/ic_skip_next_write"
+            android:visibility="gone"
             tools:ignore="ContentDescription" />
 
         <Button
@@ -82,6 +84,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_quality"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@android:color/white" />
 
         <ImageButton

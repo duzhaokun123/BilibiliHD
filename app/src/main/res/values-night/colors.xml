@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#222222</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="background">#1E1E1E</color>
     <color name="lightBackground">#202020</color>
     <color name="lighterBackground">#424242</color>

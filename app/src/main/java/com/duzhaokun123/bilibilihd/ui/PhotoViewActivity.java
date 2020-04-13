@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.PictureInPictureParams;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.util.Rational;
 import android.view.DisplayCutout;
 import android.view.View;
@@ -51,16 +52,21 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
             }
         });
 
-        baseBind.ibDl.setOnClickListener(v ->
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, grantResults -> {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        if (teleportIntent != null && teleportIntent.getExtras() != null) {
-                            DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
-                        }
+        baseBind.ibDl.setOnClickListener(v ->{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
                     } else {
-                        ToastUtil.sendMsg(PhotoViewActivity.this, getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, grantResults -> {
+                            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                if (teleportIntent != null && teleportIntent.getExtras() != null) {
+                                    DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
+                                }
+                            } else {
+                                ToastUtil.sendMsg(PhotoViewActivity.this, getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            }
+                        });
                     }
-                })
+                }
         );
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             baseBind.rl.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {

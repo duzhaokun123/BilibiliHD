@@ -17,9 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.article.ArticleActivity"
-            android:theme="@style/AppTheme.TransparencyActionBar"
-            android:label=""></activity>
+        <activity
+            android:name=".ui.article.ArticleActivity"
+            android:label=""
+            android:theme="@style/AppTheme.TransparencyActionBar"></activity>
         <activity
             android:name=".ui.download.DownloadActivity"
             android:label="@string/download"
@@ -31,7 +32,9 @@
 
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.ToolActivity" />
-        <activity android:name=".ui.UrlOpenActivity">
+        <activity
+            android:name=".ui.UrlOpenActivity"
+            android:configChanges="uiMode">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -80,16 +83,16 @@
             android:label="@string/search" />
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:label="@string/settings"
-            android:configChanges="uiMode"/>
+            android:configChanges="uiMode"
+            android:label="@string/settings" />
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login" />
         <activity android:name=".ui.main.MainActivity" />
         <activity
             android:name=".ui.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="uiMode">
+            android:configChanges="uiMode"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

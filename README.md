@@ -17,16 +17,17 @@
     - [x] 收藏
 - [x] 首页推荐
 - [ ] 动态 (bilibili-api 里没有, 自己抓包实现的)
-- [ ] 专栏 (勉强)
-- [ ] 视频播放
+- [x] 专栏 (勉强)
+- [x] 视频播放
     - [x] 能播出来
-    - [ ] 控制清晰度
-    - [ ] 播放器控制换p
+    - [x] 控制清晰度
+    - [x] 播放器控制换p
 - [ ] 视频弹幕
-    - [x] 显试普通弹幕
-    - [ ] 显试高级弹幕
-    - [ ] 发送
+    - [x] 显示普通弹幕
+    - [x] 显示高级弹幕 (可能有部分无法显示)
+    - [ ] 发送 (可能永远无法实现)
     - [ ] 配置
+    - [ ] 历史弹幕
 - [ ] 视频评论
     - [ ] 查看
     - [ ] 发布
@@ -36,6 +37,7 @@
 - [x] 视频下载 (弹幕下载会乱码, 所以不下弹幕了)
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
+- [ ] 添加历史记录
 
 ### 将***不***支持的功能
 - 注册
@@ -46,6 +48,7 @@
 - 游戏相关
 - 互动视频
 - 兼容电视和 Wear OS
+- 高级弹幕发送
 
 明显还有为提及的，未提及的基本不会支持
 
@@ -57,6 +60,7 @@
 - 至少在 2020年4月4日 首页无法加载封面 (返回`404`)
 - 如果`PlayActivity`重构, 下面的信息会消失
 - 暗色模式下不会在标题栏显试视频标题
+- 弹幕有时不显示
 - 更多 BUG 等你发现
 
 ### TODO
@@ -106,6 +110,8 @@ includeBuild 'path/to/DanmakuFlameMaster'
 [PhotoView](https://github.com/chrisbanes/PhotoView)
 
 [XRecyclerView](https://github.com/XRecyclerView/XRecyclerView)
+
+[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
 
 [bilibili-api](https://github.com/czp3009/bilibili-api)
 

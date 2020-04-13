@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.download;
 
 import android.Manifest;
+import android.os.Build;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
@@ -26,6 +27,8 @@ public class DownloadedFragment extends BaseFragment<LayoutXrecyclerviewOnlyBind
 
     @Override
     protected void initData() {
-        Objects.requireNonNull(getBaseActivity()).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, null);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Objects.requireNonNull(getBaseActivity()).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, null);
+        }
     }
 }

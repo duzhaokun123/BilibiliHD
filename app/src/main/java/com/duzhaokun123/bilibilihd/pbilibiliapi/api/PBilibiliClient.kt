@@ -11,6 +11,7 @@ class PBilibiliClient private constructor() {
     private lateinit var pAppAPI: PAppAPI
     private lateinit var pPlayerAPI: PPlayerAPI
     private lateinit var pDanmakuAPI: PDanmakuAPI
+    private lateinit var pMainAPI: PMainAPI
 
     companion object{
         private lateinit var pBilibiliClient: PBilibiliClient
@@ -43,7 +44,14 @@ class PBilibiliClient private constructor() {
         if(::pDanmakuAPI.isInitialized.not()) {
             pDanmakuAPI = PDanmakuAPI(bilibiliClient.danmakuAPI)
         }
-        return pDanmakuAPI;
+        return pDanmakuAPI
+    }
+
+    fun getPMainAPI(): PMainAPI {
+        if(::pMainAPI.isInitialized.not()) {
+            pMainAPI = PMainAPI(bilibiliClient.mainAPI)
+        }
+        return pMainAPI
     }
 
     fun logout() {

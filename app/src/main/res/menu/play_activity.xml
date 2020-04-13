@@ -6,7 +6,13 @@
         android:id="@+id/open_in_browser"
         android:icon="@drawable/ic_launch"
         android:title="@string/open_in_browser"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/check_cover"
+        android:title="@string/check_cover"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/download"
         android:title="@string/download"

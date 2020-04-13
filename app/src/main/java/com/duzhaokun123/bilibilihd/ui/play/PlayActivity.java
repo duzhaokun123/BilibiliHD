@@ -7,11 +7,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,15 +19,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
@@ -39,33 +41,25 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.ui.DebugTextViewHelper;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.hiczp.bilibili.api.danmaku.Danmaku;
-import com.hiczp.bilibili.api.danmaku.DanmakuParser;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.nio.CharBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import kotlin.Pair;
-import kotlin.sequences.Sequence;
 import master.flame.danmaku.danmaku.loader.ILoader;
 import master.flame.danmaku.danmaku.loader.IllegalDataException;
 import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
+import master.flame.danmaku.danmaku.model.Danmaku;
+import master.flame.danmaku.danmaku.model.Duration;
+import master.flame.danmaku.danmaku.model.GlobalFlagValues;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
@@ -74,12 +68,14 @@ import master.flame.danmaku.danmaku.parser.IDataSource;
 import okhttp3.ResponseBody;
 
 public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
-    private ImageButton mIbFullscreen;
-    private Button mBtnDanmakuSwitch, mBtnDanmaku;
+    private ImageButton mIbFullscreen, mIbNext;
+    private Button mBtnDanmakuSwitch, mBtnDanmaku, mBtnQuality;
 
     private SimpleExoPlayer player;
     private DanmakuContext danmakuContext;
     private BaseDanmakuParser mParser;
+    private IntroFragment introFragment;
+    private DanmakuSendFragment danmakuSendFragment;
 
     private VideoPlayUrl videoPlayUrl;
     private com.hiczp.bilibili.api.app.model.View biliView;
@@ -87,7 +83,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     private long aid;
     private int page;
     private boolean playingBeforeActivityPause = false;
+    private boolean playingBeforeTryToSendDanmaku;
     private VideoDownloadInfo videoDownloadInfo;
+    private Map<Integer, String> videoQualityMap;
 
     @Override
     protected int initConfig() {
@@ -97,16 +95,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     @Override
     public int initLayout() {
         return R.layout.activity_play;
-    }
-
-    @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.restoreInstanceState(savedInstanceState);
-        videoPlayUrl = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("videoPlayUrl"), VideoPlayUrl.class);
-        biliView = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("biliView"), com.hiczp.bilibili.api.app.model.View.class);
-        fullscreen = savedInstanceState.getBoolean("fullscreen");
-        aid = savedInstanceState.getLong("aid");
-        page = savedInstanceState.getInt("page");
     }
 
     @Override
@@ -123,6 +111,13 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     CustomTabUtil.openUrl(this, MyBilibiliClientUtil.getB23Url(aid));
                 }
                 return true;
+            case R.id.check_cover:
+                if (biliView != null) {
+                    Intent intent = new Intent(this, PhotoViewActivity.class);
+                    intent.putExtra("url", biliView.getData().getPic());
+                    startActivity(intent);
+                }
+                return true;
             case R.id.download:
                 if (videoDownloadInfo != null) {
                     videoDownloadInfo.startDownload(this);
@@ -130,6 +125,14 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (playingBeforeActivityPause) {
+            player.setPlayWhenReady(true);
         }
     }
 
@@ -144,9 +147,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     | android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
         baseBind.pv.onResume();
-        if (playingBeforeActivityPause) {
-            player.setPlayWhenReady(true);
-        }
     }
 
     @Override
@@ -154,6 +154,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         mIbFullscreen = baseBind.pv.findViewById(R.id.ib_fullscreen);
         mBtnDanmakuSwitch = baseBind.pv.findViewById(R.id.btn_danmaku_switch);
         mBtnDanmaku = baseBind.pv.findViewById(R.id.btn_danmaku);
+        mBtnQuality = baseBind.pv.findViewById(R.id.btn_quality);
+        mIbNext = baseBind.pv.findViewById(R.id.ib_next);
     }
 
     @Override
@@ -182,9 +184,16 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 if (isPlaying) {
                     baseBind.dv.resume();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    baseBind.pbLoading.setVisibility(View.INVISIBLE);
                 } else {
                     baseBind.dv.pause();
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    long contentPosition = player.getContentPosition();
+                    long contentDuration = player.getContentDuration();
+                    long contentBufferedPosition = player.getContentBufferedPosition();
+                    if (contentBufferedPosition - contentPosition <= 100 && contentDuration - contentPosition > 100) {
+                        baseBind.pbLoading.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -235,6 +244,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                mIbNext.setVisibility(View.VISIBLE);
             } else {
                 params.height = OtherUtils.dp2px(this, 300);
                 Objects.requireNonNull(getSupportActionBar()).show();
@@ -244,6 +254,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY));
+                mIbNext.setVisibility(View.GONE);
             }
             baseBind.rl.setLayoutParams(params);
         });
@@ -271,11 +282,21 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
 //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-                .setMaximumLines(maxLinesPair) //设置最大行数
+//                .setMaximumLines(maxLinesPair) //设置最大行数
                 .preventOverlapping(overlappingEnablePair)
-                .setDanmakuMargin(40);
+                .setDanmakuMargin(getResources().getInteger(R.integer.danmaku_margin))
+                .setMaximumVisibleSizeInScreen(0)
+                .setScaleTextSize(getResources().getInteger(R.integer.danmaku_scale_text_size));
         baseBind.dv.showFPS(true);
         baseBind.dv.enableDanmakuDrawingCache(true);
+
+        mBtnDanmaku.setOnClickListener(v -> {
+//            playingBeforeTryToSendDanmaku = player.isPlaying();
+//            player.setPlayWhenReady(false);
+//            danmakuSendFragment = new DanmakuSendFragment();
+//            getSupportFragmentManager().beginTransaction().add(R.id.fl_pv_cover, danmakuSendFragment).commitAllowingStateLoss();
+            ToastUtil.sendMsg(this, "没有实现");
+        });
     }
 
     @Override
@@ -316,8 +337,39 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         switch (msg.what) {
             case 0:
                 baseBind.vp.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), 1));
+                GlideUtil.loadUrlInto(this, biliView.getData().getPic(), baseBind.ivCover, false);
+                baseBind.ivCover.setOnClickListener(v -> {
+                    baseBind.ivCover.setImageDrawable(null);
+                    baseBind.ivCover.setVisibility(View.GONE);
+                    player.setPlayWhenReady(true);
+                });
                 break;
             case 1:
+                baseBind.pbLoading.setVisibility(View.VISIBLE);
+                baseBind.dv.release();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        boolean playWhenReady = player.getPlayWhenReady();
+                        runOnUiThread(() -> player.setPlayWhenReady(false));
+                        ResponseBody responseBody = null;
+                        try {
+                            responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, biliView.getData().getPages().get(page - 1).getCid());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, "无法加载弹幕\n" + e.getMessage()));
+                        }
+                        if (responseBody != null) {
+                            Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
+                            mParser = createParser(pair.getSecond());
+                            runOnUiThread(() -> baseBind.dv.prepare(mParser, danmakuContext));
+                        }
+                        runOnUiThread(() -> {
+                            player.setPlayWhenReady(playWhenReady);
+                            baseBind.pbLoading.setVisibility(View.INVISIBLE);
+                        });
+                    }
+                }.start();
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.getData().getString("videoPlayUrl"), VideoPlayUrl.class);
                 page = msg.getData().getInt("page");
                 if (videoDownloadInfo == null) {
@@ -334,8 +386,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     videoDownloadInfo.videoUrl = videoPlayUrl.getData().getDash().getVideo().get(0).getBaseUrl();
                     videoDownloadInfo.audioUrl = null;
                     videoDownloadInfo.videoOnly = true;
-                }
-                if (videoPlayUrl.getData().getDurl() != null) {
+                } else if (videoPlayUrl.getData().getDurl() != null) {
                     setPlayerUrl(videoPlayUrl.getData().getDurl().get(0).getUrl(), null);
                     videoDownloadInfo.videoUrl = videoPlayUrl.getData().getDurl().get(0).getUrl();
                     videoDownloadInfo.audioUrl = null;
@@ -348,24 +399,83 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 videoDownloadInfo.page = page;
                 setTitle(biliView.getData().getPages().get(page - 1).getPart());
 
+                if (videoPlayUrl.getData().getDash() != null) {
+                    mBtnQuality.setVisibility(View.VISIBLE);
+                    videoQualityMap = new HashMap<>();
+                    for (VideoPlayUrl.Data.Dash.Video video : videoPlayUrl.getData().getDash().getVideo()) {
+                        videoQualityMap.put(video.getId(), video.getBaseUrl());
+                    }
+                    mBtnQuality.setOnClickListener(v -> {
+                        PopupMenu popupMenu = new PopupMenu(this, mBtnQuality);
+                        Menu menu = popupMenu.getMenu();
+                        for (int i = 0; i < videoPlayUrl.getData().getAcceptDescription().size(); i++) {
+                            menu.add(0, videoPlayUrl.getData().getAcceptQuality().get(i), i, videoPlayUrl.getData().getAcceptDescription().get(i));
+                        }
+                        popupMenu.setOnMenuItemClickListener(item -> {
+                            String video = videoQualityMap.get(item.getItemId());
+                            if (!videoDownloadInfo.videoUrl.equals(video) && video != null) {
+                                long position = player.getCurrentPosition();
+                                videoDownloadInfo.videoUrl = video;
+                                setPlayerUrl(video, videoDownloadInfo.audioUrl);
+                                mBtnQuality.setText(videoPlayUrl.getData().getAcceptDescription().get(item.getOrder()));
+                                player.seekTo(position);
+                            } else if (video == null) {
+                                runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, R.string.not_vip));
+                            }
+                            return true;
+                        });
+                        popupMenu.show();
+
+                    });
+                    mBtnQuality.setText(videoPlayUrl.getData().getAcceptDescription().get(0));
+                } else {
+                    videoQualityMap = null;
+                    mBtnQuality.setOnClickListener(null);
+                    mBtnQuality.setVisibility(View.GONE);
+                }
+                if (page < biliView.getData().getPages().size()) {
+                    mIbNext.setImageResource(R.drawable.ic_skip_next_write);
+                    mIbNext.setOnClickListener(v -> {
+                        if (introFragment != null && introFragment.getHandler() != null) {
+                            Message message = new Message();
+                            message.what = 2;
+                            message.arg1 = page + 1;
+                            introFragment.getHandler().sendMessage(message);
+                        }
+                    });
+                } else {
+                    mIbNext.setImageResource(R.drawable.ic_skip_next_gray);
+                    mIbNext.setOnClickListener(null);
+                }
+                break;
+            case 2:
+                long timeOffset = player.getContentPosition();
+                Danmaku danmaku = new Danmaku(Objects.requireNonNull(msg.getData().getString("message")));
+                danmaku.textColor = 16777215;
+                danmaku.isLive = false;
+                danmaku.timeOffset = timeOffset;
+                danmaku.duration = new Duration(5000);
+                baseBind.dv.addDanmaku(danmaku);
                 new Thread() {
                     @Override
                     public void run() {
-                        ResponseBody responseBody = null;
                         try {
-                             responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, biliView.getData().getPages().get(page - 1).getCid());
+                            PBilibiliClient.Companion.getInstance().getPMainAPI().sendDanmaku(aid,
+                                    biliView.getData().getPages().get(page - 1).getCid(),
+                                    timeOffset,
+                                    Objects.requireNonNull(msg.getData().getString("message")),
+                                    1, 16777215);
+                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, R.string.sended));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, "无法加载弹幕\n" + e.getMessage()));
-                        }
-                        if (responseBody != null) {
-                            mParser = createParser(DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream()));
-                            baseBind.dv.prepare(mParser, danmakuContext);
+                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
                         }
                     }
                 }.start();
+            case 3:
+                getSupportFragmentManager().beginTransaction().remove(danmakuSendFragment).commitAllowingStateLoss();
+                player.setPlayWhenReady(playingBeforeTryToSendDanmaku);
                 break;
-
         }
     }
 
@@ -373,6 +483,11 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     protected void onPause() {
         super.onPause();
         baseBind.pv.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         if (playingBeforeActivityPause = player.isPlaying()) {
             player.setPlayWhenReady(false);
         }
@@ -382,6 +497,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     protected void onDestroy() {
         super.onDestroy();
         player.release();
+        baseBind.dv.release();
     }
 
     @Override
@@ -391,16 +507,6 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("videoPlayUrl", GsonUtil.getGsonInstance().toJson(videoPlayUrl));
-        outState.putString("biliView", GsonUtil.getGsonInstance().toJson(biliView));
-        outState.putBoolean("fullscreen", fullscreen);
-        outState.putLong("aid", aid);
-        outState.putInt("page", page);
     }
 
     private void setPlayerUrl(@NonNull String video, @Nullable String audio) {
@@ -474,7 +580,10 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return IntroFragment.getInstance(biliView, aid, page);
+                if (introFragment == null) {
+                    introFragment = IntroFragment.getInstance(biliView, aid, page);
+                }
+                return introFragment;
             } else {
                 return new Fragment();
             }

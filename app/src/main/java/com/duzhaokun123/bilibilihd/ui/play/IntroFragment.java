@@ -103,8 +103,10 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     RadioButton radioButton = new RadioButton(getContext());
                     radioButton.setText(page1.getPart());
                     radioButton.setOnClickListener(v -> {
-                        new LoadVideoPlayUrl(page1.getCid(), 1).start();
-                        page = page1.getPage();
+                        if (page != page1.getPage()) {
+                            new LoadVideoPlayUrl(page1.getCid(), 1).start();
+                            page = page1.getPage();
+                        }
                     });
                     radioButton.setButtonDrawable(null);
                     radioButton.setBackgroundResource(R.drawable.rb_video_page_bg);
@@ -123,6 +125,12 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 break;
             case 1:
                 sendBack();
+                break;
+            case 2:
+                new LoadVideoPlayUrl(biliView.getData().getPages().get(msg.arg1 - 1).getCid(), 1).start();
+                ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(false);
+                page = msg.arg1;
+                ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(true);
                 break;
         }
     }
