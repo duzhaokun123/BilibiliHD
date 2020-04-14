@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,7 +12,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <EditText
@@ -19,7 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Action"
-                android:text="com.duzhaokun123.bilibilihd.ui" />
+                android:text="com.duzhaokun123.bilibilihd.ui"
+                tools:ignore="HardcodedText" />
 
             <RadioGroup
                 android:id="@+id/rg_choose"
@@ -30,38 +32,44 @@
                     android:id="@+id/rb_int"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="int" />
+                    android:text="int"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/rb_long"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="long" />
+                    android:text="long"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/rb_float"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="float" />
+                    android:text="float"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/rb_double"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="double" />
+                    android:text="double"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/rb_boolean"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="boolean" />
+                    android:text="boolean"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/rb_string"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="String" />
+                    android:text="String"
+                    tools:ignore="HardcodedText" />
 
             </RadioGroup>
 
@@ -69,13 +77,15 @@
                 android:id="@+id/et_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="key" />
+                android:hint="key"
+                tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/et_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="value" />
+                android:hint="value"
+                tools:ignore="HardcodedText" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,7 +99,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="add"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    tools:ignore="HardcodedText" />
 
                 <Button
                     android:id="@+id/btn_start"
@@ -98,9 +109,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="start"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_save_log"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="save log"
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
     </ScrollView>

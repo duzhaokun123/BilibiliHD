@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import android.app.PictureInPictureParams;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Message;
+import android.util.Rational;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,7 +61,6 @@ import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.Danmaku;
 import master.flame.danmaku.danmaku.model.Duration;
-import master.flame.danmaku.danmaku.model.GlobalFlagValues;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
@@ -111,6 +112,19 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     CustomTabUtil.openUrl(this, MyBilibiliClientUtil.getB23Url(aid));
                 }
                 return true;
+            case R.id.pip:
+                Rational rational = new Rational(biliView.getData().getPages().get(page - 1).getDimension().getWidth(), biliView.getData().getPages().get(page - 1).getDimension().getHeight());
+                PictureInPictureParams pictureInPictureParams;
+                if (rational.doubleValue() > 0.418410 && rational.doubleValue() < 2.390000) {
+                    pictureInPictureParams = new PictureInPictureParams.Builder()
+                            .setAspectRatio(rational)
+                            .build();
+                } else {
+                    pictureInPictureParams = new PictureInPictureParams.Builder()
+                            .build();
+                }
+                enterPictureInPictureMode(pictureInPictureParams);
+                return true;
             case R.id.check_cover:
                 if (biliView != null) {
                     Intent intent = new Intent(this, PhotoViewActivity.class);
@@ -160,20 +174,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     @Override
     public void initView() {
-//        baseBind.btnPip.setOnClickListener(v -> {
-//            Rational rational = new Rational(biliView.getData().getPages().get(page - 1).getDimension().getWidth(), biliView.getData().getPages().get(page - 1).getDimension().getHeight());
-//            if (rational.doubleValue() > 0.418410 && rational.doubleValue() < 2.390000) {
-//                PictureInPictureParams pictureInPictureParams = new PictureInPictureParams.Builder()
-//                        .setAspectRatio(rational)
-//                        .build();
-//                enterPictureInPictureMode(pictureInPictureParams);
-//            } else {
-//                ToastUtil.sendMsg(PlayActivity.this, R.string.inappropriate);
-//            }
-//        });
         player = new SimpleExoPlayer.Builder(this).build();
         player.addListener(new Player.EventListener() {
-
             @Override
             public void onSeekProcessed() {
                 baseBind.dv.seekTo(player.getContentPosition());
@@ -191,7 +193,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     long contentPosition = player.getContentPosition();
                     long contentDuration = player.getContentDuration();
                     long contentBufferedPosition = player.getContentBufferedPosition();
-                    if (contentBufferedPosition - contentPosition <= 100 && contentDuration - contentPosition > 100) {
+                    if (contentBufferedPosition - contentPosition <= 1000 && contentDuration - contentPosition > 100) {
                         baseBind.pbLoading.setVisibility(View.VISIBLE);
                     }
                 }
@@ -319,6 +321,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
             Objects.requireNonNull(getSupportActionBar()).hide();
             baseBind.pv.setUseController(false);
+            baseBind.dv.hide();
         } else {
             if (fullscreen) {
                 params.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -328,6 +331,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 Objects.requireNonNull(getSupportActionBar()).show();
             }
             baseBind.pv.setUseController(true);
+            if (mBtnDanmaku.getVisibility() == View.VISIBLE) {
+                baseBind.dv.show();
+            }
         }
         baseBind.rl.setLayoutParams(params);
     }
@@ -350,7 +356,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 new Thread() {
                     @Override
                     public void run() {
-                        boolean playWhenReady = player.getPlayWhenReady();
+                        final boolean[] playWhenReady = new boolean[1];
+                        runOnUiThread(() -> playWhenReady[0] = player.getPlayWhenReady());
                         runOnUiThread(() -> player.setPlayWhenReady(false));
                         ResponseBody responseBody = null;
                         try {
@@ -365,7 +372,12 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                             runOnUiThread(() -> baseBind.dv.prepare(mParser, danmakuContext));
                         }
                         runOnUiThread(() -> {
-                            player.setPlayWhenReady(playWhenReady);
+                            player.setPlayWhenReady(playWhenReady[0]);
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             baseBind.pbLoading.setVisibility(View.INVISIBLE);
                         });
                     }

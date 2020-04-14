@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
+import com.duzhaokun123.bilibilihd.utils.LogUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
@@ -55,6 +58,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        new MenuInflater(this).inflate(R.menu.main_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -66,6 +75,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         }
         if (Settings.isUninited()) {
             ToastUtil.sendMsg(this, R.string.exception_warning);
+            LogUtil.saveLog(this);
         }
     }
 
@@ -136,6 +146,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                 } else {
                     // TODO: 20-3-10  
                 }
+                return true;
+            case R.id.search:
+                onSearchRequested();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

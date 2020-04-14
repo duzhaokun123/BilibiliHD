@@ -9,7 +9,7 @@ import kotlinx.coroutines.future.future
 class PAppAPI(private var appAPI: AppAPI) {
 
     fun getMyInfo(): MyInfo {
-        return GlobalScope.future{ appAPI.myInfo().await() }.get()
+        return GlobalScope.future { appAPI.myInfo().await() }.get()
     }
 
     fun search(keyword: String): SearchResult {
@@ -29,10 +29,10 @@ class PAppAPI(private var appAPI: AppAPI) {
     }
 
     fun space(uid: Long): Space {
-        return GlobalScope.future { appAPI.space(vmId = uid).await() } .get()
+        return GlobalScope.future { appAPI.space(vmId = uid).await() }.get()
     }
 
-    fun homePage(pull: Boolean): HomePage{
+    fun homePage(pull: Boolean): HomePage {
         return GlobalScope.future { appAPI.homePage(pull = pull).await() }.get()
     }
 

@@ -25,6 +25,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
+import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
@@ -108,11 +109,19 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         ((VideoCardHolder) holder).mCivFace.setOnClickListener(v ->
                                 CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
                         );
+                    } else if (homePage.getData().getItems().get(position).getAdInfo() != null
+                            && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
+                        GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getImageUrl(), ((VideoCardHolder) holder).mIv, true);
+                        ((VideoCardHolder) holder).mTvTitle.setText(homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getTitle());
+                        ((VideoCardHolder) holder).mTvUp.setText(R.string.ad);
+                    } else if (homePage.getData().getItems().get(position).getCovers() != null) {
+                        GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getCovers().get(0),  ((VideoCardHolder) holder).mIv, true);
                     }
                 }
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
                     private long aid;
+                    private String cardGoto = homePage.getData().getItems().get(position).getCardGoto();
 
                     {
                         try {
@@ -124,18 +133,36 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent;
-                        intent = new Intent(getContext(), PlayActivity.class);
-                        intent.putExtra("aid", aid);
-                        startActivity(intent);
+                        Intent intent = null;
+                        if ("av".equals(cardGoto)) {
+                            intent = new Intent(getContext(), PlayActivity.class);
+                            intent.putExtra("aid", aid);
+                        } else if("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
+                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getUri());
+                        } else if ("ad_web_s".equals(cardGoto)) {
+                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
+                        } else {
+                            ToastUtil.sendMsg(getContext(), "不支持 " + cardGoto);
+                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getUri());
+                        }
+                        if (intent != null) {
+                            startActivity(intent);
+                        }
                     }
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
                     private long aid;
-                    private String url = homePage.getData().getItems().get(position).getCover();
+                    private String url;
 
                     {
+                        url = homePage.getData().getItems().get(position).getCover();
+                        if (homePage.getData().getItems().get(position).getAdInfo() != null
+                            && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
+                            url = homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getImageUrl();
+                        }  else if (homePage.getData().getItems().get(position).getCovers() != null) {
+                            url =  homePage.getData().getItems().get(position).getCovers().get(0);
+                        }
                         try {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
                         } catch (Exception e) {

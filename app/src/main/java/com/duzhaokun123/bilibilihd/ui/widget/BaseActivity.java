@@ -2,8 +2,11 @@ package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     protected static final int NEED_HANDLER = 0b010;
 
     private int config;
+    private boolean topFixed = false;
 
     public final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
@@ -41,6 +45,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
         teleportIntent = getIntent();
 
         config = initConfig();
+
         if ((config & FULLSCREEN) == FULLSCREEN) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -133,12 +138,18 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     }
 
     protected abstract int initConfig();
+
     protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
         permissionNum = savedInstanceState.getInt("permissionNum");
     }
+
     protected abstract int initLayout();
-    protected void findViews() { }
+
+    protected void findViews() {
+    }
+
     protected abstract void initView();
+
     protected abstract void initData();
 
     public interface IRequestPermissionCallback {

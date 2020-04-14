@@ -6,7 +6,12 @@
         android:id="@+id/open_in_browser"
         android:icon="@drawable/ic_launch"
         android:title="@string/open_in_browser"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/pip"
+        android:title="@string/pip" />
 
     <item
         android:id="@+id/check_cover"

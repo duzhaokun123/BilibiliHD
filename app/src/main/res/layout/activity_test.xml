@@ -27,13 +27,6 @@
             android:hint="audio"
             android:maxLines="1" />
 
-        <EditText
-            android:id="@+id/et_danmaku"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="danmaku"
-            android:maxLines="1" />
-
         <CheckBox
             android:id="@+id/cb_videoOnly"
             android:layout_width="match_parent"
@@ -41,10 +34,15 @@
             android:text="video only" />
 
         <Button
-            android:id="@+id/btn_download"
+            android:id="@+id/btn_play"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/download"
+            android:text="@string/exo_controls_play_description"
             android:textColor="@android:color/black" />
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/pv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 </layout>

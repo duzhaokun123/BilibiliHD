@@ -110,7 +110,12 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("id", Long.parseLong(path.substring(1)));
                 }
-            } else {
+            } else if ("space".equals(host)) {
+                intent1 = new Intent(this, UserSpaceActivity.class);
+                if (path != null) {
+                    intent1.putExtra("uid", Long.parseLong(path.substring(1)));
+                }
+            } else  {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
             }
         }

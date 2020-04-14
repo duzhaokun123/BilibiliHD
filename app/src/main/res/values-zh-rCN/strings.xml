@@ -77,4 +77,7 @@
     <string name="not_vip">非大会员</string>
     <string name="send">发送</string>
     <string name="sended">已发送</string>
+    <string name="search_bilibili">搜索 bilibili</string>
+    <string name="pip">画中画</string>
+    <string name="ad">广告</string>
 </resources>

@@ -39,7 +39,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER;
+        return NEED_HANDLER ;
     }
 
     @Override

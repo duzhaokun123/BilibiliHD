@@ -79,4 +79,7 @@
     <string name="not_vip">not vip</string>
     <string name="send">send</string>
     <string name="sended">sended</string>
+    <string name="search_bilibili">search bilibili</string>
+    <string name="pip">pip</string>
+    <string name="ad">ad</string>
 </resources>

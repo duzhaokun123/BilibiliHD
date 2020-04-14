@@ -7,6 +7,8 @@
 
 不再打包32位原生库, 有需求请自行编译
 
+推荐配合 web 哔哩哔哩版使用
+
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
 - [x] 横屏 (转屏就崩)
@@ -18,10 +20,11 @@
 - [x] 首页推荐
 - [ ] 动态 (bilibili-api 里没有, 自己抓包实现的)
 - [x] 专栏 (勉强)
-- [x] 视频播放
+- [ ] 视频播放
     - [x] 能播出来
     - [x] 控制清晰度
     - [x] 播放器控制换p
+    - [ ] 拖动时预览
 - [ ] 视频弹幕
     - [x] 显示普通弹幕
     - [x] 显示高级弹幕 (可能有部分无法显示)
@@ -30,14 +33,19 @@
     - [ ] 历史弹幕
 - [ ] 视频评论
     - [ ] 查看
+    - [ ] 评论
     - [ ] 发布
-- [ ] 直播
+- [ ] 直播 (可能无法实现)
 - [ ] 三连相关
 - [ ] 私信
 - [x] 视频下载 (弹幕下载会乱码, 所以不下弹幕了)
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
 - [ ] 添加历史记录
+- [ ] 广告
+    - [ ] 显示
+    - [ ] 屏蔽
+- [ ] 搜索
 
 ### 将***不***支持的功能
 - 注册
@@ -59,7 +67,7 @@
 - 试图播放某些视频时崩溃, 因为服务器返回与期望不同
 - 至少在 2020年4月4日 首页无法加载封面 (返回`404`)
 - 如果`PlayActivity`重构, 下面的信息会消失
-- 暗色模式下不会在标题栏显试视频标题
+- 暗色模式下不会在标题栏显示视频标题
 - 弹幕有时不显示
 - 更多 BUG 等你发现
 
@@ -71,9 +79,9 @@
 
 ### 从源代码构建注意
 ```shell script
-git clone https://github.com/duzhaokun123/BilibiliHD
-git clone https://github.com/duzhaokun123/bilibili-api
-git clone https://github.com/duzhaokun123/DanmakuFlameMaster
+git clone https://github.com/duzhaokun123/BilibiliHD.git
+git clone https://github.com/duzhaokun123/bilibili-api.git
+git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git
 ```
 
 在`BilibiliHD/settings.gradle`中
