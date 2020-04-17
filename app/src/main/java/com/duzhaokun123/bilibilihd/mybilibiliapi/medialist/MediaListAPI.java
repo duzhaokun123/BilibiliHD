@@ -32,7 +32,9 @@ public class MediaListAPI {
         for (Ids.Data data : ids.getData()) {
             resourcesSB.append(data.getId()).append(':').append(data.getType()).append(',');
         }
-        resourcesSB.deleteCharAt(resourcesSB.length() - 1);
+        if (resourcesSB.length() > 0) {
+            resourcesSB.deleteCharAt(resourcesSB.length() - 1);
+        }
         try {
             String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
                 @Override

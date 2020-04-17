@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +31,8 @@ import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.LogUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -92,19 +93,19 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        long currentTime = System.currentTimeMillis();
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (lastBackPassTime == -1L || currentTime - lastBackPassTime >= 2000) {
-                ToastUtil.sendMsg(MainActivity.this, R.string.passe_again_to_quit);
-                lastBackPassTime = currentTime;
-            } else {
-                finish();
-            }
-            return true;
+    public void onBackPressed() {
+        if (baseBind.dlMain != null && baseBind.dlMain.isOpen()) {
+            baseBind.dlMain.close();
+            return;
         }
-
-        return super.onKeyDown(keyCode, event);
+        long currentTime = System.currentTimeMillis();
+        if (lastBackPassTime == -1L || currentTime - lastBackPassTime >= 2000) {
+//            ToastUtil.sendMsg(MainActivity.this, R.string.passe_again_to_quit);
+            Snackbar.make(baseBind.flMain, R.string.passe_again_to_quit, BaseTransientBottomBar.LENGTH_SHORT).show();
+            lastBackPassTime = currentTime;
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void reloadMyInfo() {
@@ -157,7 +158,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER;
+        return NEED_HANDLER | FIX_LAYOUT;
     }
 
     @Override

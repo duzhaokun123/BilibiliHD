@@ -15,7 +15,7 @@ public class LogoutActivity extends BaseActivity<ActivityLogoutBinding> {
 
     @Override
     protected int initConfig() {
-        return 0;
+        return FIX_LAYOUT;
     }
 
     @Override

@@ -3,15 +3,17 @@
 
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
-下载 demo https://pan.baidu.com/s/1usDwGbrNi9zAZ1AWU8G7dQ 密码: v9oa
+~~下载 demo https://pan.baidu.com/s/1usDwGbrNi9zAZ1AWU8G7dQ 密码: v9oa~~
+
+下载 demo https://github.com/duzhaokun123/BilibiliHD/releases
 
 不再打包32位原生库, 有需求请自行编译
 
-推荐配合 web 哔哩哔哩版使用
+建议配合[web端哔哩哔哩](https://www.bilibili.com)使用
 
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
-- [x] 横屏 (转屏就崩)
+- [x] 横屏
 - [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取满级用户的信息, 重写了 Bilibili-api 的部分代码)
     - [ ] 主页
     - [ ] 动态
@@ -25,6 +27,7 @@
     - [x] 控制清晰度
     - [x] 播放器控制换p
     - [ ] 拖动时预览
+    - [ ] 倍速
 - [ ] 视频弹幕
     - [x] 显示普通弹幕
     - [x] 显示高级弹幕 (可能有部分无法显示)
@@ -35,10 +38,10 @@
     - [ ] 查看
     - [ ] 评论
     - [ ] 发布
-- [ ] 直播 (可能无法实现)
+- [ ] 直播 (可能永远无法实现)
 - [ ] 三连相关
 - [ ] 私信
-- [x] 视频下载 (弹幕下载会乱码, 所以不下弹幕了)
+- [x] 视频下载
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
 - [ ] 添加历史记录
@@ -46,6 +49,8 @@
     - [ ] 显示
     - [ ] 屏蔽
 - [ ] 搜索
+- [ ] 键盘鼠标友好
+- [ ] 关注列表
 
 ### 将***不***支持的功能
 - 注册
@@ -63,19 +68,20 @@
 ### 已知 BUG
 - 任何快速操作都有肯能导致崩溃
 - 在大屏幕设备上容易崩溃
-- `Download Manager`模式似乎只在连接了`VPN`时正常工作
 - 试图播放某些视频时崩溃, 因为服务器返回与期望不同
 - 至少在 2020年4月4日 首页无法加载封面 (返回`404`)
 - 如果`PlayActivity`重构, 下面的信息会消失
 - 暗色模式下不会在标题栏显示视频标题
 - 弹幕有时不显示
+- 打开空的收藏夹可能崩溃
+- 在 x86 设备上更容易崩溃
 - 更多 BUG 等你发现
 
 ### TODO
 - 提高代码可读性
 - 解决代码重复的问题
-- DanmakuFlameMaster 64位原生库
-- 在支持的设备上使导航栏透明
+- ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
+在 API >= 23 的设备上没有必要
 
 ### 从源代码构建注意
 ```shell script

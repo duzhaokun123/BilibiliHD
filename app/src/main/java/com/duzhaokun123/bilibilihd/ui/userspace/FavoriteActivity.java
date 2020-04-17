@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,7 +39,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER ;
+        return NEED_HANDLER | FIX_LAYOUT;
     }
 
     @Override
@@ -81,52 +81,70 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new VideoCardHolder(LayoutInflater.from(FavoriteActivity.this).inflate(R.layout.layout_video_card_item, parent, false));
+                if (viewType == 0) {
+                    return new VideoCardHolder(LayoutInflater.from(FavoriteActivity.this).inflate(R.layout.layout_video_card_item, parent, false));
+                } else {
+                    return new VHolder(new View(FavoriteActivity.this));
+                }
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                if (position == ids.getData().size()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                if (infos == null) {
-                    ((VideoCardHolder) holder).mTvTitle.setText(ids.getData().get(position).getBvid());
+                if (getItemViewType(position) == 1 && navigationBarOnButton) {
+                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getFixButtonHeight());
+                    holder.itemView.setLayoutParams(params);
                 } else {
-                    ((VideoCardHolder) holder).mTvTitle.setText(infos.getData().get(position).getTitle());
-                    ((VideoCardHolder) holder).mTvUp.setText(infos.getData().get(position).getIntro());
-                    GlideUtil.loadUrlInto(FavoriteActivity.this, infos.getData().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
-                }
-                ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
-                    Intent intent = new Intent(FavoriteActivity.this, PlayActivity.class);
-                    intent.putExtra("aid", ids.getData().get(position).getId());
-                    startActivity(intent);
-                });
-                if (infos != null) {
-                    ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
-
-                        private String bvid = ids.getData().get(position).getBvid();
-                        private String url = infos.getData().get(position).getCover();
-
-                        @Override
-                        public boolean onLongClick(View v) {
-
-                            PopupMenu popupMenu = new PopupMenu(FavoriteActivity.this, ((VideoCardHolder) holder).mCv);
-                            popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
-                            popupMenu.setOnMenuItemClickListener(item -> {
-                                switch (item.getItemId()) {
-                                    case R.id.check_cover:
-                                        Intent intent = new Intent(FavoriteActivity.this, PhotoViewActivity.class);
-                                        intent.putExtra("url", url);
-                                        startActivity(intent);
-                                        break;
-                                    case R.id.add_to_watch_later:
-                                        // TODO: 20-2-27
-                                        ToastUtil.sendMsg(FavoriteActivity.this, "还没有做");
-                                        break;
-                                }
-                                return true;
-                            });
-                            popupMenu.show();
-                            return true;
-                        }
+                    if (infos == null) {
+                        ((VideoCardHolder) holder).mTvTitle.setText(ids.getData().get(position).getBvid());
+                    } else {
+                        ((VideoCardHolder) holder).mTvTitle.setText(infos.getData().get(position).getTitle());
+                        ((VideoCardHolder) holder).mTvUp.setText(infos.getData().get(position).getIntro());
+                        GlideUtil.loadUrlInto(FavoriteActivity.this, infos.getData().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
+                    }
+                    ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
+                        Intent intent = new Intent(FavoriteActivity.this, PlayActivity.class);
+                        intent.putExtra("aid", ids.getData().get(position).getId());
+                        startActivity(intent);
                     });
+                    if (infos != null) {
+                        ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
+
+                            private String bvid = ids.getData().get(position).getBvid();
+                            private String url = infos.getData().get(position).getCover();
+
+                            @Override
+                            public boolean onLongClick(View v) {
+
+                                PopupMenu popupMenu = new PopupMenu(FavoriteActivity.this, ((VideoCardHolder) holder).mCv);
+                                popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
+                                popupMenu.setOnMenuItemClickListener(item -> {
+                                    switch (item.getItemId()) {
+                                        case R.id.check_cover:
+                                            Intent intent = new Intent(FavoriteActivity.this, PhotoViewActivity.class);
+                                            intent.putExtra("url", url);
+                                            startActivity(intent);
+                                            break;
+                                        case R.id.add_to_watch_later:
+                                            // TODO: 20-2-27
+                                            ToastUtil.sendMsg(FavoriteActivity.this, "还没有做");
+                                            break;
+                                    }
+                                    return true;
+                                });
+                                popupMenu.show();
+                                return true;
+                            }
+                        });
+                    }
                 }
             }
 
@@ -135,7 +153,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                 if (ids == null) {
                     return 0;
                 } else {
-                    return ids.getData().size();
+                    return ids.getData().size() + 1;
                 }
             }
 
@@ -147,11 +165,18 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
                 VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
-                    mCv =itemView.findViewById(R.id.cv);
+                    mCv = itemView.findViewById(R.id.cv);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvTitle = itemView.findViewById(R.id.tv_title);
                     mTvUp = itemView.findViewById(R.id.tv_up);
                     ((RelativeLayout) itemView.findViewById(R.id.rl)).removeView(itemView.findViewById(R.id.civ_face));
+                }
+            }
+
+            class VHolder extends RecyclerView.ViewHolder {
+
+                public VHolder(@NonNull View itemView) {
+                    super(itemView);
                 }
             }
         });
@@ -188,20 +213,20 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
             if (teleportIntent != null && teleportIntent.getExtras() != null) {
                 MediaListAPI.getInstance().getIds(teleportIntent.getExtras().getLong("media_id"),
                         teleportIntent.getExtras().getLong("mid"), new MyBilibiliClient.ICallback<Ids>() {
-                    @Override
-                    public void onException(Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
-                    }
+                            @Override
+                            public void onException(Exception e) {
+                                e.printStackTrace();
+                                runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
+                            }
 
-                    @Override
-                    public void onSuccess(Ids ids) {
-                        FavoriteActivity.this.ids = ids;
-                        if (handler != null) {
-                            handler.sendEmptyMessage(0);
-                        }
-                    }
-                });
+                            @Override
+                            public void onSuccess(Ids ids) {
+                                FavoriteActivity.this.ids = ids;
+                                if (handler != null) {
+                                    handler.sendEmptyMessage(0);
+                                }
+                            }
+                        });
                 if (ids != null) {
                     MediaListAPI.getInstance().getInfos(teleportIntent.getExtras().getLong("media_id"),
                             teleportIntent.getExtras().getLong("mid"), ids, new MyBilibiliClient.ICallback<Infos>() {

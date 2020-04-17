@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="add"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/ordinaryText"
                     tools:ignore="HardcodedText" />
 
                 <Button
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="start"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/ordinaryText"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 

@@ -39,7 +39,7 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER;
+        return NEED_HANDLER | FIX_LAYOUT;
     }
 
     @Override

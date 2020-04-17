@@ -10,7 +10,7 @@ public class LicenseActivity extends BaseActivity<ActivityLicenseBinding> {
 
     @Override
     protected int initConfig() {
-        return 0;
+        return FIX_LAYOUT;
     }
 
     @Override

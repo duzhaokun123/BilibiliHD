@@ -18,7 +18,7 @@ public class TestActivity extends BaseActivity<ActivityTestBinding> {
 
     @Override
     protected int initConfig() {
-        return 0;
+        return FIX_LAYOUT;
     }
 
     @Override

@@ -10,7 +10,7 @@ public class ToolActivity extends BaseActivity<ActivityToolBinding> {
 
     @Override
     protected int initConfig() {
-        return 0;
+        return FIX_LAYOUT;
     }
 
     @Override

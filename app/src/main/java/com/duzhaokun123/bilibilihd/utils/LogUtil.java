@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
@@ -29,10 +28,11 @@ public class LogUtil {
                     outputStreamWriter = new OutputStreamWriter(fileOutputStream);
 
                     outputStreamWriter.write("========= beginning of info\n");
-                    outputStreamWriter.write("versionName: " + BuildConfig.VERSION_NAME + "\n");
-                    outputStreamWriter.write("versionCode: " + BuildConfig.VERSION_CODE + "\n");
-                    outputStreamWriter.write("gitVersion: " + BuildConfig.IS_GIT_VERSION + "\n");
-                    outputStreamWriter.write("sdkVersion: " + Build.VERSION.SDK_INT + "\n");
+                    outputStreamWriter.write("versionName:\t" + BuildConfig.VERSION_NAME + "\n");
+                    outputStreamWriter.write("versionCode:\t" + BuildConfig.VERSION_CODE + "\n");
+                    outputStreamWriter.write("buildType:\t\t" + BuildConfig.BUILD_TYPE + "\n");
+                    outputStreamWriter.write("gitVersion:\t\t" + BuildConfig.IS_GIT_VERSION + "\n");
+                    outputStreamWriter.write("sdkVersion:\t\t" + Build.VERSION.SDK_INT + "\n");
                     outputStreamWriter.write("========= beginning of log\n");
                     Process exec = Runtime.getRuntime().exec("logcat");
                     inputStreamReader = new InputStreamReader(exec.getInputStream());

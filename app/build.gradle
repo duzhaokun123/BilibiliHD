@@ -125,6 +125,6 @@ dependencies {
     implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
     //DanmakuFlameMaster
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
-    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.25'
-    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
+//    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.25'
+//    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
 }

@@ -2,15 +2,19 @@ package com.duzhaokun123.bilibilihd.ui.play;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import android.Manifest;
 import android.app.PictureInPictureParams;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Message;
 import android.util.Rational;
 import android.view.Menu;
@@ -21,7 +25,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
+
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
@@ -134,7 +138,15 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 return true;
             case R.id.download:
                 if (videoDownloadInfo != null) {
-                    videoDownloadInfo.startDownload(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        videoDownloadInfo.startDownload(this);
+                    } else {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, grantResults -> {
+                            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                videoDownloadInfo.startDownload(this);
+                            }
+                        });
+                    }
                 }
                 return true;
             default:
@@ -155,10 +167,10 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         super.onResume();
         if (fullscreen) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
-                    | android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
         baseBind.pv.onResume();
     }
@@ -195,6 +207,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     long contentBufferedPosition = player.getContentBufferedPosition();
                     if (contentBufferedPosition - contentPosition <= 1000 && contentDuration - contentPosition > 100) {
                         baseBind.pbLoading.setVisibility(View.VISIBLE);
+                    } else {
+                        baseBind.pv.showController();
                     }
                 }
             }

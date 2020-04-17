@@ -24,7 +24,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER;
+        return NEED_HANDLER | FIX_LAYOUT;
     }
 
     @Override

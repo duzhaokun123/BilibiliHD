@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -38,8 +38,8 @@ import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -376,7 +376,7 @@ public class DynamicFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 @Override
                 public boolean onLongClick(View v) {
 
-                    PopupMenu popupMenu = new PopupMenu(getContext(), relativeLayout);
+                    PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), relativeLayout);
                     popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
                     popupMenu.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {

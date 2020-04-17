@@ -1,21 +1,31 @@
 package com.duzhaokun123.bilibilihd.ui.play;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentPlayIntroBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
@@ -23,6 +33,7 @@ import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.Objects;
 
@@ -73,6 +84,14 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
     @Override
     protected void initView() {
         baseBind.tvId.setText(MyBilibiliClientUtil.av2bv(aid));
+
+        // 这里可以这样做是因为这个 Fragment 加载时 Activity 必然可见
+        BaseActivity baseActivity = getBaseActivity();
+        if (baseActivity != null) {
+            ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
+            params.height = baseActivity.getFixButtonHeight();
+            baseBind.v.setLayoutParams(params);
+        }
     }
 
     @Override
@@ -122,6 +141,15 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                         radioButton.setChecked(true);
                     }
                 }
+                baseBind.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                        super.getItemOffsets(outRect, view, parent, state);
+                        outRect.set(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.divider_height));
+                    }
+                });
+                baseBind.rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                baseBind.rv.setAdapter(new Adapter());
                 break;
             case 1:
                 sendBack();
@@ -152,6 +180,79 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         bundle.putString("videoPlayUrl", GsonUtil.getGsonInstance().toJson(videoPlayUrl));
         message.setData(bundle);
         Objects.requireNonNull(Objects.requireNonNull(getBaseActivity()).getHandler()).sendMessage(message);
+    }
+
+    class Adapter extends RecyclerView.Adapter {
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new RelateVideoCardHolder(LayoutInflater.from(getContext()).inflate(R.layout.layout_relate_video_card_item, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            ((RelateVideoCardHolder) holder).mTvTitle.setText(biliView.getData().getRelates().get(position).getTitle());
+            ((RelateVideoCardHolder) holder).mTvPlay.setText(String.valueOf(biliView.getData().getRelates().get(position).getStat().getReply()));
+            ((RelateVideoCardHolder) holder).mTvDanmaku.setText(String.valueOf(biliView.getData().getRelates().get(position).getStat().getDanmaku()));
+            GlideUtil.loadUrlInto(getContext(), biliView.getData().getRelates().get(position).getPic(), ((RelateVideoCardHolder) holder).mIvCover, true);
+            if (biliView.getData().getRelates().get(position).getOwner() != null) {
+                ((RelateVideoCardHolder) holder).mtvUp.setText(biliView.getData().getRelates().get(position).getOwner().getName());
+            }
+            ((RelateVideoCardHolder) holder).mCv.setOnClickListener(v -> {
+                if (biliView.getData().getRelates().get(position).getAid() != 0) {
+                    Intent intent = new Intent(getContext(), PlayActivity.class);
+                    intent.putExtra("aid", (long) biliView.getData().getRelates().get(position).getAid());
+                    startActivity(intent);
+                } else {
+                    CustomTabUtil.openUrl(getContext(), biliView.getData().getRelates().get(position).getUri());
+                }
+            });
+            ((RelateVideoCardHolder) holder).mCv.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), ((RelateVideoCardHolder) holder).mCv);
+                popupMenu.inflate(R.menu.video_card);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.check_cover:
+                            Intent intent = new Intent(getContext(), PhotoViewActivity.class);
+                            intent.putExtra("url", biliView.getData().getRelates().get(position).getPic());
+                            startActivity(intent);
+                            break;
+                        case R.id.add_to_watch_later:
+                            // TODO: 20-4-16
+                            break;
+                    }
+                    return true;
+                });
+                popupMenu.show();
+                return true;
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (biliView == null) {
+                return 0;
+            } else {
+                return biliView.getData().getRelates().size();
+            }
+        }
+
+        class RelateVideoCardHolder extends RecyclerView.ViewHolder {
+            private ImageView mIvCover;
+            private TextView mTvTitle, mtvUp, mTvPlay, mTvDanmaku;
+            private CardView mCv;
+
+            RelateVideoCardHolder(@NonNull View itemView) {
+                super(itemView);
+                mIvCover = itemView.findViewById(R.id.iv_cover);
+                mTvTitle = itemView.findViewById(R.id.tv_title);
+                mCv = itemView.findViewById(R.id.cv);
+                mtvUp = itemView.findViewById(R.id.tv_up);
+                mTvPlay = itemView.findViewById(R.id.tv_play);
+                mTvDanmaku = itemView.findViewById(R.id.tv_danmaku);
+            }
+        }
     }
 
     class LoadVideoPlayUrl extends Thread {

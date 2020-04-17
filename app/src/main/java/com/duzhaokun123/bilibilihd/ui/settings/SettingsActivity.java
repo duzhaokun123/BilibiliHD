@@ -12,7 +12,7 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     @Override
     protected int initConfig() {
-        return 0;
+        return FIX_LAYOUT;
     }
 
     @Override

@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
 

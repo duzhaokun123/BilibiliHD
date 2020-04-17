@@ -11,54 +11,58 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
-//import com.hiczp.bilibili.api.app.model.Space;
+import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewWithVBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.google.gson.Gson;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-public class FavoriteFragment extends Fragment {
+import java.util.Objects;
 
-    private XRecyclerView mXrv;
+public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBinding> {
+
 
     private Space space;
 
     public FavoriteFragment(){}
 
-    public FavoriteFragment(Space space) {
+    FavoriteFragment(Space space) {
         this.space = space;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            space = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("space"), Space.class);
-        }
+    protected int initConfig() {
+        return 0;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
-        mXrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mXrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+    protected int initLayout() {
+        return R.layout.layout_recyclerview_with_v;
+    }
+
+    @Override
+    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.restoreInstanceState(savedInstanceState);
+        space = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("space"), Space.class);
+    }
+
+    @Override
+    protected void initView() {
+        baseBind.rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        baseBind.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 outRect.set(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.divider_height));
             }
         });
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.rv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +74,10 @@ public class FavoriteFragment extends Fragment {
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((FavoriteCardViewHolder)holder).mTvName.setText(space.getData().getFavourite().getItem().get(position).getName());
                 ((FavoriteCardViewHolder)holder).mTvCount.setText(space.getData().getFavourite().getItem().get(position).getCurCount() + getString(R.string.content));
-                Glide.with(getContext()).load(space.getData().getFavourite().getItem().get(position).getCover().get(0).getPic()).into(((FavoriteCardViewHolder) holder).mIv);
+                if (space.getData().getFavourite().getItem().get(position).getCover() != null) {
+                    Glide.with(Objects.requireNonNull(getContext())).load(space.getData().getFavourite().getItem().get(position).getCover().get(0).getPic()).into(((FavoriteCardViewHolder) holder).mIv);
+
+                }
                 ((FavoriteCardViewHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
 
                     private Space.Data.Favourite.Item item = space.getData().getFavourite().getItem().get(position);
@@ -78,9 +85,9 @@ public class FavoriteFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), FavoriteActivity.class);
-                        intent.putExtra("mid", space.getData().getFavourite().getItem().get(position).getMid());
-                        intent.putExtra("media_id", space.getData().getFavourite().getItem().get(position).getMediaId());
-                        intent.putExtra("name", space.getData().getFavourite().getItem().get(position).getName());
+                        intent.putExtra("mid", item.getMid());
+                        intent.putExtra("media_id", item.getMediaId());
+                        intent.putExtra("name", item.getName());
                         startActivity(intent);
                     }
                 });
@@ -90,7 +97,7 @@ public class FavoriteFragment extends Fragment {
             public int getItemCount() {
                 if (space == null) {
                     return 0;
-                }else {
+                } else {
                     return space.getData().getFavourite().getItem().size();
                 }
             }
@@ -101,7 +108,7 @@ public class FavoriteFragment extends Fragment {
                 private TextView mTvName, mTvCount;
                 private CardView mCv;
 
-                public FavoriteCardViewHolder(@NonNull View itemView) {
+                FavoriteCardViewHolder(@NonNull View itemView) {
                     super(itemView);
                     mIv = itemView.findViewById(R.id.iv);
                     mTvName = itemView.findViewById(R.id.tv_name);
@@ -110,14 +117,18 @@ public class FavoriteFragment extends Fragment {
                 }
             }
         });
-        mXrv.setLoadingMoreEnabled(false);
-        mXrv.setPullRefreshEnabled(false);
-        return view;
+
+        BaseActivity baseActivity = getBaseActivity();
+        if (baseActivity != null && baseActivity.navigationBarOnButton) {
+            ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
+            params.height = baseActivity.getFixButtonHeight();
+            baseBind.v.setLayoutParams(params);
+        }
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void initData() {
+
     }
 
     @Override
