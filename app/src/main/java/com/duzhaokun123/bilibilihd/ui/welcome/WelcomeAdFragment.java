@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.welcome;
 
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -65,8 +64,7 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
     @Override
     protected void initData() {
         baseBind.tvVersion.setText(BuildConfig.VERSION_NAME);
-//        WelcomeAd.Data.List_ list_ = WelcomeAdApi.getShowList(welcomeAd);
-        WelcomeAd.Data.List_ list_ = welcomeAd.getData().getList().get(7);
+        WelcomeAd.Data.List_ list_ = WelcomeAdApi.getShowList(welcomeAd);
         if (list_ != null) {
             if (list_.isAd()) {
                 baseBind.tvAd.setVisibility(View.VISIBLE);
