@@ -19,8 +19,8 @@ import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewWithVBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 
 import java.util.Objects;

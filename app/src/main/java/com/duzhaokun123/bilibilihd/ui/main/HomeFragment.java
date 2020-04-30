@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,8 @@ import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -104,7 +103,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                     if (homePage.getData().getItems().get(position).getMask() != null) {
                         GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getCover(), ((VideoCardHolder) holder).mCivFace, false);
                         ((VideoCardHolder) holder).mCivFace.setOnClickListener(v ->
-                                CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
+                                BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
                         );
                     } else if (homePage.getData().getItems().get(position).getAdInfo() != null
                             && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
@@ -135,12 +134,12 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                             intent = new Intent(getContext(), PlayActivity.class);
                             intent.putExtra("aid", aid);
                         } else if("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
-                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getUri());
+                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getUri());
                         } else if ("ad_web_s".equals(cardGoto)) {
-                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
+                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
                         } else {
                             ToastUtil.sendMsg(getContext(), "不支持 " + cardGoto);
-                            CustomTabUtil.openUrl(getContext(), homePage.getData().getItems().get(position).getUri());
+                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getUri());
                         }
                         if (intent != null) {
                             startActivity(intent);
@@ -164,7 +163,6 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Log.i(CLASS_NAME, homePage.getData().getItems().get(position).toString());
                         }
                     }
 

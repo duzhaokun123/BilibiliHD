@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.services.VideoDownloadService;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.liulishuo.okdownload.DownloadTask;

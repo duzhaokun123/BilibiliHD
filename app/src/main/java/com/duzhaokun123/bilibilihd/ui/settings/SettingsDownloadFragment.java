@@ -2,7 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.settings;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsDownloadBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 
 public class SettingsDownloadFragment extends BaseFragment<FragmentSettingsDownloadBinding> {

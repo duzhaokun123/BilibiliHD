@@ -26,7 +26,7 @@ import com.duzhaokun123.bilibilihd.ui.JumpActivity;
 import com.duzhaokun123.bilibilihd.ui.LoginActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.LogUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;

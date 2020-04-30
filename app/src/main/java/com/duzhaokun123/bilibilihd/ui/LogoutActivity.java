@@ -5,7 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityLogoutBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.BilibiliClient;

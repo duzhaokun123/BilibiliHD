@@ -2,7 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.settings;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityLicenseBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 

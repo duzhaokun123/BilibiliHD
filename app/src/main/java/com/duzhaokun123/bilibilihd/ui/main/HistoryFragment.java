@@ -21,11 +21,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -102,7 +102,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
                     @Override
                     public void onClick(View v) {
-                        CustomTabUtil.openUrl(Objects.requireNonNull(getContext()), url);
+                        BrowserUtil.openDefault(Objects.requireNonNull(getContext()), url);
                     }
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {

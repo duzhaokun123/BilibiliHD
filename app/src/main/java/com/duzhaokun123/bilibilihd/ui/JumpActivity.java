@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityJumpBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.LogUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 

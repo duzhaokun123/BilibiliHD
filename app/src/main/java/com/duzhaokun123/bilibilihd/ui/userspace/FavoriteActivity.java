@@ -25,7 +25,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;

@@ -5,7 +5,7 @@ import android.os.Message;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentDanmakuSendBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 
 import java.util.Objects;
 

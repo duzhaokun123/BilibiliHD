@@ -1,8 +1,7 @@
-package com.duzhaokun123.bilibilihd.ui.widget;
+package com.duzhaokun123.bilibilihd.bases;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

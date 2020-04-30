@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPhotoViewBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 

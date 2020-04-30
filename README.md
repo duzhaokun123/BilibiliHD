@@ -11,6 +11,8 @@
 
 建议配合[web端哔哩哔哩](https://www.bilibili.com)使用
 
+暂且不建议屏幕较小或没有触摸屏的用户使用
+
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
 - [x] 横屏
@@ -51,11 +53,13 @@
 - [ ] 搜索
 - [ ] 键盘鼠标友好
 - [ ] 关注列表
-
+- [ ] 开屏广告
+    - [*] 显示
+    - [ ] 屏蔽
 ### 将***不***支持的功能
 - 注册
 - 直播弹幕发送
-- 开屏广告
+- ~~开屏广告~~
 - 会员购相关
 - 修改用户信息
 - 游戏相关
@@ -82,6 +86,7 @@
 - 解决代码重复的问题
 - ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
 在 API >= 23 的设备上没有必要
+- 重作界面
 
 ### 从源代码构建注意
 ```shell script

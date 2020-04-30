@@ -6,7 +6,7 @@ import android.widget.FrameLayout;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivitySettingsBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 
 public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 

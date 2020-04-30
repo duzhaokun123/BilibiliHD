@@ -82,4 +82,6 @@
     <string name="search_bilibili">search bilibili</string>
     <string name="pip">pip</string>
     <string name="ad">ad</string>
+    <string name="skip">skip</string>
+    <string name="keep">keep</string>
 </resources>

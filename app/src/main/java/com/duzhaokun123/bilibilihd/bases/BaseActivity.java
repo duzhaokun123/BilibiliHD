@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.widget;
+package com.duzhaokun123.bilibilihd.bases;
 
 import android.content.Intent;
 import android.os.Build;

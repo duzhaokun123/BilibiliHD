@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsLayoutBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 
 public class SettingLayoutFragment extends BaseFragment<FragmentSettingsLayoutBinding> {

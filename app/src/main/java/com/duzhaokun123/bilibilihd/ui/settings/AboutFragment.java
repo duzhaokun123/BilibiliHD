@@ -7,8 +7,8 @@ import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentAboutBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class AboutFragment extends BaseFragment<FragmentAboutBinding> {
             Intent intent = new Intent(getContext(), LicenseActivity.class);
             startActivity(intent);
         });
-        baseBind.rlProjectHome.setOnClickListener(v -> CustomTabUtil.openUrl(Objects.requireNonNull(getContext()), getString(R.string.project_home_url)));
+        baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openDefault(Objects.requireNonNull(getContext()), getString(R.string.project_home_url)));
     }
 
     @Override

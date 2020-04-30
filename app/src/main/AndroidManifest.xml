@@ -24,7 +24,7 @@
         <activity
             android:name=".ui.download.DownloadActivity"
             android:label="@string/download"
-            android:parentActivityName=".ui.WelcomeActivity" />
+            android:parentActivityName=".ui.welcome.WelcomeActivity" />
 
         <service
             android:name=".services.VideoDownloadService"
@@ -102,8 +102,8 @@
                 android:value=".ui.SearchActivity" />
         </activity>
         <activity
-            android:name=".ui.WelcomeActivity"
-            android:configChanges="uiMode"
+            android:name=".ui.welcome.WelcomeActivity"
+            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

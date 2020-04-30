@@ -31,9 +31,9 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
@@ -113,7 +113,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         switch (item.getItemId()) {
             case R.id.open_in_browser:
                 if (teleportIntent != null) {
-                    CustomTabUtil.openUrl(this, MyBilibiliClientUtil.getB23Url(aid));
+                    BrowserUtil.openDefault(this, MyBilibiliClientUtil.getB23Url(aid));
                 }
                 return true;
             case R.id.pip:

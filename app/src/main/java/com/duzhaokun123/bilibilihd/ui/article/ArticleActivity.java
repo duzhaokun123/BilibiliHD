@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityArticleBinding;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 
 public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
@@ -25,7 +25,7 @@ public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_in_browser) {
             if (teleportIntent != null) {
-                CustomTabUtil.openUrl(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
+                BrowserUtil.openDefault(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
             }
             return true;
         }

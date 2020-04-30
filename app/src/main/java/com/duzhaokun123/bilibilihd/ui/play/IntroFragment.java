@@ -23,9 +23,9 @@ import com.duzhaokun123.bilibilihd.databinding.FragmentPlayIntroBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseFragment;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
@@ -33,7 +33,6 @@ import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.Objects;
 
@@ -205,7 +204,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     intent.putExtra("aid", (long) biliView.getData().getRelates().get(position).getAid());
                     startActivity(intent);
                 } else {
-                    CustomTabUtil.openUrl(getContext(), biliView.getData().getRelates().get(position).getUri());
+                    BrowserUtil.openDefault(getContext(), biliView.getData().getRelates().get(position).getUri());
                 }
             });
             ((RelateVideoCardHolder) holder).mCv.setOnLongClickListener(v -> {

@@ -11,7 +11,6 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
@@ -19,10 +18,10 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
-import com.duzhaokun123.bilibilihd.ui.widget.BaseActivity;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
-import com.duzhaokun123.bilibilihd.utils.CustomTabUtil;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 
@@ -38,7 +37,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_in_browser && teleportIntent != null && teleportIntent.getExtras() != null) {
-            CustomTabUtil.openUrl(this, BilibiliUrlUtil.getUserSpaceLink(teleportIntent.getExtras().getLong("uid")));
+            BrowserUtil.openDefault(this, BilibiliUrlUtil.getUserSpaceLink(teleportIntent.getExtras().getLong("uid")));
             return true;
         }
         return super.onOptionsItemSelected(item);
