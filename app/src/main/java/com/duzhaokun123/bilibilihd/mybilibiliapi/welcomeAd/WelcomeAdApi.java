@@ -9,6 +9,7 @@ import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
 import java.util.Map;
+import java.util.Random;
 
 public class WelcomeAdApi {
 
@@ -22,6 +23,19 @@ public class WelcomeAdApi {
     }
 
     public static WelcomeAd.Data.List_ getShowList(@NonNull WelcomeAd welcomeAd) {
+        if (welcomeAd.getData().getList() == null) {
+            return null;
+        }
+
+        if (welcomeAd.getData().getShow() == null) { //没有 show 就随机来一个
+            Random random = new Random(System.currentTimeMillis());
+            for (WelcomeAd.Data.List_ list_ : welcomeAd.getData().getList()) {
+                if (random.nextBoolean()) {
+                    return list_;
+                }
+            }
+        }
+
         for (WelcomeAd.Data.Show show : welcomeAd.getData().getShow()) {
             for (WelcomeAd.Data.List_ list_ : welcomeAd.getData().getList()) {
                 if (list_.getId() == show.getId()) {
@@ -52,7 +66,6 @@ public class WelcomeAdApi {
                     paramsMap.put("height", "2048");
                     paramsMap.put("channel", "bili");
                     paramsMap.put("mobi_app", "android");
-
                 }
 
             });

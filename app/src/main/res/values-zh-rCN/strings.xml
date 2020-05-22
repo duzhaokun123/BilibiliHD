@@ -82,4 +82,6 @@
     <string name="ad">广告</string>
     <string name="skip">跳过</string>
     <string name="keep">保持</string>
+    <string name="display">显示</string>
+    <string name="reload">重载</string>
 </resources>

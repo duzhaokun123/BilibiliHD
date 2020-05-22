@@ -66,7 +66,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
     }
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         biliView = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("biliView"), com.hiczp.bilibili.api.app.model.View.class);
         videoPlayUrl = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("videoplayUrl"), VideoPlayUrl.class);
         aid = savedInstanceState.getLong("aid");
@@ -128,7 +128,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     });
                     radioButton.setButtonDrawable(null);
                     radioButton.setBackgroundResource(R.drawable.rb_video_page_bg);
-                    radioButton.setTextColor(Objects.requireNonNull(getContext()).getColorStateList(R.color.rb_video_page_text));
+                    radioButton.setTextColor(requireContext().getColorStateList(R.color.rb_video_page_text));
                     radioButton.setPadding(OtherUtils.dp2px(getContext(), 10),
                             OtherUtils.dp2px(getContext(), 10),
                             OtherUtils.dp2px(getContext(), 10),
@@ -204,11 +204,11 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     intent.putExtra("aid", (long) biliView.getData().getRelates().get(position).getAid());
                     startActivity(intent);
                 } else {
-                    BrowserUtil.openDefault(getContext(), biliView.getData().getRelates().get(position).getUri());
+                    BrowserUtil.openCustomTab(getContext(), biliView.getData().getRelates().get(position).getUri());
                 }
             });
             ((RelateVideoCardHolder) holder).mCv.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), ((RelateVideoCardHolder) holder).mCv);
+                PopupMenu popupMenu = new PopupMenu(requireContext(), ((RelateVideoCardHolder) holder).mCv);
                 popupMenu.inflate(R.menu.video_card);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
@@ -230,7 +230,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
 
         @Override
         public int getItemCount() {
-            if (biliView == null) {
+            if (biliView == null || biliView.getData().getRelates() == null) {
                 return 0;
             } else {
                 return biliView.getData().getRelates().size();

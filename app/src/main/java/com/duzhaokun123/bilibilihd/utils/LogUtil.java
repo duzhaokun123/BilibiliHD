@@ -23,6 +23,7 @@ public class LogUtil {
                 BufferedReader bufferedReader = null;
                 FileOutputStream fileOutputStream = null;
                 OutputStreamWriter outputStreamWriter = null;
+                Process exec = null;
                 try {
                     fileOutputStream = new FileOutputStream(new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "" + System.currentTimeMillis() + ".log"));
                     outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -34,14 +35,15 @@ public class LogUtil {
                     outputStreamWriter.write("gitVersion:\t\t" + BuildConfig.IS_GIT_VERSION + "\n");
                     outputStreamWriter.write("sdkVersion:\t\t" + Build.VERSION.SDK_INT + "\n");
                     outputStreamWriter.write("========= beginning of log\n");
-                    Process exec = Runtime.getRuntime().exec("logcat");
+                    exec = Runtime.getRuntime().exec("logcat");
                     inputStreamReader = new InputStreamReader(exec.getInputStream());
                     bufferedReader = new BufferedReader(inputStreamReader);
                     String lien;
                     while ((lien = bufferedReader.readLine()) != null) {
                         outputStreamWriter.write(lien + "\n");
+                        outputStreamWriter.flush();
+                        fileOutputStream.flush();
                     }
-                    exec.destroy();
                     activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, R.string.saved));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -74,7 +76,11 @@ public class LogUtil {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (exec != null) {
+                        exec.destroy();
+                    }
                 }
+
             }
         }.start();
     }

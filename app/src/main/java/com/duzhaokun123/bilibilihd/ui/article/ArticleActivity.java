@@ -25,7 +25,7 @@ public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_in_browser) {
             if (teleportIntent != null) {
-                BrowserUtil.openDefault(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
+                BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
             }
             return true;
         }

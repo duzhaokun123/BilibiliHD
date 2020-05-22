@@ -70,7 +70,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta6'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -89,7 +89,7 @@ dependencies {
     implementation 'javax.xml.stream:stax-api:1.0-2'
     implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
 //    DrawerLayout
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-beta01'
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-rc01'
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
@@ -106,7 +106,7 @@ dependencies {
 //    implementation "com.google.android.material:material:1.1.0"
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha02'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
     //okhttp3
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
     //gson
@@ -127,4 +127,6 @@ dependencies {
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
 //    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.25'
 //    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
+    //Preference
+    implementation 'androidx.preference:preference:1.1.1'
 }

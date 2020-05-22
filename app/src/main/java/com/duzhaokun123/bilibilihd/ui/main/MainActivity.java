@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+    public void onRestoreInstanceStateSynchronously(@NonNull Bundle savedInstanceState) {
         first = savedInstanceState.getBoolean("first");
         title = savedInstanceState.getString("title");
     }

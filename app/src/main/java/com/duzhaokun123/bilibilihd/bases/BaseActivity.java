@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +37,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Nullable
     protected Intent teleportIntent;
     /**
-     * actionBarHeight displayCutout 只在 onWindowFocusChanged() 才有意义
+     * actionBarHeight displayCutout 只在 onWindowFocusChanged() 后才有意义
      */
     public int stateBarHeight, actionBarHeight, navigationBarHeight;
     public boolean navigationBarOnButton;
@@ -62,13 +61,13 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     public int getFixButtonHeight() {
         if (!navigationBarOnButton) {
             return 0;
-        }else
-        if (displayCutout != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && displayCutout.getSafeInsetBottom() != 0) {
+        } else if (displayCutout != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && displayCutout.getSafeInsetBottom() != 0) {
             return navigationBarHeight + displayCutout.getSafeInsetBottom();
         } else {
             return navigationBarHeight;
         }
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,10 +87,6 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
             handler = new Handler(this);
         }
 
-        if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState);
-        }
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -107,6 +102,10 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
         resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             stateBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        if (savedInstanceState != null) {
+            onRestoreInstanceStateSynchronously(savedInstanceState);
         }
 
         findViews();
@@ -167,14 +166,14 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
                         & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
             }
+
+            onLayoutFixInfoReady();
         }
 
-        if ((config & FIX_LAYOUT) != 0 && layoutFixed) {
-            if (!navigationBarOnButton) {
-                getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
-                        & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
-            }
+        if ((config & FIX_LAYOUT) != 0 && layoutFixed && !navigationBarOnButton) {
+            getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
+                    & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
         }
     }
 
@@ -225,11 +224,11 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
     protected abstract int initConfig();
 
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected abstract int initLayout();
+
+    protected void onRestoreInstanceStateSynchronously(@NonNull Bundle savedInstanceState) {
         permissionNum = savedInstanceState.getInt("permissionNum");
     }
-
-    protected abstract int initLayout();
 
     protected void findViews() {
     }
@@ -241,4 +240,8 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     public interface IRequestPermissionCallback {
         void callback(int[] grantResults);
     }
+
+    protected void onLayoutFixInfoReady() {
+    }
+
 }

@@ -10,7 +10,7 @@ import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsLayoutBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 
-public class SettingLayoutFragment extends BaseFragment<FragmentSettingsLayoutBinding> {
+public class SettingsDisplayFragment extends BaseFragment<FragmentSettingsLayoutBinding> {
 
     @Override
     protected int initConfig() {

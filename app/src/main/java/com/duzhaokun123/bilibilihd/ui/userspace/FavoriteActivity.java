@@ -99,7 +99,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                if (getItemViewType(position) == 1 && navigationBarOnButton) {
+                if (getItemViewType(position) == 1) {
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getFixButtonHeight());
                     holder.itemView.setLayoutParams(params);
                 } else {
@@ -201,9 +201,11 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
     @Override
     public void handlerCallback(@NonNull Message msg) {
-        if (msg.what == 0) {
-            baseBind.xrv.refreshComplete();
-            XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, ids.getData().size());
+        switch (msg.what) {
+            case 1:
+                baseBind.xrv.refreshComplete();
+            case 0:
+                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, ids.getData().size());
         }
     }
 
@@ -240,7 +242,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                 public void onSuccess(Infos infos) {
                                     FavoriteActivity.this.infos = infos;
                                     if (handler != null) {
-                                        handler.sendEmptyMessage(0);
+                                        handler.sendEmptyMessage(1);
                                     }
                                 }
                             });

@@ -36,9 +36,9 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     }
 
-    public FrameLayout getFlSettingSecond() {
-        return baseBind.flSettingsSecond;
-    }
+//    public FrameLayout getFlSettingSecond() {
+//        return baseBind.flSettingsSecond;
+//    }
 
     @Override
     public void onBackPressed() {

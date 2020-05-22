@@ -40,7 +40,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
     private History mHistory;
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         mHistory = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("mHistory"), History.class);
     }
 
@@ -102,7 +102,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
                     @Override
                     public void onClick(View v) {
-                        BrowserUtil.openDefault(Objects.requireNonNull(getContext()), url);
+                        BrowserUtil.openCustomTab(Objects.requireNonNull(getContext()), url);
                     }
                 });
                 ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {

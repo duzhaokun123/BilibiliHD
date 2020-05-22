@@ -17,9 +17,9 @@ data class WelcomeAd(
 ) {
     data class Data(
             @SerializedName("list")
-            val list: List<List_>,
+            val list: List<List_>?,
             @SerializedName("show")
-            val show: List<Show>
+            val show: List<Show>?
     ) {
         data class List_(
                 @SerializedName("id")

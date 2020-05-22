@@ -35,7 +35,7 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
         }
 
         if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState);
+            onRestoreInstanceState(savedInstanceState);
         }
     }
 
@@ -74,8 +74,17 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
         return handler;
     }
 
+    @NonNull
+    public BaseActivity requireBaseActivity() {
+        BaseActivity activity = getBaseActivity();
+        if (activity == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to an baseActivity.");
+        }
+        return activity;
+    }
+
     protected abstract int initConfig();
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) { }
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) { }
     protected abstract int initLayout();
     protected void findViews(View parentView) { }
     protected abstract void initView();

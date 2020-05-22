@@ -113,7 +113,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         switch (item.getItemId()) {
             case R.id.open_in_browser:
                 if (teleportIntent != null) {
-                    BrowserUtil.openDefault(this, MyBilibiliClientUtil.getB23Url(aid));
+                    BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getB23Url(aid));
                 }
                 return true;
             case R.id.pip:

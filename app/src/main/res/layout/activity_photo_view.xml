@@ -43,7 +43,7 @@
                 android:layout_toStartOf="@id/ib_pip"
                 android:background="@drawable/bg_text"
                 android:foreground="?selectableItemBackground"
-                android:src="@drawable/ic_dl" />
+                android:src="@drawable/ic_dl_white" />
         </RelativeLayout>
 
     </RelativeLayout>

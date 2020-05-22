@@ -84,4 +84,6 @@
     <string name="ad">ad</string>
     <string name="skip">skip</string>
     <string name="keep">keep</string>
+    <string name="display">display</string>
+    <string name="reload">reload</string>
 </resources>

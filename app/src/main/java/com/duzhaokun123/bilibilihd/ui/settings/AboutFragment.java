@@ -34,7 +34,7 @@ public class AboutFragment extends BaseFragment<FragmentAboutBinding> {
             Intent intent = new Intent(getContext(), LicenseActivity.class);
             startActivity(intent);
         });
-        baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openDefault(Objects.requireNonNull(getContext()), getString(R.string.project_home_url)));
+        baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openCustomTab(Objects.requireNonNull(getContext()), getString(R.string.project_home_url)));
     }
 
     @Override

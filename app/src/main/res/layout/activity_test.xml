@@ -14,35 +14,32 @@
         tools:context=".ui.TestActivity">
 
         <EditText
-            android:id="@+id/et_video"
+            android:id="@+id/et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="video"
-            android:maxLines="1" />
-
-        <EditText
-            android:id="@+id/et_audio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="audio"
-            android:maxLines="1" />
-
-        <CheckBox
-            android:id="@+id/cb_videoOnly"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="video only" />
+            android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btn_play"
+            android:textColor="@color/ordinaryText"
+            android:id="@+id/btn_custom"
+            style="?materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exo_controls_play_description"
-            android:textColor="@android:color/black" />
+            android:text="custom" />
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/pv"
+        <Button
+            android:textColor="@color/ordinaryText"
+            android:id="@+id/btn_activity"
+            style="?materialButtonOutlinedStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:text="activty" />
+
+        <Button
+            android:textColor="@color/ordinaryText"
+            android:id="@+id/btn_dialog"
+            style="?materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="dialog" />
     </LinearLayout>
 </layout>

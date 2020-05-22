@@ -21,8 +21,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.Objects;
-
 public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
 
     public WelcomeAdFragment() {
@@ -35,6 +33,8 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
     private SimpleExoPlayer player;
 
     private WelcomeAd welcomeAd;
+
+    private boolean keep = false;
 
     @Override
     protected int initConfig() {
@@ -55,6 +55,7 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
             }
         });
         baseBind.btnKeep.setOnClickListener(v -> {
+            keep = true;
             if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
                 getBaseActivity().getHandler().removeCallbacksAndMessages(null);
             }
@@ -72,20 +73,20 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
             baseBind.iv.setVisibility(View.VISIBLE);
             GlideUtil.loadUrlInto(getContext(), list_.getThumb(), baseBind.iv, false);
             if (list_.getUri() != null) {
-                baseBind.iv.setOnClickListener(v -> BrowserUtil.openDefault(getContext(), list_.getUri()));
+                baseBind.iv.setOnClickListener(v -> BrowserUtil.openCustomTab(requireContext(), list_.getUri()));
             }
             if (list_.getVideoUrl() != null) {
                 baseBind.pv.setVisibility(View.VISIBLE);
-                player = new SimpleExoPlayer.Builder(Objects.requireNonNull(getContext())).build();
+                player = new SimpleExoPlayer.Builder(requireContext()).build();
                 baseBind.pv.setPlayer(player);
-                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), getString(R.string.app_name)));
+                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(requireContext(), Util.getUserAgent(requireContext(), getString(R.string.app_name)));
                 MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(list_.getVideoUrl()));
                 player.prepare(mediaSource);
                 player.addListener(new Player.EventListener() {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
-                        if ( player.getContentDuration() - player.getContentPosition() < 100) {
+                        if (player.getContentDuration() - player.getContentPosition() < 100 && !keep) {
                             if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
                                 getBaseActivity().getHandler().sendEmptyMessage(1);
                             }
@@ -96,6 +97,8 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
             } else if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
                 getBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
             }
+        } else if (requireBaseActivity().getHandler() != null) {
+            requireBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
         }
     }
 

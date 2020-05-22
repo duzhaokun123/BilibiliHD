@@ -37,7 +37,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_in_browser && teleportIntent != null && teleportIntent.getExtras() != null) {
-            BrowserUtil.openDefault(this, BilibiliUrlUtil.getUserSpaceLink(teleportIntent.getExtras().getLong("uid")));
+            BrowserUtil.openCustomTab(this, BilibiliUrlUtil.getUserSpaceLink(teleportIntent.getExtras().getLong("uid")));
             return true;
         }
         return super.onOptionsItemSelected(item);

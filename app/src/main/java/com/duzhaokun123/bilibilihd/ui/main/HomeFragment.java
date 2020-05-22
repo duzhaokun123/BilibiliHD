@@ -43,7 +43,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     private HomePage homePage;
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         homePage = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("homePage"), HomePage.class);
     }
 
@@ -103,7 +103,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                     if (homePage.getData().getItems().get(position).getMask() != null) {
                         GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getCover(), ((VideoCardHolder) holder).mCivFace, false);
                         ((VideoCardHolder) holder).mCivFace.setOnClickListener(v ->
-                                BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
+                                BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getMask().getAvatar().getUri())
                         );
                     } else if (homePage.getData().getItems().get(position).getAdInfo() != null
                             && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
@@ -134,12 +134,12 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                             intent = new Intent(getContext(), PlayActivity.class);
                             intent.putExtra("aid", aid);
                         } else if("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
-                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getUri());
+                            BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         } else if ("ad_web_s".equals(cardGoto)) {
-                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
+                            BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
                         } else {
                             ToastUtil.sendMsg(getContext(), "不支持 " + cardGoto);
-                            BrowserUtil.openDefault(getContext(), homePage.getData().getItems().get(position).getUri());
+                            BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         }
                         if (intent != null) {
                             startActivity(intent);

@@ -28,7 +28,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
     @Override
     protected int initConfig() {
-        return NEED_HANDLER | FIX_LAYOUT;
+        return NEED_HANDLER;
     }
 
     @Override
@@ -37,8 +37,8 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
     }
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.restoreInstanceState(savedInstanceState);
+    public void onRestoreInstanceStateSynchronously(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceStateSynchronously(savedInstanceState);
         welcomeAd = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("welcomeAd"), WelcomeAd.class);
     }
 
@@ -103,7 +103,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 startMainActivity();
                 break;
             case 2:
-                recreate();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(welcomeAd)).commitAllowingStateLoss();
                 break;
         }
     }
@@ -115,6 +115,9 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
     }
 
     void startMainActivity() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

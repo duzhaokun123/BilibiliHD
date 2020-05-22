@@ -47,8 +47,8 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
     }
 
     @Override
-    protected void restoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.restoreInstanceState(savedInstanceState);
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         space = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("space"), Space.class);
     }
 
