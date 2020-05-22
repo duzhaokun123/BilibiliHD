@@ -34,6 +34,8 @@ public class WelcomeAdApi {
                     return list_;
                 }
             }
+
+            return null;
         }
 
         for (WelcomeAd.Data.Show show : welcomeAd.getData().getShow()) {
