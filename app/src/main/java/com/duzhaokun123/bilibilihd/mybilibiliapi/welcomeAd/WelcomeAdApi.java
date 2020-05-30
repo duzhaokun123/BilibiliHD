@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
@@ -22,6 +23,7 @@ public class WelcomeAdApi {
         return welcomeAdApi;
     }
 
+    @Nullable
     public static WelcomeAd.Data.List_ getShowList(@NonNull WelcomeAd welcomeAd) {
         if (welcomeAd.getData().getList() == null) {
             return null;
@@ -29,13 +31,7 @@ public class WelcomeAdApi {
 
         if (welcomeAd.getData().getShow() == null) { //没有 show 就随机来一个
             Random random = new Random(System.currentTimeMillis());
-            for (WelcomeAd.Data.List_ list_ : welcomeAd.getData().getList()) {
-                if (random.nextBoolean()) {
-                    return list_;
-                }
-            }
-
-            return null;
+            return welcomeAd.getData().getList().get(random.nextInt() % welcomeAd.getData().getList().size());
         }
 
         for (WelcomeAd.Data.Show show : welcomeAd.getData().getShow()) {

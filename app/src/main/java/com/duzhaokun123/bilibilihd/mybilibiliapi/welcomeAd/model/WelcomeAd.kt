@@ -31,7 +31,9 @@ data class WelcomeAd(
                 @SerializedName("video_url")
                 val videoUrl: String?,
                 @SerializedName("is_ad")
-                val isAd: Boolean
+                val isAd: Boolean,
+                @SerializedName("uri_title")
+                val uriTitle: String
         )
 
         data class Show(

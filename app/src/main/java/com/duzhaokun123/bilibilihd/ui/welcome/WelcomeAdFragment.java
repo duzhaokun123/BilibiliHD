@@ -13,6 +13,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.WelcomeAdApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -72,6 +73,7 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
             }
             baseBind.iv.setVisibility(View.VISIBLE);
             GlideUtil.loadUrlInto(getContext(), list_.getThumb(), baseBind.iv, false);
+            baseBind.tvTitle.setText(list_.getUriTitle());
             if (list_.getUri() != null) {
                 baseBind.iv.setOnClickListener(v -> BrowserUtil.openCustomTab(requireContext(), list_.getUri()));
             }
@@ -94,6 +96,14 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
                     }
                 });
                 player.setPlayWhenReady(true);
+                player.addListener(new Player.EventListener() {
+                    @Override
+                    public void onPlayerError(ExoPlaybackException error) {
+                        if (requireBaseActivity().getHandler() != null) {
+                            requireBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
+                        }
+                    }
+                });
             } else if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
                 getBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
             }
