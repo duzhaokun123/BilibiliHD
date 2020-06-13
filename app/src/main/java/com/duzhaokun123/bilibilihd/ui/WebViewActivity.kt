@@ -69,7 +69,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     }
 
     override fun initData() {
-        baseBind.wv.loadUrl(teleportIntent?.extras?.getString("url", ""))
+        teleportIntent?.extras?.getString("url", "")?.let { baseBind.wv.loadUrl(it) }
     }
 
     override fun onBackPressed() {

@@ -204,7 +204,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     intent.putExtra("aid", (long) biliView.getData().getRelates().get(position).getAid());
                     startActivity(intent);
                 } else {
-                    BrowserUtil.openCustomTab(getContext(), biliView.getData().getRelates().get(position).getUri());
+                    BrowserUtil.openCustomTab(requireContext(), biliView.getData().getRelates().get(position).getUri());
                 }
             });
             ((RelateVideoCardHolder) holder).mCv.setOnLongClickListener(v -> {
