@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        app:title="@string/ui_mod">
-
-    </PreferenceCategory>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <DropDownPreference
+        app:iconSpaceReserved="false"
+        app:defaultValue="0"
+        app:entries="@array/ui_mod_entries"
+        app:entryValues="@array/ui_mod_values"
+        app:key="ui_mod"
+        app:title="@string/ui_mod"
+        app:useSimpleSummaryProvider="true" />
 </PreferenceScreen>

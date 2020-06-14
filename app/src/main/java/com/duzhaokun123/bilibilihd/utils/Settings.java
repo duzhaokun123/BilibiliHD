@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +21,7 @@ public class Settings {
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static boolean inited = false;
+    private static SharedPreferences sharedPreferences2;
 
     private static final int INT = 0;
     private static final int FLOAT = 1;
@@ -42,9 +43,9 @@ public class Settings {
         Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
         Settings.layout.column = sharedPreferences.getInt("column", 0);
         Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
-        Settings.layout.uiMode = sharedPreferences.getInt("ui_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         Settings.download.downloader = sharedPreferences.getInt("downloader", Download.GLIDE_CACHE_FIRST);
 
+        Settings.sharedPreferences2 = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         Settings.inited = true;
     }
 
@@ -151,7 +152,6 @@ public class Settings {
     public static class Layout {
         private int column = 0;
         private int columnLand = 0;
-        private int uiMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
         public int getColumn() {
             return column;
@@ -165,18 +165,25 @@ public class Settings {
         public int getColumnLand() {
             return columnLand;
         }
+
         public void setColumnLand(int columnLand) {
             this.columnLand = columnLand;
             save("column_land", INT, columnLand);
         }
 
         public int getUiMode() {
-            return uiMode;
+            String uiMod = sharedPreferences2.getString("ui_mod", "0");
+            if ("2".equals(uiMod)) {
+                return AppCompatDelegate.MODE_NIGHT_YES;
+            } else if ("1".equals(uiMod)) {
+                return AppCompatDelegate.MODE_NIGHT_NO;
+            } else {
+                return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            }
         }
 
         public void setUiMode(int uiMode) {
-            this.uiMode = uiMode;
-            save("ui_mode", INT, uiMode);
+            throw new RuntimeException("stub");
         }
     }
 
@@ -190,6 +197,7 @@ public class Settings {
         public int getDownloader() {
             return downloader;
         }
+
         public void setDownloader(int downloader) {
             this.downloader = downloader;
             save("downloader", INT, downloader);
