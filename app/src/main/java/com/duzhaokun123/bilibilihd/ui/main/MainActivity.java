@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -145,7 +146,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         baseBind.dlMain.open();
                     }
                 } else {
-                    // TODO: 20-3-10  
+                    // TODO: 20-6-14 动画
+                    ViewGroup.LayoutParams params = baseBind.navMain.getLayoutParams();
+                    if (params.width == 0) {
+                        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    } else {
+                        params.width = 0;
+                    }
+                    baseBind.navMain.setLayoutParams(params);
                 }
                 return true;
             case R.id.search:

@@ -31,7 +31,12 @@ public class WelcomeAdApi {
 
         if (welcomeAd.getData().getShow() == null) { //没有 show 就随机来一个
             Random random = new Random(System.currentTimeMillis());
-            return welcomeAd.getData().getList().get(random.nextInt() % welcomeAd.getData().getList().size());
+            while (true) {
+                int i = random.nextInt() % welcomeAd.getData().getList().size();
+                if (i >= 0 && i < welcomeAd.getData().getList().size()) {
+                    return welcomeAd.getData().getList().get(i);
+                }
+            }
         }
 
         for (WelcomeAd.Data.Show show : welcomeAd.getData().getShow()) {
