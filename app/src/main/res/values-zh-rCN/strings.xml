@@ -86,4 +86,5 @@
     <string name="reload">重载</string>
     <string name="downloader">下载器</string>
     <string name="zero_is_default">0 = 默认</string>
+    <string name="welcome_ads">开屏广告</string>
 </resources>

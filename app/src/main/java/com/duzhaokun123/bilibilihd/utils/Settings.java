@@ -48,6 +48,7 @@ public class Settings {
 
     public static final Layout layout = new Layout();
     public static final Download download = new Download();
+    public static final Ads ads = new Ads();
 
     public static LoginUserInfoMap getLoginUserInfoMap(Context context) {
         if (loginUserInfoMap == null) {
@@ -213,5 +214,11 @@ public class Settings {
             throw new RuntimeException("stub");
         }
 
+    }
+
+    public static class Ads {
+        public boolean isShowWelcomeAd() {
+            return sharedPreferences2.getBoolean("welcome_ads", true);
+        }
     }
 }

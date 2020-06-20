@@ -70,24 +70,30 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                     }
                     AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
 
-                    WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
-                        @Override
-                        public void onException(Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, e.getMessage()));
-                            if (handler != null) {
-                                handler.sendEmptyMessageDelayed(1, 2000);
+                    if (Settings.ads.isShowWelcomeAd()) {
+                        WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
+                            @Override
+                            public void onException(Exception e) {
+                                e.printStackTrace();
+                                runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, e.getMessage()));
+                                if (handler != null) {
+                                    handler.sendEmptyMessageDelayed(1, 2000);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onSuccess(WelcomeAd welcomeAd) {
-                            WelcomeActivity.this.welcomeAd = welcomeAd;
-                            if (handler != null) {
-                                handler.sendEmptyMessage(2);
+                            @Override
+                            public void onSuccess(WelcomeAd welcomeAd) {
+                                WelcomeActivity.this.welcomeAd = welcomeAd;
+                                if (handler != null) {
+                                    handler.sendEmptyMessage(2);
+                                }
                             }
+                        });
+                    } else {
+                        if (handler != null) {
+                            handler.sendEmptyMessageDelayed(1, 2000);
                         }
-                    });
+                    }
 
                 }
             }.start();

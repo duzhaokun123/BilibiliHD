@@ -15,6 +15,10 @@
         app:key="download"
         app:title="@string/download" />
     <Preference
+        app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsAdsFragment"
+        app:key="ads"
+        app:title="@string/ad" />
+    <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.AboutFragment"
         app:icon="@drawable/ic_info"
         app:key="about"

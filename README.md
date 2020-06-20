@@ -18,7 +18,7 @@
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
 - [x] 横屏
-- [ ] 用户信息页 (由于 bilibili-api 的 BUG, 无法获取满级用户的信息, 重写了 Bilibili-api 的部分代码)
+- [ ] 用户信息页
     - [ ] 主页
     - [ ] 动态
     - [ ] 投稿 (?)
@@ -53,9 +53,9 @@
     - [ ] 普通广告
         - [ ] 显示 (部分)
         - [ ] 屏蔽
-    - [ ] 开屏广告
+    - [x] 开屏广告
         - [x] 显示
-        - [ ] 屏蔽
+        - [x] 屏蔽
 - [ ] 搜索
 - [ ] 键盘鼠标友好
 - [ ] 关注列表
@@ -92,6 +92,7 @@
 - 解决代码重复的问题
 - ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
 在 API >= 23 的设备上没有必要
+- 重写`VideoDownloadScevice`
 - 重作界面
 
 ### 从源代码构建注意
