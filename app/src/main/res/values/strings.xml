@@ -86,4 +86,6 @@
     <string name="keep">keep</string>
     <string name="display">display</string>
     <string name="reload">reload</string>
+    <string name="downloader">downloader</string>
+    <string name="zero_is_default">0 = default</string>
 </resources>

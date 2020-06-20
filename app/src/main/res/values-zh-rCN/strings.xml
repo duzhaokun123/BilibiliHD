@@ -84,4 +84,6 @@
     <string name="keep">保持</string>
     <string name="display">显示</string>
     <string name="reload">重载</string>
+    <string name="downloader">下载器</string>
+    <string name="zero_is_default">0 = 默认</string>
 </resources>

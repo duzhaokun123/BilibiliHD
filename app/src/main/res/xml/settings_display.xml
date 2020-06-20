@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <DropDownPreference
-        app:iconSpaceReserved="false"
         app:defaultValue="0"
         app:entries="@array/ui_mod_entries"
         app:entryValues="@array/ui_mod_values"
+        app:iconSpaceReserved="false"
         app:key="ui_mod"
         app:title="@string/ui_mod"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        app:defaultValue="0"
+        app:dialogMessage="@string/zero_is_default"
+        app:iconSpaceReserved="false"
+        app:key="column"
+        app:title="@string/column"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        app:defaultValue="0"
+        app:dialogMessage="@string/zero_is_default"
+        app:iconSpaceReserved="false"
+        app:key="column_land"
+        app:title="@string/column_land"
         app:useSimpleSummaryProvider="true" />
 </PreferenceScreen>

@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="ui_mod_entries">
+        <item>@string/follow_system</item>
+        <item>@string/night_no</item>
+        <item>@string/night_yes</item>
+    </string-array>
     <string-array name="ui_mod_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="ui_mod_entries">
-        <item>@string/follow_system</item>
-        <item>@string/night_no</item>
-        <item>@string/night_yes</item>
+
+    <string-array name="downloader_entries">
+        <item>@string/glide_cache</item>
+        <item>@string/download_manager</item>
+    </string-array>
+    <string-array name="downloader_values">
+        <item>0</item>
+        <item>1</item>
     </string-array>
 </resources>

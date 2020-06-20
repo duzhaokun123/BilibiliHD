@@ -41,9 +41,6 @@ public class Settings {
         Settings.editor = sharedPreferences.edit();
 
         Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
-        Settings.layout.column = sharedPreferences.getInt("column", 0);
-        Settings.layout.columnLand = sharedPreferences.getInt("column_land", 0);
-        Settings.download.downloader = sharedPreferences.getInt("downloader", Download.GLIDE_CACHE_FIRST);
 
         Settings.sharedPreferences2 = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         Settings.inited = true;
@@ -150,25 +147,37 @@ public class Settings {
     }
 
     public static class Layout {
-        private int column = 0;
-        private int columnLand = 0;
 
         public int getColumn() {
-            return column;
+            String column = sharedPreferences2.getString("column", "0");
+            try {
+                if (column != null) {
+                    return Integer.parseInt(column);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 0;
         }
 
         public void setColumn(int column) {
-            this.column = column;
-            save("column", INT, column);
+            throw new RuntimeException("stub");
         }
 
         public int getColumnLand() {
-            return columnLand;
+            String columnLand = sharedPreferences2.getString("column_land", "0");
+            try {
+                if (columnLand != null) {
+                    return Integer.parseInt(columnLand);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 0;
         }
 
         public void setColumnLand(int columnLand) {
-            this.columnLand = columnLand;
-            save("column_land", INT, columnLand);
+            throw new RuntimeException("stub");
         }
 
         public int getUiMode() {
@@ -191,16 +200,17 @@ public class Settings {
         public static final int DOWNLOAD_MANAGER = 1;
         public static final int GLIDE_CACHE_FIRST = 2;
 
-        private int downloader = GLIDE_CACHE_FIRST;
-
-
         public int getDownloader() {
-            return downloader;
+            String downloader = sharedPreferences2.getString("downloader", "0");
+            if ("1".equals(downloader)) {
+                return DOWNLOAD_MANAGER;
+            } else {
+                return GLIDE_CACHE_FIRST;
+            }
         }
 
         public void setDownloader(int downloader) {
-            this.downloader = downloader;
-            save("downloader", INT, downloader);
+            throw new RuntimeException("stub");
         }
 
     }
