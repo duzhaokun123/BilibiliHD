@@ -30,7 +30,6 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .add(R.id.fl_settings_first, mFragmentSettingFirst, "main")
                 .commitAllowingStateLoss();
     }

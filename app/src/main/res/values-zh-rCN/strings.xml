@@ -87,4 +87,14 @@
     <string name="downloader">下载器</string>
     <string name="zero_is_default">0 = 默认</string>
     <string name="welcome_ads">开屏广告</string>
+    <string name="test">测试 (有问题)</string>
+    <string name="danmaku_test">弹幕测试</string>
+    <string name="danmaku_style">弹幕样式</string>
+    <string name="none">无</string>
+    <string name="shadow">阴影</string>
+    <string name="stroken">描边</string>
+    <string name="projection">投影</string>
+    <string name="duplicate_merging">合并重复</string>
+    <string name="text_size">字体大小</string>
+    <string name="danmaku_margin">弹幕间距</string>
 </resources>

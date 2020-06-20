@@ -17,7 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.WebViewActivity"></activity>
+        <activity
+            android:name=".ui.settings.DanmakuTestActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
+            android:label="@string/danmaku_test"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ui.WebViewActivity" />
         <activity
             android:name=".ui.article.ArticleActivity"
             android:label=""

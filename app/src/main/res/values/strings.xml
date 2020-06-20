@@ -89,4 +89,14 @@
     <string name="downloader">downloader</string>
     <string name="zero_is_default">0 = default</string>
     <string name="welcome_ads">welcome ADs</string>
+    <string name="test">test</string>
+    <string name="danmaku_test">danmaku test</string>
+    <string name="danmaku_style">damaku style</string>
+    <string name="none">none</string>
+    <string name="shadow">shador</string>
+    <string name="stroken">stroken</string>
+    <string name="projection">projection</string>
+    <string name="duplicate_merging">duplicate merging</string>
+    <string name="text_size">text size</string>
+    <string name="danmaku_margin">danmaku margin</string>
 </resources>

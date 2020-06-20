@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <master.flame.danmaku.ui.widget.DanmakuView
+            android:id="@+id/dv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:background="@color/lightBackground"
+            android:id="@+id/fl_danmaku_settings"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</layout>

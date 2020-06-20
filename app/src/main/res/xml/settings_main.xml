@@ -10,6 +10,10 @@
         app:key="display"
         app:title="@string/display" />
     <Preference
+        app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment"
+        app:key="danmaku"
+        app:title="@string/danmaku" />
+    <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsDownloadFragment"
         app:icon="@drawable/ic_dl"
         app:key="download"

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        app:iconSpaceReserved="false"
+        app:key="test"
+        app:title="@string/test" />
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/display" />
+    <DropDownPreference
+        app:defaultValue="2"
+        app:entries="@array/danmaku_style_entries"
+        app:entryValues="@array/danmaku_style_values"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_style"
+        app:title="@string/danmaku_style"
+        app:useSimpleSummaryProvider="true" />
+    <CheckBoxPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="duplicate_merging"
+        app:title="@string/duplicate_merging" />
+    <EditTextPreference
+        app:defaultValue="@integer/danmaku_scale_text_size"
+        app:dialogMessage="@string/zero_is_default"
+        app:iconSpaceReserved="false"
+        app:key="text_size"
+        app:title="@string/text_size"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:defaultValue="@integer/danmaku_margin"
+        app:dialogMessage="@string/zero_is_default"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_margin"
+        app:title="@string/danmaku_margin"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>

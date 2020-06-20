@@ -18,8 +18,6 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
 
     protected static final int NEED_HANDLER = 0b010;
 
-    private int config;
-
     protected final String CLASS_NAME = this.getClass().getSimpleName();
     protected layout baseBind;
     @Nullable
@@ -29,7 +27,7 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        config = initConfig();
+        int config = initConfig();
         if ((config & NEED_HANDLER) == NEED_HANDLER) {
             handler = new Handler(this);
         }
@@ -60,10 +58,10 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     }
 
     @Nullable
-    public BaseActivity getBaseActivity() {
+    public BaseActivity<?> getBaseActivity() {
         Activity activity = getActivity();
         if (activity instanceof BaseActivity) {
-            return (BaseActivity) activity;
+            return (BaseActivity<?>) activity;
         } else {
             return null;
         }
@@ -75,8 +73,8 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     }
 
     @NonNull
-    public BaseActivity requireBaseActivity() {
-        BaseActivity activity = getBaseActivity();
+    public BaseActivity<?> requireBaseActivity() {
+        BaseActivity<?> activity = getBaseActivity();
         if (activity == null) {
             throw new IllegalStateException("Fragment " + this + " not attached to an baseActivity.");
         }
@@ -84,10 +82,17 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     }
 
     protected abstract int initConfig();
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) { }
+
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    }
+
     protected abstract int initLayout();
-    protected void findViews(View parentView) { }
+
+    protected void findViews(View parentView) {
+    }
+
     protected abstract void initView();
+
     protected abstract void initData();
 
 }

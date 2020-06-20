@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class SettingsMainFragment extends PreferenceFragmentCompat {
 
-    Preference users, display, download, ads, about;
+    Preference users, display, danmaku, download, ads, about;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -22,6 +22,7 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
 
         users = findPreference("users");
         display = findPreference("display");
+        danmaku = findPreference("danmaku");
         download = findPreference("download");
         ads = findPreference("ads");
         about = findPreference("about");
@@ -30,6 +31,7 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
 
         users.setOnPreferenceClickListener(myOnPreferenceClickListener);
         display.setOnPreferenceClickListener(myOnPreferenceClickListener);
+        danmaku.setOnPreferenceClickListener(myOnPreferenceClickListener);
         download.setOnPreferenceClickListener(myOnPreferenceClickListener);
         ads.setOnPreferenceClickListener(myOnPreferenceClickListener);
         about.setOnPreferenceClickListener(myOnPreferenceClickListener);
@@ -62,6 +64,8 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
                 title = getString(R.string.users);
             } else if (preference == display) {
                 title = getString(R.string.display);
+            } else if (preference == danmaku) {
+                title = getString(R.string.danmaku);
             } else if (preference == download) {
                 title = getString(R.string.download);
             } else if (preference == ads) {

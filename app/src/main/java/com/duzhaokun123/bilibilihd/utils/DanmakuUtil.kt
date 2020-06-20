@@ -1,11 +1,16 @@
 package com.duzhaokun123.bilibilihd.utils
 
+import android.content.Context
+import com.duzhaokun123.bilibilihd.R
 import com.google.gson.stream.JsonReader
 import com.hiczp.bilibili.api.bounded
 import com.hiczp.bilibili.api.readUInt
+import master.flame.danmaku.danmaku.model.BaseDanmaku
+import master.flame.danmaku.danmaku.model.IDisplayer
+import master.flame.danmaku.danmaku.model.android.DanmakuContext
 import java.io.BufferedInputStream
 import java.io.InputStream
-import java.util.HashMap
+import java.util.*
 import java.util.zip.GZIPInputStream
 
 object DanmakuUtil {
@@ -54,5 +59,44 @@ object DanmakuUtil {
 
         //json 解析完毕后, 剩下的内容是一个 gzip 压缩过的 xml, 直接返回
         return Pair(danmakuFlags, GZIPInputStream(inputStream).buffered())
+    }
+
+    fun syncDanmakuSettings(danmakuContext: DanmakuContext, context: Context) {
+        val maxLinesPair = HashMap<Int, Int>()
+        maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 10 // 滚动弹幕最大显示10行
+
+
+        val overlappingEnablePair = HashMap<Int, Boolean>()
+        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = false // 允许从右至左的弹幕重合
+
+        overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = true // 不允许从顶部弹幕重合
+
+        danmakuContext
+                .setDuplicateMergingEnabled(Settings.danmaku.isDuplicateMerging)
+                .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f) //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
+                //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
+                //                .setMaximumLines(maxLinesPair) //设置最大行数
+                .preventOverlapping(overlappingEnablePair)
+                .setMaximumVisibleSizeInScreen(0)
+
+
+        when (Settings.danmaku.danmakuStyle) {
+            IDisplayer.DANMAKU_STYLE_NONE -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_NONE)
+            IDisplayer.DANMAKU_STYLE_SHADOW -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, 0.5f)
+            IDisplayer.DANMAKU_STYLE_STROKEN -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3f)
+            IDisplayer.DANMAKU_STYLE_PROJECTION -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_PROJECTION, 0f, 0f, 200f)
+        }
+
+        if (Settings.danmaku.textSize != 0f) {
+            danmakuContext.setScaleTextSize(Settings.danmaku.textSize)
+        } else {
+            danmakuContext.setScaleTextSize(context.resources.getInteger(R.integer.danmaku_scale_text_size).toFloat())
+        }
+
+        if (Settings.danmaku.danmakuMargin != 0) {
+            danmakuContext.setDanmakuMargin(Settings.danmaku.danmakuMargin)
+        } else {
+            danmakuContext.setDanmakuMargin(context.resources.getInteger(R.integer.danmaku_margin))
+        }
     }
 }

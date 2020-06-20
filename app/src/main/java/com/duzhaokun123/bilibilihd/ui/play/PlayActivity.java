@@ -62,10 +62,8 @@ import kotlin.Pair;
 import master.flame.danmaku.danmaku.loader.ILoader;
 import master.flame.danmaku.danmaku.loader.IllegalDataException;
 import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
-import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.Danmaku;
 import master.flame.danmaku.danmaku.model.Duration;
-import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
@@ -285,25 +283,8 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         });
         baseBind.tl.setupWithViewPager(baseBind.vp);
 
-        // 设置最大显示行数
-        HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
-        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 10); // 滚动弹幕最大显示10行
-
-        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
-        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, false); // 允许从右至左的弹幕重合
-        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);// 不允许从顶部弹幕重合
         danmakuContext = DanmakuContext.create();
-        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3)
-                .setDuplicateMergingEnabled(true)
-                .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
-//                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
-//        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-//                .setMaximumLines(maxLinesPair) //设置最大行数
-                .preventOverlapping(overlappingEnablePair)
-                .setDanmakuMargin(getResources().getInteger(R.integer.danmaku_margin))
-                .setMaximumVisibleSizeInScreen(0)
-                .setScaleTextSize(getResources().getInteger(R.integer.danmaku_scale_text_size));
-        baseBind.dv.showFPS(true);
+        DanmakuUtil.INSTANCE.syncDanmakuSettings(danmakuContext, this);
         baseBind.dv.enableDanmakuDrawingCache(true);
 
         mBtnDanmaku.setOnClickListener(v -> {
@@ -551,7 +532,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         player.prepare(mediaSource);
     }
 
-    private BaseDanmakuParser createParser(InputStream stream) {
+    public static BaseDanmakuParser createParser(InputStream stream) {
 
         if (stream == null) {
             return new BaseDanmakuParser() {

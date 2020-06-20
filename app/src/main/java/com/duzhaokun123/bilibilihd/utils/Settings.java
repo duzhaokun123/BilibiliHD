@@ -16,6 +16,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Set;
 
+import master.flame.danmaku.danmaku.model.IDisplayer;
+
 public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
     private static SharedPreferences sharedPreferences;
@@ -48,6 +50,7 @@ public class Settings {
 
     public static final Layout layout = new Layout();
     public static final Download download = new Download();
+    public static final Danmaku danmaku = new Danmaku();
     public static final Ads ads = new Ads();
 
     public static LoginUserInfoMap getLoginUserInfoMap(Context context) {
@@ -214,6 +217,50 @@ public class Settings {
             throw new RuntimeException("stub");
         }
 
+    }
+
+    public static class Danmaku {
+        public int getDanmakuStyle() {
+            String style = sharedPreferences2.getString("danmaku_style", "1");
+            try {
+                if (style != null) {
+                    return Integer.parseInt(style);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 1;
+        }
+
+        public boolean isDuplicateMerging() {
+            return sharedPreferences2.getBoolean("duplicate_merging", false);
+        }
+
+        public float getTextSize() {
+            String size = sharedPreferences2.getString("text_size", "0");
+            try {
+                if (size != null) {
+                    return Float.parseFloat(size);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+
+        public int getDanmakuMargin() {
+            String margin = sharedPreferences2.getString("DanmakuMargin", "0");
+            try {
+                if (margin != null) {
+                    return Integer.parseInt(margin);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
     }
 
     public static class Ads {

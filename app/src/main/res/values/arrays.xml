@@ -19,4 +19,17 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+
+    <string-array name="danmaku_style_entries">
+        <item>@string/none</item>
+        <item>@string/shadow</item>
+        <item>@string/stroken</item>
+        <item>@string/projection</item>
+    </string-array>
+    <string-array name="danmaku_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>
