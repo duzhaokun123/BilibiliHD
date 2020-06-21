@@ -99,4 +99,9 @@
     <string name="duplicate_merging">duplicate merging</string>
     <string name="text_size">text size</string>
     <string name="danmaku_margin">danmaku margin</string>
+    <string name="auto">auto</string>
+    <string name="danmaku_drawing">danmaku drawing</string>
+    <string name="click_to_learn_more">click to learn more</string>
+    <string name="danmaku_drawing_more">TODO</string>
+    <string name="danmaku_scroll_speed_factor">danmaku scroll speed factor</string>
 </resources>

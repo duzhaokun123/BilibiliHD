@@ -6,7 +6,8 @@
         app:title="@string/test" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/display" />
+        app:summary="@string/danmaku_drawing_more"
+        app:title="@string/danmaku_drawing" />
     <DropDownPreference
         app:defaultValue="2"
         app:entries="@array/danmaku_style_entries"
@@ -15,11 +16,37 @@
         app:key="danmaku_style"
         app:title="@string/danmaku_style"
         app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:defaultValue="0.5"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_style_p1"
+        app:title="p1"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="danmaku_style_p2"
+        app:title="p2"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="danmaku_style_p2"
+        app:title="p3"
+        app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/display" />
     <CheckBoxPreference
         app:defaultValue="false"
         app:iconSpaceReserved="false"
         app:key="duplicate_merging"
         app:title="@string/duplicate_merging" />
+    <EditTextPreference
+        app:defaultValue="1.2"
+        app:dialogMessage="@string/zero_is_default"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_scroll_speed_factor"
+        app:title="@string/danmaku_scroll_speed_factor"
+        app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         app:defaultValue="@integer/danmaku_scale_text_size"
         app:dialogMessage="@string/zero_is_default"

@@ -3,6 +3,7 @@ package com.duzhaokun123.bilibilihd.ui.settings;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Bundle;
 import android.os.Message;
 
 import com.duzhaokun123.bilibilihd.R;
@@ -13,6 +14,8 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     public static int WHAT_CHANGE_TITLE = 0;
     public static String BUNDLE_KEY_TITLE = "title";
+
+    private boolean first = true;
 
     @Override
     protected int initConfig() {
@@ -25,13 +28,22 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
     }
 
     @Override
+    protected void onRestoreInstanceStateSynchronously(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceStateSynchronously(savedInstanceState);
+        first = savedInstanceState.getBoolean("first", true);
+    }
+
+    @Override
     public void initView() {
         Fragment mFragmentSettingFirst = new SettingsMainFragment();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fl_settings_first, mFragmentSettingFirst, "main")
-                .commitAllowingStateLoss();
+        if (first) {
+            first = false;
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fl_settings_first, mFragmentSettingFirst, "main")
+                    .commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -54,5 +66,12 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
         if (msg.what == WHAT_CHANGE_TITLE) {
             setTitle(msg.getData().getString(BUNDLE_KEY_TITLE));
         }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("first", first);
     }
 }

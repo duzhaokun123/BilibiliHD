@@ -73,7 +73,8 @@ object DanmakuUtil {
 
         danmakuContext
                 .setDuplicateMergingEnabled(Settings.danmaku.isDuplicateMerging)
-                .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f) //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
+                .setScrollSpeedFactor(Settings.danmaku.scrollSpeedFactor)
+                //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
                 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
                 //                .setMaximumLines(maxLinesPair) //设置最大行数
                 .preventOverlapping(overlappingEnablePair)
@@ -82,9 +83,9 @@ object DanmakuUtil {
 
         when (Settings.danmaku.danmakuStyle) {
             IDisplayer.DANMAKU_STYLE_NONE -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_NONE)
-            IDisplayer.DANMAKU_STYLE_SHADOW -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, 0.5f)
-            IDisplayer.DANMAKU_STYLE_STROKEN -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3f)
-            IDisplayer.DANMAKU_STYLE_PROJECTION -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_PROJECTION, 0f, 0f, 200f)
+            IDisplayer.DANMAKU_STYLE_SHADOW -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, Settings.danmaku.p1)
+            IDisplayer.DANMAKU_STYLE_STROKEN -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, Settings.danmaku.p1)
+            IDisplayer.DANMAKU_STYLE_PROJECTION -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_PROJECTION, Settings.danmaku.p1, Settings.danmaku.p2, Settings.danmaku.p3)
         }
 
         if (Settings.danmaku.textSize != 0f) {

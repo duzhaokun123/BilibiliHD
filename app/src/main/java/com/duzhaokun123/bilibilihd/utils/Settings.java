@@ -242,7 +242,7 @@ public class Settings {
                 if (size != null) {
                     return Float.parseFloat(size);
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -260,6 +260,59 @@ public class Settings {
             }
 
             return 0;
+        }
+
+        public float getP1() {
+            String p = sharedPreferences2.getString("danmaku_style_p1", "0.5");
+            try {
+                if (p != null) {
+                    return Float.parseFloat(p);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0.5f;
+        }
+
+        public float getP2() {
+            String p = sharedPreferences2.getString("danmaku_style_p2", "0");
+            try {
+                if (p != null) {
+                    return Float.parseFloat(p);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0f;
+        }
+
+        public float getP3() {
+            String p = sharedPreferences2.getString("danmaku_style_p3", "0");
+            try {
+                if (p != null) {
+                    return Float.parseFloat(p);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0f;
+        }
+
+        public float getScrollSpeedFactor() {
+            String f = sharedPreferences2.getString("danmaku_scroll_speed_factor", "1.2");
+
+            try {
+                if (!"0".equals(f) && f != null) {
+                    return Float.parseFloat(f);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 1.2f;
         }
     }
 

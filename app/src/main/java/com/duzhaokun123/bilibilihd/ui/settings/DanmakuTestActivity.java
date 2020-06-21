@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.view.View;
 
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
@@ -21,19 +21,23 @@ import okhttp3.ResponseBody;
 
 public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding> {
     private DanmakuContext danmakuContext;
+    private BaseDanmakuParser mParser;
+
+    private long aid = 61733031;
+    private long cid = 107356773;
 
     @Override
     protected int initConfig() {
-        return FULLSCREEN;
+        return FIX_LAYOUT;
     }
 
     @Override
-    protected int initLayout() {
+    public int initLayout() {
         return R.layout.activity_danmaku_test;
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
         baseBind.rl.setOnClickListener(view -> {
             if (baseBind.flDanmakuSettings.getVisibility() == View.VISIBLE) {
                 baseBind.flDanmakuSettings.setVisibility(View.INVISIBLE);
@@ -41,42 +45,44 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 baseBind.flDanmakuSettings.setVisibility(View.VISIBLE);
             }
         });
-
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fl_danmaku_settings, new SettingsDanmakuFragment())
                 .commitAllowingStateLoss();
+
         danmakuContext = DanmakuContext.create();
         DanmakuUtil.INSTANCE.syncDanmakuSettings(danmakuContext, this);
         baseBind.dv.enableDanmakuDrawingCache(true);
         baseBind.dv.showFPS(true);
+    }
 
+    @Override
+    protected void initData() {
         new Thread() {
             @Override
             public void run() {
                 ResponseBody responseBody = null;
-                BaseDanmakuParser parser;
                 try {
-                    responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(61733031, 107356773);
+                    responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, cid);
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(() -> ToastUtil.sendMsg(DanmakuTestActivity.this, "无法加载弹幕\n" + e.getMessage()));
                 }
                 if (responseBody != null) {
                     Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
-                    parser = PlayActivity.createParser(pair.getSecond());
-                    BaseDanmakuParser finalParser = parser;
+                    mParser = PlayActivity.createParser(pair.getSecond());
                     runOnUiThread(() -> {
-                        baseBind.dv.prepare(finalParser, danmakuContext);
+                        baseBind.dv.prepare(mParser, danmakuContext);
                         ToastUtil.sendMsg(DanmakuTestActivity.this, "加载成功");
                     });
                 }
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(() -> baseBind.dv.start());
             }
         }.start();
-    }
-
-    @Override
-    protected void initData() {
-
     }
 
     @Override
