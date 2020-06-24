@@ -15,11 +15,11 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
@@ -59,10 +59,8 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 @Override
                 public void run() {
                     Settings.init(getApplicationContext());
-                    LoginResponse loginResponse = Settings.getLoginUserInfoMap(WelcomeActivity.this).getLoggedLoginResponse();
-                    if (loginResponse != null) {
-                        pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
-                    }
+                    pBilibiliClient.getBilibiliClient().setLoginResponse(Settings.getLoginUserInfoMap().getLoggedLoginResponse());
+                    BrowserUtil.syncLoggedLoginResponse();
 //                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
                     if (Settings.isFirstStart()) {
                         NotificationUtil.init(getApplicationContext());

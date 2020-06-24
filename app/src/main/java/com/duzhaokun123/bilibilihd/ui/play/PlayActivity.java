@@ -29,6 +29,9 @@ import android.widget.ImageButton;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.Heartbeat;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
@@ -40,6 +43,7 @@ import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
@@ -146,6 +150,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                         });
                     }
                 }
+                return true;
+            case R.id.add_to_history:
+                new AddToHistory().start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -343,6 +350,9 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     baseBind.ivCover.setImageDrawable(null);
                     baseBind.ivCover.setVisibility(View.GONE);
                     player.setPlayWhenReady(true);
+                    if (Settings.play.isAutoRecordingHistory() && handler != null) {
+                        handler.sendEmptyMessage(4);
+                    }
                 });
                 break;
             case 1:
@@ -483,6 +493,12 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 getSupportFragmentManager().beginTransaction().remove(danmakuSendFragment).commitAllowingStateLoss();
                 player.setPlayWhenReady(playingBeforeTryToSendDanmaku);
                 break;
+            case 4:
+                if (Settings.play.isAutoRecordingHistory() && handler != null) {
+                    handler.sendEmptyMessageDelayed(4, 30 * 1000);
+                    new AddToHistory().start();
+                }
+                break;
         }
     }
 
@@ -609,6 +625,27 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
             } else {
                 return getString(R.string.comment_num, biliView.getData().getStat().getReply());
             }
+        }
+    }
+
+    class AddToHistory extends Thread {
+        @Override
+        public void run() {
+            if (biliView == null) {
+                return;
+            }
+            HistoryApi.getInstance().setAidHistory(aid, biliView.getData().getCid(), player.getCurrentPosition() / 1000, new MyBilibiliClient.ICallback<Heartbeat>() {
+                @Override
+                public void onException(Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                }
+
+                @Override
+                public void onSuccess(Heartbeat historyReport) {
+
+                }
+            });
         }
     }
 

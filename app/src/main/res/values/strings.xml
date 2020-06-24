@@ -107,4 +107,7 @@
     <string name="maximum_visible_size_in_screen">maximum visible size in screen</string>
     <string name="minus_one_is_auto_zero_is_unlimited">-1 = auto\n0 = unlimited</string>
     <string name="allow_all_ads">allow all ADs</string>
+    <string name="add_to_history">add to history</string>
+    <string name="auto_recording_history">auto recording history</string>
+    <string name="play">play</string>
 </resources>

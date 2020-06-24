@@ -45,7 +45,7 @@ public class DynamicAPI {
         }
         LoginResponse loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         try {
-            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                 @Override
                 public String getUrl() {
                     return "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new";
@@ -94,7 +94,7 @@ public class DynamicAPI {
         }
         LoginResponse loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         try {
-            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                 @Override
                 public String getUrl() {
                     return "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_history";

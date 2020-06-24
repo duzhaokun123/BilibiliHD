@@ -55,7 +55,7 @@ public class WelcomeAdApi {
 
     public void getWelcomeAd(MyBilibiliClient.ICallback<WelcomeAd> callback) {
         try {
-            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                 @Override
                 public String getUrl() {
                     return "https://app.bilibili.com/x/v2/splash/list";

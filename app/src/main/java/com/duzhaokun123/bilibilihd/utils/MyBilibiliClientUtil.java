@@ -2,6 +2,9 @@ package com.duzhaokun123.bilibilihd.utils;
 
 import android.util.Log;
 
+import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
+import com.hiczp.bilibili.api.passport.model.LoginResponse;
+
 import java.lang.ref.SoftReference;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -74,5 +77,36 @@ public class MyBilibiliClientUtil {
 
     public static String getB23Url(long aid) {
         return "https://b23.tv/" + av2bv(aid);
+    }
+
+    public static BilibiliWebCookie getBilibiliWebCookie(LoginResponse loginResponse) {
+        if (loginResponse == null) {
+            return null;
+        }
+
+        String biliJct = null;
+        String dedeUserID = null;
+        String dedeUserIDckMd5 = null;
+        String sid = null;
+        String sessdata = null;
+        for (LoginResponse.Data.CookieInfo.Cookie cookie : loginResponse.getData().getCookieInfo().getCookies()) {
+            if ("bili_jct".equals(cookie.getName())) {
+                biliJct = cookie.getValue();
+            } else if ("DedeUserID".equals(cookie.getName())) {
+                dedeUserID = cookie.getValue();
+            } else if ("DedeUserID__ckMd5".equals(cookie.getName())) {
+                dedeUserIDckMd5 = cookie.getValue();
+            } else if ("sid".equals(cookie.getName())) {
+                sid = cookie.getValue();
+            } else if ("SESSDATA".equals(cookie.getName())) {
+                sessdata = cookie.getValue();
+            }
+        }
+
+        if (biliJct != null && dedeUserID != null && dedeUserIDckMd5 != null && sid != null && sessdata != null) {
+            return new BilibiliWebCookie(biliJct, dedeUserID, dedeUserIDckMd5, sid, sessdata);
+        } else {
+            return null;
+        }
     }
 }

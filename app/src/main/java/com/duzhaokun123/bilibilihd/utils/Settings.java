@@ -8,12 +8,6 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Set;
 
 public class Settings {
@@ -43,70 +37,36 @@ public class Settings {
         Settings.firstStart = sharedPreferences.getBoolean("firstStart", true);
 
         Settings.sharedPreferences2 = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        try {
+            loginUserInfoMap = GsonUtil.getGsonInstance().fromJson(sharedPreferences2.getString("login_user_info_map", ""), LoginUserInfoMap.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (loginUserInfoMap != null) {
+            loginUserInfoMap.setLoggedUid(sharedPreferences2.getLong("logged_uid", 0));
+        }
         Settings.inited = true;
     }
 
     public static final Layout layout = new Layout();
+    public static final Play play = new Play();
     public static final Download download = new Download();
     public static final Danmaku danmaku = new Danmaku();
     public static final Ads ads = new Ads();
 
-    public static LoginUserInfoMap getLoginUserInfoMap(Context context) {
+    public static LoginUserInfoMap getLoginUserInfoMap() {
         if (loginUserInfoMap == null) {
-            File file = new File(context.getFilesDir(), "LoginUserInfoMap");
-            if (file.exists()) {
-                FileInputStream fileInputStream = null;
-                ObjectInputStream objectInputStream = null;
-                try {
-                    fileInputStream = new FileInputStream(file);
-                    objectInputStream = new ObjectInputStream(fileInputStream);
-                    loginUserInfoMap = (LoginUserInfoMap) objectInputStream.readObject();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                    loginUserInfoMap = new LoginUserInfoMap();
-                } finally {
-                    try {
-                        if (objectInputStream != null) {
-                            objectInputStream.close();
-                        }
-                        if (fileInputStream != null) {
-                            fileInputStream.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                loginUserInfoMap = new LoginUserInfoMap();
-            }
+            loginUserInfoMap = new LoginUserInfoMap();
         }
         return loginUserInfoMap;
     }
 
-    public static void saveLoginUserInfoMap(Context context) {
-        if (loginUserInfoMap != null) {
-            File file = new File(context.getFilesDir(), "LoginUserInfoMap");
-            FileOutputStream fileOutputStream = null;
-            ObjectOutputStream objectOutputStream = null;
-            try {
-                fileOutputStream = new FileOutputStream(file);
-                objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                objectOutputStream.writeObject(loginUserInfoMap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (objectOutputStream != null) {
-                        objectOutputStream.close();
-                    }
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public static void saveLoginUserInfoMap() {
+        sharedPreferences2.edit()
+                .putString("login_user_info_map", GsonUtil.getGsonInstance().toJson(loginUserInfoMap, LoginUserInfoMap.class))
+                .putLong("logged_uid", loginUserInfoMap.getLoggedUdi())
+                .apply();
+
     }
 
     private static void save(String key, int type, Object value) {
@@ -162,10 +122,6 @@ public class Settings {
             return 0;
         }
 
-        public void setColumn(int column) {
-            throw new RuntimeException("stub");
-        }
-
         public int getColumnLand() {
             String columnLand = sharedPreferences2.getString("column_land", "0");
             try {
@@ -178,10 +134,6 @@ public class Settings {
             return 0;
         }
 
-        public void setColumnLand(int columnLand) {
-            throw new RuntimeException("stub");
-        }
-
         public int getUiMode() {
             String uiMod = sharedPreferences2.getString("ui_mod", "0");
             if ("2".equals(uiMod)) {
@@ -192,9 +144,11 @@ public class Settings {
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             }
         }
+    }
 
-        public void setUiMode(int uiMode) {
-            throw new RuntimeException("stub");
+    public static class Play {
+        public boolean isAutoRecordingHistory() {
+            return sharedPreferences2.getBoolean("auto_recording_history", true);
         }
     }
 

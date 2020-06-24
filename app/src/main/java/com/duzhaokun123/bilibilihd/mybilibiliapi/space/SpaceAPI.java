@@ -30,7 +30,7 @@ public class SpaceAPI {
             pBilibiliClient = PBilibiliClient.Companion.getInstance();
         }
         try {
-            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                 @Override
                 public String getUrl() {
                     return "https://app.bilibili.com/x/v2/space";

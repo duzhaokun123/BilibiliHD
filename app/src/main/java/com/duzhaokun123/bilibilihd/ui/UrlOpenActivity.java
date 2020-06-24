@@ -12,9 +12,9 @@ import android.util.Log;
 
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
-import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -35,10 +35,9 @@ public class UrlOpenActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Settings.init(getApplicationContext());
-                    LoginResponse loginResponse = Settings.getLoginUserInfoMap(getApplicationContext()).getLoggedLoginResponse();
-                    if (loginResponse != null) {
-                        pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
-                    }
+                    LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
+                    pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
+                    BrowserUtil.syncLoggedLoginResponse();
 //                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
                     if (Settings.isFirstStart()) {
                         NotificationUtil.init(getApplicationContext());

@@ -2,26 +2,14 @@ package com.duzhaokun123.bilibilihd.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.ImageView;
 
-import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.CharBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -80,7 +68,7 @@ public class OtherUtils {
         try {
           outputStream = context.getContentResolver().openOutputStream(uri);
           outputStreamWriter = new OutputStreamWriter(outputStream);
-          outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse));
+          outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse, LoginResponse.class));
           re = true;
         } catch (Exception e) {
             e.printStackTrace();

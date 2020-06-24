@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class SettingsMainFragment extends PreferenceFragmentCompat {
 
-    Preference users, display, danmaku, download, ads, about;
+    Preference users, display, play, danmaku, download, ads, about;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -24,6 +24,7 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
 
         users = findPreference("users");
         display = findPreference("display");
+        play = findPreference("play");
         danmaku = findPreference("danmaku");
         download = findPreference("download");
         ads = findPreference("ads");
@@ -33,6 +34,7 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
 
         users.setOnPreferenceClickListener(myOnPreferenceClickListener);
         display.setOnPreferenceClickListener(myOnPreferenceClickListener);
+        play.setOnPreferenceClickListener(myOnPreferenceClickListener);
         danmaku.setOnPreferenceClickListener(myOnPreferenceClickListener);
         download.setOnPreferenceClickListener(myOnPreferenceClickListener);
         ads.setOnPreferenceClickListener(myOnPreferenceClickListener);
@@ -84,6 +86,8 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
                     title = getString(R.string.users);
                 } else if (preference == display) {
                     title = getString(R.string.display);
+                } else if (preference == play) {
+                    title = getString(R.string.play);
                 } else if (preference == danmaku) {
                     title = getString(R.string.danmaku);
                 } else if (preference == download) {
@@ -94,8 +98,9 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
                     title = getString(R.string.about);
                 }
                 changeSettingsActivityTitle(title);
-                return false;
             }
+            return false;
         }
     }
 }
+

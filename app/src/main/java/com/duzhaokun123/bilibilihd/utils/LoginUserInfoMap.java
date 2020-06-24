@@ -19,6 +19,7 @@ public class LoginUserInfoMap extends HashMap<Long, LoginResponse> implements Se
         this.loggedUid = loggedUid;
     }
 
+    @Nullable
     public LoginResponse getLoggedLoginResponse() {
         if (loggedUid != 0) {
             return get(loggedUid);

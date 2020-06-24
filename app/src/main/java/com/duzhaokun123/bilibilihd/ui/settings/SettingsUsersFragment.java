@@ -28,6 +28,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.LoginActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.LoginUserInfoMap;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -35,6 +36,8 @@ import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,7 +50,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        loginUserInfoMap = Settings.getLoginUserInfoMap(getContext());
+        loginUserInfoMap = Settings.getLoginUserInfoMap();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -71,7 +74,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                 outRect.set(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.divider_height));
             }
         });
-        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -80,15 +83,15 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                ((UserCardHolder) holder).mTvContent.setText(String.valueOf(loginUserInfoMap.getByIndex(position).getUserId()));
+                ((UserCardHolder) holder).mTvContent.setText(String.valueOf(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId()));
                 ((UserCardHolder) holder).mCv.setOnClickListener(v -> {
                     PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getByIndex(position));
-                    loginUserInfoMap.setLoggedUid(loginUserInfoMap.getByIndex(position).getUserId());
-                    Settings.saveLoginUserInfoMap(getContext());
+                    loginUserInfoMap.setLoggedUid(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
+                    Settings.saveLoginUserInfoMap();
                     reloadLoggedUserInfo();
                 });
                 ((UserCardHolder) holder).mCv.setOnLongClickListener(v -> {
-                    PopupMenu popupMenu = new PopupMenu(getContext(), ((UserCardHolder) holder).mCv);
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), ((UserCardHolder) holder).mCv);
                     popupMenu.getMenuInflater().inflate(R.menu.settings_user, popupMenu.getMenu());
                     popupMenu.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {
@@ -101,12 +104,12 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                                 startActivityForResult(intent, 1);
                                 break;
                             case R.id.delete:
-                                new AlertDialog.Builder(getContext()).setIcon(R.drawable.ic_info)
+                                new AlertDialog.Builder(requireContext()).setIcon(R.drawable.ic_info)
                                         .setTitle(R.string.delete)
                                         .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                                            loginUserInfoMap.remove(loginUserInfoMap.getByIndex(position).getUserId());
+                                            loginUserInfoMap.remove(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
                                             XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap.size());
-                                            Settings.saveLoginUserInfoMap(getContext());
+                                            Settings.saveLoginUserInfoMap();
                                             PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
                                             reloadLoggedUserInfo();
                                         })
@@ -122,7 +125,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                 // FIXME: 20-3-31 有没有返回小一点的可以查指定uid的头像和用户名的接口
                 new Thread() {
 
-                    private long uid = loginUserInfoMap.getByIndex(position).getUserId();
+                    private long uid = Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId();
 
                     @Override
                     public void run() {
@@ -185,12 +188,13 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
 
         baseBind.ibDelete.setOnClickListener(v -> {
             loginUserInfoMap.setLoggedUid(0);
-            Settings.saveLoginUserInfoMap(getContext());
-            PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
+            Settings.saveLoginUserInfoMap();
+            PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(null);
             reloadLoggedUserInfo();
+            BrowserUtil.syncLoggedLoginResponse();
         });
 
-        baseBind.ibAdd.setOnClickListener(v -> new AlertDialog.Builder(getContext()).setTitle(R.string.add)
+        baseBind.ibAdd.setOnClickListener(v -> new AlertDialog.Builder(requireContext()).setTitle(R.string.add)
                 .setIcon(R.drawable.ic_add_circle)
                 .setItems(new String[]{
                         getString(R.string.login),
@@ -227,7 +231,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     LoginResponse loginResponse = OtherUtils.readLoginResponseFromUri(getContext(), uri);
                     if (loginResponse != null) {
                         loginUserInfoMap.put(loginResponse.getUserId(), loginResponse);
-                        Settings.saveLoginUserInfoMap(getContext());
+                        Settings.saveLoginUserInfoMap();
                         XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap.size());
                     } else {
                         ToastUtil.sendMsg(getContext(), R.string.bad_file);
@@ -254,25 +258,28 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
 
     private void reloadLoggedUserInfo() {
         if (loginUserInfoMap.getLoggedUdi() != 0) {
-            baseBind.tvContent.setText(String.valueOf(loginUserInfoMap.getLoggedLoginResponse().getUserId()));
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        myInfo = PBilibiliClient.Companion.getInstance().getPAppAPI().getMyInfo();
-                        if (handler != null) {
-                            handler.sendEmptyMessage(2);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getContext() != null) {
-                            if (getActivity() != null) {
-                                getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+            LoginResponse loginResponse = loginUserInfoMap.getLoggedLoginResponse();
+            if (loginResponse != null) {
+                baseBind.tvContent.setText(String.valueOf(loginResponse.getUserId()));
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            myInfo = PBilibiliClient.Companion.getInstance().getPAppAPI().getMyInfo();
+                            if (handler != null) {
+                                handler.sendEmptyMessage(2);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (getContext() != null) {
+                                if (getActivity() != null) {
+                                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                                }
                             }
                         }
                     }
-                }
-            }.start();
+                }.start();
+            }
         } else {
             baseBind.tvContent.setText(null);
             baseBind.tvName.setText(R.string.not_logged_in);

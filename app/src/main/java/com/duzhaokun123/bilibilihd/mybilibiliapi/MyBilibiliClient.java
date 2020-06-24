@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class MyBilibiliClient {
+    public static final MediaType X_WWW_FROM_URLENCODED = MediaType.get("application/x-www-form-urlencoded; charset=utf-8");
     private static MyBilibiliClient myBilibiliClient;
 
     public static MyBilibiliClient getInstance() {
@@ -31,7 +33,7 @@ public class MyBilibiliClient {
         this.pBilibiliClient = pBilibiliClient;
     }
 
-    public String getResponseByGet(GetRequest getRequest) throws IOException {
+    public String getResponseByGet(Request getRequest) throws IOException {
         bilibiliClientProperties = pBilibiliClient.getBilibiliClient().getBillingClientProperties();
         loginResponse = pBilibiliClient.getBilibiliClient().getLoginResponse();
         StringBuilder paramsSB = new StringBuilder();
@@ -51,22 +53,43 @@ public class MyBilibiliClient {
                 paramsSB +
                 "&sign=" +
                 sign;
-        Request request = new Request.Builder()
+        okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(urlSB)
                 .addHeader("User-Agent", bilibiliClientProperties.getDefaultUserAgent())
                 .build();
 
-        if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient();
-        }
+        return getOkHttpClient().newCall(request).execute().body().string();
+    }
 
-        return okHttpClient.newCall(request).execute().body().string();
+    public String getResponseByPost(Request getRequest, String sessdata) throws IOException {
+        bilibiliClientProperties = PBilibiliClient.Companion.getInstance().getBilibiliClient().getBillingClientProperties();
+        StringBuilder paramsSB = new StringBuilder();
+        Map<String, String> paramsMap = new TreeMap<>();
+        getRequest.addUserParams(paramsMap);
+        for (String key : paramsMap.keySet()) {
+            paramsSB.append(key)
+                    .append("=")
+                    .append(paramsMap.get(key))
+                    .append("&");
+        }
+        paramsSB.deleteCharAt(paramsSB.length() - 1);
+
+        RequestBody requestBody = RequestBody.create(paramsSB.toString(), X_WWW_FROM_URLENCODED);
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(getRequest.getUrl())
+                .post(requestBody)
+                .addHeader("User-Agent", bilibiliClientProperties.getDefaultUserAgent())
+                .addHeader("Cookie", "SESSDATA=" + sessdata)
+                .build();
+
+        return getOkHttpClient().newCall(request).execute().body().string();
     }
 
     private void addBaseParams(Map<String, String> paramsMap) {
         if (loginResponse != null) {
             paramsMap.put("access_key", loginResponse.getData().getTokenInfo().getAccessToken());
         }
+
         paramsMap.put("appkey", bilibiliClientProperties.getAppKey());
         paramsMap.put("build", bilibiliClientProperties.getBuild());
         paramsMap.put("channel", bilibiliClientProperties.getChannel());
@@ -81,7 +104,7 @@ public class MyBilibiliClient {
         return okHttpClient;
     }
 
-    public interface GetRequest {
+    public interface Request {
         String getUrl();
 
         void addUserParams(Map<String, String> paramsMap);

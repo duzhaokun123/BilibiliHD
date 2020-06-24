@@ -9,8 +9,6 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.Map;
 
 public class MediaListAPI {
@@ -39,7 +37,7 @@ public class MediaListAPI {
                 resourcesSB.deleteCharAt(resourcesSB.length() - 1);
             }
             try {
-                String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+                String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                     @Override
                     public String getUrl() {
                         return "https://api.bilibili.com/medialist/gateway/base/resource/infos";
@@ -83,7 +81,7 @@ public class MediaListAPI {
 
     public void getIds(long mediaId, long mid, MyBilibiliClient.ICallback<Ids> callback) {
         try {
-            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.GetRequest() {
+            String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
                 @Override
                 public String getUrl() {
                     return "https://api.bilibili.com/medialist/gateway/base/resource/ids";

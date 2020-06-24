@@ -36,7 +36,7 @@ public class LogoutActivity extends BaseActivity<ActivityLogoutBinding> {
                             public void run() {
                                 BilibiliClient bilibiliClient = PBilibiliClient.Companion.getInstance().getBilibiliClient();
                                 LoginResponse tmp = bilibiliClient.getLoginResponse();
-                                bilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap(LogoutActivity.this).get(Long.valueOf(baseBind.etUid.getText().toString())));
+                                bilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().get(Long.valueOf(baseBind.etUid.getText().toString())));
                                 runOnUiThread(() -> ToastUtil.sendMsg(LogoutActivity.this, R.string.logged_out));
                                 try {
                                     PBilibiliClient.Companion.getInstance().logout();

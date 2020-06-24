@@ -40,7 +40,9 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                baseBind.wv.loadUrl(request.toString())
+                if (! teleportIntent?.extras?.getBoolean("no_jump", false)!!) {
+                    baseBind.wv.loadUrl(request.toString())
+                }
                 return true
             }
 
@@ -66,6 +68,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
                 setTitle(title)
             }
         }
+        baseBind.wv.settings.userAgentString = teleportIntent?.extras?.getString("ua")
     }
 
     override fun initData() {

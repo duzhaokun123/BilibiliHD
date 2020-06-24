@@ -105,4 +105,7 @@
     <string name="maximum_visible_size_in_screen">同屏弹幕密度</string>
     <string name="minus_one_is_auto_zero_is_unlimited">-1 = 自动\n0 = 无限制</string>
     <string name="allow_all_ads">允许所有广告</string>
+    <string name="add_to_history">加入历史</string>
+    <string name="auto_recording_history">自动记录历史</string>
+    <string name="play">播放</string>
 </resources>
