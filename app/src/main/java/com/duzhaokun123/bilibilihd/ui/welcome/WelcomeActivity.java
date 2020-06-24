@@ -70,7 +70,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                     }
                     AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
 
-                    if (Settings.ads.isShowWelcomeAd()) {
+                    if (Settings.ads.shouldShowWelcomeAd()) {
                         WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
                             @Override
                             public void onException(Exception e) {

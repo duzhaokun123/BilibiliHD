@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.widget.FrameLayout;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivitySettingsBinding;
@@ -51,9 +52,9 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     }
 
-//    public FrameLayout getFlSettingSecond() {
-//        return baseBind.flSettingsSecond;
-//    }
+    public FrameLayout get2ndFl() {
+        return baseBind.flSettings2nd;
+    }
 
     @Override
     public void onBackPressed() {

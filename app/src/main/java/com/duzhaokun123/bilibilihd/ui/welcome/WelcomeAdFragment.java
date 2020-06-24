@@ -22,6 +22,8 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.Objects;
+
 public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
 
     public WelcomeAdFragment() {
@@ -75,7 +77,10 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
             GlideUtil.loadUrlInto(getContext(), list_.getThumb(), baseBind.iv, false);
             baseBind.tvTitle.setText(list_.getUriTitle());
             if (list_.getUri() != null) {
-                baseBind.iv.setOnClickListener(v -> BrowserUtil.openCustomTab(requireContext(), list_.getUri()));
+                baseBind.iv.setOnClickListener(v -> {
+                    BrowserUtil.openCustomTab(requireContext(), list_.getUri());
+                    baseBind.btnKeep.callOnClick();
+                });
             }
             if (list_.getVideoUrl() != null) {
                 baseBind.pv.setVisibility(View.VISIBLE);
@@ -99,16 +104,14 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
                 player.addListener(new Player.EventListener() {
                     @Override
                     public void onPlayerError(ExoPlaybackException error) {
-                        if (requireBaseActivity().getHandler() != null) {
-                            requireBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
-                        }
+                        Objects.requireNonNull(requireBaseActivity().getHandler()).sendEmptyMessageDelayed(1, 2000);
                     }
                 });
             } else if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
                 getBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
             }
-        } else if (requireBaseActivity().getHandler() != null) {
-            requireBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
+        } else {
+            Objects.requireNonNull(requireBaseActivity().getHandler()).sendEmptyMessageDelayed(1, 2000);
         }
     }
 

@@ -78,7 +78,7 @@ object DanmakuUtil {
                 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
                 //                .setMaximumLines(maxLinesPair) //设置最大行数
                 .preventOverlapping(overlappingEnablePair)
-                .setMaximumVisibleSizeInScreen(0)
+                .setMaximumVisibleSizeInScreen(Settings.danmaku.maximumVisibleSizeInScreen)
 
 
         when (Settings.danmaku.danmakuStyle) {

@@ -6,8 +6,11 @@
         app:title="@string/test" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:summary="@string/danmaku_drawing_more"
         app:title="@string/danmaku_drawing" />
+    <Preference
+        app:iconSpaceReserved="false"
+        app:key="danmaku_click"
+        app:title="@string/click_to_learn_more" />
     <DropDownPreference
         app:defaultValue="2"
         app:entries="@array/danmaku_style_entries"
@@ -29,7 +32,7 @@
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         app:iconSpaceReserved="false"
-        app:key="danmaku_style_p2"
+        app:key="danmaku_style_p3"
         app:title="p3"
         app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
@@ -60,6 +63,13 @@
         app:iconSpaceReserved="false"
         app:key="danmaku_margin"
         app:title="@string/danmaku_margin"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:defaultValue="-1"
+        app:dialogMessage="@string/minus_one_is_auto_zero_is_unlimited"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_maximum_visible_size_in_screen"
+        app:title="@string/maximum_visible_size_in_screen"
         app:useSimpleSummaryProvider="true" />
 
 </PreferenceScreen>

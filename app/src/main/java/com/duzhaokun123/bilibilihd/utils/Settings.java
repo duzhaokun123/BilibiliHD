@@ -16,8 +16,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Set;
 
-import master.flame.danmaku.danmaku.model.IDisplayer;
-
 public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
     private static SharedPreferences sharedPreferences;
@@ -303,7 +301,6 @@ public class Settings {
 
         public float getScrollSpeedFactor() {
             String f = sharedPreferences2.getString("danmaku_scroll_speed_factor", "1.2");
-
             try {
                 if (!"0".equals(f) && f != null) {
                     return Float.parseFloat(f);
@@ -314,11 +311,32 @@ public class Settings {
 
             return 1.2f;
         }
+
+        public int getMaximumVisibleSizeInScreen() {
+            String size = sharedPreferences2.getString("danmaku_maximum_visible_size_in_screen", "-1");
+            try {
+                if (size != null) {
+                    return Integer.parseInt(size);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return -1;
+        }
     }
 
     public static class Ads {
         public boolean isShowWelcomeAd() {
             return sharedPreferences2.getBoolean("welcome_ads", true);
+        }
+
+        public boolean isAllowAllAds() {
+            return sharedPreferences2.getBoolean("allow_all_ads", true);
+        }
+
+        public boolean shouldShowWelcomeAd() {
+            return isShowWelcomeAd() && isAllowAllAds();
         }
     }
 }
