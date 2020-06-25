@@ -495,7 +495,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 break;
             case 4:
                 if (Settings.play.isAutoRecordingHistory() && handler != null) {
-                    handler.sendEmptyMessageDelayed(4, 30 * 1000);
+                    handler.sendEmptyMessageDelayed(4, 15 * 1000);
                     new AddToHistory().start();
                 }
                 break;
@@ -629,12 +629,13 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     }
 
     class AddToHistory extends Thread {
+        long playedTime = player.getCurrentPosition();
         @Override
         public void run() {
             if (biliView == null) {
                 return;
             }
-            HistoryAPI.getInstance().setAidHistory(aid, biliView.getData().getCid(), player.getCurrentPosition() / 1000, new MyBilibiliClient.ICallback<Base>() {
+            HistoryAPI.getInstance().setAidHistory(aid, biliView.getData().getCid(), playedTime / 1000, new MyBilibiliClient.ICallback<Base>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
