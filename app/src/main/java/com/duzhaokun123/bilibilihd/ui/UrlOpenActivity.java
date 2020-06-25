@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.duzhaokun123.bilibilihd.Params;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
@@ -101,6 +102,11 @@ public class UrlOpenActivity extends AppCompatActivity {
                             break;
                     }
                     break;
+                case LIVE:
+                    intent1 = new Intent(this, WebViewActivity.class);
+                    intent1.putExtra("url", uri.toString());
+                    intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
+                    break;
                 case B23TV:
                 case UNKNOWN:
                     intent1 = new Intent(this, WebViewActivity.class);
@@ -123,6 +129,10 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
+            } else if ("live".equals(host)){
+                intent1 = new Intent(this, WebViewActivity.class);
+                intent1.putExtra("url", uri.toString());
+                intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
             } else {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
             }
@@ -148,6 +158,8 @@ public class UrlOpenActivity extends AppCompatActivity {
             return Type.WWW;
         } else if ("b23.tv".equals(host)) {
             return Type.B23TV;
+        } else if (host.startsWith("live")) {
+            return Type.LIVE;
         } else {
             return Type.UNKNOWN;
         }
@@ -196,6 +208,7 @@ public class UrlOpenActivity extends AppCompatActivity {
         READ,
         READ_MOBILE,
         B23TV,
+        LIVE,
         UNKNOWN
     }
 }
