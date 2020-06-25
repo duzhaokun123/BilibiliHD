@@ -2,7 +2,7 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi.history;
 
 import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.Heartbeat;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
@@ -13,18 +13,18 @@ import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
 import java.util.Map;
 
-public class HistoryApi {
+public class HistoryAPI {
 
-    private static HistoryApi historyApi;
+    private static HistoryAPI historyApi;
 
-    public static HistoryApi getInstance() {
+    public static HistoryAPI getInstance() {
         if (historyApi == null) {
-            historyApi = new HistoryApi();
+            historyApi = new HistoryAPI();
         }
         return historyApi;
     }
 
-    private HistoryApi() {
+    private HistoryAPI() {
     }
 
     public void getHistory(String business, MyBilibiliClient.ICallback<History> callback) {
@@ -70,7 +70,7 @@ public class HistoryApi {
         }
     }
 
-    public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<Heartbeat> callback) {
+    public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<Base> callback) {
         LoginResponse loginResponse = PBilibiliClient.Companion.getInstance().getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
@@ -91,7 +91,7 @@ public class HistoryApi {
                     paramsMap.put("csrf", bilibiliWebCookie.getBiliJct());
                 }
             }, bilibiliWebCookie.getSessdata());
-            Heartbeat historyReport = GsonUtil.getGsonInstance().fromJson(response, Heartbeat.class);
+            Base historyReport = GsonUtil.getGsonInstance().fromJson(response, Base.class);
             if (historyReport.getCode() == 0) {
                 callback.onSuccess(historyReport);
             } else {

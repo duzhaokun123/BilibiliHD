@@ -76,4 +76,5 @@ class PBilibiliClient private constructor() {
         return loginResponse
     }
 
+    fun getLoginResponse() = bilibiliClient.loginResponse
 }

@@ -30,8 +30,8 @@ import android.widget.ImageButton;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryApi;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.Heartbeat;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
@@ -634,7 +634,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
             if (biliView == null) {
                 return;
             }
-            HistoryApi.getInstance().setAidHistory(aid, biliView.getData().getCid(), player.getCurrentPosition() / 1000, new MyBilibiliClient.ICallback<Heartbeat>() {
+            HistoryAPI.getInstance().setAidHistory(aid, biliView.getData().getCid(), player.getCurrentPosition() / 1000, new MyBilibiliClient.ICallback<Base>() {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
@@ -642,7 +642,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 }
 
                 @Override
-                public void onSuccess(Heartbeat historyReport) {
+                public void onSuccess(Base historyReport) {
 
                 }
             });

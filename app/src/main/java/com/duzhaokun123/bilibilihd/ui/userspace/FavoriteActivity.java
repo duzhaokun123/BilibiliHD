@@ -23,6 +23,8 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.MediaListAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
@@ -134,8 +136,22 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                             startActivity(intent);
                                             break;
                                         case R.id.add_to_watch_later:
-                                            // TODO: 20-2-27
-                                            ToastUtil.sendMsg(FavoriteActivity.this, "还没有做");
+                                            new Thread() {
+                                                @Override
+                                                public void run() {
+                                                    ToViewAPI.getInstance().addBvid(bvid, new MyBilibiliClient.ICallback<Base>() {
+                                                        @Override
+                                                        public void onException(Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+
+                                                        @Override
+                                                        public void onSuccess(Base base) {
+
+                                                        }
+                                                    });
+                                                }
+                                            }.start();
                                             break;
                                     }
                                     return true;

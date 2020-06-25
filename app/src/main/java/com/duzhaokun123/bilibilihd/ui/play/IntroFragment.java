@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentPlayIntroBinding;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
@@ -218,7 +221,22 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                             startActivity(intent);
                             break;
                         case R.id.add_to_watch_later:
-                            // TODO: 20-4-16
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    ToViewAPI.getInstance().addAid(biliView.getData().getRelates().get(position).getAid(), new MyBilibiliClient.ICallback<Base>() {
+                                        @Override
+                                        public void onException(Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Base base) {
+
+                                        }
+                                    });
+                                }
+                            }.start();
                             break;
                     }
                     return true;
