@@ -9,13 +9,16 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.Manifest;
 import android.app.PictureInPictureParams;
+import android.app.RemoteAction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Message;
+import android.util.Log;
 import android.util.Rational;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +36,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.services.PlayControlService;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
@@ -58,9 +62,12 @@ import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import kotlin.Pair;
 import master.flame.danmaku.danmaku.loader.ILoader;
@@ -83,6 +90,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     private BaseDanmakuParser mParser;
     private IntroFragment introFragment;
     private DanmakuSendFragment danmakuSendFragment;
+    private PictureInPictureParams.Builder pictureInPictureParamsBuilder;
 
     private VideoPlayUrl videoPlayUrl;
     private com.hiczp.bilibili.api.app.model.View biliView;
@@ -93,6 +101,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
     private boolean playingBeforeTryToSendDanmaku;
     private VideoDownloadInfo videoDownloadInfo;
     private Map<Integer, String> videoQualityMap;
+    private String id;
 
     @Override
     protected int initConfig() {
@@ -120,16 +129,28 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 return true;
             case R.id.pip:
                 Rational rational = new Rational(biliView.getData().getPages().get(page - 1).getDimension().getWidth(), biliView.getData().getPages().get(page - 1).getDimension().getHeight());
-                PictureInPictureParams pictureInPictureParams;
                 if (rational.doubleValue() > 0.418410 && rational.doubleValue() < 2.390000) {
-                    pictureInPictureParams = new PictureInPictureParams.Builder()
-                            .setAspectRatio(rational)
-                            .build();
+                    pictureInPictureParamsBuilder = new PictureInPictureParams.Builder()
+                            .setAspectRatio(rational);
                 } else {
-                    pictureInPictureParams = new PictureInPictureParams.Builder()
-                            .build();
+                    pictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
                 }
-                enterPictureInPictureMode(pictureInPictureParams);
+                List<RemoteAction> actions = new ArrayList<>();
+                if (player.isPlaying()) {
+                    actions.add(new RemoteAction(
+                            Icon.createWithResource(PlayActivity.this, R.drawable.ic_pause),
+                            getString(R.string.pause),
+                            getString(R.string.pause),
+                            PlayControlService.newPausePendingIntent(this, id)));
+                } else {
+                    actions.add(new RemoteAction(
+                            Icon.createWithResource(PlayActivity.this, R.drawable.ic_play_arrow),
+                            getString(R.string.resume),
+                            getString(R.string.resume),
+                            PlayControlService.newResumePendingIntent(this, id)));
+                }
+                pictureInPictureParamsBuilder.setActions(actions);
+                enterPictureInPictureMode(pictureInPictureParamsBuilder.build());
                 return true;
             case R.id.check_cover:
                 if (biliView != null) {
@@ -313,6 +334,25 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
             new LoadBiliView().start();
         }
         setTitle("");
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+        PlayControlService.putId(id, new PlayControlService.ICallback() {
+            @Override
+            public void onPause() {
+                Log.d(CLASS_NAME, "here");
+                if (handler != null) {
+                    handler.sendEmptyMessage(5);
+                }
+            }
+
+            @Override
+            public void onResume() {
+                if (handler != null) {
+                    handler.sendEmptyMessage(6);
+                }
+            }
+        });
     }
 
     @Override
@@ -499,6 +539,28 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                     new AddToHistory().start();
                 }
                 break;
+            case 5:
+                player.setPlayWhenReady(false);
+                List<RemoteAction> actions1 = new ArrayList<>();
+                actions1.add(new RemoteAction(
+                        Icon.createWithResource(PlayActivity.this, R.drawable.ic_play_arrow),
+                        getString(R.string.resume),
+                        getString(R.string.resume),
+                        PlayControlService.newResumePendingIntent(this, id)));
+                pictureInPictureParamsBuilder.setActions(actions1);
+                setPictureInPictureParams(pictureInPictureParamsBuilder.build());
+                break;
+            case 6:
+                player.setPlayWhenReady(true);
+                List<RemoteAction> actions = new ArrayList<>();
+                actions.add(new RemoteAction(
+                        Icon.createWithResource(PlayActivity.this, R.drawable.ic_pause),
+                        getString(R.string.pause),
+                        getString(R.string.pause),
+                        PlayControlService.newPausePendingIntent(this, id)));
+                pictureInPictureParamsBuilder.setActions(actions);
+                setPictureInPictureParams(pictureInPictureParamsBuilder.build());
+                break;
         }
     }
 
@@ -521,6 +583,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
         super.onDestroy();
         player.release();
         baseBind.dv.release();
+        PlayControlService.removeId(id);
     }
 
     @Override
@@ -630,6 +693,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
     class AddToHistory extends Thread {
         long playedTime = player.getCurrentPosition();
+
         @Override
         public void run() {
             if (biliView == null) {

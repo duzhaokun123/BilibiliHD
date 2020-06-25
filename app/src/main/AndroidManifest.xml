@@ -17,11 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <service
+            android:name=".services.PlayControlService"
+            android:exported="false"></service>
+
         <activity
             android:name=".ui.settings.DanmakuTestActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:label="@string/danmaku_test"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity android:name=".ui.WebViewActivity" />
         <activity
             android:name=".ui.article.ArticleActivity"
