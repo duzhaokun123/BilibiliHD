@@ -122,7 +122,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     popupMenu.show();
                     return true;
                 });
-                // FIXME: 20-3-31 有没有返回小一点的可以查指定uid的头像和用户名的接口
+
                 new Thread() {
 
                     private long uid = Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId();

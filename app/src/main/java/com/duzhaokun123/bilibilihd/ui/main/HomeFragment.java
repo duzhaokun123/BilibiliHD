@@ -34,10 +34,10 @@ import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ConcurrentModificationException;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-// FIXME: 20-2-24 这么搞线程不安全啊
 public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
     private HomePage homePage;
@@ -136,7 +136,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         } else if("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         } else if ("ad_web_s".equals(cardGoto)) {
-                            BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getUrl());
+                            BrowserUtil.openCustomTab(getContext(), Objects.requireNonNull(homePage.getData().getItems().get(position).getAdInfo()).getCreativeContent().getUrl());
                         } else {
                             ToastUtil.sendMsg(getContext(), "不支持 " + cardGoto);
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());

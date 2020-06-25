@@ -48,7 +48,6 @@
     <string name="build_type">构建类型</string>
     <string name="version" tools:ignore="ExtraTranslation">版本</string>
     <string name="project_home">项目主页</string>
-    <string name="settings_manager_uninited_warning">严重运行时异常，无法读取和保存设置信息，请重启应用</string>
     <string name="using_gpl_3.0">在 GPL-3.0 协议下发布</string>
     <string name="logged_out">已登出</string>
     <string name="bilibili_api_client_version">bilbili-api 客户端版本</string>

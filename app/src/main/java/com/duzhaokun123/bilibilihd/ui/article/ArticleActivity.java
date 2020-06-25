@@ -8,6 +8,7 @@ import android.webkit.WebSettings;
 
 import androidx.annotation.NonNull;
 
+import com.duzhaokun123.bilibilihd.Params;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityArticleBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
@@ -48,14 +49,14 @@ public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
         baseBind.wv.getSettings().setJavaScriptEnabled(true);
         baseBind.wv.getSettings().setBlockNetworkImage(false);
         baseBind.wv.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        baseBind.wv.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 9; Mi MIX 2S Build/PQ3A.190801.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/045114 Mobile Safari/537.36 BiliApp/5540300");
+        baseBind.wv.getSettings().setUserAgentString(Params.DESKTOP_USER_AGENT);
+        baseBind.wv.getSettings().setDomStorageEnabled(true);
     }
-
 
     @Override
     protected void initData() {
         if (teleportIntent != null) {
-            baseBind.wv.loadUrl("https://www.bilibili.com/read/mobile/" + teleportIntent.getLongExtra("id", 0));
+            baseBind.wv.loadUrl("https://www.bilibili.com/read/cv" + teleportIntent.getLongExtra("id", 0));
         }
     }
 }

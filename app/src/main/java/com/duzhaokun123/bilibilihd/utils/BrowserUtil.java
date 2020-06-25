@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.CookieManager;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class BrowserUtil {
     public static void openCustomTab(@NonNull Context context, @NonNull String url) {
+        Log.d("BrowserUtil", "openCustomTab: openUrl = " + url);
         try {
             new CustomTabsIntent.Builder().setToolbarColor(context.getColor(R.color.colorPrimary)).build().launchUrl(context, Uri.parse(url));
         } catch (ActivityNotFoundException e) {

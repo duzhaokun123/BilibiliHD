@@ -25,6 +25,7 @@ public class UrlOpenActivity extends AppCompatActivity {
     private PBilibiliClient pBilibiliClient;
     private String TAG = "UrlOpenActivity";
     private boolean wait = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +50,14 @@ public class UrlOpenActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         Uri uri = intent.getData();
+        if (uri == null) {
+            return;
+        }
+
         String scheme = uri.getScheme();
         String host = uri.getHost();
         String path = uri.getPath();
+
         Log.d(TAG, uri.toString());
         Log.d(TAG, "scheme: " + scheme);
         Log.d(TAG, "host: " + host);
@@ -90,12 +96,15 @@ public class UrlOpenActivity extends AppCompatActivity {
                             }
                             break;
                         case UNKNOWN:
-                            ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
+                            intent1 = new Intent(this, WebViewActivity.class);
+                            intent1.putExtra("url", uri.toString());
                             break;
                     }
                     break;
+                case B23TV:
                 case UNKNOWN:
-                    ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
+                    intent1 = new Intent(this, WebViewActivity.class);
+                    intent1.putExtra("url", uri.toString());
                     break;
             }
         } else {
@@ -114,7 +123,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
-            } else  {
+            } else {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
             }
         }
@@ -135,8 +144,10 @@ public class UrlOpenActivity extends AppCompatActivity {
             return Type.SPACE;
         } else if (host.startsWith("m")) {
             return Type.M;
-        } else if(host.startsWith("www")) {
+        } else if (host.startsWith("www")) {
             return Type.WWW;
+        } else if ("b23.tv".equals(host)) {
+            return Type.B23TV;
         } else {
             return Type.UNKNOWN;
         }
@@ -156,7 +167,10 @@ public class UrlOpenActivity extends AppCompatActivity {
         }
     }
 
-    private long getUidFromPath(String path) {
+    private long getUidFromPath(@Nullable String path) {
+        if (path == null) {
+            return 0;
+        }
         int slash;
         long re = 0;
         Log.d("getUidFromPath", "input " + path);
@@ -181,6 +195,7 @@ public class UrlOpenActivity extends AppCompatActivity {
         ARTICLE,
         READ,
         READ_MOBILE,
+        B23TV,
         UNKNOWN
     }
 }

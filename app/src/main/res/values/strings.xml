@@ -44,11 +44,10 @@
     <string name="export">export</string>
     <string name="bad_file">bad file</string>
     <string name="failure">failure</string>
-    <string name="exception_warning">TODO</string>
+    <string name="exception_warning">Abnormal operation, please restart the application</string>
     <string name="about">about</string>
     <string name="build_type">build type</string>
     <string name="project_home">project home</string>
-    <string name="settings_manager_uninited_warning">TODO</string>
     <string name="version">version</string>
     <string name="using_gpl_3.0">using GPL-3.0</string>
     <string name="project_home_url" translatable="false">https://github.com/duzhaokun123/BilibiliHD</string>
