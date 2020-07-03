@@ -5,8 +5,6 @@ import android.util.Log;
 import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
-import java.lang.ref.SoftReference;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

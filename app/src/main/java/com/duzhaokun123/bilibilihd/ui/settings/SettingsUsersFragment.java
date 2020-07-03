@@ -85,7 +85,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((UserCardHolder) holder).mTvContent.setText(String.valueOf(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId()));
                 ((UserCardHolder) holder).mCv.setOnClickListener(v -> {
-                    PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getByIndex(position));
+                    PBilibiliClient.Companion.getInstance().setLoginResponse(loginUserInfoMap.getByIndex(position));
                     loginUserInfoMap.setLoggedUid(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
                     Settings.saveLoginUserInfoMap();
                     reloadLoggedUserInfo();
@@ -110,7 +110,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                                             loginUserInfoMap.remove(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
                                             XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap.size());
                                             Settings.saveLoginUserInfoMap();
-                                            PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
+                                            PBilibiliClient.Companion.getInstance().setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
                                             reloadLoggedUserInfo();
                                         })
                                         .setNegativeButton(android.R.string.cancel, null)
@@ -189,7 +189,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
         baseBind.ibDelete.setOnClickListener(v -> {
             loginUserInfoMap.setLoggedUid(0);
             Settings.saveLoginUserInfoMap();
-            PBilibiliClient.Companion.getInstance().getBilibiliClient().setLoginResponse(null);
+            PBilibiliClient.Companion.getInstance().setLoginResponse(null);
             reloadLoggedUserInfo();
             BrowserUtil.syncLoggedLoginResponse();
         });

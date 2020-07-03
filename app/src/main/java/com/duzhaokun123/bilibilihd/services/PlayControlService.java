@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -72,7 +72,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             handler.sendEmptyMessage(1);
                         }
                     } else {
-                        pBilibiliClient.getBilibiliClient().setLoginResponse(null);
+                        pBilibiliClient.setLoginResponse(null);
                         Message message = new Message();
                         Bundle bundle = new Bundle();
                         bundle.putString("url", loginResponse.getData().getUrl());

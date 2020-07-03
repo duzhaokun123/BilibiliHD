@@ -59,7 +59,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 @Override
                 public void run() {
                     Settings.init(getApplicationContext());
-                    pBilibiliClient.getBilibiliClient().setLoginResponse(Settings.getLoginUserInfoMap().getLoggedLoginResponse());
+                    pBilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().getLoggedLoginResponse());
                     BrowserUtil.syncLoggedLoginResponse();
 //                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
                     if (Settings.isFirstStart()) {

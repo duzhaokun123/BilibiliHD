@@ -38,8 +38,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                 public void run() {
                     Settings.init(getApplicationContext());
                     LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
-                    pBilibiliClient.getBilibiliClient().setLoginResponse(loginResponse);
-                    BrowserUtil.syncLoggedLoginResponse();
+                    pBilibiliClient.setLoginResponse(loginResponse);
 //                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
                     if (Settings.isFirstStart()) {
                         NotificationUtil.init(getApplicationContext());

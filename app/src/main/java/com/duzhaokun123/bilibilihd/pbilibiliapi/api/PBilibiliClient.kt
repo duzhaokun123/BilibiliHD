@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.hiczp.bilibili.api.BilibiliClient
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import kotlinx.coroutines.GlobalScope
@@ -77,4 +78,9 @@ class PBilibiliClient private constructor() {
     }
 
     fun getLoginResponse() = bilibiliClient.loginResponse
+
+    fun setLoginResponse(loginResponse: LoginResponse?) {
+        getBilibiliClient().loginResponse = loginResponse
+        BrowserUtil.syncLoggedLoginResponse()
+    }
 }
