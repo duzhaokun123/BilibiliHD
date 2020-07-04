@@ -101,11 +101,12 @@ public class UrlOpenActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-                case LIVE:
+                case T:
                     intent1 = new Intent(this, WebViewActivity.class);
                     intent1.putExtra("url", uri.toString());
                     intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
                     break;
+                case LIVE:
                 case B23TV:
                 case UNKNOWN:
                     intent1 = new Intent(this, WebViewActivity.class);
@@ -128,7 +129,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
-            } else if ("live".equals(host)){
+            } else if ("live".equals(host)) {
                 intent1 = new Intent(this, WebViewActivity.class);
                 intent1.putExtra("url", uri.toString());
                 intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
@@ -159,6 +160,8 @@ public class UrlOpenActivity extends AppCompatActivity {
             return Type.B23TV;
         } else if (host.startsWith("live")) {
             return Type.LIVE;
+        } else if (host.startsWith("t")) {
+            return Type.T;
         } else {
             return Type.UNKNOWN;
         }
@@ -208,6 +211,7 @@ public class UrlOpenActivity extends AppCompatActivity {
         READ_MOBILE,
         B23TV,
         LIVE,
+        T,
         UNKNOWN
     }
 }
