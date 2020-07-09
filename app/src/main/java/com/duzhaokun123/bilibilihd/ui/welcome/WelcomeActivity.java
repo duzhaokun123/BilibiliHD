@@ -5,25 +5,20 @@ import android.os.Bundle;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityWelcomeBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.WelcomeAdApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
-    private PBilibiliClient pBilibiliClient;
     private WelcomeAd welcomeAd;
 
     @Override
@@ -53,50 +48,34 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
     @Override
     public void initData() {
-        pBilibiliClient = PBilibiliClient.Companion.getInstance();
-        if (Settings.isUninited()) {
+        if (Settings.ads.shouldShowWelcomeAd()) {
             new Thread() {
                 @Override
                 public void run() {
-                    Settings.init(getApplicationContext());
-                    pBilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().getLoggedLoginResponse());
-                    BrowserUtil.syncLoggedLoginResponse();
-//                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
-                    if (Settings.isFirstStart()) {
-                        NotificationUtil.init(getApplicationContext());
-                        Settings.setFirstStart(false);
-                    }
-                    AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
-
-                    if (Settings.ads.shouldShowWelcomeAd()) {
-                        WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
-                            @Override
-                            public void onException(Exception e) {
-                                e.printStackTrace();
-                                runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, e.getMessage()));
-                                if (handler != null) {
-                                    handler.sendEmptyMessageDelayed(1, 2000);
-                                }
+                    WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
+                        @Override
+                        public void onException(Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, e.getMessage()));
+                            if (handler != null) {
+                                handler.sendEmptyMessageDelayed(1, 2000);
                             }
-
-                            @Override
-                            public void onSuccess(WelcomeAd welcomeAd) {
-                                WelcomeActivity.this.welcomeAd = welcomeAd;
-                                if (handler != null) {
-                                    handler.sendEmptyMessage(2);
-                                }
-                            }
-                        });
-                    } else {
-                        if (handler != null) {
-                            handler.sendEmptyMessageDelayed(1, 2000);
                         }
-                    }
 
+                        @Override
+                        public void onSuccess(WelcomeAd welcomeAd) {
+                            WelcomeActivity.this.welcomeAd = welcomeAd;
+                            if (handler != null) {
+                                handler.sendEmptyMessage(2);
+                            }
+                        }
+                    });
                 }
             }.start();
-        } else if (welcomeAd == null && handler != null) {
-            handler.sendEmptyMessage(1);
+        } else {
+            if (handler != null) {
+                handler.sendEmptyMessageDelayed(1, 2000);
+            }
         }
     }
 

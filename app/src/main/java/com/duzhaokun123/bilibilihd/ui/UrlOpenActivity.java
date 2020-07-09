@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,44 +9,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import com.duzhaokun123.bilibilihd.Params;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
-import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
-import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class UrlOpenActivity extends AppCompatActivity {
-    private PBilibiliClient pBilibiliClient;
     private String TAG = "UrlOpenActivity";
     private boolean wait = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pBilibiliClient = PBilibiliClient.Companion.getInstance();
-        if (Settings.isUninited()) {
-            wait = true;
-            new Thread() {
-                @Override
-                public void run() {
-                    Settings.init(getApplicationContext());
-                    LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
-                    pBilibiliClient.setLoginResponse(loginResponse);
-//                    Config.enableLogCallback(message -> Log.d(Config.TAG, message.getText()));
-                    if (Settings.isFirstStart()) {
-                        NotificationUtil.init(getApplicationContext());
-                        Settings.setFirstStart(false);
-                    }
-                    AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
-                }
-            }.start();
-        }
         Intent intent = getIntent();
         Uri uri = intent.getData();
         if (uri == null) {
@@ -96,7 +71,11 @@ public class UrlOpenActivity extends AppCompatActivity {
                             }
                             break;
                         case UNKNOWN:
-                            BrowserUtil.openWebViewActivity(this, uri.toString(), false);
+                            if (hostLooksLikeWhichType(host) == Type.WWW) {
+                                BrowserUtil.openWebViewActivity(this, uri.toString(), true);
+                            } else {
+                                BrowserUtil.openWebViewActivity(this, uri.toString(), false);
+                            }
                             break;
                     }
                     break;
@@ -125,7 +104,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
-            } else  {
+            } else {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
             }
         }
