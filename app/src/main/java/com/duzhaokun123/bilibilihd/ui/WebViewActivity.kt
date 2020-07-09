@@ -12,6 +12,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.duzhaokun123.bilibilihd.Params
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding
@@ -67,15 +68,14 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return if ("bilibili" == request?.url!!.scheme) {
+                if ("bilibili" == request?.url!!.scheme) {
                     val intent = Intent()
                     intent.data = request.url
                     startActivity(intent)
-                    false
                 } else {
                     baseBind.wv.loadUrl(request.url.toString())
-                    true
                 }
+                return true
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -100,12 +100,14 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 setTitle(title)
             }
         }
-        baseBind.wv.settings.userAgentString = teleportIntent?.extras?.getString("ua")
+        if (teleportIntent?.extras?.getBoolean("desktop_ua", true)!!) {
+            baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
+        }
         baseBind.wv.settings.domStorageEnabled = true
     }
 
     override fun initData() {
-        teleportIntent?.extras?.getString("url", "")?.let { baseBind.wv.loadUrl(it) }
+        teleportIntent?.dataString?.let { baseBind.wv.loadUrl(it) }
     }
 
     override fun onBackPressed() {

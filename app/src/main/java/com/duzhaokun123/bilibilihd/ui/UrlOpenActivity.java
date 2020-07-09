@@ -96,21 +96,17 @@ public class UrlOpenActivity extends AppCompatActivity {
                             }
                             break;
                         case UNKNOWN:
-                            intent1 = new Intent(this, WebViewActivity.class);
-                            intent1.putExtra("url", uri.toString());
+                            BrowserUtil.openWebViewActivity(this, uri.toString(), false);
                             break;
                     }
                     break;
-                case T:
-                    intent1 = new Intent(this, WebViewActivity.class);
-                    intent1.putExtra("url", uri.toString());
-                    intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
-                    break;
-                case LIVE:
                 case B23TV:
+                    BrowserUtil.openWebViewActivity(this, uri.toString(), false);
+                    break;
+                case T:
+                case LIVE:
                 case UNKNOWN:
-                    intent1 = new Intent(this, WebViewActivity.class);
-                    intent1.putExtra("url", uri.toString());
+                    BrowserUtil.openWebViewActivity(this, uri.toString(), true);
                     break;
             }
         } else {
@@ -129,11 +125,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                 if (path != null) {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
-            } else if ("live".equals(host)) {
-                intent1 = new Intent(this, WebViewActivity.class);
-                intent1.putExtra("url", uri.toString());
-                intent1.putExtra("ua", Params.DESKTOP_USER_AGENT);
-            } else {
+            } else  {
                 ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
             }
         }
