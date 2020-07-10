@@ -23,7 +23,7 @@ import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     private Space mSpace;
@@ -78,7 +78,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
                         @Override
                         public void onException(Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(UserSpaceActivity.this, e.getMessage()));
+                            runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                         }
 
                         @Override

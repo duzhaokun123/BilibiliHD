@@ -48,7 +48,7 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -241,7 +241,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                ToastUtil.sendMsg(PlayActivity.this, error.getMessage());
+                TipUtil.showToast(error.getMessage());
             }
         });
         baseBind.pv.setPlayer(player);
@@ -320,7 +320,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
 //            player.setPlayWhenReady(false);
 //            danmakuSendFragment = new DanmakuSendFragment();
 //            getSupportFragmentManager().beginTransaction().add(R.id.fl_pv_cover, danmakuSendFragment).commitAllowingStateLoss();
-            ToastUtil.sendMsg(this, "没有实现");
+            TipUtil.showToast("没有实现");
         });
     }
 
@@ -409,7 +409,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                             responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, biliView.getData().getPages().get(page - 1).getCid());
                         } catch (Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, "无法加载弹幕\n" + e.getMessage()));
+                            runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
                         }
                         if (responseBody != null) {
                             Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
@@ -477,7 +477,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                                 mBtnQuality.setText(videoPlayUrl.getData().getAcceptDescription().get(item.getOrder()));
                                 player.seekTo(position);
                             } else if (video == null) {
-                                runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, R.string.not_vip));
+                                runOnUiThread(() -> TipUtil.showToast(R.string.not_vip));
                             }
                             return true;
                         });
@@ -522,10 +522,10 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                                     timeOffset,
                                     Objects.requireNonNull(msg.getData().getString("message")),
                                     1, 16777215);
-                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, R.string.sended));
+                            runOnUiThread(() -> TipUtil.showToast(R.string.sended));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                            runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                         }
                     }
                 }.start();
@@ -652,7 +652,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
             }
         }
     }
@@ -703,7 +703,7 @@ public class PlayActivity extends BaseActivity<ActivityPlayBinding> {
                 @Override
                 public void onException(Exception e) {
                     e.printStackTrace();
-                    runOnUiThread(() -> ToastUtil.sendMsg(PlayActivity.this, e.getMessage()));
+                    runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                 }
 
                 @Override

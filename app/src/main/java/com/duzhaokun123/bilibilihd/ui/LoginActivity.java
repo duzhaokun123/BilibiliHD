@@ -2,8 +2,8 @@ package com.duzhaokun123.bilibilihd.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -13,19 +13,16 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityLoginBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.utils.BilibiliApiExceptionUtil;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GeetestUtil;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.LoginUserInfoMap;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
 public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
 
     private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
-    private long uid;
 
     @Override
     protected int initConfig() {
@@ -58,12 +55,11 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             handler.sendMessage(message);
                         }
                     }
-                    runOnUiThread(() -> ToastUtil.sendMsg(LoginActivity.this, e.getMessage()));
+                    runOnUiThread(() -> TipUtil.showTip(LoginActivity.this, e.getMessage()));
                 }
 
                 if (loginResponse != null) {
                     if (loginResponse.getData().getUrl() == null) {
-                        uid = loginResponse.getUserId();
                         LoginUserInfoMap loginUserInfoMap = Settings.getLoginUserInfoMap();
                         loginUserInfoMap.put(loginResponse.getUserId(), loginResponse);
                         loginUserInfoMap.setLoggedUid(loginResponse.getUserId());
@@ -90,6 +86,12 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     @Override
     public void initData() {
 
+    }
+
+    @Nullable
+    @Override
+    protected CoordinatorLayout initRegisterCoordinatorLayout() {
+        return baseBind.clRoot;
     }
 
     @Override

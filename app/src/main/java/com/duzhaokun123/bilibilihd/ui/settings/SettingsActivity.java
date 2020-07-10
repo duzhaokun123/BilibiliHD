@@ -1,6 +1,8 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -50,6 +52,12 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
     @Override
     public void initData() {
 
+    }
+
+    @Nullable
+    @Override
+    protected CoordinatorLayout initRegisterCoordinatorLayout() {
+        return baseBind.clRoot;
     }
 
     public FrameLayout get2ndFl() {

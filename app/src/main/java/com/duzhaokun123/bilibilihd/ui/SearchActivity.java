@@ -13,7 +13,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivitySearchBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.app.model.SearchResult;
 
 import java.util.Objects;
@@ -76,7 +76,7 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread(() -> ToastUtil.sendMsg(SearchActivity.this, e.getMessage()));
+                        runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                     }
                 }
             }.start();

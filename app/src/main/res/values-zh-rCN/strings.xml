@@ -107,4 +107,6 @@
     <string name="add_to_history">加入历史</string>
     <string name="auto_recording_history">自动记录历史</string>
     <string name="play">播放</string>
+    <string name="imported">已导入</string>
+    <string name="exported">已导出</string>
 </resources>

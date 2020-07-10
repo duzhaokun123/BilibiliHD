@@ -4,7 +4,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityToolBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class ToolActivity extends BaseActivity<ActivityToolBinding> {
 
@@ -24,7 +24,7 @@ public class ToolActivity extends BaseActivity<ActivityToolBinding> {
                     try {
                         baseBind.etBv.setText(MyBilibiliClientUtil.av2bv(Long.parseLong(baseBind.etAv.getText().toString())));
                     } catch (Exception e) {
-                        ToastUtil.sendMsg(this, e.getMessage());
+                        TipUtil.showToast(e.getMessage());
                     }
                 }
         );
@@ -32,7 +32,7 @@ public class ToolActivity extends BaseActivity<ActivityToolBinding> {
                     try {
                         baseBind.etAv.setText(String.valueOf(MyBilibiliClientUtil.bv2av(baseBind.etBv.getText().toString())));
                     } catch (Exception e) {
-                        ToastUtil.sendMsg(this, e.getMessage());
+                        TipUtil.showToast(e.getMessage());
                     }
                 }
         );

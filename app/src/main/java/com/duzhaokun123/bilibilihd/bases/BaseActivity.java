@@ -13,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
 import com.duzhaokun123.bilibilihd.utils.Handler;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +70,6 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
         }
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +112,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
         findViews();
         initView();
         initData();
+        TipUtil.registerCoordinatorLayout(this, initRegisterCoordinatorLayout());
     }
 
     @Override
@@ -126,6 +128,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        TipUtil.unregisterCoordinatorLayout(this);
         if (handler != null) {
             handler.destroy();
             handler = null;
@@ -244,4 +247,8 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     protected void onLayoutFixInfoReady() {
     }
 
+    @Nullable
+    protected CoordinatorLayout initRegisterCoordinatorLayout() {
+        return null;
+    }
 }

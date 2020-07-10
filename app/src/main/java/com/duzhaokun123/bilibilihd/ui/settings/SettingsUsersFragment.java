@@ -32,7 +32,7 @@ import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.LoginUserInfoMap;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
@@ -135,7 +135,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                                 e.printStackTrace();
                                 if (getContext() != null) {
                                     if (getActivity() != null) {
-                                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                                     }
                                 }
                             }
@@ -233,8 +233,9 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                         loginUserInfoMap.put(loginResponse.getUserId(), loginResponse);
                         Settings.saveLoginUserInfoMap();
                         XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap.size());
+                        TipUtil.showTip(getContext(), R.string.imported);
                     } else {
-                        ToastUtil.sendMsg(getContext(), R.string.bad_file);
+                        TipUtil.showTip(getContext(), R.string.bad_file);
                     }
                 }
                 break;
@@ -242,7 +243,9 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                 if (data != null) {
                     Uri uri = data.getData();
                     if (!OtherUtils.writeLoginResponseToUri(getContext(), exportLoginResponse, uri)) {
-                        ToastUtil.sendMsg(getContext(), R.string.failure);
+                        TipUtil.showTip(getContext(), R.string.failure);
+                    } else {
+                        TipUtil.showTip(getContext(), R.string.exported);
                     }
                     exportLoginResponse = null;
                 }
@@ -273,7 +276,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                             e.printStackTrace();
                             if (getContext() != null) {
                                 if (getActivity() != null) {
-                                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                                 }
                             }
                         }

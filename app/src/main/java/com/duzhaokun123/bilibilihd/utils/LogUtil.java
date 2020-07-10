@@ -44,7 +44,7 @@ public class LogUtil {
                         outputStreamWriter.flush();
                         fileOutputStream.flush();
                     }
-                    activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, R.string.saved));
+                    activity.runOnUiThread(() -> TipUtil.showToast(R.string.saved));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {

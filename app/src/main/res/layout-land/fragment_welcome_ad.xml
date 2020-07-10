@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/bg_text"
+                android:fitsSystemWindows="true"
                 android:padding="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />

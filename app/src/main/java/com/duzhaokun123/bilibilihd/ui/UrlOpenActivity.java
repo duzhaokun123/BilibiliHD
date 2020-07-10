@@ -14,7 +14,7 @@ import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class UrlOpenActivity extends AppCompatActivity {
     private String TAG = "UrlOpenActivity";
@@ -105,7 +105,7 @@ public class UrlOpenActivity extends AppCompatActivity {
                     intent1.putExtra("uid", Long.parseLong(path.substring(1)));
                 }
             } else {
-                ToastUtil.sendMsg(this, "可能不支持 " + uri.toString());
+                TipUtil.showToast("可能不支持 " + uri.toString());
             }
         }
         if (intent1 != null) {

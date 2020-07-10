@@ -15,7 +15,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityPhotoViewBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.DownloadUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
     @Override
@@ -48,7 +48,7 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
                         .build();
                 enterPictureInPictureMode(pictureInPictureParams);
             } else {
-                ToastUtil.sendMsg(PhotoViewActivity.this, R.string.inappropriate);
+                TipUtil.showToast(R.string.inappropriate);
             }
         });
 
@@ -62,7 +62,7 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
                                     DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
                                 }
                             } else {
-                                ToastUtil.sendMsg(PhotoViewActivity.this, getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                TipUtil.showToast(getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
                             }
                         });
                     }

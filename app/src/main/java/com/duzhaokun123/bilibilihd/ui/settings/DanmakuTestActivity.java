@@ -9,7 +9,7 @@ import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 import java.io.BufferedInputStream;
 import java.util.Map;
@@ -65,14 +65,14 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                     responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, cid);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    runOnUiThread(() -> ToastUtil.sendMsg(DanmakuTestActivity.this, "无法加载弹幕\n" + e.getMessage()));
+                    runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
                 }
                 if (responseBody != null) {
                     Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
                     mParser = PlayActivity.createParser(pair.getSecond());
                     runOnUiThread(() -> {
                         baseBind.dv.prepare(mParser, danmakuContext);
-                        ToastUtil.sendMsg(DanmakuTestActivity.this, "加载成功");
+                        TipUtil.showToast("加载成功");
                     });
                 }
                 try {

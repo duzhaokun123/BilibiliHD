@@ -31,11 +31,9 @@ import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-
-import java.util.Objects;
 
 public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
@@ -242,7 +240,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         handler.sendEmptyMessage(2);
                     }
                     if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                     }
                 }
 
@@ -273,7 +271,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                                 handler.sendEmptyMessage(2);
                             }
                             if (getActivity() != null) {
-                                getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                                getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                             }
                         }
 

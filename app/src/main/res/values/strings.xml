@@ -109,4 +109,6 @@
     <string name="add_to_history">add to history</string>
     <string name="auto_recording_history">auto recording history</string>
     <string name="play">play</string>
+    <string name="imported">imported</string>
+    <string name="exported">exported</string>
 </resources>

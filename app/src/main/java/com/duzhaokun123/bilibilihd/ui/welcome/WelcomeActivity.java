@@ -15,7 +15,7 @@ import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
@@ -56,7 +56,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                         @Override
                         public void onException(Exception e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> ToastUtil.sendMsg(WelcomeActivity.this, e.getMessage()));
+                            runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                             if (handler != null) {
                                 handler.sendEmptyMessageDelayed(1, 2000);
                             }

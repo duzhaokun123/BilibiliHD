@@ -31,7 +31,7 @@ import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -141,7 +141,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         } else if ("ad_web_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), Objects.requireNonNull(homePage.getData().getItems().get(position).getAdInfo()).getCreativeContent().getUrl());
                         } else {
-                            ToastUtil.sendMsg(getContext(), "不支持 " + cardGoto);
+                            TipUtil.showToast("不支持 " + cardGoto);
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         }
                         if (intent != null) {
@@ -296,7 +296,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                 }
             }
         }
@@ -310,7 +310,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                 }
             }
             if (handler != null) {

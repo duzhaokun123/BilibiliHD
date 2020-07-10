@@ -7,7 +7,7 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityLogoutBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.BilibiliClient;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
@@ -37,12 +37,12 @@ public class LogoutActivity extends BaseActivity<ActivityLogoutBinding> {
                                 BilibiliClient bilibiliClient = PBilibiliClient.Companion.getInstance().getBilibiliClient();
                                 LoginResponse tmp = bilibiliClient.getLoginResponse();
                                 bilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().get(Long.valueOf(baseBind.etUid.getText().toString())));
-                                runOnUiThread(() -> ToastUtil.sendMsg(LogoutActivity.this, R.string.logged_out));
+                                runOnUiThread(() -> TipUtil.showToast(R.string.logged_out));
                                 try {
                                     PBilibiliClient.Companion.getInstance().logout();
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    runOnUiThread(() -> ToastUtil.sendMsg(LogoutActivity.this, e.getMessage()));
+                                    runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                                 }
                                 bilibiliClient.setLoginResponse(tmp);
                             }

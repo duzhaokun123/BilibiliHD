@@ -1,8 +1,10 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -30,7 +32,7 @@ import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -79,7 +81,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                 }
             });
         }
-        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -215,6 +217,12 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
         baseBind.xrv.refresh();
     }
 
+    @Nullable
+    @Override
+    protected CoordinatorLayout initRegisterCoordinatorLayout() {
+        return baseBind.clRoot;
+    }
+
     @Override
     public void handlerCallback(@NonNull Message msg) {
         switch (msg.what) {
@@ -234,7 +242,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                             @Override
                             public void onException(Exception e) {
                                 e.printStackTrace();
-                                runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
+                                runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                             }
 
                             @Override
@@ -251,7 +259,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                 @Override
                                 public void onException(Exception e) {
                                     e.printStackTrace();
-                                    runOnUiThread(() -> ToastUtil.sendMsg(FavoriteActivity.this, e.getMessage()));
+                                    runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                                 }
 
                                 @Override

@@ -8,7 +8,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityJumpBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.LogUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
 
@@ -53,7 +53,7 @@ public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
                 Log.d("JumpActivity", baseBind.etKey.getText().toString() + ": " + baseBind.etValue.getText().toString());
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtil.sendMsg(this, e.getMessage());
+                TipUtil.showToast(e.getMessage());
             }
         });
 
@@ -65,7 +65,7 @@ public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
                 startActivity(intent);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                ToastUtil.sendMsg(this, e.getMessage());
+                TipUtil.showToast(e.getMessage());
             }
         });
         baseBind.btnSaveLog.setOnClickListener(v -> LogUtil.saveLog(this));

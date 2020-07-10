@@ -1,7 +1,9 @@
 package com.duzhaokun123.bilibilihd.ui.main;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -29,11 +31,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
-import com.duzhaokun123.bilibilihd.utils.LogUtil;
-import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -75,10 +73,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        if (Settings.isUninited()) {
-            ToastUtil.sendMsg(this, R.string.exception_warning);
-            LogUtil.saveLog(this);
-        }
     }
 
     @Override
@@ -102,7 +96,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         long currentTime = System.currentTimeMillis();
         if (lastBackPassTime == -1L || currentTime - lastBackPassTime >= 2000) {
 //            ToastUtil.sendMsg(MainActivity.this, R.string.passe_again_to_quit);
-            Snackbar.make(baseBind.flMain, R.string.passe_again_to_quit, BaseTransientBottomBar.LENGTH_SHORT).show();
+            TipUtil.showSnackbar(baseBind.flMain, R.string.passe_again_to_quit);
             lastBackPassTime = currentTime;
             return;
         }
@@ -118,7 +112,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread(() -> ToastUtil.sendMsg(MainActivity.this, e.getMessage()));
+                        runOnUiThread(() -> {
+                            if (baseBind.dlMain == null) {
+                                TipUtil.showTip(MainActivity.this, e.getMessage());
+                            } else {
+                                TipUtil.showToast(e.getMessage());
+                            }
+                        });
                     }
 
                     if (myInfo != null && handler != null) {
@@ -150,6 +150,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     ViewGroup.LayoutParams params = baseBind.navMain.getLayoutParams();
                     if (params.width == 0) {
                         params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        reloadMyInfo();
                     } else {
                         params.width = 0;
                     }
@@ -262,6 +263,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     protected void initData() {
 
+    }
+
+    @Nullable
+    @Override
+    protected CoordinatorLayout initRegisterCoordinatorLayout() {
+        return baseBind.flMain;
     }
 
     @SuppressLint("SetTextI18n")

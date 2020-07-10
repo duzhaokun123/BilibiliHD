@@ -34,7 +34,7 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil;
-import com.duzhaokun123.bilibilihd.utils.ToastUtil;
+import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
 import java.util.Objects;
@@ -291,7 +291,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> ToastUtil.sendMsg(getContext(), e.getMessage()));
+                    getActivity().runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                 }
             }
         }

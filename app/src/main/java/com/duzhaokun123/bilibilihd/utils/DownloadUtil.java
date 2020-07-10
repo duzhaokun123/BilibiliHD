@@ -32,7 +32,7 @@ public class DownloadUtil {
                     ((DownloadManager) Objects.requireNonNull(activity.getSystemService(Context.DOWNLOAD_SERVICE))).enqueue(dmRequest);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, R.string.saved));
+                    activity.runOnUiThread(() -> TipUtil.showToast(R.string.saved));
                 }
                 break;
             case Settings.Download.GLIDE_CACHE_FIRST:
@@ -57,10 +57,10 @@ public class DownloadUtil {
                                 File file = new File(dir, String.valueOf(System.currentTimeMillis()));
                                 fileOutputStream = new FileOutputStream(file);
                                 FileUtil.copy(fileInputStream, fileOutputStream);
-                                activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, R.string.saved));
+                                activity.runOnUiThread(() -> TipUtil.showToast(R.string.saved));
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                activity.runOnUiThread(() -> ToastUtil.sendMsg(activity, e.getMessage()));
+                                activity.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                             } finally {
                                 try {
                                     if (fileInputStream != null) {
