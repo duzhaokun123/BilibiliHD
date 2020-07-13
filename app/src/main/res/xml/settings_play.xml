@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <CheckBoxPreference
         app:defaultValue="true"
         app:iconSpaceReserved="false"
         app:key="auto_recording_history"
         app:title="@string/auto_recording_history" />
+
+    <DropDownPreference
+        android:defaultValue="0"
+        app:entries="@array/play_default_quality_entries"
+        app:entryValues="@array/play_default_quality_values"
+        app:iconSpaceReserved="false"
+        app:key="quality"
+        app:title="@string/quality"
+        app:useSimpleSummaryProvider="true" />
 </PreferenceScreen>

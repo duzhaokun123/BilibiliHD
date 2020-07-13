@@ -19,31 +19,31 @@ public class PlayControlService extends IntentService {
         super("PlayControlService");
     }
 
-    private static Map<String, ICallback> idICallbackMap;
+    private static Map<Long, ICallback> idICallbackMap;
 
-    private static Map<String, ICallback> getIdICallbackMap() {
+    private static Map<Long, ICallback> getIdICallbackMap() {
         if (idICallbackMap == null) {
             idICallbackMap = new HashMap<>();
         }
         return idICallbackMap;
     }
 
-    public static void putId(String id, ICallback callback) {
+    public static void putId(long id, ICallback callback) {
         getIdICallbackMap().put(id, callback);
     }
 
-    public static void removeId(String id) {
+    public static void removeId(long id) {
         getIdICallbackMap().remove(id);
     }
 
-    public static PendingIntent newPausePendingIntent(Context context, String id) {
+    public static PendingIntent newPausePendingIntent(Context context, long id) {
         Intent pauseIntent = new Intent(context, PlayControlService.class);
         pauseIntent.setAction(PlayControlService.ACTION_PAUSE);
         pauseIntent.putExtra(PlayControlService.EXTRA_ID, id);
         return PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static PendingIntent newResumePendingIntent(Context context, String id) {
+    public static PendingIntent newResumePendingIntent(Context context, long id) {
         Intent pauseIntent = new Intent(context, PlayControlService.class);
         pauseIntent.setAction(PlayControlService.ACTION_RESUME);
         pauseIntent.putExtra(PlayControlService.EXTRA_ID, id);
@@ -55,16 +55,16 @@ public class PlayControlService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_PAUSE.equals(action)) {
-                final String id = intent.getStringExtra(EXTRA_ID);
+                final long id = intent.getLongExtra(EXTRA_ID, 0);
                 handleActionPause(id);
             } else if (ACTION_RESUME.equals(action)) {
-                final String id = intent.getStringExtra(EXTRA_ID);
+                final long id = intent.getLongExtra(EXTRA_ID, 0);
                 handleActionResume(id);
             }
         }
     }
 
-    private void handleActionPause(String id) {
+    private void handleActionPause(long id) {
         Log.d("PlayControlService", "here");
         ICallback callback = getIdICallbackMap().get(id);
         if (callback != null) {
@@ -72,7 +72,7 @@ public class PlayControlService extends IntentService {
         }
     }
 
-    private void handleActionResume(String id) {
+    private void handleActionResume(long id) {
         ICallback callback = getIdICallbackMap().get(id);
         if (callback != null) {
             callback.onResume();

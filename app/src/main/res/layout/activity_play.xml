@@ -12,41 +12,11 @@
         android:orientation="vertical"
         tools:context=".ui.play.PlayActivity">
 
-        <RelativeLayout
-            android:id="@+id/rl"
+        <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
+            android:id="@+id/bpvpv"
             android:layout_width="match_parent"
-            android:layout_height="300dp">
-
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/pv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/black" />
-
-            <master.flame.danmaku.ui.widget.DanmakuView
-                android:id="@+id/dv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="70dp" />
-
-            <ImageView
-                android:id="@+id/iv_cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-            <ProgressBar
-                android:id="@+id/pb_loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <FrameLayout
-                android:id="@+id/fl_pv_cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </RelativeLayout>
+            android:layout_height="300dp"
+            android:background="@android:color/black" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl"

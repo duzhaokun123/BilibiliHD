@@ -69,7 +69,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta7'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -128,4 +128,11 @@ dependencies {
 //    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
     //Preference
     implementation 'androidx.preference:preference:1.1.1'
+//    //lifecycle
+//    // Lifecycles only (without ViewModel or LiveData)
+//    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha05'
+//    // alternately
+//    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.0-alpha05'
+
+
 }

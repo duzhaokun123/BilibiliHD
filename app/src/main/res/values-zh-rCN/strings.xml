@@ -109,4 +109,7 @@
     <string name="play">播放</string>
     <string name="imported">已导入</string>
     <string name="exported">已导出</string>
+    <string name="max">最大</string>
+    <string name="default_">默认</string>
+    <string name="quality">画质</string>
 </resources>

@@ -7,6 +7,6 @@ import okhttp3.ResponseBody
 
 class PDanmakuAPI(private var danmakuAPI: DanmakuAPI) {
     fun list(aid: Long, cid: Long): ResponseBody {
-        return GlobalScope.future { danmakuAPI.list(aid = aid, oid = cid).await() }.get()
+        return GlobalScope.future { danmakuAPI.list(aid, cid).await() }.get()
     }
 }

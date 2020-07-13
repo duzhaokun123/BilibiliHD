@@ -66,10 +66,10 @@ public class OtherUtils {
         OutputStream outputStream = null;
         OutputStreamWriter outputStreamWriter = null;
         try {
-          outputStream = context.getContentResolver().openOutputStream(uri);
-          outputStreamWriter = new OutputStreamWriter(outputStream);
-          outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse, LoginResponse.class));
-          re = true;
+            outputStream = context.getContentResolver().openOutputStream(uri);
+            outputStreamWriter = new OutputStreamWriter(outputStream);
+            outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse, LoginResponse.class));
+            re = true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

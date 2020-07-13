@@ -66,8 +66,8 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
 
     @Override
     public void onBackPressed() {
-        setTitle(R.string.settings);
         super.onBackPressed();
+        setTitle(R.string.settings);
     }
 
     @Override

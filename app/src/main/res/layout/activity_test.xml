@@ -13,33 +13,8 @@
         android:orientation="vertical"
         tools:context=".ui.TestActivity">
 
-        <EditText
-            android:id="@+id/et"
+        <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:textColor="@color/ordinaryText"
-            android:id="@+id/btn_custom"
-            style="?materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="custom" />
-
-        <Button
-            android:textColor="@color/ordinaryText"
-            android:id="@+id/btn_activity"
-            style="?materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="activty" />
-
-        <Button
-            android:textColor="@color/ordinaryText"
-            android:id="@+id/btn_dialog"
-            style="?materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="dialog" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </layout>

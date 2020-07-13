@@ -80,10 +80,10 @@ public class UrlOpenActivity extends AppCompatActivity {
                     }
                     break;
                 case B23TV:
+                case LIVE:
                     BrowserUtil.openWebViewActivity(this, uri.toString(), false);
                     break;
                 case T:
-                case LIVE:
                 case UNKNOWN:
                     BrowserUtil.openWebViewActivity(this, uri.toString(), true);
                     break;

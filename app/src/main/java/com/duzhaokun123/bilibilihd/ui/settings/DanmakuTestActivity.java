@@ -8,6 +8,7 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
+import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerView;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
@@ -69,7 +70,7 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 }
                 if (responseBody != null) {
                     Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
-                    mParser = PlayActivity.createParser(pair.getSecond());
+                    mParser = BiliPlayerView.createParser(pair.getSecond());
                     runOnUiThread(() -> {
                         baseBind.dv.prepare(mParser, danmakuContext);
                         TipUtil.showToast("加载成功");

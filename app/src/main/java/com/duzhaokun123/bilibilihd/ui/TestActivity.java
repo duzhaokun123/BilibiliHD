@@ -18,9 +18,7 @@ public class TestActivity extends BaseActivity<ActivityTestBinding> {
 
     @Override
     protected void initView() {
-        baseBind.btnCustom.setOnClickListener(v -> BrowserUtil.openCustomTab(this, baseBind.et.getText().toString()));
-        baseBind.btnActivity.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this, baseBind.et.getText().toString(), true));
-        baseBind.btnDialog.setOnClickListener(v -> BrowserUtil.openWebViewDialog(this, baseBind.et.getText().toString()));
+
     }
 
     @Override

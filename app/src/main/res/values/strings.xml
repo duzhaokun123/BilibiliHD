@@ -111,4 +111,7 @@
     <string name="play">play</string>
     <string name="imported">imported</string>
     <string name="exported">exported</string>
+    <string name="max">max</string>
+    <string name="default_">default</string>
+    <string name="quality">quality</string>
 </resources>

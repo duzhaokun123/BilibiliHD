@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -11,9 +10,6 @@ public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
     private static SharedPreferences sharedPreferences;
 
-    private static final String TAG = "SettingsManager";
-
-    @SuppressLint("CommitPrefEdits")
     public static void init(Context context) {
         Settings.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         try {
@@ -57,27 +53,11 @@ public class Settings {
     public static class Layout {
 
         public int getColumn() {
-            String column = sharedPreferences.getString("column", "0");
-            try {
-                if (column != null) {
-                    return Integer.parseInt(column);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return 0;
+            return getIntByString("column", 0);
         }
 
         public int getColumnLand() {
-            String columnLand = sharedPreferences.getString("column_land", "0");
-            try {
-                if (columnLand != null) {
-                    return Integer.parseInt(columnLand);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return 0;
+            return getIntByString("column_land", 0);
         }
 
         public int getUiMode() {
@@ -95,6 +75,10 @@ public class Settings {
     public static class Play {
         public boolean isAutoRecordingHistory() {
             return sharedPreferences.getBoolean("auto_recording_history", true);
+        }
+
+        public int getDefaultQualityType() {
+            return getIntByString("quality", 0);
         }
     }
 

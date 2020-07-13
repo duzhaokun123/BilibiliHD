@@ -14,7 +14,7 @@ class PBilibiliClient private constructor() {
     private lateinit var pDanmakuAPI: PDanmakuAPI
     private lateinit var pMainAPI: PMainAPI
 
-    companion object{
+    companion object {
         private lateinit var pBilibiliClient: PBilibiliClient
         fun getInstance(): PBilibiliClient {
             if (::pBilibiliClient.isInitialized.not()) {
@@ -42,14 +42,14 @@ class PBilibiliClient private constructor() {
     }
 
     fun getPDanmakuAPI(): PDanmakuAPI {
-        if(::pDanmakuAPI.isInitialized.not()) {
+        if (::pDanmakuAPI.isInitialized.not()) {
             pDanmakuAPI = PDanmakuAPI(bilibiliClient.danmakuAPI)
         }
         return pDanmakuAPI
     }
 
     fun getPMainAPI(): PMainAPI {
-        if(::pMainAPI.isInitialized.not()) {
+        if (::pMainAPI.isInitialized.not()) {
             pMainAPI = PMainAPI(bilibiliClient.mainAPI)
         }
         return pMainAPI
@@ -68,7 +68,8 @@ class PBilibiliClient private constructor() {
                 loginResponse = bilibiliClient.login(username, password)
             } catch (e: Exception) {
                 exception = e
-            }}.get()
+            }
+        }.get()
 
         if (exception != null) {
             throw exception as Exception

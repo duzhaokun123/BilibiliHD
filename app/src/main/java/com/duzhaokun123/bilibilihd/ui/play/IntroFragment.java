@@ -42,6 +42,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
+    public static final int WHAT_LOAD_NEW_PAGE = 2;
+
     private TextView mTvUpName, mTvUpFans;
     private CircleImageView mCivFace;
 
@@ -87,8 +89,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
     protected void initView() {
         baseBind.tvId.setText(MyBilibiliClientUtil.av2bv(aid));
 
-        // 这里可以这样做是因为这个 Fragment 加载时 Activity 必然可见
-        BaseActivity baseActivity = getBaseActivity();
+        BaseActivity<?> baseActivity = getBaseActivity();
         if (baseActivity != null) {
             ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
             params.height = baseActivity.getFixButtonHeight();
@@ -132,12 +133,12 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     radioButton.setButtonDrawable(null);
                     radioButton.setBackgroundResource(R.drawable.rb_video_page_bg);
                     radioButton.setTextColor(requireContext().getColorStateList(R.color.rb_video_page_text));
-                    radioButton.setPadding(OtherUtils.dp2px(getContext(), 10),
-                            OtherUtils.dp2px(getContext(), 10),
-                            OtherUtils.dp2px(getContext(), 10),
-                            OtherUtils.dp2px(getContext(), 10));
+                    radioButton.setPadding(OtherUtils.dp2px(requireContext(), 10),
+                            OtherUtils.dp2px(requireContext(), 10),
+                            OtherUtils.dp2px(requireContext(), 10),
+                            OtherUtils.dp2px(requireContext(), 10));
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.rightMargin = OtherUtils.dp2px(getContext(), 5);
+                    params.rightMargin = OtherUtils.dp2px(requireContext(), 5);
                     baseBind.rgPages.addView(radioButton, params);
                     if (page == page1.getPage()) {
                         radioButton.setChecked(true);
@@ -156,7 +157,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             case 1:
                 sendBack();
                 break;
-            case 2:
+            case WHAT_LOAD_NEW_PAGE:
                 new LoadVideoPlayUrl(biliView.getData().getPages().get(msg.arg1 - 1).getCid(), 1).start();
                 ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(false);
                 page = msg.arg1;
@@ -176,7 +177,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
 
     private void sendBack() {
         Message message = new Message();
-        message.what = 1;
+        message.what = PlayActivity.WHAT_INTRO_FRAGMENT_SEND_BACK;
         Bundle bundle = new Bundle();
         bundle.putInt("page", page);
         bundle.putString("videoPlayUrl", GsonUtil.getGsonInstance().toJson(videoPlayUrl));
@@ -184,7 +185,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         Objects.requireNonNull(Objects.requireNonNull(getBaseActivity()).getHandler()).sendMessage(message);
     }
 
-    class Adapter extends RecyclerView.Adapter {
+    class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @NonNull
         @Override
