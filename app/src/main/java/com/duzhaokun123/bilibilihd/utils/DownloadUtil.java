@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.utils;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
@@ -10,7 +9,6 @@ import android.os.Environment;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.services.VideoDownloadService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,9 +77,5 @@ public class DownloadUtil {
                 break;
         }
 
-    }
-
-    public static void downloadVideo(Context context, String video, String audio, String videoTitle, String mainTitle, String bvid, boolean videoOnly, int page, long cid) {
-        VideoDownloadService.downloadVideo(context, video, audio, context.getCacheDir().getPath() + File.separator + bvid + "_" + page, videoTitle, mainTitle, bvid, videoOnly, page, cid);
     }
 }

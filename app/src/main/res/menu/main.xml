@@ -17,10 +17,6 @@
 
     </group>
     <item
-        android:id="@+id/download"
-        android:icon="@drawable/ic_dl"
-        android:title="@string/download" />
-    <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings" />

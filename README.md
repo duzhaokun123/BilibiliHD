@@ -47,7 +47,7 @@
     - [ ] 三连相关
 - [x] 直播 (WebView, 移动ua)
 - [ ] 私信
-- [x] 视频下载
+- [x] 视频下载 (仅获取链接)
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
 - [x] 添加历史记录
@@ -96,7 +96,6 @@
 - 解决代码重复的问题
 - ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
 在 API >= 23 的设备上没有必要
-- 重写`VideoDownloadScevice`
 - 重作界面
 
 ### 从源代码构建注意

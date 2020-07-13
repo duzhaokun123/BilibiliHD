@@ -27,7 +27,6 @@ import com.duzhaokun123.bilibilihd.utils.*
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
-
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     companion object {
         const val WHAT_LOAD_BILIVIEW = 0
@@ -93,7 +92,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 true
             }
             R.id.download -> {
-                // TODO: 20-7-12
+                if (biliView != null && videoPlayUrl != null) {
+                    VideoDownloadInfoDialog(this, biliView!!, videoPlayUrl!!, page, baseBind.bpvpv.qualityId).show()
+                }
                 true
             }
             R.id.add_to_history -> {
@@ -303,7 +304,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     override fun getId(index: Int): Int {
                         return videoPlayUrl?.data?.acceptQuality?.get(index)!!
                     }
-
                 }
                 val rational = biliView?.data?.pages?.get(page - 1)?.dimension?.let {
                     Rational(it.width, it.height)

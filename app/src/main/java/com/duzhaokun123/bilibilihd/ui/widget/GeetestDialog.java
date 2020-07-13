@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -32,14 +33,14 @@ public class GeetestDialog extends Dialog {
         return mWvGeetest;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_geetest_dialog);
+        setContentView(R.layout.dialog_geetest);
         mWvGeetest = findViewById(R.id.wv_geetest);
 
         mWvGeetest.getSettings().setJavaScriptEnabled(true);
         mWvGeetest.loadUrl(url);
-
     }
 }

@@ -39,6 +39,8 @@ public class BiliPlayerViewPackageView extends FrameLayout {
 
     private SimpleExoPlayer player;
 
+    private int qualityId = 0;
+
     public BiliPlayerViewPackageView(@NonNull Context context) {
         this(context, null);
     }
@@ -207,8 +209,9 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         if (videoUrlAdapter == null) {
             baseBind.bpv.getBtnQuality().setVisibility(GONE);
         } else {
+            int qualityIdTemp = videoUrlAdapter.getId(index);
             baseBind.bpv.getBtnQuality().setVisibility(VISIBLE);
-            Pair<String, String> url = videoUrlAdapter.getUrl(videoUrlAdapter.getId(index));
+            Pair<String, String> url = videoUrlAdapter.getUrl(qualityIdTemp);
             String video = url.first;
             String audio = url.second;
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Application.getInstance(), Util.getUserAgent(Application.getInstance(), Application.getInstance().getString(R.string.app_name)));
@@ -230,6 +233,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
                 player.prepare(mediaSource);
                 player.seekTo(playedTime);
                 baseBind.bpv.getBtnQuality().setText(videoUrlAdapter.getName(index));
+                qualityId = qualityIdTemp;
             }
         }
     }
@@ -244,6 +248,14 @@ public class BiliPlayerViewPackageView extends FrameLayout {
 
     public void clickIbFullscreen() {
         baseBind.bpv.clickIbFullscreen();
+    }
+
+    public int getQualityId() {
+        return qualityId;
+    }
+
+    public void setQualityId(int qualityId) {
+        this.qualityId = qualityId;
     }
 
     public interface OnFullscreenClickListener {

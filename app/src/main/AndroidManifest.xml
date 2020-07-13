@@ -32,14 +32,6 @@
             android:name=".ui.article.ArticleActivity"
             android:label=""
             android:theme="@style/AppTheme.TransparencyActionBar" />
-        <activity
-            android:name=".ui.download.DownloadActivity"
-            android:label="@string/download"
-            android:parentActivityName=".ui.welcome.WelcomeActivity" />
-
-        <service
-            android:name=".services.VideoDownloadService"
-            android:exported="false" />
 
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.ToolActivity" />
