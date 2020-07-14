@@ -26,7 +26,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.ui.LoginActivity;
+import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.LoginUserInfoMap;

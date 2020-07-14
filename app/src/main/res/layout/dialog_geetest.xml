@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
     </data>
@@ -7,16 +9,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="gt: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_gt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="challenge: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_challenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true" />
+        </LinearLayout>
 
         <WebView
             android:id="@+id/wv_geetest"
             android:layout_width="400dp"
-            android:layout_height="370dp" />
+            android:layout_height="500dp" />
 
-        <TextView
-            android:layout_width="400dp"
+        <EditText
+            android:id="@+id/et_validate"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="抱歉，目前还没有办法获取验证返回值（明显是因为我太菜了）， 但这不代表你无法登录，等待一天或更长时间就不用过验证码了。如果你有办法，请在 Github 上提一个 PR。" />
+            android:hint="validate"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_finish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/finish" />
+
     </LinearLayout>
 </layout>

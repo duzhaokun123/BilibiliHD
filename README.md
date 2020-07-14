@@ -16,7 +16,7 @@
 # B站迟早要完
 
 ### 将支持的功能
-- [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 多用户登录理论上实现)
+- [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 这因该是`bilibli-api`的问题, 多用户登录理论上实现)
 - [x] 横屏
 - [ ] 用户信息页
     - [ ] 主页
@@ -146,10 +146,10 @@ includeBuild 'path/to/DanmakuFlameMaster'
 
 [bilibili-api](https://github.com/czp3009/bilibili-api)
 
+[geetest-validator](https://github.com/kuresaru/geetest-validator)
+
 [glide](https://bumptech.github.io/glide/)
 
 [gson](https://github.com/google/gson)
-
-[okdownload](https://github.com/lingochamp/okdownload)
 
 [okttp](https://square.github.io/okhttp/)

@@ -25,7 +25,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.JumpActivity;
-import com.duzhaokun123.bilibilihd.ui.LoginActivity;
+import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;

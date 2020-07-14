@@ -117,4 +117,5 @@
     <string name="play_background">play background</string>
     <string name="retry">retry</string>
     <string name="play_settings">play settings</string>
+    <string name="finish">finish</string>
 </resources>

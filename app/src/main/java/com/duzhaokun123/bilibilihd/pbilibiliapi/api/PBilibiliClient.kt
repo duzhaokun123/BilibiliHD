@@ -75,6 +75,27 @@ class PBilibiliClient private constructor() {
             throw exception as Exception
         }
 
+        BrowserUtil.syncLoggedLoginResponse()
+        return loginResponse
+    }
+
+    @Throws(Exception::class)
+    fun login(username: String, password: String, challenge: String, secCode: String, validate: String): LoginResponse? {
+        var exception: Exception? = null
+        var loginResponse: LoginResponse? = null
+        GlobalScope.future {
+            try {
+                loginResponse = bilibiliClient.login(username, password, challenge, secCode, validate)
+            } catch (e: Exception) {
+                exception = e
+            }
+        }.get()
+
+        if (exception != null) {
+            throw exception as Exception
+        }
+
+        BrowserUtil.syncLoggedLoginResponse()
         return loginResponse
     }
 

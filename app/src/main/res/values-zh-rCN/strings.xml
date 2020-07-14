@@ -115,4 +115,5 @@
     <string name="play_background">后台播放</string>
     <string name="retry">重试</string>
     <string name="play_settings">播放设置</string>
+    <string name="finish">完成</string>
 </resources>
