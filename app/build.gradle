@@ -113,15 +113,15 @@ dependencies {
     //exoplayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.3'
-    //mobile-ffmpeg
-    implementation 'com.arthenica:mobile-ffmpeg-min:4.3.1'
+//    //mobile-ffmpeg
+//    implementation 'com.arthenica:mobile-ffmpeg-min:4.3.1'
     //okdownload
     // core
-    implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
-    // provide sqlite to store breakpoints
-    implementation 'com.liulishuo.okdownload:sqlite:1.0.7'
-    // provide okhttp to connect to backend
-    implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
+//    implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
+//    // provide sqlite to store breakpoints
+//    implementation 'com.liulishuo.okdownload:sqlite:1.0.7'
+//    // provide okhttp to connect to backend
+//    implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
     //DanmakuFlameMaster
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
 //    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.25'

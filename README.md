@@ -80,7 +80,7 @@
 ### 已知 BUG
 - 任何快速操作都有肯能导致崩溃
 - 在大屏幕设备上容易崩溃
-- 试图播放某些视频时崩溃, 因为服务器返回与期望不同
+- 试图播放某些视频时崩溃, 因为服务器返回与期望不同 (也可能不是, 它就是要崩)
 - 至少在 2020年4月4日 首页无法加载封面 (返回`404`)
 - 如果`PlayActivity`重构, 下面的信息会消失
 - 暗色模式下不会在标题栏显示视频标题
@@ -90,6 +90,7 @@
 - 再次查看视频详情时, 推荐视频的封面不会被加载
 - 弹幕仅加载前六分钟
 - 如果视频未正常播放, 返回***可能***会导致应用无响应
+- 有时后台播放通知不会自动清除
 - 更多 BUG 等你发现
 
 ### TODO
@@ -148,8 +149,6 @@ includeBuild 'path/to/DanmakuFlameMaster'
 [glide](https://bumptech.github.io/glide/)
 
 [gson](https://github.com/google/gson)
-
-[mobile-ffmpeg](https://tanersener.github.io/mobile-ffmpeg)
 
 [okdownload](https://github.com/lingochamp/okdownload)
 

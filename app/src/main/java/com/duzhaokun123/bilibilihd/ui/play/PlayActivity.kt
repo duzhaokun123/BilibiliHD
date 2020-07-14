@@ -9,12 +9,14 @@ import android.os.Message
 import android.util.Rational
 import android.view.*
 import androidx.annotation.Nullable
+import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding
@@ -45,14 +47,16 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var introFragment: IntroFragment? = null
     private var showingFragment: Fragment? = null
     private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder = PictureInPictureParams.Builder()
+    private var notificationBuilder: NotificationCompat.Builder? = null
 
     private var videoPlayUrl: VideoPlayUrl? = null
     private var biliView: BiliView? = null
-    private var aid: Long = 0
-    private var cid: Long = 0
-    private var page: Int = 0
+    private var aid = 0L
+    private var cid = 0L
+    private var page = 0
     private var playId = 0L
     private var firstPlay = true
+    private val notificationId = NotificationUtil.getNewId()
 
     private var fullscreen = false
     private var isPlayingBeforeActivityPause = false
@@ -182,6 +186,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                             PlayControlService.newPausePendingIntent(this, playId)))
                     pictureInPictureParamsBuilder.setActions(actions)
                     setPictureInPictureParams(pictureInPictureParamsBuilder.build())
+                    notificationBuilder?.setSmallIcon(R.drawable.ic_play_arrow)
+                    NotificationUtil.reshow(notificationId, notificationBuilder?.build())
+                    NotificationUtil.setNotificationCleanable(notificationId, false)
                 }
                 BiliPlayerViewPackageView.PlayingStatus.PAUSED -> {
                     val actions: MutableList<RemoteAction> = ArrayList()
@@ -192,6 +199,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                             PlayControlService.newResumePendingIntent(this, playId)))
                     pictureInPictureParamsBuilder.setActions(actions)
                     setPictureInPictureParams(pictureInPictureParamsBuilder.build())
+                    notificationBuilder?.setSmallIcon(R.drawable.ic_pause)
+                    NotificationUtil.reshow(notificationId, notificationBuilder?.build())
                 }
                 BiliPlayerViewPackageView.PlayingStatus.ENDED -> {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -240,6 +249,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 handler?.sendEmptyMessage(WHAT_RESUME)
             }
         })
+
+        notificationBuilder = NotificationCompat.Builder(this, NotificationUtil.CHANNEL_CHANNEL_ID_VIDEO_PLAY_BACKGROUND)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setStyle(androidx.media.app.NotificationCompat.MediaStyle())
+                .setSmallIcon(R.drawable.ic_pause)
+                .setShowWhen(false)
+                .addAction(R.drawable.ic_pause, getString(R.string.pause), PlayControlService.newPausePendingIntent(this, playId))
+                .addAction(R.drawable.ic_play_arrow, getString(R.string.resume), PlayControlService.newResumePendingIntent(this, playId))
     }
 
     override fun onStop() {
@@ -247,13 +264,22 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         if (!Settings.play.isPlayBackground) {
             isPlayingBeforeActivityPause = baseBind.bpvpv.isPlaying
             baseBind.bpvpv.pause()
+        } else {
+            NotificationUtil.show(notificationId, notificationBuilder?.build()!!)
+            if (baseBind.bpvpv.isPlaying) {
+                NotificationUtil.setNotificationCleanable(notificationId, false)
+            }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        if (!Settings.play.isPlayBackground && isPlayingBeforeActivityPause) {
-            baseBind.bpvpv.resume();
+        if (!Settings.play.isPlayBackground) {
+            if (isPlayingBeforeActivityPause) {
+                baseBind.bpvpv.resume();
+            }
+        } else {
+            NotificationUtil.remove(notificationId)
         }
     }
 
@@ -272,6 +298,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         super.onDestroy()
         PlayControlService.removeId(playId)
         baseBind.bpvpv.release()
+        NotificationUtil.remove(notificationId)
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
@@ -310,6 +337,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 baseBind.bpvpv.setCover(biliView?.data?.pic)
                 baseBind.vp.adapter = MyFragmentPagerAdapter(supportFragmentManager, 1)
                 title = biliView?.data?.title
+                notificationBuilder?.setContentTitle(biliView?.data?.title)
+                Thread {
+                    notificationBuilder?.setLargeIcon(Glide.with(this).asBitmap().load(biliView?.data?.pic).submit().get())
+                }.start()
+
             }
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
@@ -365,6 +397,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                         baseBind.bpvpv.biliPlayerView.setOnIbNextClickListener(null)
                     }
                 }
+                notificationBuilder?.setContentText(biliView?.data?.pages?.get(page - 1)?.part)
             }
             WHAT_ADD_HISTORY -> {
                 val playedTime = baseBind.bpvpv.player.currentPosition

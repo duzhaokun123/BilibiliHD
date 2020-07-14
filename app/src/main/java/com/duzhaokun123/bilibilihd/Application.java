@@ -12,8 +12,6 @@ import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class Application extends android.app.Application implements Handler.IHandlerMessageCallback {
-    private static final int WHAT_RUN_ON_UI_THREAD = 0;
-
     private static Application application;
     private static Handler handler;
 
@@ -37,10 +35,16 @@ public class Application extends android.app.Application implements Handler.IHan
     public void onCreate() {
         super.onCreate();
         Settings.init(this);
+        NotificationUtil.INSTANCE.setContext(this);
+        if (Settings.getLastVersionCode() < BuildConfig.VERSION_CODE) {
+            // 做一些更新
+            NotificationUtil.INSTANCE.init(this);
+            Settings.setLastVersionCode(BuildConfig.VERSION_CODE);
+        }
         LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
         PBilibiliClient.Companion.getInstance().setLoginResponse(loginResponse);
         if (Settings.isFirstStart()) {
-            NotificationUtil.init(getApplicationContext());
+            NotificationUtil.INSTANCE.init(this);
             Settings.setFirstStart(false);
         }
         AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());

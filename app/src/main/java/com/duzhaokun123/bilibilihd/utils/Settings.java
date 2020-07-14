@@ -50,6 +50,14 @@ public class Settings {
         sharedPreferences.edit().putBoolean("firstStart", firstStart).apply();
     }
 
+    public static int getLastVersionCode() {
+        return sharedPreferences.getInt("last_version_code", 0);
+    }
+
+    public static void setLastVersionCode(int versionCode) {
+        sharedPreferences.edit().putInt("last_version_code", versionCode).apply();
+    }
+
     public static class Layout {
 
         public int getColumn() {
