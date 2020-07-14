@@ -1,7 +1,5 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi;
 
-import androidx.annotation.NonNull;
-
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.hiczp.bilibili.api.BilibiliClientProperties;
@@ -113,7 +111,7 @@ public class MyBilibiliClient {
     }
 
     public interface ICallback<T> {
-        void onException(@NonNull Exception e);
+        void onException(Exception e);
 
         void onSuccess(T t);
     }
