@@ -7,10 +7,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +51,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private MyInfo myInfo;
     private boolean first = true;
     private String title;
+    private int defaultNavWidth = 0;
+    private boolean navOpen = true;
 
     @Override
     public void setTitle(CharSequence title) {
@@ -145,15 +149,23 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         baseBind.dlMain.open();
                     }
                 } else {
-                    // TODO: 20-6-14 动画
                     ViewGroup.LayoutParams params = baseBind.navMain.getLayoutParams();
-                    if (params.width == 0) {
-                        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        reloadMyInfo();
+                    ValueAnimator valueAnimator;
+                    if (navOpen) {
+                        navOpen = false;
+                        valueAnimator = ValueAnimator.ofInt(defaultNavWidth, 0);
                     } else {
-                        params.width = 0;
+                        navOpen = true;
+                        valueAnimator = ValueAnimator.ofInt(0, defaultNavWidth);
+                        reloadMyInfo();
                     }
-                    baseBind.navMain.setLayoutParams(params);
+                    valueAnimator.setDuration(500);
+                    valueAnimator.addUpdateListener(animation -> {
+                        Log.d(CLASS_NAME, "value: " + (Integer) animation.getAnimatedValue());
+                        params.width = (Integer) animation.getAnimatedValue();
+                        baseBind.navMain.setLayoutParams(params);
+                    });
+                    valueAnimator.start();
                 }
                 return true;
             case R.id.search:
@@ -265,6 +277,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     protected CoordinatorLayout initRegisterCoordinatorLayout() {
         return baseBind.flMain;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (defaultNavWidth == 0) {
+            defaultNavWidth = baseBind.navMain.getWidth();
+        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -22,12 +22,12 @@ def getGitCommitCount = { ->
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.duzhaokun123.bilibilihd"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode "${getGitCommitCount}".toInteger()
         versionName "0.1-git.${getGitHash}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
