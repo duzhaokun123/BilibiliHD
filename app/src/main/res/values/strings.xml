@@ -114,4 +114,7 @@
     <string name="max">max</string>
     <string name="default_">default</string>
     <string name="quality">quality</string>
+    <string name="play_background">play background</string>
+    <string name="retry">retry</string>
+    <string name="play_settings">play settings</string>
 </resources>

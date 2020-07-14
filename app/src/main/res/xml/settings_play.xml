@@ -7,6 +7,12 @@
         app:key="auto_recording_history"
         app:title="@string/auto_recording_history" />
 
+    <CheckBoxPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="play_background"
+        app:title="@string/play_background"/>
+
     <DropDownPreference
         android:defaultValue="0"
         app:entries="@array/play_default_quality_entries"

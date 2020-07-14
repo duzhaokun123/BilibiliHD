@@ -6,29 +6,48 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.play.PlayActivity">
+        android:layout_height="match_parent">
 
-        <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
-            android:id="@+id/bpvpv"
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/dl"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@android:color/black" />
+            android:layout_height="match_parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:theme="@style/AppTheme.Navigation" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context=".ui.play.PlayActivity">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/vp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
+                    android:id="@+id/bpvpv"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@android:color/black" />
 
-    </LinearLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="1dp"
+                    android:theme="@style/AppTheme.Navigation" />
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl_end"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@color/background"
+                android:fitsSystemWindows="true" />
+        </androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

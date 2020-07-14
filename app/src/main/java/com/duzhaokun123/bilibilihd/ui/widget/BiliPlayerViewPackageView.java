@@ -90,7 +90,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
                     long contentDuration = player.getContentDuration();
                     long contentBufferedPosition = player.getContentBufferedPosition();
                     if (contentBufferedPosition - contentPosition <= 1000 && contentDuration - contentPosition > 100) {
-                        baseBind.bpv.setPbExoBufferingVisibility(View.INVISIBLE);
+                        baseBind.bpv.setPbExoBufferingVisibility(View.VISIBLE);
                         if (onPlayingStatusChangeListener != null) {
                             onPlayingStatusChangeListener.onPlayingStatusChange(PlayingStatus.LOADING);
                         }

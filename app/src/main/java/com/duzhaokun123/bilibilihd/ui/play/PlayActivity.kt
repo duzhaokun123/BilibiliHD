@@ -10,6 +10,8 @@ import android.util.Rational
 import android.view.*
 import androidx.annotation.Nullable
 import androidx.core.util.Pair
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -22,8 +24,11 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.services.PlayControlService
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
+import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 import com.duzhaokun123.bilibilihd.utils.*
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
@@ -38,6 +43,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     private var introFragment: IntroFragment? = null
+    private var showingFragment: Fragment? = null
     private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder = PictureInPictureParams.Builder()
 
     private var videoPlayUrl: VideoPlayUrl? = null
@@ -54,6 +60,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     override fun initConfig() = NEED_HANDLER
 
     override fun initLayout() = R.layout.activity_play
+
+    override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         MenuInflater(this).inflate(R.menu.play_activity, menu)
@@ -101,12 +109,22 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 handler?.sendEmptyMessage(WHAT_ADD_HISTORY)
                 true
             }
+            R.id.retry -> {
+                baseBind.bpvpv.player.retry()
+                true
+            }
+            R.id.play_settings -> {
+                showingFragment = SettingsPlayFragment()
+                supportFragmentManager.beginTransaction().add(R.id.fl_end, showingFragment as SettingsPlayFragment).commitAllowingStateLoss()
+                baseBind.dl.openDrawer(GravityCompat.END)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
-
     }
 
     override fun initView() {
+        baseBind.tl.setupWithViewPager(baseBind.vp)
         baseBind.bpvpv.onFullscreenClickListener = BiliPlayerViewPackageView.OnFullscreenClickListener { isFullscreen ->
             fullscreen = isFullscreen
             val params = baseBind.bpvpv.layoutParams
@@ -129,7 +147,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
             baseBind.bpvpv.layoutParams = params
         }
-        baseBind.tl.setupWithViewPager(baseBind.vp)
         baseBind.bpvpv.setControllerVisibilityListener { visibility ->
             if (visibility != View.VISIBLE) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -150,6 +167,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         baseBind.bpvpv.setOnPlayingStatusChangeListener { playingStatus ->
             when (playingStatus) {
                 BiliPlayerViewPackageView.PlayingStatus.PLAYING -> {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     if (firstPlay) {
                         firstPlay = false
                         if (Settings.play.isAutoRecordingHistory) {
@@ -175,10 +193,33 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     pictureInPictureParamsBuilder.setActions(actions)
                     setPictureInPictureParams(pictureInPictureParamsBuilder.build())
                 }
+                BiliPlayerViewPackageView.PlayingStatus.ENDED -> {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
             }
             // TODO: 20-7-12
         }
-        baseBind.bpvpv.setOnPlayerErrorListener { }
+        baseBind.bpvpv.setOnPlayerErrorListener { error ->
+            error.printStackTrace()
+            Snackbar.make(baseBind.clRoot, error.message!!, BaseTransientBottomBar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry) { baseBind.bpvpv.player.retry() }
+                    .show()
+        }
+        baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        baseBind.dl.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerClosed(drawerView: View) {
+                baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                supportFragmentManager.beginTransaction().remove(showingFragment!!).commitAllowingStateLoss()
+                showingFragment = null
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+        })
     }
 
     override fun initData() {
@@ -203,13 +244,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onStop() {
         super.onStop()
-        isPlayingBeforeActivityPause = baseBind.bpvpv.isPlaying
-        baseBind.bpvpv.pause()
+        if (!Settings.play.isPlayBackground) {
+            isPlayingBeforeActivityPause = baseBind.bpvpv.isPlaying
+            baseBind.bpvpv.pause()
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        if (isPlayingBeforeActivityPause) {
+        if (!Settings.play.isPlayBackground && isPlayingBeforeActivityPause) {
             baseBind.bpvpv.resume();
         }
     }
@@ -301,9 +344,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
                     override fun getCount() = videoPlayUrl?.data?.acceptQuality?.size!!
 
-                    override fun getId(index: Int): Int {
-                        return videoPlayUrl?.data?.acceptQuality?.get(index)!!
-                    }
+                    override fun getId(index: Int) = videoPlayUrl?.data?.acceptQuality?.get(index)!!
                 }
                 val rational = biliView?.data?.pages?.get(page - 1)?.dimension?.let {
                     Rational(it.width, it.height)

@@ -112,4 +112,7 @@
     <string name="max">最大</string>
     <string name="default_">默认</string>
     <string name="quality">画质</string>
+    <string name="play_background">后台播放</string>
+    <string name="retry">重试</string>
+    <string name="play_settings">播放设置</string>
 </resources>

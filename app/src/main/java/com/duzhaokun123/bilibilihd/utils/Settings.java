@@ -77,6 +77,10 @@ public class Settings {
             return sharedPreferences.getBoolean("auto_recording_history", true);
         }
 
+        public boolean isPlayBackground() {
+            return sharedPreferences.getBoolean("play_background", false);
+        }
+
         public int getDefaultQualityType() {
             return getIntByString("quality", 0);
         }

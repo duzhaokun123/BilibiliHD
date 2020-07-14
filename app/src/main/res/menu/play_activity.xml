@@ -27,4 +27,14 @@
         android:id="@+id/add_to_history"
         android:title="@string/add_to_history"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/retry"
+        android:title="@string/retry"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/play_settings"
+        android:title="@string/play_settings"
+        app:showAsAction="never" />
 </menu>
