@@ -64,9 +64,11 @@ object DanmakuUtil {
     }
 
     fun syncDanmakuSettings() {
+        if (::danmakuContext.isInitialized.not()) {
+            return
+        }
         val maxLinesPair = HashMap<Int, Int>()
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 10 // 滚动弹幕最大显示10行
-
 
         val overlappingEnablePair = HashMap<Int, Boolean>()
         overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = false // 允许从右至左的弹幕重合
