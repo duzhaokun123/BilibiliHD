@@ -1,10 +1,14 @@
 package com.duzhaokun123.bilibilihd.ui.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -20,6 +24,7 @@ import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
+import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
 
@@ -45,6 +50,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private static final int WHAT_DANMAKU_LOAD_SUCCESSFUL = 1;
 
     private final String TAG = this.getClass().getSimpleName();
+    private final int defaultIbNextWidth = OtherUtils.dp2px(50);
 
     private LayoutPlayerOverlayBinding overlayBaseBind;
     private FrameLayout overlay;
@@ -94,15 +100,32 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             return;
         }
         ibFullscreen.setOnClickListener(view -> {
+            ViewGroup.LayoutParams ibNextParams = ibNext.getLayoutParams();
+            int ibNextNewWidth;
             if (!isFullscreen) {
                 isFullscreen = true;
                 ibFullscreen.setImageResource(R.drawable.ic_fullscreen_exit);
                 ibNext.setVisibility(VISIBLE);
+                ibNextNewWidth = defaultIbNextWidth;
             } else {
                 isFullscreen = false;
                 ibFullscreen.setImageResource(R.drawable.ic_fullscreen);
-                ibNext.setVisibility(GONE);
+                ibNextNewWidth = 0;
             }
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(ibNextParams.width, ibNextNewWidth);
+            valueAnimator.addUpdateListener(animation -> {
+                ibNextParams.width = (int) animation.getAnimatedValue();
+                ibNext.setLayoutParams(ibNextParams);
+            });
+            valueAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (ibNextParams.width == 0) {
+                        ibNext.setVisibility(GONE);
+                    }
+                }
+            });
+            valueAnimator.start();
             if (onFullscreenClickListener != null) {
                 onFullscreenClickListener.onClick(isFullscreen);
             }
@@ -123,10 +146,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     public void release() {
         handler.destroy();
         overlayBaseBind.dv.release();
-    }
-
-    public DanmakuLoadListener getDanmakuLoadListener() {
-        return danmakuLoadListener;
     }
 
     public void setDanmakuLoadListener(DanmakuLoadListener danmakuLoadListener) {

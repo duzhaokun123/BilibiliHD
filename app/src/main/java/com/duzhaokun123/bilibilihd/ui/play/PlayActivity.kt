@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.play
 
+import android.animation.ValueAnimator
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.os.Message
 import android.util.Rational
 import android.view.*
 import androidx.annotation.Nullable
+import androidx.core.animation.doOnEnd
 import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
@@ -59,9 +61,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var playId = 0L
     private var firstPlay = true
     private val notificationId = NotificationUtil.getNewId()
+    private val bpvpvDefaultHeight = OtherUtils.dp2px(300f)
 
-    private var fullscreen = false
+    private var isFullscreen = false
     private var isPlayingBeforeActivityPause = false
+    private var allowFullscreenAnimation = true
 
     override fun initConfig() = NEED_HANDLER
 
@@ -142,10 +146,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     override fun initView() {
         baseBind.tl.setupWithViewPager(baseBind.vp)
         baseBind.bpvpv.onFullscreenClickListener = BiliPlayerViewPackageView.OnFullscreenClickListener { isFullscreen ->
-            fullscreen = isFullscreen
-            val params = baseBind.bpvpv.layoutParams
-            if (fullscreen) {
-                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+            this.isFullscreen = isFullscreen
+
+            val newHeight: Int
+            if (this.isFullscreen) {
+                newHeight = baseBind.clRoot.height
                 supportActionBar?.hide()
                 window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -153,7 +158,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                         or View.SYSTEM_UI_FLAG_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
             } else {
-                params.height = OtherUtils.dp2px(this, 300f);
+                newHeight = bpvpvDefaultHeight
                 supportActionBar?.show()
                 window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                         and (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -161,12 +166,33 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                         or View.SYSTEM_UI_FLAG_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY).inv())
             }
-            baseBind.bpvpv.layoutParams = params
+
+            val params = baseBind.bpvpv.layoutParams
+            if (allowFullscreenAnimation) {
+                val valueAnimator = ValueAnimator.ofInt(baseBind.bpvpv.height, newHeight)
+                valueAnimator.addUpdateListener { animation ->
+                    params.height = animation.animatedValue as Int
+                    baseBind.bpvpv.layoutParams = params
+                }
+                if (newHeight == baseBind.clRoot.height) {
+                    valueAnimator.doOnEnd {
+                        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        baseBind.bpvpv.layoutParams = params
+                    }
+                }
+                valueAnimator.start()
+            } else {
+                params.height = newHeight
+                if (params.height == baseBind.clRoot.height) {
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                }
+                baseBind.bpvpv.layoutParams = params
+            }
         }
         baseBind.bpvpv.setControllerVisibilityListener { visibility ->
             if (visibility != View.VISIBLE) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LOW_PROFILE
-                if (fullscreen) {
+                if (isFullscreen) {
                     window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                             or View.SYSTEM_UI_FLAG_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
@@ -174,7 +200,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 supportActionBar?.hide()
             } else {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LOW_PROFILE.inv()
-                if (fullscreen) {
+                if (isFullscreen) {
                     window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_FULLSCREEN.inv()
                 }
                 supportActionBar?.show()
@@ -217,6 +243,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 BiliPlayerViewPackageView.PlayingStatus.ENDED -> {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 }
+                else -> OtherUtils.doNothing() // TODO: 20-7-16
             }
             // TODO: 20-7-12
         }
@@ -288,7 +315,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         super.onStart()
         if (!Settings.play.isPlayBackground) {
             if (isPlayingBeforeActivityPause) {
-                baseBind.bpvpv.resume();
+                baseBind.bpvpv.resume()
             }
         } else {
             NotificationUtil.remove(notificationId)
@@ -297,7 +324,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if (fullscreen) {
+        if (isFullscreen) {
             window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -315,8 +342,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        allowFullscreenAnimation = isInPictureInPictureMode.not()
         if (isInPictureInPictureMode) {
-            if (!fullscreen) {
+            if (!isFullscreen) {
                 baseBind.bpvpv.clickIbFullscreen()
             }
             baseBind.bpvpv.biliPlayerView.useController = false
@@ -326,7 +354,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun onBackPressed() {
-        if (fullscreen) {
+        if (isFullscreen) {
             baseBind.bpvpv.clickIbFullscreen()
         } else {
             super.onBackPressed()

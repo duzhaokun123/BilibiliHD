@@ -133,12 +133,12 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     radioButton.setButtonDrawable(null);
                     radioButton.setBackgroundResource(R.drawable.rb_video_page_bg);
                     radioButton.setTextColor(requireContext().getColorStateList(R.color.rb_video_page_text));
-                    radioButton.setPadding(OtherUtils.dp2px(requireContext(), 10),
-                            OtherUtils.dp2px(requireContext(), 10),
-                            OtherUtils.dp2px(requireContext(), 10),
-                            OtherUtils.dp2px(requireContext(), 10));
+                    radioButton.setPadding(OtherUtils.dp2px(10),
+                            OtherUtils.dp2px(10),
+                            OtherUtils.dp2px(10),
+                            OtherUtils.dp2px(10));
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.rightMargin = OtherUtils.dp2px(requireContext(), 5);
+                    params.rightMargin = OtherUtils.dp2px(5);
                     baseBind.rgPages.addView(radioButton, params);
                     if (page == page1.getPage()) {
                         radioButton.setChecked(true);

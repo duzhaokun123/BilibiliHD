@@ -3,6 +3,7 @@ package com.duzhaokun123.bilibilihd.utils;
 import android.content.Context;
 import android.net.Uri;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 public class OtherUtils {
 
@@ -42,7 +44,7 @@ public class OtherUtils {
         LoginResponse loginResponse = null;
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
-            inputStreamReader = new InputStreamReader(inputStream);
+            inputStreamReader = new InputStreamReader(Objects.requireNonNull(inputStream));
             loginResponse = GsonUtil.getGsonInstance().fromJson(inputStreamReader, LoginResponse.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +69,7 @@ public class OtherUtils {
         OutputStreamWriter outputStreamWriter = null;
         try {
             outputStream = context.getContentResolver().openOutputStream(uri);
-            outputStreamWriter = new OutputStreamWriter(outputStream);
+            outputStreamWriter = new OutputStreamWriter(Objects.requireNonNull(outputStream));
             outputStreamWriter.write(GsonUtil.getGsonInstance().toJson(loginResponse, LoginResponse.class));
             re = true;
         } catch (Exception e) {
@@ -87,13 +89,16 @@ public class OtherUtils {
         return re;
     }
 
-    public static int dp2px(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int dp2px(float dp) {
+        final float scale = Application.getInstance().getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 
-    public static int px2dp(Context context, float px) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dp(float px) {
+        final float scale = Application.getInstance().getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
+    }
+
+    public static void doNothing() {
     }
 }
