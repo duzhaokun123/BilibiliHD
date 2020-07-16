@@ -118,4 +118,6 @@
     <string name="retry">retry</string>
     <string name="play_settings">play settings</string>
     <string name="finish">finish</string>
+    <string name="sync">sync</string>
+    <string name="danmaku_settings">danmaku settings</string>
 </resources>

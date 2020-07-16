@@ -7,9 +7,16 @@ public class XRecyclerViewUtil {
         notifyItemsChanged(xRecyclerView, 0, to);
     }
 
-    public static void notifyItemsChanged(XRecyclerView xRecyclerView, int from, int to){
-        for (int i = from; i <= to; i++) {
-            xRecyclerView.notifyItemChanged(i);
+    public static void notifyItemsChanged(XRecyclerView xRecyclerView, int from, int to) {
+        if (from > to) {
+            return;
+        }
+        try {
+            for (int i = from; i <= to; i++) {
+                xRecyclerView.notifyItemChanged(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -26,6 +26,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.services.PlayControlService
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
+import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 import com.duzhaokun123.bilibilihd.utils.*
@@ -119,9 +120,19 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 true
             }
             R.id.play_settings -> {
-                showingFragment = SettingsPlayFragment()
-                supportFragmentManager.beginTransaction().add(R.id.fl_end, showingFragment as SettingsPlayFragment).commitAllowingStateLoss()
-                baseBind.dl.openDrawer(GravityCompat.END)
+                if (showingFragment == null) {
+                    showingFragment = SettingsPlayFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.fl_end, showingFragment as Fragment).commitAllowingStateLoss()
+                    baseBind.dl.openDrawer(GravityCompat.END)
+                }
+                true
+            }
+            R.id.danmaku_settings -> {
+                if (showingFragment == null) {
+                    showingFragment = SettingsDanmakuFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.fl_end, showingFragment as Fragment).commitAllowingStateLoss()
+                    baseBind.dl.openDrawer(GravityCompat.END)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

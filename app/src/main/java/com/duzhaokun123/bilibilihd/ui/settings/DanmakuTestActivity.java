@@ -7,7 +7,6 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerView;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
@@ -50,8 +49,7 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 .add(R.id.fl_danmaku_settings, new SettingsDanmakuFragment())
                 .commitAllowingStateLoss();
 
-        danmakuContext = DanmakuContext.create();
-        DanmakuUtil.INSTANCE.syncDanmakuSettings(danmakuContext, this);
+        danmakuContext = DanmakuUtil.INSTANCE.getDanmakuContext();
         baseBind.dv.enableDanmakuDrawingCache(true);
         baseBind.dv.showFPS(true);
     }
@@ -89,9 +87,7 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (danmakuContext != null) {
-            DanmakuUtil.INSTANCE.syncDanmakuSettings(danmakuContext, this);
-        }
+        DanmakuUtil.INSTANCE.syncDanmakuSettings();
     }
 
     @Override

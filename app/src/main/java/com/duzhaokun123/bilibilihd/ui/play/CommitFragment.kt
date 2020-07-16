@@ -75,7 +75,7 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
             }.start()
             WHAT_REPLY_REFRESH_END -> {
                 baseBind.xrv.refreshComplete()
-                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
+                reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
@@ -103,7 +103,7 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 ReplyHolder(LayoutInflater.from(context).inflate(R.layout.item_reply, parent, false))
 
         override fun getItemCount(): Int {
-            return if (reply == null) {
+            return if (reply == null || reply!!.data.replies == null) {
                 0
             } else {
                 reply!!.data.replies!!.size

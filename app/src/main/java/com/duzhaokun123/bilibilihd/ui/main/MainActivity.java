@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -161,7 +160,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     }
                     valueAnimator.setDuration(500);
                     valueAnimator.addUpdateListener(animation -> {
-                        Log.d(CLASS_NAME, "value: " + (Integer) animation.getAnimatedValue());
                         params.width = (Integer) animation.getAnimatedValue();
                         baseBind.navMain.setLayoutParams(params);
                     });

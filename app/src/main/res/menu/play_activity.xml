@@ -37,4 +37,9 @@
         android:id="@+id/play_settings"
         android:title="@string/play_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/danmaku_settings"
+        android:title="@string/danmaku_settings"
+        app:showAsAction="never" />
 </menu>

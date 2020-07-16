@@ -1,6 +1,6 @@
 package com.duzhaokun123.bilibilihd.utils
 
-import android.content.Context
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.google.gson.stream.JsonReader
 import com.hiczp.bilibili.api.bounded
@@ -14,6 +14,8 @@ import java.util.*
 import java.util.zip.GZIPInputStream
 
 object DanmakuUtil {
+    private lateinit var danmakuContext: DanmakuContext
+
     /**
      * 解析弹幕文件
      *
@@ -61,7 +63,7 @@ object DanmakuUtil {
         return Pair(danmakuFlags, GZIPInputStream(inputStream).buffered())
     }
 
-    fun syncDanmakuSettings(danmakuContext: DanmakuContext, context: Context) {
+    fun syncDanmakuSettings() {
         val maxLinesPair = HashMap<Int, Int>()
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 10 // 滚动弹幕最大显示10行
 
@@ -91,13 +93,21 @@ object DanmakuUtil {
         if (Settings.danmaku.textSize != 0f) {
             danmakuContext.setScaleTextSize(Settings.danmaku.textSize)
         } else {
-            danmakuContext.setScaleTextSize(context.resources.getInteger(R.integer.danmaku_scale_text_size).toFloat())
+            danmakuContext.setScaleTextSize(Application.getInstance().resources.getInteger(R.integer.danmaku_scale_text_size).toFloat())
         }
 
         if (Settings.danmaku.danmakuMargin != 0) {
             danmakuContext.setDanmakuMargin(Settings.danmaku.danmakuMargin)
         } else {
-            danmakuContext.setDanmakuMargin(context.resources.getInteger(R.integer.danmaku_margin))
+            danmakuContext.setDanmakuMargin(Application.getInstance().resources.getInteger(R.integer.danmaku_margin))
         }
+    }
+
+    fun getDanmakuContext(): DanmakuContext {
+        if (::danmakuContext.isInitialized.not()) {
+            danmakuContext = DanmakuContext.create()
+        }
+        syncDanmakuSettings()
+        return danmakuContext
     }
 }

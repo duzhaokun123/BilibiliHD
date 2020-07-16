@@ -4,6 +4,10 @@
         app:iconSpaceReserved="false"
         app:key="test"
         app:title="@string/test" />
+    <Preference
+        app:iconSpaceReserved="false"
+        app:key="sync"
+        app:title="@string/sync" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/danmaku_drawing" />

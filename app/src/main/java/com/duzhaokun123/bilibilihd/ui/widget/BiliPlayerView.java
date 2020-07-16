@@ -77,8 +77,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         overlay = getOverlayFrameLayout();
         overlayBaseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_player_overlay, overlay, true);
         handler = new Handler(this);
-        danmakuContext = DanmakuContext.create();
-        DanmakuUtil.INSTANCE.syncDanmakuSettings(danmakuContext, context);
+        danmakuContext = DanmakuUtil.INSTANCE.getDanmakuContext();
 
         pbExoBuffering = findViewById(R.id.exo_buffering);
         ibFullscreen = findViewById(R.id.ib_fullscreen);
