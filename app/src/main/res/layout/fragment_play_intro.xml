@@ -39,10 +39,22 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/watched"
+                    android:textSize="12sp" />
+
+                <TextView
                     android:id="@+id/tv_danmakuHas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/danmaku"
                     android:textSize="12sp" />
 
                 <TextView

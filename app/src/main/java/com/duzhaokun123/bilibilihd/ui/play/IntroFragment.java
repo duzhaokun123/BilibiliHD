@@ -198,7 +198,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             ((RelateVideoCardHolder) holder).mTvTitle.setText(biliView.getData().getRelates().get(position).getTitle());
             ((RelateVideoCardHolder) holder).mTvPlay.setText(String.valueOf(biliView.getData().getRelates().get(position).getStat().getReply()));
             ((RelateVideoCardHolder) holder).mTvDanmaku.setText(String.valueOf(biliView.getData().getRelates().get(position).getStat().getDanmaku()));
-            GlideUtil.loadUrlInto(getContext(), biliView.getData().getRelates().get(position).getPic(), ((RelateVideoCardHolder) holder).mIvCover, true);
+            GlideUtil.loadUrlInto(getContext(), biliView.getData().getRelates().get(position).getPic(), ((RelateVideoCardHolder) holder).mIvCover, false);
             if (biliView.getData().getRelates().get(position).getOwner() != null) {
                 ((RelateVideoCardHolder) holder).mtvUp.setText(biliView.getData().getRelates().get(position).getOwner().getName());
             }
