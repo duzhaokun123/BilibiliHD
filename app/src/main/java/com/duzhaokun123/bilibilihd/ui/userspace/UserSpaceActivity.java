@@ -127,7 +127,6 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
     class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
-
         private Fragment mHomeFragment, mTrendFragment, mSubmitFragment, mFavoriteFragment;
 
         MyFragmentPagerAdapter(@NonNull FragmentManager fm, int behavior) {

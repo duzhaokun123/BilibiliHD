@@ -381,7 +381,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 Thread {
                     notificationBuilder?.setLargeIcon(Glide.with(this).asBitmap().load(biliView?.data?.pic).submit().get())
                 }.start()
-
             }
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
