@@ -14,6 +14,7 @@ import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
 import com.hiczp.bilibili.api.main.model.Reply
+import com.hiczp.bilibili.api.main.model.SendReplyResponse
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
 class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
@@ -48,6 +49,23 @@ class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 handler?.sendEmptyMessage(WHAT_REPLY_REFRESH)
             }
         })
+        baseBind.btnSend.setOnClickListener {
+            Thread {
+                var sendReplyResponse: SendReplyResponse? = null
+                try {
+                    sendReplyResponse = PBilibiliClient.getInstance().getPMainAPI().sendReply(aid, baseBind.etText.text.toString())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
+                }
+                if (sendReplyResponse != null) {
+                    activity?.runOnUiThread {
+                        baseBind.xrv.refresh()
+                        baseBind.etText.text = null
+                    }
+                }
+            }.start()
+        }
     }
 
     override fun initData() {
