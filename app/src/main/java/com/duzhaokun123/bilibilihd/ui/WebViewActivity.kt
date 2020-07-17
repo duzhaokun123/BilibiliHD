@@ -19,6 +19,11 @@ import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 
 class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
+    companion object {
+        const val EXTRA_DESKTOP_UA = "desktop_ua"
+        const val EXTRA_INTERCEPT_ALL = "intercept_all"
+    }
+
     override fun initConfig(): Int {
         return FIX_LAYOUT
     }
@@ -35,7 +40,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.open_in_browser -> {
-                BrowserUtil.openCustomTab(this, teleportIntent?.extras?.getString("url", "")!!)
+                BrowserUtil.openCustomTab(this, baseBind.wv.url)
                 true
             }
             R.id.reload -> {
@@ -68,14 +73,15 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                if ("bilibili" == request?.url!!.scheme) {
-                    val intent = Intent()
-                    intent.data = request.url
+                return if ("bilibili" == request?.url?.scheme || teleportIntent?.extras?.getBoolean(EXTRA_INTERCEPT_ALL)!!) {
+                    val intent = Intent(this@WebViewActivity, UrlOpenActivity::class.java)
+                    intent.data = request?.url
                     startActivity(intent)
+                    true
                 } else {
-                    baseBind.wv.loadUrl(request.url.toString())
+                    false
                 }
-                return true
+
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -100,7 +106,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 setTitle(title)
             }
         }
-        if (teleportIntent?.extras?.getBoolean("desktop_ua", true)!!) {
+        if (teleportIntent?.extras?.getBoolean(EXTRA_DESKTOP_UA, true)!!) {
             baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
         }
         baseBind.wv.settings.domStorageEnabled = true

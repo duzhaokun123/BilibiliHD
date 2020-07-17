@@ -19,10 +19,12 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
+import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
@@ -66,6 +68,15 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         });
 
         setTitle(null);
+
+        if (teleportIntent != null && teleportIntent.getExtras() != null
+                && PBilibiliClient.Companion.getInstance().getLoginResponse() != null
+                && teleportIntent.getExtras().getLong("uid") == PBilibiliClient.Companion.getInstance().getLoginResponse().getUserId()) {
+            baseBind.tvFans.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this,
+                    "https://space.bilibili.com/h5/follow?type=fans&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
+            baseBind.tvWatching.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this,
+                    "https://space.bilibili.com/h5/follow?type=follow&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
+        }
     }
 
     @Override

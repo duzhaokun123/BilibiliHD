@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.duzhaokun123.bilibilihd.Application;
+import com.duzhaokun123.bilibilihd.R;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 import java.io.IOException;
@@ -100,5 +101,9 @@ public class OtherUtils {
     }
 
     public static void doNothing() {
+    }
+
+    public static boolean isNightMode() {
+        return Application.getInstance().getResources().getBoolean(R.bool.night_mode);
     }
 }

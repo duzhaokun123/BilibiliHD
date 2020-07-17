@@ -25,9 +25,14 @@ public class BrowserUtil {
     }
 
     public static void openWebViewActivity(@NonNull Context context, @NonNull String url, boolean desktopUA) {
+        openWebViewActivity(context, url, desktopUA, false);
+    }
+
+    public static void openWebViewActivity(@NonNull Context context, @NonNull String url, boolean desktopUA, boolean interceptAll) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
-        intent.putExtra("desktop_ua", desktopUA);
+        intent.putExtra(WebViewActivity.EXTRA_DESKTOP_UA, desktopUA);
+        intent.putExtra(WebViewActivity.EXTRA_INTERCEPT_ALL, interceptAll);
         context.startActivity(intent);
     }
 
