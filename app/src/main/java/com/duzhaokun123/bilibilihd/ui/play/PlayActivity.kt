@@ -48,7 +48,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     private var introFragment: IntroFragment? = null
-    private var commitFragment: CommitFragment? = null
+    private var replyFragment: ReplyFragment? = null
     private var showingFragment: Fragment? = null
     private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder = PictureInPictureParams.Builder()
     private var notificationBuilder: NotificationCompat.Builder? = null
@@ -470,10 +470,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 }
                 introFragment!!
             } else {
-                if (commitFragment == null) {
-                    commitFragment = CommitFragment(aid)
+                if (replyFragment == null) {
+                    replyFragment = ReplyFragment(aid)
                 }
-                commitFragment!!
+                replyFragment!!
             }
         }
 

@@ -10,6 +10,8 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends RecyclerView.Adapter<BaseSimpleAdapter<layout>.ViewHolder> {
+    public final String CLASS_NAME = this.getClass().getSimpleName();
+
     private Context mContext;
 
     public BaseSimpleAdapter(Context context) {

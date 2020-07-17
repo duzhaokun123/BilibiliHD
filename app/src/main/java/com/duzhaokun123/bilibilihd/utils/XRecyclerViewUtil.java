@@ -11,12 +11,9 @@ public class XRecyclerViewUtil {
         if (from > to) {
             return;
         }
-        try {
-            for (int i = from; i <= to; i++) {
-                xRecyclerView.notifyItemChanged(i);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        for (int i = from; i <= to; i++) {
+            xRecyclerView.notifyItemChanged(i);
         }
     }
 }

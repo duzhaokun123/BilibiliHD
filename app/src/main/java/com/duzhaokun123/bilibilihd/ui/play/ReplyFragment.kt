@@ -2,10 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.play
 
 import android.graphics.Rect
 import android.os.Message
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -13,12 +10,13 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseFragment
 import com.duzhaokun123.bilibilihd.databinding.FragmentCommitBinding
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
+import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
 import com.hiczp.bilibili.api.main.model.Reply
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
-class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
+class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
     companion object {
         const val WHAT_REPLY_REFRESH = 0
         const val WHAT_REPLY_REFRESH_END = 1
@@ -41,7 +39,6 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
             }
         })
         baseBind.xrv.layoutManager = LinearLayoutManager(context)
-        baseBind.xrv.adapter = Adapter()
         baseBind.xrv.setLoadingListener(object : XRecyclerView.LoadingListener {
             override fun onLoadMore() {
                 handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE)
@@ -74,6 +71,9 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 }
             }.start()
             WHAT_REPLY_REFRESH_END -> {
+                if (baseBind.xrv.adapter == null && reply != null) {
+                    baseBind.xrv.adapter = ReplyAdapter(requireContext(), reply!!)
+                }
                 baseBind.xrv.refreshComplete()
                 reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
             }
@@ -87,7 +87,10 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 }
                 if (reply != null) {
                     next = reply!!.data.cursor.next
-                    reply!!.data.replies?.let { this.reply?.data?.replies?.plus(it) }
+                    reply!!.data.replies?.let {
+//                        this.reply?.data?.replies?.plus(it) 用这个加不上去 神奇
+                        ListUtil.addAll(this.reply?.data?.replies, it)
+                    }
                     handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
                 }
             }.start()
@@ -95,31 +98,6 @@ class CommitFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 baseBind.xrv.loadMoreComplete()
                 XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
             }
-        }
-    }
-
-    inner class Adapter : RecyclerView.Adapter<Adapter.ReplyHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                ReplyHolder(LayoutInflater.from(context).inflate(R.layout.item_reply, parent, false))
-
-        override fun getItemCount(): Int {
-            return if (reply == null || reply!!.data.replies == null) {
-                0
-            } else {
-                reply!!.data.replies!!.size
-            }
-        }
-
-        override fun onBindViewHolder(holder: ReplyHolder, position: Int) {
-            reply?.data?.replies?.get(position)?.let {
-                holder.tvUsername.text = it.member.uname
-                holder.tvContext.text = it.content.message
-            }
-        }
-
-        inner class ReplyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val tvUsername: TextView = itemView.findViewById(R.id.tv_username)
-            val tvContext: TextView = itemView.findViewById(R.id.tv_content)
         }
     }
 }
