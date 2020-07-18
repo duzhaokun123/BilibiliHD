@@ -47,9 +47,6 @@ import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.danmaku.parser.IDataSource;
 import okhttp3.ResponseBody;
 
-/**
- * TODO: 实现双击暂停
- */
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
     private static final int WHAT_DANMAKU_LOAD_EXCEPTION = 0;
     private static final int WHAT_DANMAKU_LOAD_SUCCESSFUL = 1;

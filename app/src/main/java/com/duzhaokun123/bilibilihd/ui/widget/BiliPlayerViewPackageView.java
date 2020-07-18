@@ -138,6 +138,22 @@ public class BiliPlayerViewPackageView extends FrameLayout {
             });
             popupMenu.show();
         });
+        baseBind.bpv.setOnClickListener(new OnClickListener() {
+            private long lastClickTime = 0;
+
+            @Override
+            public void onClick(View v) {
+                long thisClickTime = System.currentTimeMillis();
+                if (thisClickTime - lastClickTime < 400) {
+                    if (player.isPlaying()) {
+                        pause();
+                    } else {
+                        resume();
+                    }
+                }
+                lastClickTime = thisClickTime;
+            }
+        });
     }
 
     public void release() {
