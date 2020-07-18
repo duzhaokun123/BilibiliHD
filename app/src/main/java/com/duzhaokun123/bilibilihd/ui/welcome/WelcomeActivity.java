@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.welcome;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.WelcomeAdApi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
@@ -29,12 +27,6 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
     @Override
     public int initLayout() {
         return R.layout.activity_welcome;
-    }
-
-    @Override
-    public void onRestoreInstanceStateSynchronously(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceStateSynchronously(savedInstanceState);
-        welcomeAd = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("welcomeAd"), WelcomeAd.class);
     }
 
     @Override
@@ -89,12 +81,6 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(welcomeAd)).commitAllowingStateLoss();
                 break;
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("welcomeAd", GsonUtil.getGsonInstance().toJson(welcomeAd));
     }
 
     void startMainActivity() {

@@ -62,14 +62,6 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        biliView = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("biliView"), com.hiczp.bilibili.api.app.model.View.class);
-        videoPlayUrl = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("videoplayUrl"), VideoPlayUrl.class);
-        aid = savedInstanceState.getLong("aid");
-        page = savedInstanceState.getInt("page");
-    }
-
-    @Override
     protected void findViews(View parentView) {
         mTvUpName = parentView.findViewById(R.id.tv_name);
         mTvUpFans = parentView.findViewById(R.id.tv_content);
@@ -155,15 +147,6 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(true);
                 break;
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("biliView", GsonUtil.getGsonInstance().toJson(biliView));
-        outState.putString("videoPlayUrl", GsonUtil.getGsonInstance().toJson(videoPlayUrl));
-        outState.putLong("aid", aid);
-        outState.putInt("page", page);
     }
 
     private void sendBack() {

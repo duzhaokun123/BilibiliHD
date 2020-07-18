@@ -21,9 +21,7 @@ import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewWithVBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-
-import java.util.Objects;
+import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 
 public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBinding> {
 
@@ -49,7 +47,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        space = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("space"), Space.class);
+        space = (Space) ObjectCache.get(savedInstanceState.getLong("space"));
     }
 
     @Override
@@ -75,7 +73,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
                 ((FavoriteCardViewHolder)holder).mTvName.setText(space.getData().getFavourite().getItem().get(position).getName());
                 ((FavoriteCardViewHolder)holder).mTvCount.setText(space.getData().getFavourite().getItem().get(position).getCurCount() + getString(R.string.content));
                 if (space.getData().getFavourite().getItem().get(position).getCover() != null) {
-                    Glide.with(Objects.requireNonNull(getContext())).load(space.getData().getFavourite().getItem().get(position).getCover().get(0).getPic()).into(((FavoriteCardViewHolder) holder).mIv);
+                    Glide.with(requireContext()).load(space.getData().getFavourite().getItem().get(position).getCover().get(0).getPic()).into(((FavoriteCardViewHolder) holder).mIv);
 
                 }
                 ((FavoriteCardViewHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +132,6 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("space", GsonUtil.getGsonInstance().toJson(space));
+        outState.putLong("space", ObjectCache.put(space));
     }
 }

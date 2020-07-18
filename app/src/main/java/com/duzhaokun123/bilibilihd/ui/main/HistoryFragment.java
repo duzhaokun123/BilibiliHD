@@ -29,7 +29,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
+import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -41,7 +41,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        mHistory = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("mHistory"), History.class);
+        mHistory = (History) ObjectCache.get(savedInstanceState.getLong("mHistory"));
     }
 
     @Override
@@ -226,7 +226,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("mHistory", GsonUtil.getGsonInstance().toJson(mHistory));
+        outState.putLong("mHistory", ObjectCache.put(mHistory));
     }
 
     class Refresh extends Thread {

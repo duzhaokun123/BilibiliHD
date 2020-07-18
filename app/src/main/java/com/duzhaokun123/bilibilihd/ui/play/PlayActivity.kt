@@ -354,10 +354,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun onBackPressed() {
-        if (isFullscreen) {
-            baseBind.bpvpv.clickIbFullscreen()
-        } else {
-            super.onBackPressed()
+        when {
+            showingFragment != null -> baseBind.dl.closeDrawer(GravityCompat.END)
+            isFullscreen -> baseBind.bpvpv.clickIbFullscreen()
+            else -> super.onBackPressed()
         }
     }
 
@@ -418,11 +418,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     override fun getId(index: Int) = videoPlayUrl?.data?.acceptQuality?.get(index)!!
                 }
                 val rational = biliView?.data?.pages?.get(page - 1)?.dimension?.let {
-                    Rational(it.width, it.height)
+                    if (it.rotate == 0) {
+                        Rational(it.width, it.height)
+                    } else {
+                        Rational(it.height, it.width)
+                    }
                 }
                 if (rational?.toDouble()!! > 0.418410 && rational.toDouble() < 2.390000) {
-                    pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
-                            .setAspectRatio(rational)
+                    pictureInPictureParamsBuilder.setAspectRatio(rational)
                 }
                 biliView?.data?.pages?.let {
                     if (it.size > page) {

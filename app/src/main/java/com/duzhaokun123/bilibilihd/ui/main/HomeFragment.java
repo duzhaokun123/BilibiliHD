@@ -29,14 +29,13 @@ import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
-import com.duzhaokun123.bilibilihd.utils.GsonUtil;
+import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-import java.util.ConcurrentModificationException;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,7 +46,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        homePage = GsonUtil.getGsonInstance().fromJson(savedInstanceState.getString("homePage"), HomePage.class);
+        homePage = (HomePage) ObjectCache.get(savedInstanceState.getLong("homePage"));
     }
 
     @Override
@@ -275,11 +274,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        try {
-            outState.putString("homePage", GsonUtil.getGsonInstance().toJson(homePage));
-        } catch (ConcurrentModificationException e) {
-            e.printStackTrace();
-        }
+        outState.putLong("homePage", ObjectCache.put(homePage));
     }
 
     class Refresh extends Thread {

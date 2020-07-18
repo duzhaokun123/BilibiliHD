@@ -65,8 +65,11 @@ public class UrlOpenActivity extends AppCompatActivity {
                                 try {
                                     intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path.substring(7)));
                                 } catch (Exception e) {
-                                    e.printStackTrace();
-                                    intent1.putExtra("aid", Long.parseLong(path.substring(9)));
+                                    try {
+                                        intent1.putExtra("aid", Long.parseLong(path.substring(9)));
+                                    } catch (NumberFormatException e1) {
+                                        intent1.putExtra("aid", Long.parseLong(path.substring(9, path.length() - 1)));
+                                    }
                                 }
                             }
                             break;

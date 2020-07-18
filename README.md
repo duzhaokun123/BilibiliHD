@@ -7,7 +7,7 @@
 
 下载 demo https://github.com/duzhaokun123/BilibiliHD/releases
 
-不再打包32位原生库, 有需求请自行编译
+~~不再打包32位原生库, 有需求请自行编译~~不再存在原生库
 
 建议配合[web端哔哩哔哩](https://www.bilibili.com)使用
 
@@ -91,6 +91,7 @@
 - 如果视频未正常播放, 返回***可能***会导致应用无响应
 - 有时后台播放通知不会自动清除
 - 发布评论后刷新会崩溃
+- 即使使`minSdkVersion 25`也无法在[Anbox](https://anbox.io)下运行
 - 更多 BUG 等你发现
 
 ### TODO
