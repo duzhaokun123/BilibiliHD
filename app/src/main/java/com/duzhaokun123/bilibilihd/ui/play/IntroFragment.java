@@ -24,7 +24,7 @@ import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
-import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil;
+import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
@@ -100,7 +100,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 mTvUpName.setOnClickListener(v -> mCivFace.callOnClick());
                 mTvUpFans.setText(getString(R.string.num_fans, biliView.getData().getOwnerExt().getFans()));
                 baseBind.tvDesc.setText(biliView.getData().getDesc());
-                baseBind.tvUptime.setText(SimpleDateFormatUtil.getFormat1().format(biliView.getData().getPubdate() * 1000L));
+                baseBind.tvUptime.setText(DateTimeFormatUtil.getFormat1().format(biliView.getData().getPubdate() * 1000L));
                 baseBind.tvDanmakuHas.setText(String.valueOf(biliView.getData().getStat().getDanmaku()));
                 baseBind.tvWatched.setText(String.valueOf(biliView.getData().getStat().getView()));
                 baseBind.tvTitle.setText(biliView.getData().getTitle());

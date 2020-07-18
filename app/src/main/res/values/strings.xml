@@ -120,4 +120,6 @@
     <string name="finish">finish</string>
     <string name="sync">sync</string>
     <string name="danmaku_settings">danmaku settings</string>
+    <string name="last_time_view_to_dp_s">last time view to %dP %s</string>
+    <string name="jump">jump</string>
 </resources>

@@ -10,12 +10,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.duzhaokun123.bilibilihd.R;
@@ -23,6 +26,7 @@ import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
+import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
@@ -31,6 +35,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Objects;
 
 import kotlin.Pair;
 import master.flame.danmaku.danmaku.loader.ILoader;
@@ -57,6 +62,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private ProgressBar pbExoBuffering;
     private ImageButton ibFullscreen, ibNext;
     private Button btnDanmakuSwitch, btnDanmaku, btnQuality;
+    private LinearLayout llTime;
 
     private DanmakuLoadListener danmakuLoadListener;
     private BiliPlayerViewPackageView.OnFullscreenClickListener onFullscreenClickListener;
@@ -91,6 +97,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmakuSwitch = findViewById(R.id.btn_danmaku_switch);
         btnDanmaku = findViewById(R.id.btn_danmaku);
         btnQuality = findViewById(R.id.btn_quality);
+        llTime = findViewById(R.id.ll_time);
     }
 
     @Override
@@ -141,6 +148,32 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         });
         btnDanmaku.setOnClickListener(view -> TipUtil.showTip(getContext(), "没有实现"));
         overlayBaseBind.dv.enableDanmakuDrawingCache(true);
+        llTime.setOnClickListener(v -> {
+            boolean isPlayingBefore = Objects.requireNonNull(getPlayer()).isPlaying();
+            getPlayer().setPlayWhenReady(false);
+            EditText editText = new EditText(getContext());
+            editText.setText(DateTimeFormatUtil.getStringForTime(getPlayer().getCurrentPosition()));
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.jump)
+                    .setPositiveButton(R.string.jump, (dialog, which) -> {
+                                try {
+                                    long timeMs = DateTimeFormatUtil.getTimeSForString(editText.getText().toString()) * 1000;
+                                    getPlayer().seekTo(timeMs);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    TipUtil.showToast(e.getMessage());
+                                }
+                            }
+                    )
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setOnDismissListener(dialog -> {
+                        if (isPlayingBefore) {
+                            getPlayer().setPlayWhenReady(true);
+                        }
+                    })
+                    .setView(editText)
+                    .create().show();
+        });
     }
 
     public void release() {

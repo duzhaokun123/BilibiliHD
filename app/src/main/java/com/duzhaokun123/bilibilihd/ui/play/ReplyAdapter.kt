@@ -9,11 +9,11 @@ import com.duzhaokun123.bilibilihd.databinding.ItemReplyBinding
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.GlideUtil
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil
-import com.duzhaokun123.bilibilihd.utils.SimpleDateFormatUtil
+import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil
 import com.hiczp.bilibili.api.main.model.Reply
 
 class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapter<ItemReplyBinding>(context) {
-    private val sampleDateFormat = SimpleDateFormatUtil.getFormat1()
+    private val sampleDateFormat = DateTimeFormatUtil.getFormat1()
 
     override fun getItemCount(): Int {
         return if (reply.data.replies == null) {

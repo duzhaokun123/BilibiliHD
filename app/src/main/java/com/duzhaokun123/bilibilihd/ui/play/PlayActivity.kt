@@ -381,6 +381,33 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 Thread {
                     notificationBuilder?.setLargeIcon(Glide.with(this).asBitmap().load(biliView?.data?.pic).submit().get())
                 }.start()
+                biliView?.data?.history?.let { history ->
+                    var p = 0
+                    for (page in biliView!!.data.pages) {
+                        if (page.cid == history.cid) {
+                            p = page.page
+                        }
+                    }
+                    Snackbar.make(baseBind.clRoot,
+                            getString(R.string.last_time_view_to_dp_s, p, DateTimeFormatUtil.getStringForTime(history.progress * 1000)),
+                            BaseTransientBottomBar.LENGTH_LONG)
+                            .setAction(R.string.jump) {
+                                if (page != p) {
+                                    val message = Message()
+                                    message.what = IntroFragment.WHAT_LOAD_NEW_PAGE
+                                    message.arg1 = p
+                                    introFragment?.handler?.sendMessage(message)
+                                }
+                                Thread {
+                                    Thread.sleep(1000)
+                                    runOnUiThread {
+                                        baseBind.bpvpv.setCover(null)
+                                        baseBind.bpvpv.player.seekTo(history.progress * 1000)
+                                    }
+                                }.start()
+                            }
+                            .show()
+                }
             }
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
@@ -424,7 +451,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                         Rational(it.height, it.width)
                     }
                 }
-                if (rational?.toDouble()!! > 0.418410 && rational.toDouble() < 2.390000) {
+                if (rational!!.toDouble() > 0.418410 && rational.toDouble() < 2.390000) {
                     pictureInPictureParamsBuilder.setAspectRatio(rational)
                 }
                 biliView?.data?.pages?.let {

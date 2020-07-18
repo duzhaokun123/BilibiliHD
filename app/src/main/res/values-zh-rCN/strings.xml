@@ -118,4 +118,6 @@
     <string name="finish">完成</string>
     <string name="sync">同步</string>
     <string name="danmaku_settings">弹幕设置</string>
+    <string name="last_time_view_to_dp_s">上次看到 %dP %s</string>
+    <string name="jump">跳转</string>
 </resources>

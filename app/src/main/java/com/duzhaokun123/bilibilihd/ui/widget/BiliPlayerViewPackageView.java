@@ -114,7 +114,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
             }
         });
         baseBind.ivCover.setOnClickListener(view -> {
-            baseBind.ivCover.setVisibility(GONE);
+            setCover(null);
             resume();
         });
         baseBind.bpv.setDanmakuLoadListener(e -> {
@@ -149,6 +149,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         if (url != null) {
             GlideUtil.loadUrlInto(getContext(), url, baseBind.ivCover, false);
         } else {
+            baseBind.ivCover.setVisibility(GONE);
             baseBind.ivCover.setImageDrawable(null);
         }
     }
