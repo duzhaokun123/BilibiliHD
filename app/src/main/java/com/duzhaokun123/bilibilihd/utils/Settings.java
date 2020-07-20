@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
     private static SharedPreferences sharedPreferences;
@@ -92,6 +95,10 @@ public class Settings {
         public int getDefaultQualityType() {
             return getIntByString("quality", 0);
         }
+
+        public boolean isUserSpaceUseWebView() {
+            return sharedPreferences.getBoolean("user_space_use_web_view", false);
+        }
     }
 
     public static class Download {
@@ -144,6 +151,14 @@ public class Settings {
 
         public int getMaximumVisibleSizeInScreen() {
             return getIntByString("danmaku_maximum_visible_size_in_screen", -1);
+        }
+
+        public Set<String> getBlockByPlace() {
+            return sharedPreferences.getStringSet("block_by_place", new HashSet<>());
+        }
+
+        public Set<String> getAllowDanmakuOverlapping() {
+            return sharedPreferences.getStringSet("prevent_danmaku_overlapping", new HashSet<>());
         }
     }
 

@@ -75,5 +75,19 @@
         app:key="danmaku_maximum_visible_size_in_screen"
         app:title="@string/maximum_visible_size_in_screen"
         app:useSimpleSummaryProvider="true" />
-
+    <MultiSelectListPreference
+        app:entries="@array/allow_danmaku_overlapping_entries"
+        app:entryValues="@array/allow_danmaku_overlapping_values"
+        app:iconSpaceReserved="false"
+        app:title="@string/allow_danmaku_overlapping"
+        app:key="prevent_danmaku_overlapping" />
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/block" />
+    <MultiSelectListPreference
+        app:entries="@array/block_by_place_entries"
+        app:entryValues="@array/block_by_place_values"
+        app:iconSpaceReserved="false"
+        app:key="block_by_place"
+        app:title="@string/block_by_place" />
 </PreferenceScreen>

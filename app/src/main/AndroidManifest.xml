@@ -18,9 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <service
             android:name=".services.PlayControlService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".ui.settings.DanmakuTestActivity"
@@ -32,7 +33,6 @@
             android:name=".ui.article.ArticleActivity"
             android:label=""
             android:theme="@style/AppTheme.TransparencyActionBar" />
-
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.ToolActivity" />
         <activity android:name=".ui.UrlOpenActivity">

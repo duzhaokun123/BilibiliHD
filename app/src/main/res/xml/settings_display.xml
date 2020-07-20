@@ -24,4 +24,10 @@
         app:key="column_land"
         app:title="@string/column_land"
         app:useSimpleSummaryProvider="true" />
+    
+    <CheckBoxPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="user_space_use_web_view"
+        app:title="@string/user_space_use_web_view" />
 </PreferenceScreen>

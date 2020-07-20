@@ -25,6 +25,7 @@ import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
+import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
@@ -57,6 +58,16 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
     @Override
     public void initView() {
+        if (teleportIntent == null || teleportIntent.getExtras() == null) {
+            return;
+        }
+
+        if (Settings.play.isUserSpaceUseWebView()) {
+            BrowserUtil.openWebViewActivity(this, "https://space.bilibili.com/" + teleportIntent.getExtras().getLong("uid"), true, true);
+            finish();
+            return;
+        }
+
         baseBind.tl.setupWithViewPager(baseBind.vp);
 
         baseBind.civFace.setOnClickListener(v -> {
@@ -69,8 +80,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
         setTitle(null);
 
-        if (teleportIntent != null && teleportIntent.getExtras() != null
-                && PBilibiliClient.Companion.getInstance().getLoginResponse() != null
+        if (PBilibiliClient.Companion.getInstance().getLoginResponse() != null
                 && teleportIntent.getExtras().getLong("uid") == PBilibiliClient.Companion.getInstance().getLoginResponse().getUserId()) {
             baseBind.tvFans.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this,
                     "https://space.bilibili.com/h5/follow?type=fans&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));

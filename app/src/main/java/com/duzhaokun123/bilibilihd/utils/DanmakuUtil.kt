@@ -71,14 +71,23 @@ object DanmakuUtil {
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 10 // 滚动弹幕最大显示10行
 
         val overlappingEnablePair = HashMap<Int, Boolean>()
-        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = false // 允许从右至左的弹幕重合
+        overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = true
+        overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = true
+        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = true
+        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = true
 
-        overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = true // 不允许从顶部弹幕重合
+        for (allow in Settings.danmaku.allowDanmakuOverlapping) {
+            when (allow) {
+                "top" -> overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = false
+                "bottom" -> overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = false
+                "r2l" -> overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = false
+                "l2r" -> overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = false
+            }
+        }
 
         danmakuContext
                 .setDuplicateMergingEnabled(Settings.danmaku.isDuplicateMerging)
                 .setScrollSpeedFactor(Settings.danmaku.scrollSpeedFactor)
-                //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
                 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
                 //                .setMaximumLines(maxLinesPair) //设置最大行数
                 .preventOverlapping(overlappingEnablePair)
@@ -102,6 +111,21 @@ object DanmakuUtil {
             danmakuContext.setDanmakuMargin(Settings.danmaku.danmakuMargin)
         } else {
             danmakuContext.setDanmakuMargin(Application.getInstance().resources.getInteger(R.integer.danmaku_margin))
+        }
+
+        danmakuContext.ftDanmakuVisibility = true
+        danmakuContext.fbDanmakuVisibility = true
+        danmakuContext.r2LDanmakuVisibility = true
+        danmakuContext.l2RDanmakuVisibility = true
+        danmakuContext.specialDanmakuVisibility = true
+        for (place in Settings.danmaku.blockByPlace) {
+            when (place) {
+                "top" -> danmakuContext.ftDanmakuVisibility = false
+                "bottom" -> danmakuContext.fbDanmakuVisibility = false
+                "r2l" -> danmakuContext.r2LDanmakuVisibility = false
+                "l2r" -> danmakuContext.l2RDanmakuVisibility = false
+                "special" -> danmakuContext.specialDanmakuVisibility = false
+            }
         }
     }
 

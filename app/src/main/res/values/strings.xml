@@ -122,4 +122,13 @@
     <string name="danmaku_settings">danmaku settings</string>
     <string name="last_time_view_to_dp_s">last time view to %dP %s</string>
     <string name="jump">jump</string>
+    <string name="block">block</string>
+    <string name="block_by_place">block by place</string>
+    <string name="top">top</string>
+    <string name="bottom">bottom</string>
+    <string name="r2l">right to left</string>
+    <string name="l2r">left to right</string>
+    <string name="special">special</string>
+    <string name="user_space_use_web_view">user space use WebView</string>
+    <string name="allow_danmaku_overlapping">allow danmaku overlapping</string>
 </resources>

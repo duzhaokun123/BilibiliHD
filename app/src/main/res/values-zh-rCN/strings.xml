@@ -120,4 +120,13 @@
     <string name="danmaku_settings">弹幕设置</string>
     <string name="last_time_view_to_dp_s">上次看到 %dP %s</string>
     <string name="jump">跳转</string>
+    <string name="block">屏蔽</string>
+    <string name="block_by_place">按位置屏蔽</string>
+    <string name="top">顶部</string>
+    <string name="bottom">底部</string>
+    <string name="r2l">右至左</string>
+    <string name="l2r">左至右</string>
+    <string name="special">特殊</string>
+    <string name="user_space_use_web_view">用户空间使用 WebView</string>
+    <string name="allow_danmaku_overlapping">允许弹幕重叠</string>
 </resources>
