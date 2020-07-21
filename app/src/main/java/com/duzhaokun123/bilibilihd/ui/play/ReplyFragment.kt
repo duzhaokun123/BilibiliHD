@@ -89,9 +89,7 @@ class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
                 }
             }.start()
             WHAT_REPLY_REFRESH_END -> {
-                if (baseBind.xrv.adapter == null && reply != null) {
-                    baseBind.xrv.adapter = ReplyAdapter(requireContext(), reply!!)
-                }
+                baseBind.xrv.adapter = ReplyAdapter(requireContext(), reply!!)
                 baseBind.xrv.refreshComplete()
                 reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
             }

@@ -3,22 +3,24 @@ package com.duzhaokun123.bilibilihd.ui.main;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -61,7 +63,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.main_activity, menu);
+        getMenuInflater().inflate(R.menu.main_activity, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE );
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        assert searchManager != null;
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+
         return super.onCreateOptionsMenu(menu);
     }
 

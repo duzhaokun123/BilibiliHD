@@ -74,12 +74,16 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        MenuInflater(this).inflate(R.menu.play_activity, menu)
+        menuInflater.inflate(R.menu.play_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.share -> {
+                ShareUtil.shareUrl(this, MyBilibiliClientUtil.getB23Url(aid), biliView?.data?.title)
+                true
+            }
             R.id.open_in_browser -> {
                 BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getB23Url(aid))
                 true

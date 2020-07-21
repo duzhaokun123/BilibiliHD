@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.ui.article;
 
 import android.annotation.SuppressLint;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 
@@ -14,23 +13,32 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityArticleBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
+import com.duzhaokun123.bilibilihd.utils.ShareUtil;
 
 public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.article_activity, menu);
+        getMenuInflater().inflate(R.menu.article_activity, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.open_in_browser) {
-            if (teleportIntent != null) {
-                BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
-            }
-            return true;
+        switch (item.getItemId()) {
+            case R.id.open_in_browser:
+                if (teleportIntent != null) {
+                    BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
+                }
+                return true;
+            case R.id.share:
+                if (teleportIntent != null) {
+                    ShareUtil.INSTANCE.shareText(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override

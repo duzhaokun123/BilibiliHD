@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebChromeClient
@@ -33,7 +32,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        MenuInflater(this).inflate(R.menu.web_view_activity, menu)
+        menuInflater.inflate(R.menu.web_view_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -12,10 +12,6 @@ class PAppAPI(private var appAPI: AppAPI) {
         return GlobalScope.future { appAPI.myInfo().await() }.get()
     }
 
-    fun search(keyword: String): SearchResult {
-        return GlobalScope.future { appAPI.search(keyword = keyword).await() }.get()
-    }
-
     fun search(keyword: String, from_source: String): SearchResult {
         return GlobalScope.future { appAPI.search(keyword = keyword, from_source = from_source).await() }.get()
     }

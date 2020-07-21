@@ -50,6 +50,13 @@
                 android:layout_below="@id/tv_date"
                 android:layout_alignStart="@id/tv_date"
                 android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/tv_floor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                tools:ignore="RelativeOverlap" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

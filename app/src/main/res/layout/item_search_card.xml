@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="140dp"
+                android:layout_height="80dp"
+                android:scaleType="fitCenter"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/iv_cover"
+                android:textColor="@color/ordinaryText"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@id/iv_cover" />
+
+            <TextView
+                android:id="@+id/tv_linkType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_up"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@id/iv_cover" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

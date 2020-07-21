@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share_black"
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/open_in_browser"
-        android:icon="@drawable/ic_launch"
+        android:icon="@drawable/ic_launch_black"
         android:title="@string/open_in_browser"
         app:showAsAction="ifRoom" />
 </menu>

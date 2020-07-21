@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import android.content.Intent;
 import android.os.Message;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bumptech.glide.Glide;
@@ -33,7 +32,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.user_space_activity, menu);
+        getMenuInflater().inflate(R.menu.user_space_activity, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

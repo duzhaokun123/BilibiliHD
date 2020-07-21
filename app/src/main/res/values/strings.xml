@@ -131,4 +131,6 @@
     <string name="special">special</string>
     <string name="user_space_use_web_view">user space use WebView</string>
     <string name="allow_danmaku_overlapping">allow danmaku overlapping</string>
+    <string name="d_floor">%d floor</string>
+    <string name="share">share</string>
 </resources>

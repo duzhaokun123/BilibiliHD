@@ -129,4 +129,6 @@
     <string name="special">特殊</string>
     <string name="user_space_use_web_view">用户空间使用 WebView</string>
     <string name="allow_danmaku_overlapping">允许弹幕重叠</string>
+    <string name="d_floor">%d楼</string>
+    <string name="share">分享</string>
 </resources>

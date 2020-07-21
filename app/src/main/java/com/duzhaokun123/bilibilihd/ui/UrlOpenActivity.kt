@@ -19,8 +19,8 @@ class UrlOpenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent
-        val uri = intent.data ?: return
-        val scheme = uri.scheme
+        val uri = intent.data
+        val scheme = uri!!.scheme
         val host = uri.host
         val path = uri.path
 
@@ -77,23 +77,20 @@ class UrlOpenActivity : AppCompatActivity() {
                     else -> throw RuntimeException("shouldn't be here")
                 }
             } else {
-                if ("video" == host) {
-                    intent1 = Intent(this, PlayActivity::class.java)
-                    if (path != null) {
-                        intent1.putExtra("aid", path.substring(1).toLong())
+                when (host) {
+                    "video" -> {
+                        intent1 = Intent(this, PlayActivity::class.java)
+                        intent1.putExtra("aid", path!!.substring(1).toLong())
                     }
-                } else if ("article" == host) {
-                    intent1 = Intent(this, ArticleActivity::class.java)
-                    if (path != null) {
-                        intent1.putExtra("id", path.substring(1).toLong())
+                    "article" -> {
+                        intent1 = Intent(this, ArticleActivity::class.java)
+                        intent1.putExtra("id", path!!.substring(1).toLong())
+                        }
+                    "space", "author" -> {
+                        intent1 = Intent(this, UserSpaceActivity::class.java)
+                        intent1.putExtra("uid", path!!.substring(1).toLong())
                     }
-                } else if ("space" == host) {
-                    intent1 = Intent(this, UserSpaceActivity::class.java)
-                    if (path != null) {
-                        intent1.putExtra("uid", path.substring(1).toLong())
-                    }
-                } else {
-                    TipUtil.showToast("可能不支持 $uri")
+                    else -> TipUtil.showToast("不支持 $uri")
                 }
             }
             if (intent1 != null) {

@@ -40,6 +40,7 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
             baseBind.tvUsername.text = it.member.uname
             baseBind.tvDate.text = sampleDateFormat.format(it.ctime.toLong() * 1000)
             baseBind.tvContent.text = it.content.message
+            baseBind.tvFloor.text = context.getString(R.string.d_floor, it.floor)
             GlideUtil.loadUrlInto(context, it.member.avatar, baseBind.civFace, false)
             ImageViewUtil.setLevelDrawable(baseBind.ivLevel, it.member.levelInfo.currentLevel)
         }

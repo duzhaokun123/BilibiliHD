@@ -81,7 +81,7 @@
             android:name=".ui.userspace.UserSpaceActivity"
             android:theme="@style/AppTheme.TransparencyActionBar" />
         <activity
-            android:name=".ui.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:label="@string/search"
             android:launchMode="singleTop">
             <intent-filter>
@@ -102,7 +102,7 @@
         <activity android:name=".ui.main.MainActivity">
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.SearchActivity" />
+                android:value=".ui.search.SearchActivity" />
         </activity>
         <activity
             android:name=".ui.welcome.WelcomeActivity"
