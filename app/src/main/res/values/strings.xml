@@ -133,4 +133,5 @@
     <string name="allow_danmaku_overlapping">allow danmaku overlapping</string>
     <string name="d_floor">%d floor</string>
     <string name="share">share</string>
+    <string name="connection_to_s">connection to: %s</string>
 </resources>

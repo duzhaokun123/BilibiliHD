@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             case 0:
                 Glide.with(MainActivity.this).load(myInfo.getData().getFace()).into(mCivFace);
                 mTvUsername.setText(myInfo.getData().getName());
-                ImageViewUtil.setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
+                ImageViewUtil.INSTANCE.setLevelDrawable(mIvLevel, myInfo.getData().getLevel());
 //                    mTvBBi.setText(getString(R.string.b_bi) + ": " + myInfo.getData().get);
                 mTvBBi.setText(getString(R.string.b_bi) + ": --");
                 mTvCoins.setText(getString(R.string.coins) + ": " + myInfo.getData().getCoins());

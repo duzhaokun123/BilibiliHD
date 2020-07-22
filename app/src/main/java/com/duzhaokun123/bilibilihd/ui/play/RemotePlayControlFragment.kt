@@ -8,7 +8,7 @@ import com.duzhaokun123.bilibilihd.bases.BaseFragment
 import com.duzhaokun123.bilibilihd.databinding.FragmentRemotePlayControlBinding
 import com.google.android.exoplayer2.Player
 
-class RemotePlayControlFragment(private val player: Player, private val danmakuSwitch: (v: View) -> Unit) : BaseFragment<FragmentRemotePlayControlBinding>() {
+class RemotePlayControlFragment(private val player: Player, private val displayName: String, private val onDanmakuSwitchClick: (v: View) -> Unit) : BaseFragment<FragmentRemotePlayControlBinding>() {
     companion object {
         const val WHAT_REFRESH_STATUS = 0
     }
@@ -22,6 +22,7 @@ class RemotePlayControlFragment(private val player: Player, private val danmakuS
     override fun initLayout() = R.layout.fragment_remote_play_control
 
     override fun initView() {
+        baseBind.tvDisplayName.text = context?.getString(R.string.connection_to_s, displayName)
         baseBind.sbProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -40,7 +41,7 @@ class RemotePlayControlFragment(private val player: Player, private val danmakuS
         })
         baseBind.ibResume.setOnClickListener { player.playWhenReady = true }
         baseBind.ibPause.setOnClickListener { player.playWhenReady = false }
-        baseBind.btnDanmakuSwitch.setOnClickListener(danmakuSwitch)
+        baseBind.btnDanmakuSwitch.setOnClickListener(onDanmakuSwitchClick)
     }
 
     override fun initData() {

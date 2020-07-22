@@ -133,8 +133,8 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
                 startActivity(intent);
             });
         }
-        ImageViewUtil.setSixDrawable(baseBind.ivSex, mSpace.getData().getCard().getSex());
-        ImageViewUtil.setLevelDrawable(baseBind.ivLevel, mSpace.getData().getCard().getLevelInfo().getCurrentLevel());
+        ImageViewUtil.INSTANCE.setSixDrawable(baseBind.ivSex, mSpace.getData().getCard().getSex());
+        ImageViewUtil.INSTANCE.setLevelDrawable(baseBind.ivLevel, mSpace.getData().getCard().getLevelInfo().getCurrentLevel());
         baseBind.tvName.setText(mSpace.getData().getCard().getName());
         baseBind.tvFans.setText(String.valueOf(mSpace.getData().getCard().getFans()));
         baseBind.tvSign.setText(mSpace.getData().getCard().getSign());

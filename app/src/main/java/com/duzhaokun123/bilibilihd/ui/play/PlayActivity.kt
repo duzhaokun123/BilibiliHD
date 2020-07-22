@@ -352,9 +352,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         if (presentation != null) {
             presentation!!.dismiss()
             presentation!!.release()
-            if (baseBind.bpvpv.parent == null) {
-                baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
-            }
             presentation = null
             remotePlayControlFragment?.let {
                 supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
@@ -472,6 +469,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
                 page = msg.data.getInt("page")
                 cid = biliView?.data?.pages?.get(page - 1)?.cid?.toLong()!!
+                baseBind.bpvpv.biliPlayerView.setAidCid(aid, cid)
                 baseBind.bpvpv.loadDanmaku(aid, cid)
                 baseBind.bpvpv.videoUrlAdapter = object : BiliPlayerViewPackageView.VideoUrlAdapter {
                     override fun getUrl(id: Int): Pair<String, String> {
@@ -557,9 +555,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         if (presentation != null && presentation!!.display != selectedDisplay) {
             presentation!!.dismiss()
             presentation!!.release()
-            if (baseBind.bpvpv.parent == null) {
-                baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
-            }
             presentation = null
             remotePlayControlFragment?.let {
                 supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
@@ -568,8 +563,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         }
 
         if (presentation == null && selectedDisplay != null) {
-            presentation = PlayPresentation(this, selectedDisplay, baseBind.bpvpv.biliPlayerView)
-            remotePlayControlFragment = RemotePlayControlFragment(baseBind.bpvpv.player) { baseBind.bpvpv.biliPlayerView.danmakuSwitch() }
+            presentation = PlayPresentation(this, selectedDisplay, baseBind.bpvpv)
+            remotePlayControlFragment = RemotePlayControlFragment(baseBind.bpvpv.player, selectedRoute.name) { baseBind.bpvpv.biliPlayerView.danmakuSwitch() }
             supportFragmentManager.beginTransaction().add(R.id.bpvpv, remotePlayControlFragment as RemotePlayControlFragment).commitAllowingStateLoss()
             presentation!!.setOnDismissListener {
                 presentation?.release()
@@ -583,9 +578,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 presentation!!.show()
             } catch (e: WindowManager.InvalidDisplayException) {
                 presentation!!.release()
-                if (baseBind.bpvpv.parent == null) {
-                    baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
-                }
                 presentation = null
                 remotePlayControlFragment?.let {
                     supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()

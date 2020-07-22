@@ -29,7 +29,7 @@ public class GlideUtil {
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 if (autoAspectRation) {
-                    ImageViewUtil.autoAspectRation(imageView, resource);
+                    ImageViewUtil.INSTANCE.autoAspectRation(imageView, resource);
                 }
                 return false;
             }

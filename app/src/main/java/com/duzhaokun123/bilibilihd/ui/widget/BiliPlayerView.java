@@ -21,16 +21,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.ShotAPi;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.model.VideoShot;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
+import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -50,6 +56,7 @@ import okhttp3.ResponseBody;
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
     private static final int WHAT_DANMAKU_LOAD_EXCEPTION = 0;
     private static final int WHAT_DANMAKU_LOAD_SUCCESSFUL = 1;
+    private static final int WHAT_LOAD_SHOT = 2;
 
     private final String TAG = this.getClass().getSimpleName();
     private final int defaultIbNextWidth = OtherUtils.dp2px(50);
@@ -60,6 +67,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private ImageButton ibFullscreen, ibNext;
     private Button btnDanmakuSwitch, btnDanmaku, btnQuality;
     private LinearLayout llTime;
+    private TimeBar exoTimeBar;
 
     private DanmakuLoadListener danmakuLoadListener;
     private BiliPlayerViewPackageView.OnFullscreenClickListener onFullscreenClickListener;
@@ -67,6 +75,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private Handler handler;
     private DanmakuContext danmakuContext;
 
+    private VideoShot videoShot;
+
+    private long aid;
+    private long cid;
     private boolean isFullscreen = false;
 
     public BiliPlayerView(Context context) {
@@ -95,6 +107,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmaku = findViewById(R.id.btn_danmaku);
         btnQuality = findViewById(R.id.btn_quality);
         llTime = findViewById(R.id.ll_time);
+        exoTimeBar = findViewById(R.id.exo_progress);
     }
 
     @Override
@@ -170,6 +183,37 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                     })
                     .setView(editText)
                     .create().show();
+        });
+        exoTimeBar.addListener(new TimeBar.OnScrubListener() {
+            @Override
+            public void onScrubStart(@NonNull TimeBar timeBar, long position) {
+                overlayBaseBind.ivPreview.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void onScrubMove(@NonNull TimeBar timeBar, long position) {
+                int timeS = (int) (position / 1000);
+                int index = -1;
+                int gap = -1;
+                for (int i = 0; i < videoShot.getData().getIndex().size(); i++) {
+                    int newGap = Math.abs(videoShot.getData().getIndex().get(i) - timeS);
+                    if (gap == -1 || gap >= newGap) {
+                        gap = newGap;
+                    } else if (i != 1) {
+                        index = i - 1;
+                        break;
+                    }
+                    if (i == videoShot.getData().getIndex().size()) {
+                        index = i;
+                    }
+                }
+                ImageViewUtil.INSTANCE.setPreview(overlayBaseBind.ivPreview, videoShot, index);
+            }
+
+            @Override
+            public void onScrubStop(@NonNull TimeBar timeBar, long position, boolean canceled) {
+                overlayBaseBind.ivPreview.setVisibility(GONE);
+            }
         });
     }
 
@@ -256,6 +300,22 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 }
                 pbExoBuffering.setVisibility(INVISIBLE);
                 break;
+            case WHAT_LOAD_SHOT:
+                new Thread(() -> {
+                    ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
+                        @Override
+                        public void onException(Exception e) {
+                            e.printStackTrace();
+                            Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+                        }
+
+                        @Override
+                        public void onSuccess(VideoShot videoShot) {
+                            BiliPlayerView.this.videoShot = videoShot;
+                        }
+                    });
+                }).start();
+                break;
         }
     }
 
@@ -309,6 +369,12 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     public Button getBtnQuality() {
         return btnQuality;
+    }
+
+    public void setAidCid(long aid, long cid) {
+        this.aid = aid;
+        this.cid = cid;
+        handler.sendEmptyMessage(WHAT_LOAD_SHOT);
     }
 
     public void clickIbFullscreen() {

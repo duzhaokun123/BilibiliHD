@@ -7,21 +7,28 @@ import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerView
+import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 
-class PlayPresentation(context: Context, display: Display, private val biliPlayerView: BiliPlayerView) : Presentation(context, display) {
+class PlayPresentation(context: Context, display: Display, biliPlayerViewPackageView: BiliPlayerViewPackageView) : Presentation(context, display) {
 
     private var frameLayout: FrameLayout? = null
+    private var released = false
+    private val biliPlayerView = biliPlayerViewPackageView.biliPlayerView
+    private val oldParent = biliPlayerView.parent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.presentation_play)
         frameLayout = findViewById(R.id.fl)
-        biliPlayerView.parent?.let { (it as ViewGroup).removeView(biliPlayerView) }
+        (oldParent as ViewGroup).removeView(biliPlayerView)
         frameLayout!!.addView(biliPlayerView)
     }
 
     fun release() {
-        biliPlayerView.parent?.let { (it as ViewGroup).removeView(biliPlayerView) }
+        if (released.not()) {
+            released = true
+            biliPlayerView.parent?.let { (it as ViewGroup).removeView(biliPlayerView) }
+            (oldParent as ViewGroup).addView(biliPlayerView)
+        }
     }
 }
