@@ -145,7 +145,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
             public void onClick(View v) {
                 long thisClickTime = System.currentTimeMillis();
                 if (thisClickTime - lastClickTime < 400) {
-                    if (player.isPlaying()) {
+                    if (player.getPlayWhenReady()) {
                         pause();
                     } else {
                         resume();
@@ -260,7 +260,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
     }
 
     public boolean isPlaying() {
-        return player.isPlaying();
+        return player.getPlayWhenReady();
     }
 
     public void clickIbFullscreen() {

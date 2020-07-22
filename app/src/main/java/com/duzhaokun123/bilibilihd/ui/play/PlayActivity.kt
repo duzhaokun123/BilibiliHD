@@ -14,10 +14,15 @@ import androidx.core.animation.doOnEnd
 import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.mediarouter.app.MediaRouteActionProvider
+import androidx.mediarouter.media.MediaControlIntent
+import androidx.mediarouter.media.MediaRouteSelector
+import androidx.mediarouter.media.MediaRouter
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
@@ -52,20 +57,38 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var showingFragment: Fragment? = null
     private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder = PictureInPictureParams.Builder()
     private var notificationBuilder: NotificationCompat.Builder? = null
+    private var mediaRouteSelector: MediaRouteSelector? = null
+    private var mediaRouter: MediaRouter? = null
+    private var presentation: PlayPresentation? = null
+    private var remotePlayControlFragment: Fragment? = null
 
     private var videoPlayUrl: VideoPlayUrl? = null
     private var biliView: BiliView? = null
     private var aid = 0L
     private var cid = 0L
     private var page = 0
+
     private var playId = 0L
     private var firstPlay = true
     private val notificationId = NotificationUtil.getNewId()
     private val bpvpvDefaultHeight = OtherUtils.dp2px(300f)
-
     private var isFullscreen = false
     private var isPlayingBeforeActivityPause = false
     private var allowFullscreenAnimation = true
+
+    private val mediaRouteCallback = object : MediaRouter.Callback() {
+        override fun onRouteSelected(router: MediaRouter?, route: MediaRouter.RouteInfo?) {
+            updatePresentation()
+        }
+
+        override fun onRouteUnselected(router: MediaRouter?, route: MediaRouter.RouteInfo?, reason: Int) {
+            updatePresentation()
+        }
+
+        override fun onRoutePresentationDisplayChanged(router: MediaRouter?, route: MediaRouter.RouteInfo?) {
+            updatePresentation()
+        }
+    }
 
     override fun initConfig() = NEED_HANDLER
 
@@ -75,6 +98,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.play_activity, menu)
+
+        val mediaRouteItem = menu?.findItem(R.id.media_route)
+        val mediaRouteActionProvider = MenuItemCompat.getActionProvider(mediaRouteItem) as MediaRouteActionProvider
+        mediaRouteSelector?.also(mediaRouteActionProvider::setRouteSelector)
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -155,7 +183,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             val newHeight: Int
             if (this.isFullscreen) {
                 newHeight = baseBind.clRoot.height
-                supportActionBar?.hide()
+                if (presentation == null) {
+                    supportActionBar?.hide()
+                }
                 window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -201,7 +231,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                             or View.SYSTEM_UI_FLAG_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
                 }
-                supportActionBar?.hide()
+                if (presentation == null) {
+                    supportActionBar?.hide()
+                }
             } else {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LOW_PROFILE.inv()
                 if (isFullscreen) {
@@ -249,7 +281,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 }
                 else -> OtherUtils.doNothing() // TODO: 20-7-16
             }
-            // TODO: 20-7-12
         }
         baseBind.bpvpv.setOnPlayerErrorListener { error ->
             error.printStackTrace()
@@ -272,6 +303,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
         })
+
+        mediaRouteSelector = MediaRouteSelector.Builder()
+                .addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
+                .build()
+        mediaRouter = MediaRouter.getInstance(this)
     }
 
     override fun initData() {
@@ -313,6 +349,18 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 NotificationUtil.setNotificationCleanable(notificationId, false)
             }
         }
+        if (presentation != null) {
+            presentation!!.dismiss()
+            presentation!!.release()
+            if (baseBind.bpvpv.parent == null) {
+                baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
+            }
+            presentation = null
+            remotePlayControlFragment?.let {
+                supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
+                remotePlayControlFragment = null
+            }
+        }
     }
 
     override fun onStart() {
@@ -335,6 +383,13 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     or View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
+        mediaRouter?.addCallback(mediaRouteSelector, mediaRouteCallback)
+        updatePresentation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaRouter?.removeCallback(mediaRouteCallback)
     }
 
     override fun onDestroy() {
@@ -493,6 +548,50 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
             WHAT_PAUSE -> baseBind.bpvpv.pause()
             WHAT_RESUME -> baseBind.bpvpv.resume()
+        }
+    }
+
+    fun updatePresentation() {
+        val selectedRoute: MediaRouter.RouteInfo = mediaRouter!!.selectedRoute
+        val selectedDisplay = selectedRoute.presentationDisplay
+        if (presentation != null && presentation!!.display != selectedDisplay) {
+            presentation!!.dismiss()
+            presentation!!.release()
+            if (baseBind.bpvpv.parent == null) {
+                baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
+            }
+            presentation = null
+            remotePlayControlFragment?.let {
+                supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
+                remotePlayControlFragment = null
+            }
+        }
+
+        if (presentation == null && selectedDisplay != null) {
+            presentation = PlayPresentation(this, selectedDisplay, baseBind.bpvpv.biliPlayerView)
+            remotePlayControlFragment = RemotePlayControlFragment(baseBind.bpvpv.player) { baseBind.bpvpv.biliPlayerView.danmakuSwitch() }
+            supportFragmentManager.beginTransaction().add(R.id.bpvpv, remotePlayControlFragment as RemotePlayControlFragment).commitAllowingStateLoss()
+            presentation!!.setOnDismissListener {
+                presentation?.release()
+                presentation = null
+                remotePlayControlFragment?.let {
+                    supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
+                    remotePlayControlFragment = null
+                }
+            }
+            try {
+                presentation!!.show()
+            } catch (e: WindowManager.InvalidDisplayException) {
+                presentation!!.release()
+                if (baseBind.bpvpv.parent == null) {
+                    baseBind.bpvpv.addView(baseBind.bpvpv.biliPlayerView)
+                }
+                presentation = null
+                remotePlayControlFragment?.let {
+                    supportFragmentManager.beginTransaction().remove(it as RemotePlayControlFragment).commitAllowingStateLoss()
+                    remotePlayControlFragment = null
+                }
+            }
         }
     }
 

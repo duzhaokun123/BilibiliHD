@@ -146,7 +146,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmaku.setOnClickListener(view -> TipUtil.showTip(getContext(), "没有实现"));
         overlayBaseBind.dv.enableDanmakuDrawingCache(true);
         llTime.setOnClickListener(v -> {
-            boolean isPlayingBefore = Objects.requireNonNull(getPlayer()).isPlaying();
+            boolean isPlayingBefore = Objects.requireNonNull(getPlayer()).getPlayWhenReady();
             getPlayer().setPlayWhenReady(false);
             EditText editText = new EditText(getContext());
             editText.setText(DateTimeFormatUtil.getStringForTime(getPlayer().getCurrentPosition()));
@@ -230,6 +230,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         overlayBaseBind.dv.seekTo(ms);
     }
 
+    public void danmakuSwitch() {
+        btnDanmakuSwitch.callOnClick();
+    }
+
     @Override
     public void handlerCallback(@NonNull Message msg) {
         switch (msg.what) {
@@ -246,7 +250,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 }
                 if (getPlayer() != null) {
                     overlayBaseBind.dv.seekTo(getPlayer().getContentPosition());
-                    if (!getPlayer().isPlaying()) {
+                    if (!getPlayer().getPlayWhenReady()) {
                         overlayBaseBind.dv.pause();
                     }
                 }
