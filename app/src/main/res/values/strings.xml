@@ -52,7 +52,6 @@
     <string name="using_gpl_3.0">using GPL-3.0</string>
     <string name="project_home_url" translatable="false">https://github.com/duzhaokun123/BilibiliHD</string>
     <string name="logged_out">logged out</string>
-    <string name="bilibili_api_client_version">bilibili-api client version</string>
     <string name="start">start</string>
     <string name="stop">stop</string>
     <string name="glide_cache">Glide cache first</string>

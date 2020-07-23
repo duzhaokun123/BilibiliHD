@@ -25,33 +25,23 @@ import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.ShotAPi;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.model.VideoShot;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
-import com.duzhaokun123.bilibilihd.utils.BiliDanmakuParser;
+import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
+import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.util.Map;
 import java.util.Objects;
 
-import kotlin.Pair;
-import master.flame.danmaku.danmaku.loader.ILoader;
-import master.flame.danmaku.danmaku.loader.IllegalDataException;
-import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
-import master.flame.danmaku.danmaku.model.android.Danmakus;
-import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
-import master.flame.danmaku.danmaku.parser.IDataSource;
-import okhttp3.ResponseBody;
 
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
     private static final int WHAT_DANMAKU_LOAD_EXCEPTION = 0;
@@ -73,7 +63,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private BiliPlayerViewPackageView.OnFullscreenClickListener onFullscreenClickListener;
 
     private Handler handler;
-    private DanmakuContext danmakuContext;
 
     private VideoShot videoShot;
 
@@ -98,7 +87,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         overlay = getOverlayFrameLayout();
         overlayBaseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_player_overlay, overlay, true);
         handler = new Handler(this);
-        danmakuContext = DanmakuUtil.INSTANCE.getDanmakuContext();
 
         pbExoBuffering = findViewById(R.id.exo_buffering);
         ibFullscreen = findViewById(R.id.ib_fullscreen);
@@ -226,15 +214,17 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         this.danmakuLoadListener = danmakuLoadListener;
     }
 
-    public void loadDanmaku(long aid, long cid) {
+    public void loadDanmaku(long aid, long cid, int durationS) {
         pbExoBuffering.setVisibility(VISIBLE);
         overlayBaseBind.dv.release();
         new Thread() {
             @Override
             public void run() {
-                ResponseBody responseBody = null;
+                BiliDanmaku.DmSegMobileReply[] dmSegMobileReplies = new BiliDanmaku.DmSegMobileReply[durationS / 360 + 1];
                 try {
-                    responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, cid);
+                    for (int i = 0; i < dmSegMobileReplies.length; i++) {
+                        dmSegMobileReplies[i] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, i + 1);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Bundle bundle = new Bundle();
@@ -244,16 +234,13 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                     message.setData(bundle);
                     handler.sendMessage(message);
                 }
-                if (responseBody != null) {
-                    Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
-                    overlayBaseBind.dv.prepare(createParser(pair.getSecond()), danmakuContext);
-                    try {
-                        sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
+                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
             }
         }.start();
     }
@@ -301,53 +288,20 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 pbExoBuffering.setVisibility(INVISIBLE);
                 break;
             case WHAT_LOAD_SHOT:
-                new Thread(() -> {
-                    ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
-                        @Override
-                        public void onException(Exception e) {
-                            e.printStackTrace();
-                            Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-                        }
+                new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
+                    @Override
+                    public void onException(@NonNull Exception e) {
+                        e.printStackTrace();
+                        Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+                    }
 
-                        @Override
-                        public void onSuccess(VideoShot videoShot) {
-                            BiliPlayerView.this.videoShot = videoShot;
-                        }
-                    });
-                }).start();
+                    @Override
+                    public void onSuccess(@NonNull VideoShot videoShot) {
+                        BiliPlayerView.this.videoShot = videoShot;
+                    }
+                })).start();
                 break;
         }
-    }
-
-    public static BaseDanmakuParser createParser(InputStream stream) {
-
-        if (stream == null) {
-            return new BaseDanmakuParser() {
-
-                @Override
-                protected Danmakus parse() {
-                    return new Danmakus();
-                }
-            };
-        }
-
-        ILoader loader = DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI);
-
-        try {
-            if (loader != null) {
-                loader.load(stream);
-            }
-        } catch (IllegalDataException e) {
-            e.printStackTrace();
-        }
-        BaseDanmakuParser parser = new BiliDanmakuParser();
-        IDataSource<?> dataSource = null;
-        if (loader != null) {
-            dataSource = loader.getDataSource();
-        }
-        parser.load(dataSource);
-        return parser;
-
     }
 
     public BiliPlayerViewPackageView.OnFullscreenClickListener getOnFullscreenClickListener() {

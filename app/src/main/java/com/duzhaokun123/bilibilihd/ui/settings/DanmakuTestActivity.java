@@ -5,26 +5,16 @@ import android.view.View;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerView;
+import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
+import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
-import java.io.BufferedInputStream;
-import java.util.Map;
-
-import kotlin.Pair;
-import master.flame.danmaku.danmaku.model.android.DanmakuContext;
-import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
-import okhttp3.ResponseBody;
-
 public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding> {
-    private DanmakuContext danmakuContext;
-    private BaseDanmakuParser mParser;
-
-    private long aid = 61733031;
-    private long cid = 107356773;
+    private static long aid = 61733031;
+    private static long cid = 107356773;
 
     @Override
     protected int initConfig() {
@@ -49,7 +39,6 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 .add(R.id.fl_danmaku_settings, new SettingsDanmakuFragment())
                 .commitAllowingStateLoss();
 
-        danmakuContext = DanmakuUtil.INSTANCE.getDanmakuContext();
         baseBind.dv.enableDanmakuDrawingCache(true);
         baseBind.dv.showFPS(true);
     }
@@ -59,20 +48,16 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
         new Thread() {
             @Override
             public void run() {
-                ResponseBody responseBody = null;
+                BiliDanmaku.DmSegMobileReply[] dmSegMobileReply = new BiliDanmaku.DmSegMobileReply[1];
                 try {
-                    responseBody = PBilibiliClient.Companion.getInstance().getPDanmakuAPI().list(aid, cid);
+                    dmSegMobileReply[0] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, 1);
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
                 }
-                if (responseBody != null) {
-                    Pair<Map<Long, Integer>, BufferedInputStream> pair = DanmakuUtil.INSTANCE.toInputStream(responseBody.byteStream());
-                    mParser = BiliPlayerView.createParser(pair.getSecond());
-                    runOnUiThread(() -> {
-                        baseBind.dv.prepare(mParser, danmakuContext);
-                        TipUtil.showToast("加载成功");
-                    });
+                if (dmSegMobileReply[0] != null) {
+                    baseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReply), DanmakuUtil.INSTANCE.getDanmakuContext());
+                    runOnUiThread(() -> TipUtil.showToast("加载成功"));
                 }
                 try {
                     sleep(100);

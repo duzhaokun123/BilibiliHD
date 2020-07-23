@@ -204,8 +204,8 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         return baseBind.bpv;
     }
 
-    public void loadDanmaku(long aid, long cid) {
-        baseBind.bpv.loadDanmaku(aid, cid);
+    public void loadDanmaku(long aid, long cid, int durationS) {
+        baseBind.bpv.loadDanmaku(aid, cid, durationS);
     }
 
     public void setOnPlayerErrorListener(OnPlayerErrorListener onPlayerErrorListener) {

@@ -54,7 +54,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
                                     e.printStackTrace()
                                 }
 
-                                override fun onSuccess(t: Base?) {
+                                override fun onSuccess(t: Base) {
 
                                 }
                             })

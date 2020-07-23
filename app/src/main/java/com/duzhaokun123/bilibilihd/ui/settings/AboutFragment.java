@@ -6,11 +6,8 @@ import android.content.Intent;
 import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentAboutBinding;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
-
-import java.util.Objects;
 
 public class AboutFragment extends BaseFragment<FragmentAboutBinding> {
 
@@ -29,12 +26,11 @@ public class AboutFragment extends BaseFragment<FragmentAboutBinding> {
     protected void initView() {
         baseBind.version.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
         baseBind.buildType.setText(getString(R.string.build_type) + " " + BuildConfig.BUILD_TYPE);
-        baseBind.bilibiliApiClientVersion.setText(getString(R.string.bilibili_api_client_version) + " " + PBilibiliClient.Companion.getInstance().getBilibiliClient().getBillingClientProperties().getVersion());
         baseBind.rlLicense.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LicenseActivity.class);
             startActivity(intent);
         });
-        baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openCustomTab(Objects.requireNonNull(getContext()), getString(R.string.project_home_url)));
+        baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openCustomTab(requireContext(), getString(R.string.project_home_url)));
     }
 
     @Override

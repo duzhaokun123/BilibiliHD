@@ -470,7 +470,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 page = msg.data.getInt("page")
                 cid = biliView?.data?.pages?.get(page - 1)?.cid?.toLong()!!
                 baseBind.bpvpv.biliPlayerView.setAidCid(aid, cid)
-                baseBind.bpvpv.loadDanmaku(aid, cid)
+                baseBind.bpvpv.loadDanmaku(aid, cid, biliView!!.data.pages[page - 1].duration)
                 baseBind.bpvpv.videoUrlAdapter = object : BiliPlayerViewPackageView.VideoUrlAdapter {
                     override fun getUrl(id: Int): Pair<String, String> {
                         var videoUrl: String? = null
@@ -534,7 +534,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                             runOnUiThread { TipUtil.showToast(e.message) }
                         }
 
-                        override fun onSuccess(t: Base?) {
+                        override fun onSuccess(t: Base) {
 
                         }
                     })

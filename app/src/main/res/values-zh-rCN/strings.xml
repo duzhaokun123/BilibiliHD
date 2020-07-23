@@ -50,7 +50,6 @@
     <string name="project_home">项目主页</string>
     <string name="using_gpl_3.0">在 GPL-3.0 协议下发布</string>
     <string name="logged_out">已登出</string>
-    <string name="bilibili_api_client_version">bilbili-api 客户端版本</string>
     <string name="start">开始</string>
     <string name="stop">停止</string>
     <string name="glide_cache">Glide 缓存优先</string>

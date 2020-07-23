@@ -58,7 +58,7 @@ class GeetestDialog(context: Context, private val callBackHandler: Handler?) : B
                         Application.runOnUiThread { TipUtil.showToast(e.message) }
                     }
 
-                    override fun onSuccess(t: Combine?) {
+                    override fun onSuccess(t: Combine) {
                         this@GeetestDialog.combine = t
                         handler?.sendEmptyMessage(WHAT_COMBINE_GETTED)
                     }
