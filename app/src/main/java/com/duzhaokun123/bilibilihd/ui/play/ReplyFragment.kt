@@ -53,7 +53,7 @@ class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
             Thread {
                 var sendReplyResponse: SendReplyResponse? = null
                 try {
-                    sendReplyResponse = PBilibiliClient.getInstance().getPMainAPI().sendReply(aid, baseBind.etText.text.toString())
+                    sendReplyResponse = PBilibiliClient.getInstance().pMainAPI.sendReply(aid, baseBind.etText.text.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
@@ -77,7 +77,7 @@ class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
             WHAT_REPLY_REFRESH -> Thread {
                 var reply: Reply? = null
                 try {
-                    reply = PBilibiliClient.getInstance().getPMainAPI().reply(aid, null)
+                    reply = PBilibiliClient.getInstance().pMainAPI.reply(aid, null)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
@@ -96,7 +96,7 @@ class ReplyFragment(val aid: Long) : BaseFragment<FragmentCommitBinding>() {
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
                 try {
-                    reply = PBilibiliClient.getInstance().getPMainAPI().reply(aid, next)
+                    reply = PBilibiliClient.getInstance().pMainAPI.reply(aid, next)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }

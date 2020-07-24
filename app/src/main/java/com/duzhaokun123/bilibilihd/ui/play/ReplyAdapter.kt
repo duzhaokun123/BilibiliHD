@@ -10,6 +10,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.GlideUtil
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil
+import com.duzhaokun123.bilibilihd.utils.LinkifyUtil
 import com.hiczp.bilibili.api.main.model.Reply
 
 class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapter<ItemReplyBinding>(context) {
@@ -40,6 +41,7 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
             baseBind.tvUsername.text = it.member.uname
             baseBind.tvDate.text = sampleDateFormat.format(it.ctime.toLong() * 1000)
             baseBind.tvContent.text = it.content.message
+            LinkifyUtil.addAllLinks(baseBind.tvContent)
             baseBind.tvFloor.text = context.getString(R.string.d_floor, it.floor)
             GlideUtil.loadUrlInto(context, it.member.avatar, baseBind.civFace, false)
             ImageViewUtil.setLevelDrawable(baseBind.ivLevel, it.member.levelInfo.currentLevel)

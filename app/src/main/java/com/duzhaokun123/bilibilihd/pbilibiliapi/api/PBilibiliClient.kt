@@ -7,44 +7,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 class PBilibiliClient private constructor() {
-    private var bilibiliClient: BilibiliClient = BilibiliClient()
-
-    private lateinit var pAppAPI: PAppAPI
-    private lateinit var pPlayerAPI: PPlayerAPI
-    private lateinit var pMainAPI: PMainAPI
+    val bilibiliClient by lazy { BilibiliClient() }
+    val pAppAPI by lazy { PAppAPI(bilibiliClient.appAPI) }
+    val pPlayerAPI by lazy { PPlayerAPI(bilibiliClient.playerAPI) }
+    val pMainAPI by lazy { PMainAPI(bilibiliClient.mainAPI) }
 
     companion object {
-        private lateinit var pBilibiliClient: PBilibiliClient
-        fun getInstance(): PBilibiliClient {
-            if (::pBilibiliClient.isInitialized.not()) {
-                pBilibiliClient = PBilibiliClient()
-            }
-
-            return pBilibiliClient
-        }
-    }
-
-    fun getBilibiliClient() = bilibiliClient
-
-    fun getPAppAPI(): PAppAPI {
-        if (::pAppAPI.isInitialized.not()) {
-            pAppAPI = PAppAPI(bilibiliClient.appAPI)
-        }
-        return pAppAPI
-    }
-
-    fun getPPlayerAPI(): PPlayerAPI {
-        if (::pPlayerAPI.isInitialized.not()) {
-            pPlayerAPI = PPlayerAPI(bilibiliClient.playerAPI)
-        }
-        return pPlayerAPI
-    }
-
-    fun getPMainAPI(): PMainAPI {
-        if (::pMainAPI.isInitialized.not()) {
-            pMainAPI = PMainAPI(bilibiliClient.mainAPI)
-        }
-        return pMainAPI
+        private val pBilibiliClient by lazy { PBilibiliClient() }
+        fun getInstance() = pBilibiliClient
     }
 
     fun logout() {
@@ -94,7 +64,7 @@ class PBilibiliClient private constructor() {
     fun getLoginResponse() = bilibiliClient.loginResponse
 
     fun setLoginResponse(loginResponse: LoginResponse?) {
-        getBilibiliClient().loginResponse = loginResponse
+        bilibiliClient.loginResponse = loginResponse
         BrowserUtil.syncLoggedLoginResponse()
     }
 }

@@ -23,6 +23,7 @@ import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
+import com.duzhaokun123.bilibilihd.utils.LinkifyUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
@@ -96,13 +97,13 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
                 if (teleportIntent != null && teleportIntent.getExtras() != null) {
                     SpaceAPI.getInstance().getSpace(teleportIntent.getExtras().getLong("uid"), new MyBilibiliClient.ICallback<Space>() {
                         @Override
-                        public void onException(Exception e) {
+                        public void onException(@NonNull Exception e) {
                             e.printStackTrace();
                             runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                         }
 
                         @Override
-                        public void onSuccess(com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space space) {
+                        public void onSuccess(@NonNull Space space) {
                             mSpace = space;
                             if (handler != null) {
                                 handler.sendEmptyMessage(0);
@@ -138,11 +139,11 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         baseBind.tvName.setText(mSpace.getData().getCard().getName());
         baseBind.tvFans.setText(String.valueOf(mSpace.getData().getCard().getFans()));
         baseBind.tvSign.setText(mSpace.getData().getCard().getSign());
+        LinkifyUtil.INSTANCE.addAllLinks(baseBind.tvSign);
         baseBind.tvWatching.setText(String.valueOf(mSpace.getData().getCard().getAttention()));
         if (mSpace.getData().getCard().getVip().getVipType() != 0) {
             baseBind.tvName.setTextColor(getColor(R.color.colorAccent));
         }
-        // TODO: 20-2-22 试出 mTvLike 对应的键 不可能的, 你的版本不行, 去抓 web api 吧
     }
 
     class MyFragmentPagerAdapter extends FragmentPagerAdapter {

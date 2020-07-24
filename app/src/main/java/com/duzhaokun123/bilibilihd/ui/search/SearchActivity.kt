@@ -118,7 +118,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
             WHAT_REFRESH -> Thread {
                 try {
                     page = 1
-                    searchResult = getInstance().getPAppAPI().search(intent.getStringExtra(SearchManager.QUERY)!!, page)
+                    searchResult = getInstance().pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
                     handler?.sendEmptyMessage(WHAT_REFRESH_END)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -133,7 +133,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
             WHAT_LOAD_MORE -> Thread {
                 try {
                     page++
-                    val searchResult = getInstance().getPAppAPI().search(intent.getStringExtra(SearchManager.QUERY)!!, page)
+                    val searchResult = getInstance().pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
                     ListUtil.addAll(this.searchResult!!.data.item, searchResult.data.item)
                     handler?.sendEmptyMessage(WHAT_LOAD_MORE_END)
                 } catch (e: Exception) {
