@@ -9,6 +9,8 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class MediaListAPI {
@@ -44,7 +46,7 @@ public class MediaListAPI {
                     }
 
                     @Override
-                    public void addUserParams(Map<String, String> paramsMap) {
+                    public void addUserParams(@NotNull Map<String, String> paramsMap) {
                         paramsMap.put("media_id", String.valueOf(mediaId));
                         paramsMap.put("mobi_app", "android");
                         paramsMap.put("resources", resourcesSB.toString());
@@ -88,7 +90,7 @@ public class MediaListAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("media_id", String.valueOf(mediaId));
                     paramsMap.put("mobi_app", "android");
                     paramsMap.put("mid", String.valueOf(mid));

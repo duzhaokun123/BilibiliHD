@@ -39,6 +39,8 @@ import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
@@ -290,13 +292,13 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             case WHAT_LOAD_SHOT:
                 new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
                     @Override
-                    public void onException(@NonNull Exception e) {
+                    public void onException(@NotNull @NonNull Exception e) {
                         e.printStackTrace();
                         Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                     }
 
                     @Override
-                    public void onSuccess(@NonNull VideoShot videoShot) {
+                    public void onSuccess(@NotNull @NonNull VideoShot videoShot) {
                         BiliPlayerView.this.videoShot = videoShot;
                     }
                 })).start();

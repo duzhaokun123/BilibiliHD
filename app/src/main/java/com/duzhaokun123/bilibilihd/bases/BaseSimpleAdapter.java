@@ -1,10 +1,12 @@
 package com.duzhaokun123.bilibilihd.bases;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,11 @@ public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends 
 
     protected Context getContext() {
         return mContext;
+    }
+
+    @Nullable
+    protected Activity getActivity() {
+        return mContext instanceof Activity ? (Activity) mContext : null;
     }
 
     @NonNull

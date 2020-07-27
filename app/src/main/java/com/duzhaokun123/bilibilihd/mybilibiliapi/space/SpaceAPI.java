@@ -7,6 +7,8 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class SpaceAPI {
@@ -37,7 +39,7 @@ public class SpaceAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("from", String.valueOf(0));
                     paramsMap.put("mobi_app", "android");
                     paramsMap.put("ps", String.valueOf(10));

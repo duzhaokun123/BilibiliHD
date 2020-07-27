@@ -1,15 +1,14 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.history;
 
-import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class HistoryAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("business", business);
                     paramsMap.put("max", String.valueOf(max));
                     paramsMap.put("max_tp", String.valueOf(maxTp));
@@ -70,12 +69,11 @@ public class HistoryAPI {
         }
     }
 
-    public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<Base> callback) {
+    public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<CommonResponse> callback) {
         LoginResponse loginResponse = PBilibiliClient.Companion.getInstance().getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
         }
-        BilibiliWebCookie bilibiliWebCookie = MyBilibiliClientUtil.getBilibiliWebCookie(loginResponse);
         try {
             String response = MyBilibiliClient.getInstance().getResponseByPost(new MyBilibiliClient.Request() {
                 @Override
@@ -84,25 +82,17 @@ public class HistoryAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("aid", String.valueOf(aid));
                     paramsMap.put("cid", String.valueOf(cid));
                     paramsMap.put("played_time", String.valueOf(playedTime));
-                    paramsMap.put("csrf", bilibiliWebCookie.getBiliJct());
                 }
-            }, bilibiliWebCookie.getSessdata());
-            Base historyReport = GsonUtil.getGsonInstance().fromJson(response, Base.class);
+            });
+            CommonResponse historyReport = GsonUtil.getGsonInstance().fromJson(response, CommonResponse.class);
             if (historyReport.getCode() == 0) {
                 callback.onSuccess(historyReport);
             } else {
-                throw new BilibiliApiException(new CommonResponse(
-                        historyReport.getCode(),
-                        historyReport.getMessage(),
-                        historyReport.getMessage(),
-                        System.currentTimeMillis(),
-                        null,
-                        historyReport.getTtl()
-                ));
+                throw new BilibiliApiException(historyReport);
             }
         } catch (Exception e) {
             callback.onException(e);

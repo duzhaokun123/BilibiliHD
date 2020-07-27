@@ -1,14 +1,13 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.toview;
 
-import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
-import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -26,12 +25,11 @@ public class ToViewAPI {
 
     private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
 
-    public void addAid(long aid, MyBilibiliClient.ICallback<Base> callback) {
+    public void addAid(long aid, MyBilibiliClient.ICallback<CommonResponse> callback) {
         LoginResponse loginResponse = pBilibiliClient.getLoginResponse();
         if (loginResponse == null) {
             return;
         }
-        BilibiliWebCookie bilibiliWebCookie = MyBilibiliClientUtil.getBilibiliWebCookie(loginResponse);
         try {
             String response = MyBilibiliClient.getInstance().getResponseByPost(new MyBilibiliClient.Request() {
                 @Override
@@ -40,35 +38,26 @@ public class ToViewAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("aid", String.valueOf(aid));
-                    paramsMap.put("csrf", bilibiliWebCookie.getBiliJct());
                 }
-            }, bilibiliWebCookie.getSessdata());
-            Base base = GsonUtil.getGsonInstance().fromJson(response, Base.class);
-            if (base.getCode() == 0) {
-                callback.onSuccess(base);
+            });
+            CommonResponse commonResponse = GsonUtil.getGsonInstance().fromJson(response, CommonResponse.class);
+            if (commonResponse.getCode() == 0) {
+                callback.onSuccess(commonResponse);
             } else {
-                throw new BilibiliApiException(new CommonResponse(
-                        base.getCode(),
-                        base.getMessage(),
-                        base.getMessage(),
-                        System.currentTimeMillis(),
-                        null,
-                        base.getTtl()
-                ));
+                throw new BilibiliApiException(commonResponse);
             }
         } catch (Exception e) {
             callback.onException(e);
         }
     }
 
-    public void addBvid(String bvid, MyBilibiliClient.ICallback<Base> callback) {
+    public void addBvid(String bvid, MyBilibiliClient.ICallback<CommonResponse> callback) {
         LoginResponse loginResponse = pBilibiliClient.getLoginResponse();
         if (loginResponse == null) {
             return;
         }
-        BilibiliWebCookie bilibiliWebCookie = MyBilibiliClientUtil.getBilibiliWebCookie(loginResponse);
         try {
             String response = MyBilibiliClient.getInstance().getResponseByPost(new MyBilibiliClient.Request() {
                 @Override
@@ -77,23 +66,15 @@ public class ToViewAPI {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("bvid", bvid);
-                    paramsMap.put("csrf", bilibiliWebCookie.getBiliJct());
                 }
-            }, bilibiliWebCookie.getSessdata());
-            Base base = GsonUtil.getGsonInstance().fromJson(response, Base.class);
-            if (base.getCode() == 0) {
-                callback.onSuccess(base);
+            });
+            CommonResponse commonResponse = GsonUtil.getGsonInstance().fromJson(response, CommonResponse.class);
+            if (commonResponse.getCode() == 0) {
+                callback.onSuccess(commonResponse);
             } else {
-                throw new BilibiliApiException(new CommonResponse(
-                        base.getCode(),
-                        base.getMessage(),
-                        base.getMessage(),
-                        System.currentTimeMillis(),
-                        null,
-                        base.getTtl()
-                ));
+                throw new BilibiliApiException(commonResponse);
             }
         } catch (Exception e) {
             callback.onException(e);

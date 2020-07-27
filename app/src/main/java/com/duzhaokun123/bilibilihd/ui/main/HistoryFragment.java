@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI;
@@ -33,7 +32,10 @@ import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
+import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import org.jetbrains.annotations.NotNull;
 
 public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
@@ -133,14 +135,14 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                                     new Thread() {
                                         @Override
                                         public void run() {
-                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<Base>() {
+                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<CommonResponse>() {
                                                 @Override
-                                                public void onException(Exception e) {
+                                                public void onException(@NotNull Exception e) {
                                                     e.printStackTrace();
                                                 }
 
                                                 @Override
-                                                public void onSuccess(Base base) {
+                                                public void onSuccess(@NotNull CommonResponse commonResponse) {
 
                                                 }
                                             });
@@ -234,7 +236,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
         public void run() {
             HistoryAPI.getInstance().getHistory("all", new MyBilibiliClient.ICallback<History>() {
                 @Override
-                public void onException(Exception e) {
+                public void onException(@NotNull Exception e) {
                     e.printStackTrace();
                     if (handler != null) {
                         handler.sendEmptyMessage(2);
@@ -245,7 +247,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 }
 
                 @Override
-                public void onSuccess(History history) {
+                public void onSuccess(@NotNull History history) {
                     mHistory = history;
                     LoadMore loadMore = new LoadMore();
                     for (int i = 0; i < 2; i++) {
@@ -265,7 +267,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
             HistoryAPI.getInstance().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
                     "all", new MyBilibiliClient.ICallback<History>() {
                         @Override
-                        public void onException(Exception e) {
+                        public void onException(@NotNull Exception e) {
                             e.printStackTrace();
                             if (handler != null) {
                                 handler.sendEmptyMessage(2);
@@ -276,7 +278,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         }
 
                         @Override
-                        public void onSuccess(History history) {
+                        public void onSuccess(@NotNull History history) {
                             mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
                             mHistory.getData().getCursor().setMax_tp(history.getData().getCursor().getMax_tp());
                             mHistory.getData().getList().addAll(history.getData().getList());

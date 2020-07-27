@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi;
 
 import androidx.annotation.NonNull;
 
+import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.hiczp.bilibili.api.BilibiliClientProperties;
@@ -16,7 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class MyBilibiliClient {
-    public static final MediaType X_WWW_FROM_URLENCODED = MediaType.get("application/x-www-form-urlencoded; charset=utf-8");
+    public static final MediaType X_WWW_FROM_URLENCODED = MediaType.get("application/x-www-form-urlencoded");
     private static MyBilibiliClient myBilibiliClient;
 
     public static MyBilibiliClient getInstance() {
@@ -63,10 +64,14 @@ public class MyBilibiliClient {
         return getOkHttpClient().newCall(request).execute().body().string();
     }
 
-    public String getResponseByPost(Request getRequest, String sessdata) throws IOException {
+    public String getResponseByPost(Request getRequest) throws IOException {
         bilibiliClientProperties = PBilibiliClient.Companion.getInstance().getBilibiliClient().getBillingClientProperties();
+        BilibiliWebCookie bilibiliWebCookie = PBilibiliClient.Companion.getInstance().getBilibiliWebCookie();
         StringBuilder paramsSB = new StringBuilder();
         Map<String, String> paramsMap = new TreeMap<>();
+        if (bilibiliWebCookie != null) {
+            paramsMap.put("csrf", bilibiliWebCookie.getBiliJct());
+        }
         getRequest.addUserParams(paramsMap);
         for (String key : paramsMap.keySet()) {
             paramsSB.append(key)
@@ -77,14 +82,15 @@ public class MyBilibiliClient {
         paramsSB.deleteCharAt(paramsSB.length() - 1);
 
         RequestBody requestBody = RequestBody.create(paramsSB.toString(), X_WWW_FROM_URLENCODED);
-        okhttp3.Request request = new okhttp3.Request.Builder()
+        okhttp3.Request.Builder requestBuilder = new okhttp3.Request.Builder()
                 .url(getRequest.getUrl())
                 .post(requestBody)
-                .addHeader("User-Agent", bilibiliClientProperties.getDefaultUserAgent())
-                .addHeader("Cookie", "SESSDATA=" + sessdata)
-                .build();
+                .addHeader("User-Agent", bilibiliClientProperties.getDefaultUserAgent());
+        if (bilibiliWebCookie != null) {
+            requestBuilder.addHeader("Cookie", "SESSDATA=" + bilibiliWebCookie.getSessdata());
+        }
 
-        return getOkHttpClient().newCall(request).execute().body().string();
+        return getOkHttpClient().newCall(requestBuilder.build()).execute().body().string();
     }
 
     private void addBaseParams(Map<String, String> paramsMap) {
@@ -109,12 +115,15 @@ public class MyBilibiliClient {
     public interface Request {
         String getUrl();
 
-        void addUserParams(Map<String, String> paramsMap);
+        void addUserParams(@NonNull Map<String, String> paramsMap);
     }
 
     public interface ICallback<T> {
-        void onException(@NonNull Exception e);
+        default void onException(@NonNull Exception e) {
+            e.printStackTrace();
+        }
 
-        void onSuccess(@NonNull T t);
+        default void onSuccess(@NonNull T t) {
+        }
     }
 }

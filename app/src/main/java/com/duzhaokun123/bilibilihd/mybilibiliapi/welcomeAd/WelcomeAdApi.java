@@ -9,6 +9,8 @@ import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.Random;
 
@@ -62,7 +64,7 @@ public class WelcomeAdApi {
                 }
 
                 @Override
-                public void addUserParams(Map<String, String> paramsMap) {
+                public void addUserParams(@NotNull Map<String, String> paramsMap) {
                     paramsMap.put("appkey", "1d8b6e7d45233436");
                     paramsMap.put("build", "5570300");
                     paramsMap.put("width", "1080");

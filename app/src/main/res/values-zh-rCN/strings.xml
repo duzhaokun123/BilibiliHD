@@ -128,7 +128,15 @@
     <string name="special">特殊</string>
     <string name="user_space_use_web_view">用户空间使用 WebView</string>
     <string name="allow_danmaku_overlapping">允许弹幕重叠</string>
-    <string name="d_floor">%d楼</string>
     <string name="share">分享</string>
     <string name="connection_to_s">连接至: %s</string>
+    <string name="action">动作</string>
+    <string name="dislike">踩</string>
+    <string name="reply">回复</string>
+    <string name="cancel_action">取消动作</string>
+    <string name="view_reply">查看回复</string>
+    <string name="liked">已赞</string>
+    <string name="disliked">已踩</string>
+    <string name="deleted">已删除</string>
+    <string name="report">举报</string>
 </resources>

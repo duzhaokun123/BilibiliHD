@@ -130,7 +130,16 @@
     <string name="special">special</string>
     <string name="user_space_use_web_view">user space use WebView</string>
     <string name="allow_danmaku_overlapping">allow danmaku overlapping</string>
-    <string name="d_floor">%d floor</string>
     <string name="share">share</string>
     <string name="connection_to_s">connection to: %s</string>
+    <string name="action">action</string>
+    <string name="hashtagd" translatable="false">#%d</string>
+    <string name="dislike">dislike</string>
+    <string name="reply">reply</string>
+    <string name="cancel_action">cancel action</string>
+    <string name="view_reply">view reply</string>
+    <string name="liked">liked</string>
+    <string name="disliked">disliked</string>
+    <string name="deleted">deleted</string>
+    <string name="report">report</string>
 </resources>

@@ -28,6 +28,8 @@ import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     private Space mSpace;
 
@@ -97,13 +99,13 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
                 if (teleportIntent != null && teleportIntent.getExtras() != null) {
                     SpaceAPI.getInstance().getSpace(teleportIntent.getExtras().getLong("uid"), new MyBilibiliClient.ICallback<Space>() {
                         @Override
-                        public void onException(@NonNull Exception e) {
+                        public void onException(@NotNull @NonNull Exception e) {
                             e.printStackTrace();
                             runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                         }
 
                         @Override
-                        public void onSuccess(@NonNull Space space) {
+                        public void onSuccess(@NotNull @NonNull Space space) {
                             mSpace = space;
                             if (handler != null) {
                                 handler.sendEmptyMessage(0);

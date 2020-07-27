@@ -37,6 +37,8 @@ import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -131,7 +133,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     public void run() {
                         SpaceAPI.getInstance().getSpace(uid, new MyBilibiliClient.ICallback<Space>() {
                             @Override
-                            public void onException(Exception e) {
+                            public void onException(@NotNull Exception e) {
                                 e.printStackTrace();
                                 if (getContext() != null) {
                                     if (getActivity() != null) {
@@ -141,7 +143,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                             }
 
                             @Override
-                            public void onSuccess(Space space) {
+                            public void onSuccess(@NotNull Space space) {
                                 Message message = Message.obtain(null, () -> {
                                     if (getContext() != null) {
                                         Glide.with(getContext()).load(space.getData().getCard().getFace()).into(((UserCardHolder) holder).mCivFace);

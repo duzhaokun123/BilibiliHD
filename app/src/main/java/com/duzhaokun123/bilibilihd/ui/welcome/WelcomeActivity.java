@@ -15,6 +15,8 @@ import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
     private WelcomeAd welcomeAd;
@@ -46,7 +48,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 public void run() {
                     WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
                         @Override
-                        public void onException(Exception e) {
+                        public void onException(@NotNull Exception e) {
                             e.printStackTrace();
                             runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                             if (handler != null) {
@@ -55,7 +57,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                         }
 
                         @Override
-                        public void onSuccess(WelcomeAd welcomeAd) {
+                        public void onSuccess(@NotNull WelcomeAd welcomeAd) {
                             WelcomeActivity.this.welcomeAd = welcomeAd;
                             if (handler != null) {
                                 handler.sendEmptyMessage(2);

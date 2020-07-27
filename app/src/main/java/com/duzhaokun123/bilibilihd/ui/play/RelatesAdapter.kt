@@ -9,11 +9,11 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemRelateVideoCardBinding
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.duzhaokun123.bilibilihd.utils.GlideUtil
+import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSimpleAdapter<ItemRelateVideoCardBinding>(context) {
@@ -49,13 +49,9 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
                     }
                     R.id.add_to_watch_later -> object : Thread() {
                         override fun run() {
-                            ToViewAPI.getInstance().addAid(biliView.data.relates!![position].aid.toLong(), object : MyBilibiliClient.ICallback<Base?> {
+                            ToViewAPI.getInstance().addAid(biliView.data.relates!![position].aid.toLong(), object : MyBilibiliClient.ICallback<CommonResponse> {
                                 override fun onException(e: Exception) {
                                     e.printStackTrace()
-                                }
-
-                                override fun onSuccess(t: Base) {
-
                                 }
                             })
                         }

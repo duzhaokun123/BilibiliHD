@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
@@ -34,6 +33,7 @@ import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
+import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.Objects;
@@ -113,7 +113,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         ((VideoCardHolder) holder).mTvTitle.setText(homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getTitle());
                         ((VideoCardHolder) holder).mTvUp.setText(R.string.ad);
                     } else if (homePage.getData().getItems().get(position).getCovers() != null) {
-                        GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getCovers().get(0),  ((VideoCardHolder) holder).mIv, true);
+                        GlideUtil.loadUrlInto(getContext(), homePage.getData().getItems().get(position).getCovers().get(0), ((VideoCardHolder) holder).mIv, true);
                     }
                 }
                 ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +135,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         if ("av".equals(cardGoto)) {
                             intent = new Intent(getContext(), PlayActivity.class);
                             intent.putExtra("aid", aid);
-                        } else if("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
+                        } else if ("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         } else if ("ad_web_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), Objects.requireNonNull(homePage.getData().getItems().get(position).getAdInfo()).getCreativeContent().getUrl());
@@ -156,10 +156,10 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                     {
                         url = homePage.getData().getItems().get(position).getCover();
                         if (homePage.getData().getItems().get(position).getAdInfo() != null
-                            && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
+                                && homePage.getData().getItems().get(position).getAdInfo().getCreativeContent() != null) {
                             url = homePage.getData().getItems().get(position).getAdInfo().getCreativeContent().getImageUrl();
-                        }  else if (homePage.getData().getItems().get(position).getCovers() != null) {
-                            url =  homePage.getData().getItems().get(position).getCovers().get(0);
+                        } else if (homePage.getData().getItems().get(position).getCovers() != null) {
+                            url = homePage.getData().getItems().get(position).getCovers().get(0);
                         }
                         try {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
@@ -184,15 +184,13 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                                     new Thread() {
                                         @Override
                                         public void run() {
-                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<Base>() {
+                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<CommonResponse>() {
                                                 @Override
-                                                public void onException(Exception e) {
+                                                public void onException(@NonNull Exception e) {
                                                     e.printStackTrace();
-                                                }
-
-                                                @Override
-                                                public void onSuccess(Base base) {
-
+                                                    if (getActivity() != null) {
+                                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                                                    }
                                                 }
                                             });
                                         }

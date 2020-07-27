@@ -29,17 +29,18 @@ import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBinding
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.services.PlayControlService
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
+import com.duzhaokun123.bilibilihd.ui.universal.reply.ReplyFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
+import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
@@ -528,14 +529,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             WHAT_ADD_HISTORY -> {
                 val playedTime = baseBind.bpvpv.player.currentPosition
                 Thread {
-                    HistoryAPI.getInstance().setAidHistory(aid, biliView!!.data.cid.toLong(), playedTime / 1000, object : MyBilibiliClient.ICallback<Base?> {
+                    HistoryAPI.getInstance().setAidHistory(aid, biliView!!.data.cid.toLong(), playedTime / 1000, object : MyBilibiliClient.ICallback<CommonResponse> {
                         override fun onException(e: java.lang.Exception) {
                             e.printStackTrace()
                             runOnUiThread { TipUtil.showToast(e.message) }
-                        }
-
-                        override fun onSuccess(t: Base) {
-
                         }
                     })
                     Thread.sleep(15000)
@@ -596,7 +593,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 introFragment!!
             } else {
                 if (replyFragment == null) {
-                    replyFragment = ReplyFragment(aid)
+                    replyFragment = ReplyFragment(aid, 3, 1)
                 }
                 replyFragment!!
             }

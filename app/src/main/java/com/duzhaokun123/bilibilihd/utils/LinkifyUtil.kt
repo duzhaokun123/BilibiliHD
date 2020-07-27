@@ -11,12 +11,7 @@ object LinkifyUtil {
             "video/$id"
         })
         LinkifyCompat.addLinks(text, PatternUtil.bvPattern, "bilibili://", null, Linkify.TransformFilter { _, url ->
-            try {
-                val id = MyBilibiliClientUtil.bv2av(url)
-                "video/$id"
-            } catch (e: StringIndexOutOfBoundsException) {
-                ""
-            }
+            "video/$url"
         })
         LinkifyCompat.addLinks(text, PatternUtil.cvPattern, "bilibili://", null, Linkify.TransformFilter { _, url ->
             val id = url.substring(2)
@@ -27,6 +22,10 @@ object LinkifyUtil {
         })
         LinkifyCompat.addLinks(text, PatternUtil.acPattern, "https://", null, Linkify.TransformFilter { _, url ->
             "www.acfun.cn/v/$url"
+        })
+        LinkifyCompat.addLinks(text, PatternUtil.auPattern, "bilibili://", null, Linkify.TransformFilter { _, url ->
+            val id = url.substring(2)
+            "audio/$id"
         })
     }
 }

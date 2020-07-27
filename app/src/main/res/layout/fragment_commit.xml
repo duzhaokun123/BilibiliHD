@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,6 +11,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_ll_more_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/ic_add_circle_accent" />
 
             <EditText
                 android:id="@+id/et_text"
@@ -25,7 +36,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/send"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/accentText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="mode"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLines="1"
+                tools:ignore="HardcodedText" />
+
+
         </LinearLayout>
 
         <com.jcodecraeer.xrecyclerview.XRecyclerView

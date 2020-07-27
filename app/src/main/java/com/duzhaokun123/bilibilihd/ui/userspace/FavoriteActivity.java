@@ -25,7 +25,6 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.MediaListAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.model.Base;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.PlayActivity;
@@ -34,7 +33,10 @@ import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
+import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import org.jetbrains.annotations.NotNull;
 
 public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBinding> {
 
@@ -141,15 +143,11 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                             new Thread() {
                                                 @Override
                                                 public void run() {
-                                                    ToViewAPI.getInstance().addBvid(bvid, new MyBilibiliClient.ICallback<Base>() {
+                                                    ToViewAPI.getInstance().addBvid(bvid, new MyBilibiliClient.ICallback<CommonResponse>() {
                                                         @Override
-                                                        public void onException(Exception e) {
+                                                        public void onException(@NotNull Exception e) {
                                                             e.printStackTrace();
-                                                        }
-
-                                                        @Override
-                                                        public void onSuccess(Base base) {
-
+                                                            runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                                                         }
                                                     });
                                                 }
@@ -240,13 +238,13 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                 MediaListAPI.getInstance().getIds(teleportIntent.getExtras().getLong("media_id"),
                         teleportIntent.getExtras().getLong("mid"), new MyBilibiliClient.ICallback<Ids>() {
                             @Override
-                            public void onException(Exception e) {
+                            public void onException(@NotNull Exception e) {
                                 e.printStackTrace();
                                 runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                             }
 
                             @Override
-                            public void onSuccess(Ids ids) {
+                            public void onSuccess(@NotNull Ids ids) {
                                 FavoriteActivity.this.ids = ids;
                                 if (handler != null) {
                                     handler.sendEmptyMessage(0);
@@ -257,13 +255,13 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                     MediaListAPI.getInstance().getInfos(teleportIntent.getExtras().getLong("media_id"),
                             teleportIntent.getExtras().getLong("mid"), ids, new MyBilibiliClient.ICallback<Infos>() {
                                 @Override
-                                public void onException(Exception e) {
+                                public void onException(@NotNull Exception e) {
                                     e.printStackTrace();
                                     runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                                 }
 
                                 @Override
-                                public void onSuccess(Infos infos) {
+                                public void onSuccess(@NotNull Infos infos) {
                                     FavoriteActivity.this.infos = infos;
                                     if (handler != null) {
                                         handler.sendEmptyMessage(1);
