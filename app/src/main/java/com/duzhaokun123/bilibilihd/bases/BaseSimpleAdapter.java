@@ -29,6 +29,11 @@ public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends 
         return mContext instanceof Activity ? (Activity) mContext : null;
     }
 
+    @Nullable
+    protected BaseActivity<?> getBaseActivity() {
+        return mContext instanceof BaseActivity ? (BaseActivity<?>) mContext : null;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -17,6 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.universal.reply.ChildReplyActivity"></activity>
+        <activity android:name=".ui.universal.reply.RootReplyActivity" />
 
         <service
             android:name=".services.PlayControlService"

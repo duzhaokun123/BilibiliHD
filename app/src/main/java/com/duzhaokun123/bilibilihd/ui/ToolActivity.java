@@ -1,8 +1,11 @@
 package com.duzhaokun123.bilibilihd.ui;
 
+import android.content.Intent;
+
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityToolBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyActivity;
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
@@ -36,6 +39,12 @@ public class ToolActivity extends BaseActivity<ActivityToolBinding> {
                     }
                 }
         );
+        baseBind.btnReplyGo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RootReplyActivity.class);
+            intent.putExtra(RootReplyActivity.EXTRA_TYPE, Integer.parseInt(baseBind.etType.getText().toString()));
+            intent.putExtra(RootReplyActivity.EXTRA_OID, Long.parseLong(baseBind.etOid.getText().toString()));
+            startActivity(intent);
+        });
     }
 
     @Override

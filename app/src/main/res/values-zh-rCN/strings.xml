@@ -139,4 +139,6 @@
     <string name="disliked">已踩</string>
     <string name="deleted">已删除</string>
     <string name="report">举报</string>
+    <string name="no_action">无动作</string>
+    <string name="canceled">已取消</string>
 </resources>

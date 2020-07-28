@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseFragment
-import com.duzhaokun123.bilibilihd.databinding.FragmentCommitBinding
+import com.duzhaokun123.bilibilihd.databinding.FragmentRootReplyBinding
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
@@ -20,7 +20,7 @@ import com.hiczp.bilibili.api.main.model.Reply
 import com.hiczp.bilibili.api.main.model.SendReplyResponse
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
-class ReplyFragment(private val oid: Long, private val defMode: Int, private val type: Int) : BaseFragment<FragmentCommitBinding>() {
+class RootReplyFragment(private val oid: Long, private val defMode: Int, private val type: Int) : BaseFragment<FragmentRootReplyBinding>() {
     companion object {
         const val WHAT_REPLY_REFRESH = 0
         const val WHAT_REPLY_REFRESH_END = 1
@@ -30,13 +30,14 @@ class ReplyFragment(private val oid: Long, private val defMode: Int, private val
 
     private var reply: Reply? = null
     private var next: Long? = null
+    private var isEnd = false
 
     private var defLlMoreHeight = 0
     private var isLlMoreOpen = true
 
     override fun initConfig() = NEED_HANDLER
 
-    override fun initLayout() = R.layout.fragment_commit
+    override fun initLayout() = R.layout.fragment_root_reply
 
     override fun initView() {
         baseBind.xrv.addItemDecoration(object : ItemDecoration() {
@@ -48,11 +49,16 @@ class ReplyFragment(private val oid: Long, private val defMode: Int, private val
         baseBind.xrv.layoutManager = LinearLayoutManager(context)
         baseBind.xrv.setLoadingListener(object : XRecyclerView.LoadingListener {
             override fun onLoadMore() {
+                isEnd = false
                 handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE)
             }
 
             override fun onRefresh() {
-                handler?.sendEmptyMessage(WHAT_REPLY_REFRESH)
+                if (isEnd.not()) {
+                    handler?.sendEmptyMessage(WHAT_REPLY_REFRESH)
+                } else {
+                    baseBind.xrv.setNoMore(true)
+                }
             }
         })
         baseBind.btnSend.setOnClickListener {
@@ -121,9 +127,10 @@ class ReplyFragment(private val oid: Long, private val defMode: Int, private val
                 }
             }.start()
             WHAT_REPLY_REFRESH_END -> {
-                baseBind.xrv.adapter = ReplyAdapter(requireContext(), reply!!)
+                baseBind.xrv.adapter = RootReplyAdapter(requireContext(), reply!!)
                 baseBind.xrv.refreshComplete()
                 reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
+                isEnd = reply!!.data.cursor.isEnd
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
@@ -145,6 +152,7 @@ class ReplyFragment(private val oid: Long, private val defMode: Int, private val
             WHAT_REPLY_LOAD_MORE_END -> {
                 baseBind.xrv.loadMoreComplete()
                 XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
+                isEnd = reply!!.data.cursor.isEnd
             }
         }
     }

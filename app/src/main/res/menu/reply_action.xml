@@ -10,7 +10,7 @@
         android:id="@+id/cancel_action"
         android:title="@string/cancel_action" />
     <item
-        android:id="@+id/view_reply"
+        android:id="@+id/reply"
         android:title="@string/reply" />
     <item
         android:id="@+id/delete"

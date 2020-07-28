@@ -142,4 +142,6 @@
     <string name="disliked">disliked</string>
     <string name="deleted">deleted</string>
     <string name="report">report</string>
+    <string name="no_action">no action</string>
+    <string name="canceled">canceled</string>
 </resources>

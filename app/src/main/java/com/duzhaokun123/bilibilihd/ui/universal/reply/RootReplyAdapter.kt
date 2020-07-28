@@ -18,7 +18,7 @@ import com.duzhaokun123.bilibilihd.utils.*
 import com.github.salomonbrys.kotson.get
 import com.hiczp.bilibili.api.main.model.Reply
 
-class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapter<ItemReplyBinding>(context) {
+class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapter<ItemReplyBinding>(context) {
     private val sampleDateFormat = DateTimeFormatUtil.getFormat1()
 
     override fun getItemCount(): Int {
@@ -49,6 +49,10 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
             baseBind.tvLike.text = reply.like.toString()
             GlideUtil.loadUrlInto(context, reply.member.avatar, baseBind.civFace, false)
             ImageViewUtil.setLevelDrawable(baseBind.ivLevel, reply.member.levelInfo.currentLevel)
+            when (reply.action) {
+                1 -> baseBind.tvAction.setText(R.string.liked)
+                2 -> baseBind.tvAction.setText(R.string.disliked)
+            }
 
             Thread {
                 val messageSSB = SpannableStringBuilder(reply.content.message)
@@ -80,7 +84,11 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
                             Thread {
                                 try {
                                     PBilibiliClient.getInstance().pMainAPI.likeReply(1, reply.oid, reply.rpid, reply.type)
-                                    activity?.runOnUiThread { TipUtil.showTip(context, R.string.liked) }
+                                    activity?.runOnUiThread {
+                                        TipUtil.showTip(context, R.string.liked)
+                                        baseBind.tvAction.setText(R.string.liked)
+                                    }
+                                    reply.action = 1
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
@@ -91,7 +99,11 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
                             Thread {
                                 try {
                                     PBilibiliClient.getInstance().pMainAPI.dislikeReply(1, reply.oid, reply.rpid, reply.type)
-                                    activity?.runOnUiThread { TipUtil.showTip(context, R.string.disliked) }
+                                    activity?.runOnUiThread {
+                                        TipUtil.showTip(context, R.string.disliked)
+                                        baseBind.tvAction.setText(R.string.disliked)
+                                    }
+                                    reply.action = 2
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
@@ -99,10 +111,35 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
                             }.start()
                         }
                         R.id.cancel_action -> {
-                            // TODO: 20-7-27
+                            Thread {
+                                when (reply.action) {
+                                    0 -> activity?.runOnUiThread { TipUtil.showTip(context, R.string.no_action) }
+                                    1, 2 -> {
+                                        try {
+                                            if (reply.action == 1) {
+                                                PBilibiliClient.getInstance().pMainAPI.likeReply(0, reply.oid, reply.rpid, reply.type)
+                                            } else {
+                                                PBilibiliClient.getInstance().pMainAPI.dislikeReply(0, reply.oid, reply.rpid, reply.type)
+                                            }
+                                            reply.action = 0
+                                            activity?.runOnUiThread {
+                                                TipUtil.showTip(context, R.string.canceled)
+                                                baseBind.tvAction.text = null
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                            activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
+                                        }
+                                    }
+                                }
+                            }.start()
                         }
-                        R.id.view_reply -> {
-                            // TODO: 20-7-27
+                        R.id.reply -> {
+                            val intent = Intent(context, ChildReplyActivity::class.java)
+                            intent.putExtra(ChildReplyActivity.EXTRA_TYPE, reply.type)
+                            intent.putExtra(ChildReplyActivity.EXTRA_OID, reply.oid)
+                            intent.putExtra(ChildReplyActivity.EXTRA_ROOT, reply.rpid)
+                            activity?.startActivity(intent)
                         }
                         R.id.delete -> {
                             Thread {
@@ -115,9 +152,8 @@ class ReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleAdapt
                                 }
                             }.start()
                         }
-                        R.id.report -> {
-                            // TODO: 20-7-27
-                        }
+                        R.id.report -> BrowserUtil.openWebViewActivity(context,
+                                "https://www.bilibili.com/h5/comment/report?&pageType=${reply.type}&oid=${reply.oid}&rpid=${reply.rpid}", false, false)
                     }
                     true
                 }

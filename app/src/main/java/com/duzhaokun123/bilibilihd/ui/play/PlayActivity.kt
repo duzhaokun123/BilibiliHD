@@ -34,7 +34,7 @@ import com.duzhaokun123.bilibilihd.services.PlayControlService
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
-import com.duzhaokun123.bilibilihd.ui.universal.reply.ReplyFragment
+import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -54,7 +54,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     private var introFragment: IntroFragment? = null
-    private var replyFragment: ReplyFragment? = null
+    private var rootReplyFragment: RootReplyFragment? = null
     private var showingFragment: Fragment? = null
     private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder = PictureInPictureParams.Builder()
     private var notificationBuilder: NotificationCompat.Builder? = null
@@ -592,10 +592,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 }
                 introFragment!!
             } else {
-                if (replyFragment == null) {
-                    replyFragment = ReplyFragment(aid, 3, 1)
+                if (rootReplyFragment == null) {
+                    rootReplyFragment = RootReplyFragment(aid, 3, 1)
                 }
-                replyFragment!!
+                rootReplyFragment!!
             }
         }
 
