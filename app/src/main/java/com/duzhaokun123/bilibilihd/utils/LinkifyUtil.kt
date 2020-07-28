@@ -27,5 +27,9 @@ object LinkifyUtil {
             val id = url.substring(2)
             "audio/$id"
         })
+        LinkifyCompat.addLinks(text, PatternUtil.uidPattern, "bilibili://", null, Linkify.TransformFilter { _, url ->
+            val id = url.substring(3)
+            "space/$id"
+        })
     }
 }

@@ -71,7 +71,8 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
 
     @Override
     protected void initView() {
-        baseBind.tvId.setText(MyBilibiliClientUtil.av2bv(aid));
+        baseBind.tvBvid.setText(MyBilibiliClientUtil.av2bv(aid));
+        baseBind.tvAid.setText("av" + aid);
 
         BaseActivity<?> baseActivity = getBaseActivity();
         if (baseActivity != null) {

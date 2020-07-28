@@ -65,7 +65,15 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_id"
+                    android:id="@+id/tv_bvid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textIsSelectable="true"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_aid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

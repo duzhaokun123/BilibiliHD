@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <item
+        android:id="@+id/media_route"
+        android:title="media_route"
+        app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"
+        app:showAsAction="always"
+        tools:ignore="HardcodedText" />
+
+    <item
         android:id="@+id/share"
         android:icon="@drawable/ic_share_white"
         android:iconTint="@android:color/white"
@@ -21,12 +28,6 @@
         android:icon="@drawable/ic_launch_white"
         android:title="@string/open_in_browser"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/media_route"
-        android:title="media_route"
-        app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"
-        app:showAsAction="ifRoom"
-        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/check_cover"

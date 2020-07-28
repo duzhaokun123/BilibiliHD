@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
 import com.hiczp.bilibili.api.main.MainAPI
-import com.hiczp.bilibili.api.main.model.ChildReply
 import com.hiczp.bilibili.api.main.model.Reply
 import com.hiczp.bilibili.api.main.model.SendDanmakuResponse
 import com.hiczp.bilibili.api.main.model.SendReplyResponse

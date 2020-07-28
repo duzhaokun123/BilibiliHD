@@ -79,6 +79,27 @@
                     android:text="@string/like" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@id/ll_like"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reply" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_action"
                 android:layout_width="wrap_content"

@@ -80,12 +80,16 @@ class UrlOpenActivity : AppCompatActivity() {
                 when (host) {
                     "video" -> {
                         intent1 = Intent(this, PlayActivity::class.java)
-                        intent1.putExtra("aid", path!!.substring(1).toLong())
+                        try {
+                            intent1.putExtra("aid", path!!.substring(1).toLong())
+                        } catch (e: NumberFormatException) {
+                            intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path!!.substring(1)))
+                        }
                     }
                     "article" -> {
                         intent1 = Intent(this, ArticleActivity::class.java)
                         intent1.putExtra("id", path!!.substring(1).toLong())
-                        }
+                    }
                     "space", "author" -> {
                         intent1 = Intent(this, UserSpaceActivity::class.java)
                         intent1.putExtra("uid", path!!.substring(1).toLong())
@@ -100,6 +104,8 @@ class UrlOpenActivity : AppCompatActivity() {
             e.printStackTrace()
             if ("bilibili" != scheme) {
                 BrowserUtil.openWebViewActivity(this, uri.toString(), true, false)
+            } else {
+                TipUtil.showToast("不支持 $uri")
             }
         }
         finish()

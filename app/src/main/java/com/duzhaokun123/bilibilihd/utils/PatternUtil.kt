@@ -9,4 +9,5 @@ object PatternUtil {
     val smPattern: Pattern by lazy { Pattern.compile("[sS][mM][0-9]+") }
     val acPattern: Pattern by lazy { Pattern.compile("[aA][cC][0-9]+") }
     val auPattern: Pattern by lazy { Pattern.compile("[aA][uU][0-9]+") }
+    val uidPattern: Pattern by lazy { Pattern.compile("[uU][iI][dD][0-9]+") }
 }

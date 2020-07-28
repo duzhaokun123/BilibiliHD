@@ -47,6 +47,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
             baseBind.tvDate.text = sampleDateFormat.format(reply.ctime.toLong() * 1000)
             baseBind.tvFloor.text = context.getString(R.string.hashtagd, reply.floor)
             baseBind.tvLike.text = reply.like.toString()
+            baseBind.tvReply.text = reply.rcount.toString()
             GlideUtil.loadUrlInto(context, reply.member.avatar, baseBind.civFace, false)
             ImageViewUtil.setLevelDrawable(baseBind.ivLevel, reply.member.levelInfo.currentLevel)
             when (reply.action) {
@@ -54,6 +55,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                 2 -> baseBind.tvAction.setText(R.string.disliked)
             }
 
+            baseBind.tvContent.text = reply.content.message
             Thread {
                 val messageSSB = SpannableStringBuilder(reply.content.message)
                 reply.content.emote?.let { emotes ->
@@ -67,7 +69,6 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                             messageSSB.setSpan(ImageSpan(context, emoteBitmap), index, index + emoteText.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                         }
                     }
-
                 }
                 activity?.runOnUiThread {
                     baseBind.tvContent.text = messageSSB
@@ -145,7 +146,10 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                             Thread {
                                 try {
                                     ReplyAPI.del(reply.type, reply.oid, reply.rpid)
-                                    activity?.runOnUiThread { TipUtil.showTip(context, R.string.deleted) }
+                                    activity?.runOnUiThread {
+                                        TipUtil.showTip(context, R.string.deleted)
+                                        baseBind.tvAction.setText(R.string.deleted)
+                                    }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
