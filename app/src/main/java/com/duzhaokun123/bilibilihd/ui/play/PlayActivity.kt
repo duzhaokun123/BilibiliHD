@@ -187,11 +187,13 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 if (presentation == null) {
                     supportActionBar?.hide()
                 }
-                window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                if (isInMultiWindowMode.not()) {
+                    window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                }
             } else {
                 newHeight = bpvpvDefaultHeight
                 supportActionBar?.show()
@@ -227,7 +229,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         baseBind.bpvpv.setControllerVisibilityListener { visibility ->
             if (visibility != View.VISIBLE) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LOW_PROFILE
-                if (isFullscreen) {
+                if (isFullscreen && isInMultiWindowMode.not()) {
                     window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                             or View.SYSTEM_UI_FLAG_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
@@ -237,7 +239,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 }
             } else {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LOW_PROFILE.inv()
-                if (isFullscreen) {
+                if (isFullscreen && isInMultiWindowMode.not()) {
                     window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_FULLSCREEN.inv()
                 }
                 supportActionBar?.show()
@@ -374,7 +376,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if (isFullscreen) {
+        if (isFullscreen && isInMultiWindowMode.not()) {
             window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
