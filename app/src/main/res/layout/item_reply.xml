@@ -40,10 +40,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iv_level"
-                android:text="TOP"
+                android:text="@string/top2"
+                android:textAllCaps="true"
                 android:textColor="@color/accentText"
-                android:visibility="gone"
-                tools:ignore="HardcodedText" />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/tv_date"

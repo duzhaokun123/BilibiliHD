@@ -35,6 +35,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
     override fun initLayout() = R.layout.item_reply
 
     override fun initView(baseBind: ItemReplyBinding, position: Int) {
+        baseBind.tvTop.visibility = View.INVISIBLE
         val aReply: Reply.Data.Reply = if (hasUpperTop && position == 0) {
             baseBind.tvTop.visibility = View.VISIBLE
             reply.data.top!!.upper!!.toCommonReply()

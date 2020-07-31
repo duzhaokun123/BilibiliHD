@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Log;
@@ -60,12 +61,16 @@ public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
         baseBind.btnStart.setOnClickListener(v -> {
             Log.d("JumpActivity", "start" + ": " + baseBind.etComponent.getText().toString());
             try {
-                Class.forName(baseBind.etComponent.getText().toString());
-                intent.setComponent(new ComponentName(JumpActivity.this, baseBind.etComponent.getText().toString()));
-                startActivity(intent);
+                Class<?> clazz = Class.forName(baseBind.etComponent.getText().toString());
+                if (Activity.class.isAssignableFrom(clazz)) {
+                    intent.setComponent(new ComponentName(JumpActivity.this, clazz));
+                    startActivity(intent);
+                } else {
+                    TipUtil.showToast(clazz.getName() + " is not a Activity");
+                }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                TipUtil.showToast(e.getMessage());
+                TipUtil.showToast("class not found " + e.getMessage());
             }
         });
         baseBind.btnSaveLog.setOnClickListener(v -> LogUtil.saveLog(this));

@@ -125,4 +125,5 @@
     <string name="report">report</string>
     <string name="no_action">no action</string>
     <string name="canceled">canceled</string>
+    <string name="top2">top</string>
 </resources>
