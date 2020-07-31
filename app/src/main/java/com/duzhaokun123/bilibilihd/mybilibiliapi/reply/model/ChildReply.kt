@@ -21,20 +21,8 @@ data class ChildReply(
             var root: Root
     ) {
         data class Root(
-                @SerializedName("rpid")
-                var rpid: Long,
-                @SerializedName("oid")
-                var oid: Long,
-                @SerializedName("type")
-                var type: Int,
-                @SerializedName("floor")
-                var floor: Int,
-                @SerializedName("ctime")
-                var ctime: Int,
-                @SerializedName("like")
-                var like: Int,
-                @SerializedName("action")
-                var action: Int,
+                @SerializedName("rcount")
+                var rcount: Int,
                 @SerializedName("replies")
                 var replies: List<Reply.Data.Reply>?
         )

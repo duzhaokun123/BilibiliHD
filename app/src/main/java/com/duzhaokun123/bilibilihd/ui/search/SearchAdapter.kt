@@ -28,7 +28,7 @@ class SearchAdapter(context: Context, private val searchResult: SearchResult) : 
 
     override fun initData(baseBind: ItemSearchCardBinding, position: Int) {
         searchResult.data.item[position].let { item ->
-            baseBind.tvTitle.text = item.title
+            baseBind.htvTitle.setHtml(item.title.replace("<em class=\"keyword\">", "<strong><font color=\"#FB7299\">").replace("</em>", "</font></strong>"))
             baseBind.tvUp.text = item.author
             baseBind.tvLinkType.text = item.linktype
             GlideUtil.loadUrlInto(context, item.cover, baseBind.ivCover, false)

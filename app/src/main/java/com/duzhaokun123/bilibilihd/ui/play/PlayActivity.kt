@@ -315,8 +315,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun initData() {
         if (aid == 0L) {
-            aid = teleportIntent?.getLongExtra("aid", 0)!!
-            page = teleportIntent?.getIntExtra("page", 1)!!
+            aid = teleportIntent!!.getLongExtra("aid", 0)
+            page = teleportIntent!!.getIntExtra("page", 1)
             handler?.sendEmptyMessage(WHAT_LOAD_BILIVIEW)
         }
         title = ""
@@ -472,7 +472,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
                 page = msg.data.getInt("page")
                 cid = biliView?.data?.pages?.get(page - 1)?.cid?.toLong()!!
-                baseBind.bpvpv.biliPlayerView.setAidCid(aid, cid)
+                baseBind.bpvpv.biliPlayerView.loadShot(aid, cid)
                 baseBind.bpvpv.loadDanmaku(aid, cid, biliView!!.data.pages[page - 1].duration)
                 baseBind.bpvpv.videoUrlAdapter = object : BiliPlayerViewPackageView.VideoUrlAdapter {
                     override fun getUrl(id: Int): Pair<String, String> {

@@ -130,8 +130,6 @@ includeBuild 'path/to/DanmakuFlameMaster'
 ### 鸣谢
 [AOSP](https://source.android.com)
 
-[AboutLibraries](https://mikepenz.github.io/AboutLibraries/)
-
 [BilibiliAPIDocs](https://github.com/fython/BilibiliAPIDocs)
 
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
@@ -155,5 +153,7 @@ includeBuild 'path/to/DanmakuFlameMaster'
 [glide](https://bumptech.github.io/glide/)
 
 [gson](https://github.com/google/gson)
+
+[html-textview](https://github.com/SufficientlySecure/html-textview)
 
 [okttp](https://square.github.io/okhttp/)

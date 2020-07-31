@@ -42,8 +42,8 @@ public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        initData(holder.getBaseBind(), position);
         initView(holder.getBaseBind(), position);
+        initData(holder.getBaseBind(), position);
     }
 
     protected abstract int initLayout();

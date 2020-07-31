@@ -120,6 +120,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
             WHAT_REPLY_REFRESH_END -> {
                 baseBind.xrv.adapter = ChildReplyAdapter(this, childReply)
                 baseBind.xrv.refreshComplete()
+                baseBind.tvRcount.text = childReply.data.root.rcount.toString()
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 try {

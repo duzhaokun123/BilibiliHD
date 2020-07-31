@@ -35,6 +35,17 @@
                 android:layout_toEndOf="@id/tv_username" />
 
             <TextView
+                android:id="@+id/tv_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/iv_level"
+                android:text="TOP"
+                android:textColor="@color/accentText"
+                android:visibility="gone"
+                tools:ignore="HardcodedText" />
+
+            <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

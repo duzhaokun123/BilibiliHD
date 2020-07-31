@@ -22,20 +22,18 @@
                 android:scaleType="fitCenter"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/tv_title"
+            <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/htv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/iv_cover"
-                android:textColor="@color/ordinaryText"
-                android:textSize="14sp" />
+                android:layout_toEndOf="@id/iv_cover" />
 
             <TextView
                 android:id="@+id/tv_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_title"
+                android:layout_below="@id/htv_title"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toEndOf="@id/iv_cover" />

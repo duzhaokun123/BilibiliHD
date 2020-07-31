@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">bilibili HD</string>
-    <string name="keyword">keyword</string>
     <string name="search">Search</string>
     <string name="passe_again_to_quit">Passe again to quit</string>
     <string name="username">name</string>
     <string name="password">password</string>
     <string name="login">Login</string>
     <string name="settings">Settings</string>
-    <string name="develop">develop</string>
-    <string name="logged">Logged</string>
     <string name="not_logged_in">Not Logged In</string>
     <string name="home">home</string>
     <string name="logout">Logout</string>
@@ -20,15 +17,11 @@
     <string name="dynamic">dynamic</string>
     <string name="submit">submit</string>
     <string name="favorite">favorite</string>
-    <string name="license" translatable="false">license</string>
     <string name="content">contents</string>
     <string name="watched">watched</string>
-    <string name="save">save</string>
     <string name="saved">saved</string>
-    <string name="client">client</string>
     <string name="column">column</string>
     <string name="column_land">column land</string>
-    <string name="layout">layout</string>
     <string name="inappropriate">inappropriate</string>
     <string name="download">download</string>
     <string name="check_cover">check cover</string>
@@ -44,7 +37,6 @@
     <string name="export">export</string>
     <string name="bad_file">bad file</string>
     <string name="failure">failure</string>
-    <string name="exception_warning">Abnormal operation, please restart the application</string>
     <string name="about">about</string>
     <string name="build_type">build type</string>
     <string name="project_home">project home</string>
@@ -52,20 +44,12 @@
     <string name="using_gpl_3.0">using GPL-3.0</string>
     <string name="project_home_url" translatable="false">https://github.com/duzhaokun123/BilibiliHD</string>
     <string name="logged_out">logged out</string>
-    <string name="start">start</string>
     <string name="stop">stop</string>
     <string name="glide_cache">Glide cache first</string>
     <string name="open_in_browser">open in browser</string>
     <string name="request">request</string>
-    <string name="video_download">video download</string>
-    <string name="merging">merging</string>
-    <string name="success">success</string>
     <string name="pause">pause</string>
     <string name="resume">resume</string>
-    <string name="moving">moving</string>
-    <string name="downloading">downloading</string>
-    <string name="downloaded">downloaded</string>
-    <string name="no_need">no need</string>
     <string name="danmaku">danmaku</string>
     <string name="num_fans">%d fans</string>
     <string name="intro">intro</string>
@@ -76,7 +60,6 @@
     <string name="follow_system">follow_system</string>
     <string name="not_vip">not vip</string>
     <string name="send">send</string>
-    <string name="sended">sended</string>
     <string name="search_bilibili">search bilibili</string>
     <string name="pip">pip</string>
     <string name="ad">ad</string>
@@ -97,7 +80,6 @@
     <string name="duplicate_merging">duplicate merging</string>
     <string name="text_size">text size</string>
     <string name="danmaku_margin">danmaku margin</string>
-    <string name="auto">auto</string>
     <string name="danmaku_drawing">danmaku drawing</string>
     <string name="click_to_learn_more">click to learn more</string>
     <string name="danmaku_drawing_more">The shadow radius of p1 in shadow mode\nIn stroke mode p1 incoming stroke width\nIn projection mode, p1, p2, p3 input offsetX, offsetY, alpha offsetX/offsetY: offset in x/y direction alpha: projection transparency [0, 255]\nFill in floating point</string>
@@ -137,7 +119,6 @@
     <string name="dislike">dislike</string>
     <string name="reply">reply</string>
     <string name="cancel_action">cancel action</string>
-    <string name="view_reply">view reply</string>
     <string name="liked">liked</string>
     <string name="disliked">disliked</string>
     <string name="deleted">deleted</string>

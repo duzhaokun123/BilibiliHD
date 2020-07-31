@@ -39,11 +39,9 @@ import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 
-import master.flame.danmaku.danmaku.model.android.DanmakuContext;
+import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
     private static final int WHAT_DANMAKU_LOAD_EXCEPTION = 0;
@@ -292,13 +290,13 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             case WHAT_LOAD_SHOT:
                 new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
                     @Override
-                    public void onException(@NotNull @NonNull Exception e) {
+                    public void onException(@NonNull Exception e) {
                         e.printStackTrace();
                         Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
                     }
 
                     @Override
-                    public void onSuccess(@NotNull @NonNull VideoShot videoShot) {
+                    public void onSuccess(@NonNull VideoShot videoShot) {
                         BiliPlayerView.this.videoShot = videoShot;
                     }
                 })).start();
@@ -327,7 +325,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         return btnQuality;
     }
 
-    public void setAidCid(long aid, long cid) {
+    public void loadShot(long aid, long cid) {
+        videoShot = null;
         this.aid = aid;
         this.cid = cid;
         handler.sendEmptyMessage(WHAT_LOAD_SHOT);
@@ -335,6 +334,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     public void clickIbFullscreen() {
         ibFullscreen.callOnClick();
+    }
+
+    public DanmakuView getDanmakuView() {
+        return overlayBaseBind.dv;
     }
 
     public interface DanmakuLoadListener {

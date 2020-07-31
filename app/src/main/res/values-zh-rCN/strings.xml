@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">bilibili HD</string>
-    <string name="keyword">关键字</string>
     <string name="search">搜索</string>
     <string name="passe_again_to_quit">再按一次退出</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="login">登录</string>
     <string name="settings">设置</string>
-    <string name="develop">开发</string>
-    <string name="logged">已登录</string>
     <string name="not_logged_in">未登录</string>
     <string name="home">主页</string>
     <string name="logout">登出</string>
@@ -23,12 +20,9 @@
     <string name="favorite">收藏</string>
     <string name="content">个内容</string>
     <string name="watched">观看</string>
-    <string name="save">保存</string>
     <string name="saved">已保存</string>
-    <string name="client">客户端</string>
     <string name="column">列</string>
     <string name="column_land">横向时列</string>
-    <string name="layout">布局</string>
     <string name="inappropriate">不合适</string>
     <string name="download">下载</string>
     <string name="check_cover">检查封面</string>
@@ -43,27 +37,18 @@
     <string name="export">导出</string>
     <string name="bad_file">坏文件</string>
     <string name="failure">失败</string>
-    <string name="exception_warning">严重运行时异常，请重启应用</string>
     <string name="about">关于</string>
     <string name="build_type">构建类型</string>
     <string name="version" tools:ignore="ExtraTranslation">版本</string>
     <string name="project_home">项目主页</string>
     <string name="using_gpl_3.0">在 GPL-3.0 协议下发布</string>
     <string name="logged_out">已登出</string>
-    <string name="start">开始</string>
     <string name="stop">停止</string>
     <string name="glide_cache">Glide 缓存优先</string>
     <string name="open_in_browser">在浏览器中打开</string>
     <string name="request">需要</string>
-    <string name="video_download">视频下载</string>
-    <string name="merging">合并中</string>
-    <string name="success">成功</string>
     <string name="pause">暂停</string>
     <string name="resume">恢复</string>
-    <string name="moving">移动中</string>
-    <string name="downloading">下载中</string>
-    <string name="downloaded">已下载</string>
-    <string name="no_need">不需要</string>
     <string name="danmaku">弹幕</string>
     <string name="num_fans">%d粉丝</string>
     <string name="intro">详情</string>
@@ -74,7 +59,6 @@
     <string name="follow_system">跟随系统</string>
     <string name="not_vip">非大会员</string>
     <string name="send">发送</string>
-    <string name="sended">已发送</string>
     <string name="search_bilibili">搜索 bilibili</string>
     <string name="pip">画中画</string>
     <string name="ad">广告</string>
@@ -95,7 +79,6 @@
     <string name="duplicate_merging">合并重复</string>
     <string name="text_size">字体大小</string>
     <string name="danmaku_margin">弹幕间距</string>
-    <string name="auto">自动</string>
     <string name="danmaku_drawing">弹幕绘制</string>
     <string name="click_to_learn_more">点击了解更多</string>
     <string name="danmaku_drawing_more">阴影模式下p1传入阴影半径\n描边模式下p1传入描边宽度\n投影模式下p1, p2, p3传入 offsetX, offsetY, alpha  offsetX/offsetY: x/y 方向上的偏移量 alpha: 投影透明度 [0, 255] \n填入浮点数</string>
@@ -134,7 +117,6 @@
     <string name="dislike">踩</string>
     <string name="reply">回复</string>
     <string name="cancel_action">取消动作</string>
-    <string name="view_reply">查看回复</string>
     <string name="liked">已赞</string>
     <string name="disliked">已踩</string>
     <string name="deleted">已删除</string>

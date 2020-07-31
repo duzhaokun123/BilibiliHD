@@ -18,12 +18,12 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.universal.reply.ChildReplyActivity"></activity>
-        <activity android:name=".ui.universal.reply.RootReplyActivity" />
-
+        <activity
+            android:name=".ui.universal.reply.RootReplyActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode" />
         <service
             android:name=".services.PlayControlService"
             android:exported="false" />
-
         <activity
             android:name=".ui.settings.DanmakuTestActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
@@ -63,9 +63,6 @@
         <activity
             android:name=".ui.LogoutActivity"
             android:label="@string/logout" />
-        <activity
-            android:name=".ui.settings.LicenseActivity"
-            android:label="@string/license" />
         <activity android:name=".ui.userspace.FavoriteActivity" />
         <activity
             android:name=".ui.play.PlayActivity"
