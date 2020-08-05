@@ -52,11 +52,12 @@ public class BiliPlayerViewPackageView extends FrameLayout {
     public BiliPlayerViewPackageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        baseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_bili_player_view_package_view, this, true);
         if (isInEditMode()) {
+            LayoutInflater.from(context).inflate(R.layout.layout_bili_player_view_package_view, this);
             return;
         }
 
+        baseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_bili_player_view_package_view, this, true);
         player = new SimpleExoPlayer.Builder(context).build();
         baseBind.bpv.setPlayer(player);
     }

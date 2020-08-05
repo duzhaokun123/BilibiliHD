@@ -8,7 +8,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -53,7 +51,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private boolean first = true;
     private String title;
     private int defaultNavWidth = 0;
-    private boolean navOpen = true;
 
     @Override
     public void setTitle(CharSequence title) {
@@ -65,7 +62,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_activity, menu);
 
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE );
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         assert searchManager != null;
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -156,23 +153,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     } else {
                         baseBind.dlMain.open();
                     }
-                } else {
-                    ViewGroup.LayoutParams params = baseBind.navMain.getLayoutParams();
-                    ValueAnimator valueAnimator;
-                    if (navOpen) {
-                        navOpen = false;
-                        valueAnimator = ValueAnimator.ofInt(defaultNavWidth, 0);
+                }
+                if (baseBind.ml != null) {
+                    if (baseBind.ml.getProgress() == 0f) {
+                        baseBind.ml.transitionToEnd();
                     } else {
-                        navOpen = true;
-                        valueAnimator = ValueAnimator.ofInt(0, defaultNavWidth);
-                        reloadMyInfo();
+                        baseBind.ml.transitionToStart();
                     }
-                    valueAnimator.setDuration(500);
-                    valueAnimator.addUpdateListener(animation -> {
-                        params.width = (Integer) animation.getAnimatedValue();
-                        baseBind.navMain.setLayoutParams(params);
-                    });
-                    valueAnimator.start();
                 }
                 return true;
             case R.id.search:

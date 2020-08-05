@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.play
 
-import android.animation.ValueAnimator
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.os.Message
 import android.util.Rational
 import android.view.*
 import androidx.annotation.Nullable
-import androidx.core.animation.doOnEnd
 import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
@@ -72,10 +70,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var playId = 0L
     private var firstPlay = true
     private val notificationId = NotificationUtil.getNewId()
-    private val bpvpvDefaultHeight = OtherUtils.dp2px(300f)
     private var isFullscreen = false
     private var isPlayingBeforeActivityPause = false
-    private var allowFullscreenAnimation = true
 
     private val mediaRouteCallback = object : MediaRouter.Callback() {
         override fun onRouteSelected(router: MediaRouter?, route: MediaRouter.RouteInfo?) {
@@ -181,9 +177,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         baseBind.bpvpv.onFullscreenClickListener = BiliPlayerViewPackageView.OnFullscreenClickListener { isFullscreen ->
             this.isFullscreen = isFullscreen
 
-            val newHeight: Int
             if (this.isFullscreen) {
-                newHeight = baseBind.clRoot.height
+                baseBind.ml.transitionToEnd()
                 if (presentation == null) {
                     supportActionBar?.hide()
                 }
@@ -195,35 +190,13 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
                 }
             } else {
-                newHeight = bpvpvDefaultHeight
+                baseBind.ml.transitionToStart()
                 supportActionBar?.show()
                 window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
                         and (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY).inv())
-            }
-
-            val params = baseBind.bpvpv.layoutParams
-            if (allowFullscreenAnimation) {
-                val valueAnimator = ValueAnimator.ofInt(baseBind.bpvpv.height, newHeight)
-                valueAnimator.addUpdateListener { animation ->
-                    params.height = animation.animatedValue as Int
-                    baseBind.bpvpv.layoutParams = params
-                }
-                if (newHeight == baseBind.clRoot.height) {
-                    valueAnimator.doOnEnd {
-                        params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                        baseBind.bpvpv.layoutParams = params
-                    }
-                }
-                valueAnimator.start()
-            } else {
-                params.height = newHeight
-                if (params.height == baseBind.clRoot.height) {
-                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                }
-                baseBind.bpvpv.layoutParams = params
             }
         }
         baseBind.bpvpv.setControllerVisibilityListener { visibility ->
@@ -401,7 +374,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-        allowFullscreenAnimation = isInPictureInPictureMode.not()
+        baseBind.ml.enableTransition(R.id.player_transition, isInPictureInPictureMode.not())
         if (isInPictureInPictureMode) {
             if (!isFullscreen) {
                 baseBind.bpvpv.clickIbFullscreen()

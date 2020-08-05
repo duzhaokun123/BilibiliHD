@@ -49,16 +49,16 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
         baseBind.xrv.layoutManager = LinearLayoutManager(context)
         baseBind.xrv.setLoadingListener(object : XRecyclerView.LoadingListener {
             override fun onLoadMore() {
-                isEnd = false
-                handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE)
-            }
-
-            override fun onRefresh() {
                 if (isEnd.not()) {
-                    handler?.sendEmptyMessage(WHAT_REPLY_REFRESH)
+                    handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE)
                 } else {
                     baseBind.xrv.setNoMore(true)
                 }
+            }
+
+            override fun onRefresh() {
+                isEnd = false
+                handler?.sendEmptyMessage(WHAT_REPLY_REFRESH)
             }
         })
         baseBind.btnSend.setOnClickListener {

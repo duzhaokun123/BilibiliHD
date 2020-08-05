@@ -49,7 +49,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private static final int WHAT_LOAD_SHOT = 2;
 
     private final String TAG = this.getClass().getSimpleName();
-    private final int defaultIbNextWidth = OtherUtils.dp2px(50);
+    private int defaultIbNextWidth;
 
     private LayoutPlayerOverlayBinding overlayBaseBind;
     private FrameLayout overlay;
@@ -84,6 +84,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         if (isInEditMode()) {
             return;
         }
+        defaultIbNextWidth = OtherUtils.dp2px(50);
         overlay = getOverlayFrameLayout();
         overlayBaseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_player_overlay, overlay, true);
         handler = new Handler(this);

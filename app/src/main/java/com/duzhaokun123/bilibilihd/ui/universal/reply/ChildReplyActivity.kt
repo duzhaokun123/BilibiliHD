@@ -65,16 +65,16 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
         baseBind.xrv.layoutManager = LinearLayoutManager(this)
         baseBind.xrv.setLoadingListener(object : XRecyclerView.LoadingListener {
             override fun onLoadMore() {
-                isEnd = false
-                handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_LOAD_MORE)
-            }
-
-            override fun onRefresh() {
                 if (isEnd.not()) {
-                    handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_REFRESH)
+                    handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_LOAD_MORE)
                 } else {
                     baseBind.xrv.setNoMore(true)
                 }
+            }
+
+            override fun onRefresh() {
+                isEnd = false
+                handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_REFRESH)
             }
         })
         baseBind.btnSend.setOnClickListener {

@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep public class * extends com.duzhaokun123.bilibilihd.bases*
+-keep public class * extends androidx.fragment.app.Fragment
+-keep public class com.duzhaokun123.bilibilihd.mybilibiliapi** {*;}
+-keep public class com.hiczp.bilibili.api** {*;}

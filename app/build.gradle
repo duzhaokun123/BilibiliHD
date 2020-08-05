@@ -18,7 +18,16 @@ def getGitCommitCount = { ->
         commandLine "git", "rev-list", "dev", "--count"
         standardOutput = stdout
     }
-    return stdout.toString().trim()
+    return stdout.toString().toInteger()
+}
+
+def isHasChange = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "status", "--short"
+        standardOutput = stdout
+    }
+    return !stdout.toString().trim().isEmpty()
 }
 
 android {
@@ -28,18 +37,20 @@ android {
         applicationId "com.duzhaokun123.bilibilihd"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode "${getGitCommitCount}".toInteger()
-        versionName "0.1-git.${getGitHash}"
+        versionCode getGitCommitCount()
+        versionName "0.1-git.${getGitHash()}${isHasChange() ? "-changed" : ""}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "IS_GIT_VERSION", "true")
         proguardFiles
         multiDexEnabled true
+        resConfigs "en", "zh-rCN"
     }
 
     buildTypes {
 
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
         }
@@ -76,7 +87,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
