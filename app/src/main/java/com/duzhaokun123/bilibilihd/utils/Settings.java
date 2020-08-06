@@ -81,6 +81,10 @@ public class Settings {
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             }
         }
+
+        public boolean isUserSpaceUseWebView() {
+            return sharedPreferences.getBoolean("user_space_use_web_view", false);
+        }
     }
 
     public static class Play {
@@ -94,10 +98,6 @@ public class Settings {
 
         public int getDefaultQualityType() {
             return getIntByString("quality", 0);
-        }
-
-        public boolean isUserSpaceUseWebView() {
-            return sharedPreferences.getBoolean("user_space_use_web_view", false);
         }
     }
 

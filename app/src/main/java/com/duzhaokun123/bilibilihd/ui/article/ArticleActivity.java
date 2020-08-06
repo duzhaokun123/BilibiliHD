@@ -26,14 +26,10 @@ public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.open_in_browser:
-                if (teleportIntent != null) {
-                    BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
-                }
+                BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getCvUrl(getStartIntent().getLongExtra("id", 0)));
                 return true;
             case R.id.share:
-                if (teleportIntent != null) {
-                    ShareUtil.INSTANCE.shareText(this, MyBilibiliClientUtil.getCvUrl(teleportIntent.getLongExtra("id", 0)));
-                }
+                ShareUtil.INSTANCE.shareText(this, MyBilibiliClientUtil.getCvUrl(getStartIntent().getLongExtra("id", 0)));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -63,8 +59,6 @@ public class ArticleActivity extends BaseActivity<ActivityArticleBinding> {
 
     @Override
     protected void initData() {
-        if (teleportIntent != null) {
-            baseBind.wv.loadUrl("https://www.bilibili.com/read/cv" + teleportIntent.getLongExtra("id", 0));
-        }
+        baseBind.wv.loadUrl("https://www.bilibili.com/read/cv" + getStartIntent().getLongExtra("id", 0));
     }
 }

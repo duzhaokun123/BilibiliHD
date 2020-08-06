@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -55,9 +56,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
 
     @Override
     public void initView() {
-        if (teleportIntent != null && teleportIntent.getExtras() != null) {
-            setTitle(teleportIntent.getExtras().getString("name"));
-        }
+        setTitle(getStartIntent().getStringExtra("name"));
 
         int spanCount = getResources().getInteger(R.integer.column_medium);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.getColumn() != 0) {
@@ -119,7 +118,8 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                     ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
                         Intent intent = new Intent(FavoriteActivity.this, PlayActivity.class);
                         intent.putExtra("aid", ids.getData().get(position).getId());
-                        startActivity(intent);
+                        intent.putExtra(PlayActivity.EXTRA_FAST_LOAD_COVER_URL, infos.getData().get(position).getCover());
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(FavoriteActivity.this, ((VideoCardHolder) holder).mIv, "cover").toBundle());
                     });
                     if (infos != null) {
                         ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
@@ -137,7 +137,7 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                         case R.id.check_cover:
                                             Intent intent = new Intent(FavoriteActivity.this, PhotoViewActivity.class);
                                             intent.putExtra("url", url);
-                                            startActivity(intent);
+                                            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(FavoriteActivity.this, ((VideoCardHolder) holder).mIv, "img").toBundle());
                                             break;
                                         case R.id.add_to_watch_later:
                                             new Thread() {
@@ -234,9 +234,26 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
     class Refresh extends Thread {
         @Override
         public void run() {
-            if (teleportIntent != null && teleportIntent.getExtras() != null) {
-                MediaListAPI.getInstance().getIds(teleportIntent.getExtras().getLong("media_id"),
-                        teleportIntent.getExtras().getLong("mid"), new MyBilibiliClient.ICallback<Ids>() {
+
+            MediaListAPI.getInstance().getIds(getStartIntent().getLongExtra("media_id", 0),
+                    getStartIntent().getLongExtra("mid", 0), new MyBilibiliClient.ICallback<Ids>() {
+                        @Override
+                        public void onException(@NotNull Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
+                        }
+
+                        @Override
+                        public void onSuccess(@NotNull Ids ids) {
+                            FavoriteActivity.this.ids = ids;
+                            if (handler != null) {
+                                handler.sendEmptyMessage(0);
+                            }
+                        }
+                    });
+            if (ids != null) {
+                MediaListAPI.getInstance().getInfos(getStartIntent().getLongExtra("media_id", 0),
+                        getStartIntent().getLongExtra("mid", 0), ids, new MyBilibiliClient.ICallback<Infos>() {
                             @Override
                             public void onException(@NotNull Exception e) {
                                 e.printStackTrace();
@@ -244,32 +261,15 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                             }
 
                             @Override
-                            public void onSuccess(@NotNull Ids ids) {
-                                FavoriteActivity.this.ids = ids;
+                            public void onSuccess(@NotNull Infos infos) {
+                                FavoriteActivity.this.infos = infos;
                                 if (handler != null) {
-                                    handler.sendEmptyMessage(0);
+                                    handler.sendEmptyMessage(1);
                                 }
                             }
                         });
-                if (ids != null) {
-                    MediaListAPI.getInstance().getInfos(teleportIntent.getExtras().getLong("media_id"),
-                            teleportIntent.getExtras().getLong("mid"), ids, new MyBilibiliClient.ICallback<Infos>() {
-                                @Override
-                                public void onException(@NotNull Exception e) {
-                                    e.printStackTrace();
-                                    runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
-                                }
-
-                                @Override
-                                public void onSuccess(@NotNull Infos infos) {
-                                    FavoriteActivity.this.infos = infos;
-                                    if (handler != null) {
-                                        handler.sendEmptyMessage(1);
-                                    }
-                                }
-                            });
-                }
             }
+
         }
     }
 }

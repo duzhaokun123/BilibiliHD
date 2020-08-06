@@ -116,7 +116,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:importantForAutofill="no"
-                    android:inputType="text" />
+                    android:inputType="textMultiLine"
+                    android:maxLines="4" />
 
                 <Button
                     android:id="@+id/btn_send"

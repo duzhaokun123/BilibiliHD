@@ -46,7 +46,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
     override fun initLayout() = R.layout.activity_child_reply
 
     override fun initView() {
-        teleportIntent?.let {
+        startIntent.let {
             type = it.getIntExtra(EXTRA_TYPE, 0)
             oid = it.getLongExtra(EXTRA_OID, 0)
             root = it.getLongExtra(EXTRA_ROOT, 0)

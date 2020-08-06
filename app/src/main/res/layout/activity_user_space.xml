@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,6 +32,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="-8dp"
+                android:transitionName="face"
                 app:civ_border_color="@color/colorPrimaryDark"
                 app:civ_border_width="2dp" />
 
@@ -42,7 +45,8 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/ordinaryText"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:transitionName="name" />
 
             <ImageView
                 android:id="@+id/iv_sex"
@@ -157,7 +161,7 @@
                 app:tabGravity="center" />
         </RelativeLayout>
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

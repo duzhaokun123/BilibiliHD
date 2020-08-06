@@ -19,14 +19,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Constraint
-            android:id="@id/tl"
-            android:layout_width="match_parent"
-            motion:layout_constraintTop_toBottomOf="@id/bpvpv" />
-
-        <Constraint
-            android:id="@id/vp"
-            android:layout_width="match_parent"
-            motion:layout_constraintTop_toBottomOf="@id/tl" />
     </ConstraintSet>
 </MotionScene>

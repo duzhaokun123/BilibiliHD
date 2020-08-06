@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.main;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -43,7 +44,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        mHistory = (History) ObjectCache.get(savedInstanceState.getLong("mHistory"));
+        mHistory = (History) ObjectCache.get(savedInstanceState.getString("mHistory"));
     }
 
     @Override
@@ -122,14 +123,14 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     @Override
                     public boolean onLongClick(View v) {
 
-                        PopupMenu popupMenu = new PopupMenu(getContext(), ((VideoCardHolder) holder).mCv);
+                        PopupMenu popupMenu = new PopupMenu(requireContext(), ((VideoCardHolder) holder).mCv);
                         popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
                         popupMenu.setOnMenuItemClickListener(item -> {
                             switch (item.getItemId()) {
                                 case R.id.check_cover:
                                     Intent intent = new Intent(getContext(), PhotoViewActivity.class);
                                     intent.putExtra("url", url);
-                                    startActivity(intent);
+                                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "img").toBundle());
                                     break;
                                 case R.id.add_to_watch_later:
                                     new Thread() {
@@ -228,7 +229,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("mHistory", ObjectCache.put(mHistory));
+        outState.putString("mHistory", ObjectCache.put(mHistory));
     }
 
     class Refresh extends Thread {

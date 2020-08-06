@@ -47,7 +47,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        space = (Space) ObjectCache.get(savedInstanceState.getLong("space"));
+        space = (Space) ObjectCache.get(savedInstanceState.getString("space"));
     }
 
     @Override
@@ -116,7 +116,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
             }
         });
 
-        BaseActivity baseActivity = getBaseActivity();
+        BaseActivity<?> baseActivity = getBaseActivity();
         if (baseActivity != null && baseActivity.navigationBarOnButton) {
             ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
             params.height = baseActivity.getFixButtonHeight();
@@ -132,6 +132,6 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("space", ObjectCache.put(space));
+        outState.putString("space", ObjectCache.put(space));
     }
 }

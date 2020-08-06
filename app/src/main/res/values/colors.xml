@@ -9,9 +9,9 @@
     <color name="lightBackground">@color/background</color>
     <color name="lighterBackground">@color/background</color>
     <color name="lightestBackground">@color/background</color>
-    <color name="darkBackground">@color/background</color>
-    <color name="darkerBackground">@color/background</color>
-    <color name="darkestBackground">@color/background</color>
+    <color name="darkBackground">#ECECEC</color>
+    <color name="darkerBackground">#DADADA</color>
+    <color name="darkestBackground">#CFCFCF</color>
     <color name="ordinaryText">@android:color/black</color>
     <color name="accentText">@color/colorAccent</color>
     <color name="iconOnBackground">@android:color/black</color>

@@ -44,7 +44,7 @@
         - [ ] 历史弹幕
     - [x] 稍后再看
     - [ ] 三连相关
-    - [ ] TAG
+    - [x] TAG
     - [x] 历史进度
 - [x] 评论
     - [x] 查看
@@ -147,6 +147,8 @@ includeBuild 'path/to/DanmakuFlameMaster'
 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
 
 [bilibili-api](https://github.com/czp3009/bilibili-api)
+
+[flexbox-layout](https://github.com/google/flexbox-layout)
 
 [geetest-validator](https://github.com/kuresaru/geetest-validator)
 

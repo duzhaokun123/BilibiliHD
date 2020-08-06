@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.play;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
@@ -14,12 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentPlayIntroBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.duzhaokun123.bilibilihd.utils.LinkifyUtil;
@@ -69,6 +72,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         mCivFace = parentView.findViewById(R.id.civ_face);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
         baseBind.tvBvid.setText(MyBilibiliClientUtil.av2bv(aid));
@@ -79,6 +83,35 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
             params.height = baseActivity.getFixButtonHeight();
             baseBind.v.setLayoutParams(params);
+        }
+        for (com.hiczp.bilibili.api.app.model.View.Data.Tag tag : biliView.getData().getTag()) {
+            TextView textView = new TextView(getContext());
+            textView.setText(tag.getTagName());
+            textView.setBackgroundResource(R.drawable.bg_tag);
+            textView.setTextColor(getResources().getColor(R.color.ordinaryText, null));
+            textView.setPadding(OtherUtils.dp2px(10), OtherUtils.dp2px(5), OtherUtils.dp2px(10), OtherUtils.dp2px(5));
+            textView.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), "https://www.bilibili.com/v/channel/" + tag.getTagId(), true, true));
+            baseBind.fblTags.addView(textView);
+        }
+        if (biliView.getData().getHonor() != null) {
+            baseBind.llHonor.setVisibility(View.VISIBLE);
+            baseBind.tvHonorText.setText(biliView.getData().getHonor().getText());
+            baseBind.tvHonorTextExtra.setText(biliView.getData().getHonor().getTextExtra());
+            baseBind.tvHonorUrl.setText(biliView.getData().getHonor().getUrlText());
+            int textColor;
+            if (OtherUtils.isNightMode()) {
+                Glide.with(this).load(biliView.getData().getHonor().getIconNight()).into(baseBind.ivHonorIcon);
+                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getData().getHonor().getBgColorNight()));
+                textColor = Color.parseColor(biliView.getData().getHonor().getTextColorNight());
+            } else {
+                Glide.with(this).load(biliView.getData().getHonor().getIcon()).into(baseBind.ivHonorIcon);
+                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getData().getHonor().getBgColor()));
+                textColor = Color.parseColor(biliView.getData().getHonor().getTextColor());
+            }
+            baseBind.tvHonorText.setTextColor(textColor);
+            baseBind.tvHonorTextExtra.setTextColor(textColor);
+            baseBind.tvHonorUrl.setTextColor(textColor);
+            baseBind.llHonor.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), biliView.getData().getHonor().getUrl(), false, true));
         }
     }
 
@@ -93,11 +126,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             case 0:
                 sendBack();
                 GlideUtil.loadUrlInto(getContext(), biliView.getData().getOwner().getFace(), mCivFace, false);
-                mCivFace.setOnClickListener(v -> {
-                    Intent intent = new Intent(getContext(), UserSpaceActivity.class);
-                    intent.putExtra("uid", biliView.getData().getOwner().getMid());
-                    startActivity(intent);
-                });
+                mCivFace.setOnClickListener(v -> UserSpaceActivity.enter(getActivity(), biliView.getData().getOwner().getMid(), mCivFace, null));
                 mTvUpName.setText(biliView.getData().getOwner().getName());
                 mTvUpName.setOnClickListener(v -> mCivFace.callOnClick());
                 mTvUpFans.setText(getString(R.string.num_fans, biliView.getData().getOwnerExt().getFans()));

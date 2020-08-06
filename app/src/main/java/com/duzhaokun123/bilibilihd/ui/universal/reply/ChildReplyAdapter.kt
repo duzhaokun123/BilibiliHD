@@ -1,14 +1,12 @@
 package com.duzhaokun123.bilibilihd.ui.universal.reply
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Message
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
@@ -28,9 +26,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
     override fun initView(baseBind: ItemReplyBinding, position: Int) {
         childReply.data.root.replies?.get(position)?.let { reply ->
             baseBind.civFace.setOnClickListener {
-                val intent = Intent(context, UserSpaceActivity::class.java)
-                intent.putExtra("uid", reply.mid)
-                ContextCompat.startActivity(context, intent, null)
+                UserSpaceActivity.enter(activity, reply.mid, baseBind.civFace, null)
             }
         }
     }

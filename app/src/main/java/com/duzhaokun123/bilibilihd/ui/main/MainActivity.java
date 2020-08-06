@@ -252,9 +252,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
         mRlMyInfo.setOnClickListener(v -> {
             if (pBilibiliClient.getBilibiliClient().isLogin()) {
-                Intent intent = new Intent(MainActivity.this, UserSpaceActivity.class);
-                intent.putExtra("uid", pBilibiliClient.getBilibiliClient().getUserId());
-                startActivity(intent);
+                assert pBilibiliClient.getBilibiliClient().getUserId() != null;
+                UserSpaceActivity.enter(this, pBilibiliClient.getBilibiliClient().getUserId(), mCivFace, mTvUsername);
             } else {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);

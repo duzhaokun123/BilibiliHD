@@ -8,19 +8,18 @@ import android.graphics.drawable.Icon
 import android.os.Message
 import android.util.Rational
 import android.view.*
-import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.mediarouter.app.MediaRouteActionProvider
 import androidx.mediarouter.media.MediaControlIntent
 import androidx.mediarouter.media.MediaRouteSelector
 import androidx.mediarouter.media.MediaRouter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
@@ -37,12 +36,16 @@ import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
 import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     companion object {
+        const val EXTRA_FAST_LOAD_COVER_URL = "fast_load_cover_url"
+        const val EXTRA_BVID = "bvid"
+
         const val WHAT_LOAD_BILIVIEW = 0
         const val WHAT_BILIVIEW_LOAD_OVER = 1
         const val WHAT_INTRO_FRAGMENT_SEND_BACK = 2
@@ -173,7 +176,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun initView() {
-        baseBind.tl.setupWithViewPager(baseBind.vp)
+        baseBind.bpvpv.setCover(startIntent.getStringExtra(EXTRA_FAST_LOAD_COVER_URL))
         baseBind.bpvpv.onFullscreenClickListener = BiliPlayerViewPackageView.OnFullscreenClickListener { isFullscreen ->
             this.isFullscreen = isFullscreen
 
@@ -288,8 +291,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun initData() {
         if (aid == 0L) {
-            aid = teleportIntent!!.getLongExtra("aid", 0)
-            page = teleportIntent!!.getIntExtra("page", 1)
+            aid = startIntent.getLongExtra("aid", 0)
+            if (aid == 0L) {
+                aid = MyBilibiliClientUtil.bv2av(startIntent.getStringExtra(EXTRA_BVID))
+            }
+            page = startIntent.getIntExtra("page", 1)
             handler?.sendEmptyMessage(WHAT_LOAD_BILIVIEW)
         }
         title = ""
@@ -406,8 +412,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     }
                 }.start()
             WHAT_BILIVIEW_LOAD_OVER -> {
+                baseBind.vp.adapter = MyFragmentStateAdapter(this)
+                TabLayoutMediator(baseBind.tl, baseBind.vp) { tab, position ->
+                    when (position) {
+                        0 -> tab.setText(R.string.intro)
+                        1 -> tab.text = getString(R.string.comment_num, biliView?.data?.stat?.reply)
+                    }
+                }.attach()
                 baseBind.bpvpv.setCover(biliView?.data?.pic)
-                baseBind.vp.adapter = MyFragmentPagerAdapter(supportFragmentManager, 1)
                 title = biliView?.data?.title
                 notificationBuilder?.setContentTitle(biliView?.data?.title)
                 Thread {
@@ -559,8 +571,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         }
     }
 
-    inner class MyFragmentPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
-        override fun getItem(position: Int): Fragment {
+    inner class MyFragmentStateAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+        override fun createFragment(position: Int): Fragment {
             return if (position == 0) {
                 if (introFragment == null) {
                     introFragment = IntroFragment.getInstance(biliView, aid, page)
@@ -574,15 +586,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
         }
 
-        override fun getCount() = 2
-
-        @Nullable
-        override fun getPageTitle(position: Int): CharSequence {
-            return if (position == 0) {
-                getString(R.string.intro)
-            } else {
-                getString(R.string.comment_num, biliView?.data?.stat?.reply)
-            }
-        }
+        override fun getItemCount() = 2
     }
 }

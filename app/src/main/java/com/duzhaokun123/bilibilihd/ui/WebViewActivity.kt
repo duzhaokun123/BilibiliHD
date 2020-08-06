@@ -21,6 +21,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
     companion object {
         const val EXTRA_DESKTOP_UA = "desktop_ua"
         const val EXTRA_INTERCEPT_ALL = "intercept_all"
+        const val EXTRA_FINISH_WHEN_INTERCEPT = "finish_when_intercept"
     }
 
     override fun initConfig(): Int {
@@ -72,10 +73,13 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return if ("bilibili" == request?.url?.scheme || teleportIntent?.extras?.getBoolean(EXTRA_INTERCEPT_ALL)!!) {
+                return if ("bilibili" == request?.url?.scheme || startIntent.extras?.getBoolean(EXTRA_INTERCEPT_ALL)!!) {
                     val intent = Intent(this@WebViewActivity, UrlOpenActivity::class.java)
                     intent.data = request?.url
                     startActivity(intent)
+                    if (startIntent.getBooleanExtra(EXTRA_FINISH_WHEN_INTERCEPT, false)) {
+                        finish()
+                    }
                     true
                 } else {
                     false
@@ -105,14 +109,14 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 setTitle(title)
             }
         }
-        if (teleportIntent?.extras?.getBoolean(EXTRA_DESKTOP_UA, true)!!) {
+        if (startIntent.extras?.getBoolean(EXTRA_DESKTOP_UA, true)!!) {
             baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
         }
         baseBind.wv.settings.domStorageEnabled = true
     }
 
     override fun initData() {
-        teleportIntent?.dataString?.let { baseBind.wv.loadUrl(it) }
+        startIntent.dataString?.let { baseBind.wv.loadUrl(it) }
     }
 
     override fun onBackPressed() {

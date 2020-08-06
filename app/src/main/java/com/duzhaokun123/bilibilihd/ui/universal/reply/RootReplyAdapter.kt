@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.view.View
 import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
@@ -46,9 +45,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
         } ?: return
 
         baseBind.civFace.setOnClickListener {
-            val intent = Intent(context, UserSpaceActivity::class.java)
-            intent.putExtra("uid", aReply.mid)
-            ContextCompat.startActivity(context, intent, null)
+            UserSpaceActivity.enter(activity, aReply.mid, baseBind.civFace, null)
         }
     }
 

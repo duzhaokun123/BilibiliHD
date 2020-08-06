@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.main;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -46,7 +47,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        homePage = (HomePage) ObjectCache.get(savedInstanceState.getLong("homePage"));
+        homePage = (HomePage) ObjectCache.get(savedInstanceState.getString("homePage"));
     }
 
     @Override
@@ -132,9 +133,12 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                     @Override
                     public void onClick(View v) {
                         Intent intent = null;
+                        Bundle options = null;
                         if ("av".equals(cardGoto)) {
                             intent = new Intent(getContext(), PlayActivity.class);
                             intent.putExtra("aid", aid);
+                            intent.putExtra(PlayActivity.EXTRA_FAST_LOAD_COVER_URL, homePage.getData().getItems().get(position).getCover());
+                            options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "cover").toBundle();
                         } else if ("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         } else if ("ad_web_s".equals(cardGoto)) {
@@ -144,7 +148,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());
                         }
                         if (intent != null) {
-                            startActivity(intent);
+                            startActivity(intent, options);
                         }
                     }
                 });
@@ -178,7 +182,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                                 case R.id.check_cover:
                                     Intent intent = new Intent(getContext(), PhotoViewActivity.class);
                                     intent.putExtra("url", url);
-                                    startActivity(intent);
+                                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "img").toBundle());
                                     break;
                                 case R.id.add_to_watch_later:
                                     new Thread() {
@@ -272,7 +276,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("homePage", ObjectCache.put(homePage));
+        outState.putString("homePage", ObjectCache.put(homePage));
     }
 
     class Refresh extends Thread {

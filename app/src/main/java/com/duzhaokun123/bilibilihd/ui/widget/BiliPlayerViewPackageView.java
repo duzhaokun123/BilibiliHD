@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -164,6 +165,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
 
     public void setCover(String url) {
         if (url != null) {
+            baseBind.ivCover.setVisibility(VISIBLE);
             GlideUtil.loadUrlInto(getContext(), url, baseBind.ivCover, false);
         } else {
             baseBind.ivCover.setVisibility(GONE);

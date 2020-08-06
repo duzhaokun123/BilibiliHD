@@ -2,9 +2,6 @@ package com.duzhaokun123.bilibilihd.utils;
 
 import android.util.Log;
 
-import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
-import com.hiczp.bilibili.api.passport.model.LoginResponse;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +40,10 @@ public class MyBilibiliClientUtil {
     private static final long add = 8728348608L;
 
     public static long bv2av(String bv) {
+        if (bv == null) {
+            return 0;
+        }
+
         if (tr == null) {
             tr = new HashMap<>();
             for (int i = 0; i < 58; i++) {
@@ -50,8 +51,13 @@ public class MyBilibiliClientUtil {
             }
         }
         long re = 0;
-        for (int i = 0; i < 6; i++) {
-            re += tr.get(bv.charAt(s[i])) * Math.pow(58, i);
+        try {
+            for (int i = 0; i < 6; i++) {
+                re += tr.get(bv.charAt(s[i])) * Math.pow(58, i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
         return (re - add) ^ xor;
     }

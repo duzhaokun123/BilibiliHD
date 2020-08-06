@@ -16,7 +16,7 @@ class RootReplyActivity : BaseActivity<ActivityRootReplyBinding>() {
     override fun initLayout() = R.layout.activity_root_reply
 
     override fun initView() {
-        teleportIntent?.let {
+        startIntent.let {
             baseBind.tvType.text = it.getIntExtra(EXTRA_TYPE, 0).toString()
             baseBind.tvOid.text = it.getLongExtra(EXTRA_OID, 0L).toString()
             supportFragmentManager

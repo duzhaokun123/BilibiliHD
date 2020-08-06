@@ -52,15 +52,13 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
             }
         });
 
-        baseBind.ibDl.setOnClickListener(v ->{
+        baseBind.ibDl.setOnClickListener(v -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
+                        DownloadUtil.downloadPicture(PhotoViewActivity.this, getStartIntent().getStringExtra("url"));
                     } else {
                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, grantResults -> {
                             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                                if (teleportIntent != null && teleportIntent.getExtras() != null) {
-                                    DownloadUtil.downloadPicture(PhotoViewActivity.this, teleportIntent.getExtras().getString("url"));
-                                }
+                                DownloadUtil.downloadPicture(PhotoViewActivity.this, getStartIntent().getStringExtra("url"));
                             } else {
                                 TipUtil.showToast(getString(R.string.request) + " " + Manifest.permission.WRITE_EXTERNAL_STORAGE);
                             }
@@ -91,9 +89,7 @@ public class PhotoViewActivity extends BaseActivity<ActivityPhotoViewBinding> {
     @Override
     protected void initData() {
         String url;
-        if (teleportIntent != null
-                && teleportIntent.getExtras() != null
-                && (url = teleportIntent.getExtras().getString("url", null)) != null) {
+        if ((url = getStartIntent().getStringExtra("url")) != null) {
             Glide.with(this).load(url).into(baseBind.pv);
         }
     }

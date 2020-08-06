@@ -36,8 +36,6 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     protected layout baseBind;
     @Nullable
     protected Handler handler;
-    @Nullable
-    protected Intent teleportIntent;
     /**
      * actionBarHeight displayCutout 只在 onWindowFocusChanged() 后才有意义
      */
@@ -73,8 +71,6 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        teleportIntent = getIntent();
 
         config = initConfig();
 
@@ -245,6 +241,11 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     }
 
     protected void onLayoutFixInfoReady() {
+    }
+
+    @NonNull
+    public Intent getStartIntent() {
+        return getIntent();
     }
 
     @Nullable

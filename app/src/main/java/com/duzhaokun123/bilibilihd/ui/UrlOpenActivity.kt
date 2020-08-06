@@ -71,7 +71,7 @@ class UrlOpenActivity : AppCompatActivity() {
                         }
                         else -> throw RuntimeException("shouldn't be here")
                     }
-                    Type.B23TV, Type.LIVE -> BrowserUtil.openWebViewActivity(this, uri.toString(), false)
+                    Type.B23TV, Type.LIVE -> BrowserUtil.openWebViewActivity(this, uri.toString(), false, false, true)
                     Type.T -> BrowserUtil.openWebViewActivity(this, uri.toString(), true, true)
                     Type.UNKNOWN -> BrowserUtil.openWebViewActivity(this, uri.toString(), true, false)
                     else -> throw RuntimeException("shouldn't be here")
