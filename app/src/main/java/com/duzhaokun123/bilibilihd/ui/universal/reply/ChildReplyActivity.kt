@@ -81,7 +81,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
             Thread {
                 var sendReplyResponse: SendReplyResponse? = null
                 try {
-                    sendReplyResponse = PBilibiliClient.getInstance().pMainAPI.sendReply(oid, baseBind.etText.text.toString(),
+                    sendReplyResponse = PBilibiliClient.pMainAPI.sendReply(oid, baseBind.etText.text.toString(),
                             baseBind.etParent.text.toString().toLongOrNull() ?: root, root, type)
                 } catch (e: Exception) {
                     e.printStackTrace()

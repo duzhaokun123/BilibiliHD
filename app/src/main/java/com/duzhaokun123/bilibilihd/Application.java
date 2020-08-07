@@ -42,7 +42,7 @@ public class Application extends android.app.Application implements Handler.IHan
             Settings.setLastVersionCode(BuildConfig.VERSION_CODE);
         }
         LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
-        PBilibiliClient.Companion.getInstance().setLoginResponse(loginResponse);
+        PBilibiliClient.INSTANCE.setLoginResponse(loginResponse);
         if (Settings.isFirstStart()) {
             NotificationUtil.INSTANCE.init(this);
             Settings.setFirstStart(false);

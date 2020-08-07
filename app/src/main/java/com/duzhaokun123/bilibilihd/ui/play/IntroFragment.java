@@ -31,6 +31,7 @@ import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
+import com.hiczp.bilibili.api.app.model.FavoritePage;
 import com.hiczp.bilibili.api.app.model.LikeResponse;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
@@ -118,7 +119,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         }
         baseBind.tvLike.setOnClickListener(v -> new Thread(() -> {
             try {
-                LikeResponse likeResponse = PBilibiliClient.Companion.getInstance().getPAppAPI().like(aid, true);
+                LikeResponse likeResponse = PBilibiliClient.INSTANCE.getPAppAPI().like(aid, true);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         TipUtil.showTip(getContext(), likeResponse.getData().getToast());
@@ -134,7 +135,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         }).start());
         baseBind.tvDislike.setOnClickListener(v -> new Thread(() -> {
             try {
-                PBilibiliClient.Companion.getInstance().getPAppAPI().dislike(aid, true);
+                PBilibiliClient.INSTANCE.getPAppAPI().dislike(aid, true);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), R.string.disliked));
                 }
@@ -153,7 +154,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             }
             popupMenu.setOnMenuItemClickListener(item -> {
                 try {
-                    PBilibiliClient.Companion.getInstance().getPAppAPI().addCoin(aid, item.getOrder());
+                    PBilibiliClient.INSTANCE.getPAppAPI().addCoin(aid, item.getOrder());
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             TipUtil.showTip(getContext(), getString(R.string.added_coin_d, item.getOrder()));
@@ -170,6 +171,41 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             });
             popupMenu.show();
         });
+        baseBind.tvFavorite.setOnClickListener(v -> new Thread(() -> {
+            try {
+                FavoritePage favoritePage = PBilibiliClient.INSTANCE.getPAppAPI().favoritePage();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        PopupMenu popupMenu = new PopupMenu(requireContext(), baseBind.tvFavorite);
+                        for (int i = 0; i < favoritePage.getData().getFavorite().getItems().size(); i++) {
+                            popupMenu.getMenu().add(0, i, i, favoritePage.getData().getFavorite().getItems().get(i).getName());
+                        }
+                        popupMenu.setOnMenuItemClickListener(item -> {
+                            new Thread(() -> {
+                                try {
+                                    PBilibiliClient.INSTANCE.getPMainAPI().addFavoriteVideo(aid, favoritePage.getData().getFavorite().getItems().get(item.getOrder()).getFid());
+                                    if (getActivity() != null) {
+                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), getString(R.string.favorited_s, favoritePage.getData().getFavorite().getItems().get(item.getOrder()).getName())));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    if (getActivity() != null) {
+                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                                    }
+                                }
+                            }).start();
+                            return true;
+                        });
+                        popupMenu.show();
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                }
+            }
+        }).start());
         if (biliView.getData().getCopyright() == 1) {
             baseBind.tvSelfMade.setVisibility(View.VISIBLE);
         }
@@ -266,7 +302,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         @Override
         public void run() {
             try {
-                videoPlayUrl = PBilibiliClient.Companion.getInstance().getPPlayerAPI().videoPlayUrl(aid, cid);
+                videoPlayUrl = PBilibiliClient.INSTANCE.getPPlayerAPI().videoPlayUrl(aid, cid);
                 if (handler != null) {
                     handler.sendEmptyMessage(what);
                 }

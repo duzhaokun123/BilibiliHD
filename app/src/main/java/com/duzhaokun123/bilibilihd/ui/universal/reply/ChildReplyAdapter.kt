@@ -74,7 +74,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                         R.id.like -> {
                             Thread {
                                 try {
-                                    PBilibiliClient.getInstance().pMainAPI.likeReply(1, reply.oid, reply.rpid, reply.type)
+                                    PBilibiliClient.pMainAPI.likeReply(1, reply.oid, reply.rpid, reply.type)
                                     activity?.runOnUiThread {
                                         TipUtil.showTip(context, R.string.liked)
                                         baseBind.tvAction.setText(R.string.liked)
@@ -89,7 +89,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                         R.id.dislike -> {
                             Thread {
                                 try {
-                                    PBilibiliClient.getInstance().pMainAPI.dislikeReply(1, reply.oid, reply.rpid, reply.type)
+                                    PBilibiliClient.pMainAPI.dislikeReply(1, reply.oid, reply.rpid, reply.type)
                                     activity?.runOnUiThread {
                                         TipUtil.showTip(context, R.string.disliked)
                                         baseBind.tvAction.setText(R.string.disliked)
@@ -108,9 +108,9 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                                     1, 2 -> {
                                         try {
                                             if (reply.action == 1) {
-                                                PBilibiliClient.getInstance().pMainAPI.likeReply(0, reply.oid, reply.rpid, reply.type)
+                                                PBilibiliClient.pMainAPI.likeReply(0, reply.oid, reply.rpid, reply.type)
                                             } else {
-                                                PBilibiliClient.getInstance().pMainAPI.dislikeReply(0, reply.oid, reply.rpid, reply.type)
+                                                PBilibiliClient.pMainAPI.dislikeReply(0, reply.oid, reply.rpid, reply.type)
                                             }
                                             reply.action = 0
                                             activity?.runOnUiThread {

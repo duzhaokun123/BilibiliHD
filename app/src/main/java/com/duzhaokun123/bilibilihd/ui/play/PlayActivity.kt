@@ -411,7 +411,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             WHAT_LOAD_BILIVIEW ->
                 Thread {
                     try {
-                        biliView = PBilibiliClient.getInstance().pAppAPI.view(aid)
+                        biliView = PBilibiliClient.pAppAPI.view(aid)
                         handler?.sendEmptyMessage(WHAT_BILIVIEW_LOAD_OVER)
                     } catch (e: Exception) {
                         e.printStackTrace()

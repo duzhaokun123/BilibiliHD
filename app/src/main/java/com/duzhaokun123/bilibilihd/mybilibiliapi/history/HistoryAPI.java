@@ -31,7 +31,7 @@ public class HistoryAPI {
     }
 
     public void getHistory(long max, int maxTp, String business, MyBilibiliClient.ICallback<History> callback) {
-        LoginResponse loginResponse = PBilibiliClient.Companion.getInstance().getBilibiliClient().getLoginResponse();
+        LoginResponse loginResponse = PBilibiliClient.INSTANCE.getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
         }
@@ -70,7 +70,7 @@ public class HistoryAPI {
     }
 
     public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<CommonResponse> callback) {
-        LoginResponse loginResponse = PBilibiliClient.Companion.getInstance().getBilibiliClient().getLoginResponse();
+        LoginResponse loginResponse = PBilibiliClient.INSTANCE.getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
         }

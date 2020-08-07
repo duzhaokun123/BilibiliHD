@@ -62,4 +62,11 @@ class PAppAPI(private var appAPI: AppAPI) {
     fun addCoin(aid: Long, multiply: Int): AddCoinResponse {
         return GlobalScope.future { appAPI.addCoin(aid, multiply = multiply).await() }.get()
     }
+
+    fun favoritePage(): FavoritePage {
+        return GlobalScope.future {
+            appAPI.favoritePage(
+                    vmId = PBilibiliClient.loginResponse?.userId ?: 0).await()
+        }.get()
+    }
 }

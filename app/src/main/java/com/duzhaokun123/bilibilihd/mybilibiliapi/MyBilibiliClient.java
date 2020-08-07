@@ -22,7 +22,7 @@ public class MyBilibiliClient {
 
     public static MyBilibiliClient getInstance() {
         if (myBilibiliClient == null) {
-            myBilibiliClient = new MyBilibiliClient(PBilibiliClient.Companion.getInstance());
+            myBilibiliClient = new MyBilibiliClient(PBilibiliClient.INSTANCE);
         }
         return myBilibiliClient;
     }
@@ -65,8 +65,8 @@ public class MyBilibiliClient {
     }
 
     public String getResponseByPost(Request getRequest) throws IOException {
-        bilibiliClientProperties = PBilibiliClient.Companion.getInstance().getBilibiliClient().getBillingClientProperties();
-        BilibiliWebCookie bilibiliWebCookie = PBilibiliClient.Companion.getInstance().getBilibiliWebCookie();
+        bilibiliClientProperties = PBilibiliClient.INSTANCE.getBilibiliClient().getBillingClientProperties();
+        BilibiliWebCookie bilibiliWebCookie = PBilibiliClient.INSTANCE.getBilibiliWebCookie();
         StringBuilder paramsSB = new StringBuilder();
         Map<String, String> paramsMap = new TreeMap<>();
         if (bilibiliWebCookie != null) {

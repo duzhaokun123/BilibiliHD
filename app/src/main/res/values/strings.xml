@@ -128,4 +128,5 @@
     <string name="top2">top</string>
     <string name="self_made">self made</string>
     <string name="added_coin_d">added coin %d</string>
+    <string name="favorited_s">favorited: %s</string>
 </resources>

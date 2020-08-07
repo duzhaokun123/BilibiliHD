@@ -28,4 +28,8 @@ class PMainAPI(private var mainAPI: MainAPI) {
     fun dislikeReply(action: Int, oid: Long, replyId: Long, type: Int): CommonResponse {
         return GlobalScope.future { mainAPI.dislikeReply(action, oid, replyId, type).await() }.get()
     }
+
+    fun addFavoriteVideo(aid: Long, fid: Long) : CommonResponse {
+        return GlobalScope.future { mainAPI.addFavoriteVideo(aid, fid.toString()).await() }.get()
+    }
 }

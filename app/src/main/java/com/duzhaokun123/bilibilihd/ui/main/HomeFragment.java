@@ -42,7 +42,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
+    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
     private HomePage homePage;
 
     @Override

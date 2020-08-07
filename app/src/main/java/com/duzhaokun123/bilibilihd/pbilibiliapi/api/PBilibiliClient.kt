@@ -7,18 +7,13 @@ import com.hiczp.bilibili.api.passport.model.LoginResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
-class PBilibiliClient private constructor() {
+object PBilibiliClient {
     val bilibiliClient by lazy { BilibiliClient() }
     val pAppAPI by lazy { PAppAPI(bilibiliClient.appAPI) }
     val pPlayerAPI by lazy { PPlayerAPI(bilibiliClient.playerAPI) }
     val pMainAPI by lazy { PMainAPI(bilibiliClient.mainAPI) }
 
     private var bilibiliWebCookie: BilibiliWebCookie? = null
-
-    companion object {
-        private val pBilibiliClient by lazy { PBilibiliClient() }
-        fun getInstance() = pBilibiliClient
-    }
 
     fun logout() {
         GlobalScope.future { bilibiliClient.logout() }.get()
@@ -50,22 +45,22 @@ class PBilibiliClient private constructor() {
         return loginResponse
     }
 
-    fun getLoginResponse() = bilibiliClient.loginResponse
-
-    fun setLoginResponse(loginResponse: LoginResponse?) {
-        bilibiliWebCookie = null
-        bilibiliClient.loginResponse = loginResponse
-        BrowserUtil.syncLoggedLoginResponse()
-    }
+    var loginResponse
+        get() = bilibiliClient.loginResponse
+        set(value) {
+            bilibiliWebCookie = null
+            bilibiliClient.loginResponse = value
+            BrowserUtil.syncLoggedLoginResponse()
+        }
 
     fun getBilibiliWebCookie(): BilibiliWebCookie? {
-        if (bilibiliWebCookie == null && getLoginResponse() != null) {
+        if (bilibiliWebCookie == null && loginResponse != null) {
             var biliJct: String? = null
             var dedeUserID: String? = null
             var dedeUserIDckMd5: String? = null
             var sid: String? = null
             var sessdata: String? = null
-            for ((_, _, name, value) in getLoginResponse()!!.data.cookieInfo.cookies) {
+            for ((_, _, name, value) in loginResponse!!.data.cookieInfo.cookies) {
                 when (name) {
                     "bili_jct" -> biliJct = value
                     "DedeUserID" -> dedeUserID = value

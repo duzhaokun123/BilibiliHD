@@ -23,7 +23,7 @@ public class ToViewAPI {
 
     private ToViewAPI() {}
 
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
+    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
 
     public void addAid(long aid, MyBilibiliClient.ICallback<CommonResponse> callback) {
         LoginResponse loginResponse = pBilibiliClient.getLoginResponse();

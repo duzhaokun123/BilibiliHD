@@ -25,32 +25,25 @@ public class LogoutActivity extends BaseActivity<ActivityLogoutBinding> {
 
     @Override
     protected void initView() {
-        baseBind.btnLogout.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.logout)
-                    .setIcon(R.drawable.ic_warning)
-                    .setMessage(R.string.logout_ask)
-                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                BilibiliClient bilibiliClient = PBilibiliClient.Companion.getInstance().getBilibiliClient();
-                                LoginResponse tmp = bilibiliClient.getLoginResponse();
-                                bilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().get(Long.valueOf(baseBind.etUid.getText().toString())));
-                                runOnUiThread(() -> TipUtil.showToast(R.string.logged_out));
-                                try {
-                                    PBilibiliClient.Companion.getInstance().logout();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-                                }
-                                bilibiliClient.setLoginResponse(tmp);
-                            }
-                        }.start();
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-        });
+        baseBind.btnLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle(R.string.logout)
+                .setIcon(R.drawable.ic_warning)
+                .setMessage(R.string.logout_ask)
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> new Thread(() -> {
+                    BilibiliClient bilibiliClient = PBilibiliClient.INSTANCE.getBilibiliClient();
+                    LoginResponse tmp = bilibiliClient.getLoginResponse();
+                    bilibiliClient.setLoginResponse(Settings.getLoginUserInfoMap().get(Long.valueOf(baseBind.etUid.getText().toString())));
+                    runOnUiThread(() -> TipUtil.showToast(R.string.logged_out));
+                    try {
+                        PBilibiliClient.INSTANCE.logout();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+                    }
+                    bilibiliClient.setLoginResponse(tmp);
+                }).start())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show());
     }
 
     @Override

@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private Fragment homeFragment, historyFragment, dynamicFragment;
 
     private long lastBackPassTime = -1L;
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.Companion.getInstance();
+    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
     private MyInfo myInfo;
     private boolean first = true;
     private String title;

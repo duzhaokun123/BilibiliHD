@@ -30,7 +30,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding?>() {
             Thread {
                 var loginResponse: LoginResponse? = null
                 try {
-                    loginResponse = PBilibiliClient.getInstance().login(baseBind!!.etUsername.text.toString(), baseBind!!.etPassword.text.toString())
+                    loginResponse = PBilibiliClient.login(baseBind!!.etUsername.text.toString(), baseBind!!.etPassword.text.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                     if (e is BilibiliApiException && e.commonResponse.code == -105) {
@@ -46,7 +46,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding?>() {
                         Settings.saveLoginUserInfoMap()
                         handler?.sendEmptyMessage(WHAT_FINISH)
                     } else {
-                        PBilibiliClient.getInstance().setLoginResponse(null)
+                        PBilibiliClient.loginResponse = null
                         handler?.sendEmptyMessage(WHAT_DO_GEETEST)
                     }
                 }
@@ -65,7 +65,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding?>() {
                     Log.d(CLASS_NAME, "here1")
                     var loginResponse: LoginResponse? = null
                     try {
-                        loginResponse = PBilibiliClient.getInstance().login(
+                        loginResponse = PBilibiliClient.login(
                                 baseBind!!.etUsername.text.toString(),
                                 baseBind!!.etPassword.text.toString(),
                                 msg.data.getString(EXTRA_CHALLENGE, ""),

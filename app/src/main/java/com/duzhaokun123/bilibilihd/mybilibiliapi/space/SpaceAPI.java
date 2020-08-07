@@ -29,7 +29,7 @@ public class SpaceAPI {
     public void getSpace(long uid, MyBilibiliClient.ICallback<Space> callback) {
 
         if (pBilibiliClient == null) {
-            pBilibiliClient = PBilibiliClient.Companion.getInstance();
+            pBilibiliClient = PBilibiliClient.INSTANCE;
         }
         try {
             String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {
