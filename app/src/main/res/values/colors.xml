@@ -18,4 +18,6 @@
     <color name="colorTransparentBlack">#88000000</color>
     <color name="ordinaryCivBorderColor">@color/colorPrimaryDark</color>
     <color name="accentCivBorderColor">@color/colorAccent</color>
+    <color name="tagBackground">@color/darkBackground</color>
+    <color name="dimText">#757575</color>
 </resources>

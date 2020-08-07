@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
 import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.app.model.*
+import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
@@ -48,5 +49,17 @@ class PAppAPI(private var appAPI: AppAPI) {
         }
 
         return view
+    }
+
+    fun like(aid: Long, like: Boolean): LikeResponse {
+        return GlobalScope.future { appAPI.like(aid, if (like) 0 else 1).await() }.get()
+    }
+
+    fun dislike(aid: Long, dislike: Boolean): CommonResponse {
+        return GlobalScope.future { appAPI.dislike(aid, if (dislike) 0 else 1).await() }.get()
+    }
+
+    fun addCoin(aid: Long, multiply: Int): AddCoinResponse {
+        return GlobalScope.future { appAPI.addCoin(aid, multiply = multiply).await() }.get()
     }
 }

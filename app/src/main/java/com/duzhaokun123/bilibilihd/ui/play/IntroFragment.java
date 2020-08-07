@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
+import com.hiczp.bilibili.api.app.model.LikeResponse;
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
 import java.util.Objects;
@@ -87,6 +89,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         for (com.hiczp.bilibili.api.app.model.View.Data.Tag tag : biliView.getData().getTag()) {
             TextView textView = new TextView(getContext());
             textView.setText(tag.getTagName());
+            textView.setTextSize(12);
             textView.setBackgroundResource(R.drawable.bg_tag);
             textView.setTextColor(getResources().getColor(R.color.ordinaryText, null));
             textView.setPadding(OtherUtils.dp2px(10), OtherUtils.dp2px(5), OtherUtils.dp2px(10), OtherUtils.dp2px(5));
@@ -113,10 +116,81 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             baseBind.tvHonorUrl.setTextColor(textColor);
             baseBind.llHonor.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), biliView.getData().getHonor().getUrl(), false, true));
         }
+        baseBind.tvLike.setOnClickListener(v -> new Thread(() -> {
+            try {
+                LikeResponse likeResponse = PBilibiliClient.Companion.getInstance().getPAppAPI().like(aid, true);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        TipUtil.showTip(getContext(), likeResponse.getData().getToast());
+                        baseBind.tvLike.setText(String.valueOf(biliView.getData().getStat().getLike() + 1));
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                }
+            }
+        }).start());
+        baseBind.tvDislike.setOnClickListener(v -> new Thread(() -> {
+            try {
+                PBilibiliClient.Companion.getInstance().getPAppAPI().dislike(aid, true);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), R.string.disliked));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                }
+            }
+        }).start());
+        baseBind.tvCoin.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(requireContext(), baseBind.tvCoin);
+            popupMenu.getMenu().add(0, 1, 1, "1");
+            if (biliView.getData().getCopyright() == 1) {
+                popupMenu.getMenu().add(0, 2, 2, "2");
+            }
+            popupMenu.setOnMenuItemClickListener(item -> {
+                try {
+                    PBilibiliClient.Companion.getInstance().getPAppAPI().addCoin(aid, item.getOrder());
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            TipUtil.showTip(getContext(), getString(R.string.added_coin_d, item.getOrder()));
+                            baseBind.tvCoin.setText(String.valueOf(biliView.getData().getStat().getCoin() + item.getOrder()));
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                    }
+                }
+                return true;
+            });
+            popupMenu.show();
+        });
+        if (biliView.getData().getCopyright() == 1) {
+            baseBind.tvSelfMade.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void initData() {
+        GlideUtil.loadUrlInto(getContext(), biliView.getData().getOwner().getFace(), mCivFace, false);
+        mCivFace.setOnClickListener(v -> UserSpaceActivity.enter(getActivity(), biliView.getData().getOwner().getMid(), mCivFace, null));
+        mTvUpName.setText(biliView.getData().getOwner().getName());
+        mTvUpName.setOnClickListener(v -> mCivFace.callOnClick());
+        mTvUpFans.setText(getString(R.string.num_fans, biliView.getData().getOwnerExt().getFans()));
+        baseBind.tvDesc.setText(biliView.getData().getDesc());
+        LinkifyUtil.INSTANCE.addAllLinks(baseBind.tvDesc);
+        baseBind.tvUptime.setText(DateTimeFormatUtil.getFormat1().format(biliView.getData().getPubdate() * 1000L));
+        baseBind.tvDanmakuHas.setText(String.valueOf(biliView.getData().getStat().getDanmaku()));
+        baseBind.tvWatched.setText(String.valueOf(biliView.getData().getStat().getView()));
+        baseBind.tvTitle.setText(biliView.getData().getTitle());
+        baseBind.tvLike.setText(String.valueOf(biliView.getData().getStat().getLike()));
+        baseBind.tvCoin.setText(String.valueOf(biliView.getData().getStat().getCoin()));
+        baseBind.tvFavorite.setText(String.valueOf(biliView.getData().getStat().getFavorite()));
         new LoadVideoPlayUrl(biliView.getData().getPages().get(page - 1).getCid(), 0).start();
     }
 
@@ -125,17 +199,6 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         switch (msg.what) {
             case 0:
                 sendBack();
-                GlideUtil.loadUrlInto(getContext(), biliView.getData().getOwner().getFace(), mCivFace, false);
-                mCivFace.setOnClickListener(v -> UserSpaceActivity.enter(getActivity(), biliView.getData().getOwner().getMid(), mCivFace, null));
-                mTvUpName.setText(biliView.getData().getOwner().getName());
-                mTvUpName.setOnClickListener(v -> mCivFace.callOnClick());
-                mTvUpFans.setText(getString(R.string.num_fans, biliView.getData().getOwnerExt().getFans()));
-                baseBind.tvDesc.setText(biliView.getData().getDesc());
-                LinkifyUtil.INSTANCE.addAllLinks(baseBind.tvDesc);
-                baseBind.tvUptime.setText(DateTimeFormatUtil.getFormat1().format(biliView.getData().getPubdate() * 1000L));
-                baseBind.tvDanmakuHas.setText(String.valueOf(biliView.getData().getStat().getDanmaku()));
-                baseBind.tvWatched.setText(String.valueOf(biliView.getData().getStat().getView()));
-                baseBind.tvTitle.setText(biliView.getData().getTitle());
                 for (com.hiczp.bilibili.api.app.model.View.Data.Page page1 : biliView.getData().getPages()) {
                     RadioButton radioButton = new RadioButton(getContext());
                     radioButton.setText(page1.getPart());

@@ -124,4 +124,6 @@
     <string name="no_action">无动作</string>
     <string name="canceled">已取消</string>
     <string name="top2">置顶</string>
+    <string name="self_made">自制</string>
+    <string name="added_coin_d">已投币 %d</string>
 </resources>

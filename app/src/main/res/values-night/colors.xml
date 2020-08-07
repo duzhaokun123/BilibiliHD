@@ -15,4 +15,5 @@
     <color name="ordinaryCivBorderColor">#000000</color>
     <color name="lighterGray">@color/lightestBackground</color>
     <color name="lightGray">@color/lighterBackground</color>
+    <color name="tagBackground">@color/lightBackground</color>
 </resources>

@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon
 import android.os.Message
 import android.util.Rational
 import android.view.*
+import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
 import androidx.core.util.Pair
 import androidx.core.view.GravityCompat
@@ -15,6 +16,7 @@ import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.mediarouter.app.MediaRouteActionProvider
 import androidx.mediarouter.media.MediaControlIntent
 import androidx.mediarouter.media.MediaRouteSelector
@@ -318,6 +320,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 .setShowWhen(false)
                 .addAction(R.drawable.ic_pause, getString(R.string.pause), PlayControlService.newPausePendingIntent(this, playId))
                 .addAction(R.drawable.ic_play_arrow, getString(R.string.resume), PlayControlService.newResumePendingIntent(this, playId))
+
+        val model: RootReplyFragment.AllCountViewModel by viewModels()
+        model.allCount.observe(this, Observer { allCount ->
+            baseBind.tl.getTabAt(1)?.text = getString(R.string.comment_num, allCount)
+        })
     }
 
     override fun onStop() {

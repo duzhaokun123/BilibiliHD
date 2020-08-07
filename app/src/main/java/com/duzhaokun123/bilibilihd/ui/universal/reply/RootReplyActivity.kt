@@ -1,5 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.universal.reply
 
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityRootReplyBinding
@@ -31,7 +33,10 @@ class RootReplyActivity : BaseActivity<ActivityRootReplyBinding>() {
     }
 
     override fun initData() {
-
+        val model: RootReplyFragment.AllCountViewModel by viewModels()
+        model.allCount.observe(this, Observer { allCount ->
+            baseBind.tvAllCount.text = allCount.toString()
+        })
     }
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot

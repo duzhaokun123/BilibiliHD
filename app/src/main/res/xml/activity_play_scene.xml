@@ -11,9 +11,9 @@
         <KeyFrameSet />
     </Transition>
 
-    <ConstraintSet android:id="@+id/start" />
+    <ConstraintSet android:id="@id/start" />
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@id/end">
         <Constraint
             android:id="@id/bpvpv"
             android:layout_width="match_parent"

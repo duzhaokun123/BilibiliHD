@@ -6,6 +6,9 @@ import android.os.Message
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -34,6 +37,8 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
 
     private var defLlMoreHeight = 0
     private var isLlMoreOpen = true
+
+    private val viewModel: AllCountViewModel by activityViewModels()
 
     override fun initConfig() = NEED_HANDLER
 
@@ -122,6 +127,7 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                 }
                 if (reply != null) {
                     next = reply.data.cursor.next
+                    viewModel.allCount.postValue(reply.data.cursor.allCount)
                     this.reply = reply
                     handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 }
@@ -142,8 +148,8 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                 }
                 if (reply != null) {
                     next = reply!!.data.cursor.next
+                    viewModel.allCount.postValue(reply!!.data.cursor.allCount)
                     reply!!.data.replies?.let {
-//                        this.reply?.data?.replies?.plus(it) 用这个加不上去 神奇
                         ListUtil.addAll(this.reply?.data?.replies, it)
                     }
                     handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
@@ -154,6 +160,12 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                 XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
                 isEnd = reply!!.data.cursor.isEnd
             }
+        }
+    }
+
+    class AllCountViewModel : ViewModel() {
+        val allCount: MutableLiveData<Int> by lazy {
+            MutableLiveData<Int>()
         }
     }
 }

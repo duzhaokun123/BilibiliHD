@@ -37,7 +37,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/ll"
                 android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/iv_cover" />
+                android:layout_toEndOf="@id/iv_cover"
+                android:drawableStart="@drawable/ic_up"
+                android:drawablePadding="5dp" />
 
             <LinearLayout
                 android:id="@+id/ll"
@@ -52,23 +54,16 @@
                     android:id="@+id/tv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/play" />
+                    android:drawableStart="@drawable/ic_play"
+                    android:drawablePadding="5dp" />
 
                 <TextView
                     android:id="@+id/tv_danmaku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/danmaku" />
+                    android:layout_marginStart="5dp"
+                    android:drawableStart="@drawable/ic_danmaku"
+                    android:drawablePadding="5dp" />
             </LinearLayout>
 
         </RelativeLayout>
