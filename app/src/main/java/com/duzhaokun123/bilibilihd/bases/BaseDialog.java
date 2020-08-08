@@ -19,6 +19,8 @@ public abstract class BaseDialog<layout extends ViewDataBinding> extends AlertDi
 
     protected static final int NEED_HANDLER = 0b010;
 
+    public final String CLASS_NAME = this.getClass().getSimpleName();
+
     private int config;
 
     protected layout baseBind;

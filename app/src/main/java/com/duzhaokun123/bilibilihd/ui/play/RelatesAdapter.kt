@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
@@ -70,7 +69,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
     override fun initData(baseBind: ItemRelateVideoCardBinding, position: Int) {
         biliView.data.relates!![position].let {
             baseBind.tvTitle.text = it.title
-            baseBind.tvPlay.text = it.stat.reply.toString()
+            baseBind.tvPlay.text = it.stat.view.toString()
             baseBind.tvDanmaku.text = it.stat.danmaku.toString()
             baseBind.tvUp.text = it.owner?.name
             GlideUtil.loadUrlInto(context, it.pic, baseBind.ivCover, false)
