@@ -114,12 +114,12 @@ class UrlOpenActivity : AppCompatActivity() {
     private fun hostLooksLikeWhichType(host: String?): Type {
         return when {
             host == null -> Type.UNKNOWN
-            host.startsWith("space") -> Type.SPACE
-            host.startsWith("m") -> Type.M
-            host.startsWith("www") -> Type.WWW
+            host.startsWith("space.") -> Type.SPACE
+            host.startsWith("m.") -> Type.M
+            host.startsWith("www.") -> Type.WWW
             "b23.tv" == host -> Type.B23TV
-            host.startsWith("live") -> Type.LIVE
-            host.startsWith("t") -> Type.T
+            host.startsWith("live.") -> Type.LIVE
+            host.startsWith("t.") -> Type.T
             else -> Type.UNKNOWN
         }
     }

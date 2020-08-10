@@ -5,7 +5,6 @@
         android:id="@+id/open_in_browser"
         android:title="@string/open_in_browser"
         app:showAsAction="never" />
-
     <item
         android:id="@+id/reload"
         android:title="@string/reload"
@@ -14,4 +13,16 @@
         android:id="@+id/stop"
         android:title="@string/stop"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/desktop_ua"
+        android:checkable="true"
+        android:title="@string/desktop_ua" />
+    <item
+        android:id="@+id/intercept_all"
+        android:checkable="true"
+        android:title="intercept_all" />
+    <item
+        android:id="@+id/finish_when_intercept"
+        android:checkable="true"
+        android:title="finish_when_intercept" />
 </menu>

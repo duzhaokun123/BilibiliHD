@@ -11,6 +11,10 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.viewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.duzhaokun123.bilibilihd.Params
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
@@ -24,6 +28,8 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         const val EXTRA_FINISH_WHEN_INTERCEPT = "finish_when_intercept"
     }
 
+    private val configViewModel: ConfigViewModel by viewModels()
+
     override fun initConfig(): Int {
         return FIX_LAYOUT
     }
@@ -34,10 +40,16 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.web_view_activity, menu)
+        menu?.findItem(R.id.desktop_ua)?.let { it.isChecked = configViewModel.desktopUA.value!! }
+        menu?.findItem(R.id.intercept_all)?.let { it.isChecked = configViewModel.interceptAll.value!! }
+        menu?.findItem(R.id.finish_when_intercept)?.let { it.isChecked = configViewModel.finishWhenIntercept.value!! }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.isCheckable) {
+            item.isChecked = item.isChecked.not()
+        }
         return when (item.itemId) {
             R.id.open_in_browser -> {
                 BrowserUtil.openCustomTab(this, baseBind.wv.url)
@@ -51,6 +63,18 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 baseBind.wv.stopLoading()
                 true
             }
+            R.id.desktop_ua -> {
+                configViewModel.desktopUA.value = item.isChecked
+                true
+            }
+            R.id.intercept_all -> {
+                configViewModel.interceptAll.value = item.isChecked
+                true
+            }
+            R.id.finish_when_intercept -> {
+                configViewModel.finishWhenIntercept.value = item.isChecked
+                true
+            }
             android.R.id.home -> {
                 finish()
                 true
@@ -61,7 +85,9 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        configViewModel.desktopUA.value = startIntent.getBooleanExtra(EXTRA_DESKTOP_UA, true)
+        configViewModel.interceptAll.value = startIntent.getBooleanExtra(EXTRA_INTERCEPT_ALL, false)
+        configViewModel.finishWhenIntercept.value = startIntent.getBooleanExtra(EXTRA_FINISH_WHEN_INTERCEPT, false)
         supportActionBar?.let {
             it.setHomeAsUpIndicator(R.drawable.ic_clear)
             it.setDisplayShowHomeEnabled(true)
@@ -73,11 +99,11 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return if ("bilibili" == request?.url?.scheme || startIntent.extras?.getBoolean(EXTRA_INTERCEPT_ALL)!!) {
+                return if ("bilibili" == request?.url?.scheme || configViewModel.interceptAll.value!!) {
                     val intent = Intent(this@WebViewActivity, UrlOpenActivity::class.java)
                     intent.data = request?.url
                     startActivity(intent)
-                    if (startIntent.getBooleanExtra(EXTRA_FINISH_WHEN_INTERCEPT, false)) {
+                    if (configViewModel.finishWhenIntercept.value!!) {
                         finish()
                     }
                     true
@@ -109,9 +135,13 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 setTitle(title)
             }
         }
-        if (startIntent.extras?.getBoolean(EXTRA_DESKTOP_UA, true)!!) {
-            baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
-        }
+        configViewModel.desktopUA.observe(this, Observer { desktopUA ->
+            if (desktopUA) {
+                baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
+            } else {
+                baseBind.wv.settings.userAgentString = Params.TABLETS_USER_AGENT
+            }
+        })
         baseBind.wv.settings.domStorageEnabled = true
     }
 
@@ -124,6 +154,18 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
             baseBind.wv.goBack()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    class ConfigViewModel : ViewModel() {
+        val desktopUA: MutableLiveData<Boolean> by lazy {
+            MutableLiveData<Boolean>()
+        }
+        val interceptAll: MutableLiveData<Boolean> by lazy {
+            MutableLiveData<Boolean>()
+        }
+        val finishWhenIntercept: MutableLiveData<Boolean> by lazy {
+            MutableLiveData<Boolean>()
         }
     }
 }

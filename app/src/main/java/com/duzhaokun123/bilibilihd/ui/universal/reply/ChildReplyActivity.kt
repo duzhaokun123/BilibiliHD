@@ -111,6 +111,9 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
                     childReply = ReplyAPI.getChildReply(oid, root, type)
                     next = childReply.data.cursor.next
                     isEnd = childReply.data.cursor.isEnd
+                    if (childReply.data.root.replies == null) {
+                        isEnd = true
+                    }
                     handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -127,6 +130,9 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
                     val childReply2 = ReplyAPI.getChildReply(oid, root, type, next)
                     next = childReply2.data.cursor.next
                     isEnd = childReply2.data.cursor.isEnd
+                    if (childReply.data.root.replies == null) {
+                        isEnd = true
+                    }
                     childReply2.data.root.replies?.let {
                         ListUtil.addAll(childReply.data.root.replies, it)
                     }

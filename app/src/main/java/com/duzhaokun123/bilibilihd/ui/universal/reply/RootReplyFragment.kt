@@ -129,6 +129,10 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                     next = reply.data.cursor.next
                     viewModel.allCount.postValue(reply.data.cursor.allCount)
                     this.reply = reply
+                    isEnd = reply.data.cursor.isEnd
+                    if (reply.data.top == null && reply.data.replies == null) {
+                        isEnd = true
+                    }
                     handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 }
             }.start()
@@ -136,7 +140,6 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                 baseBind.xrv.adapter = RootReplyAdapter(requireContext(), reply!!)
                 baseBind.xrv.refreshComplete()
                 reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
-                isEnd = reply!!.data.cursor.isEnd
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
@@ -152,13 +155,16 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                     reply!!.data.replies?.let {
                         ListUtil.addAll(this.reply?.data?.replies, it)
                     }
+                    isEnd = reply!!.data.cursor.isEnd
+                            if (reply!!.data.top == null && reply!!.data.replies == null) {
+                                isEnd = true
+                            }
                     handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
                 }
             }.start()
             WHAT_REPLY_LOAD_MORE_END -> {
                 baseBind.xrv.loadMoreComplete()
                 XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
-                isEnd = reply!!.data.cursor.isEnd
             }
         }
     }

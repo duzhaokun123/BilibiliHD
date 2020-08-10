@@ -130,4 +130,5 @@
     <string name="added_coin_d">added coin %d</string>
     <string name="favorited_s">favorited: %s</string>
     <string name="cant_pass_geetest">bilibili HD can\'t pass Geetest\nPlease wait a few hours to a few days, or change your IP address and try again\nIf you still can\'t log in, please try to get the LoginResponse through packet capture</string>
+    <string name="desktop_ua">desktop UA</string>
 </resources>
