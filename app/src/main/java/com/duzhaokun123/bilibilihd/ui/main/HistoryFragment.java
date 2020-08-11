@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,23 +84,29 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 }
             });
         }
-        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.xrv.setAdapter(new RecyclerView.Adapter<VideoCardHolder>() {
             @NonNull
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public VideoCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 return new VideoCardHolder(LayoutInflater.from(getContext()).inflate(R.layout.layout_video_card_item, parent, false));
             }
 
             @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                ((VideoCardHolder) holder).mTvTitle.setText(mHistory.getData().getList().get(position).getTitle());
-                GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
+            public void onBindViewHolder(@NonNull VideoCardHolder holder, int position) {
+                holder.pb.setVisibility(View.GONE);
+                holder.mTvTitle.setText(mHistory.getData().getList().get(position).getTitle());
+                GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), holder.mIv, true);
                 if (mHistory.getData().getList().get(position).getCovers() != null) {
-                    GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCovers().get(0), ((VideoCardHolder) holder).mIv, true);
+                    GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCovers().get(0), holder.mIv, true);
                 }
-                ((VideoCardHolder) holder).mTvBadge.setText(mHistory.getData().getList().get(position).getBadge());
-                ((VideoCardHolder) holder).mTvUp.setText(mHistory.getData().getList().get(position).getName());
-                ((VideoCardHolder) holder).mCv.setOnClickListener(new View.OnClickListener() {
+                holder.mTvBadge.setText(mHistory.getData().getList().get(position).getBadge());
+                holder.mTvUp.setText(mHistory.getData().getList().get(position).getName());
+                if (mHistory.getData().getList().get(position).getDuration() != 0) {
+                    holder.pb.setVisibility(View.VISIBLE);
+                    holder.pb.setMax(mHistory.getData().getList().get(position).getDuration());
+                    holder.pb.setProgress(mHistory.getData().getList().get(position).getProgress());
+                }
+                holder.mCv.setOnClickListener(new View.OnClickListener() {
 
                     private String url = mHistory.getData().getList().get(position).getUri();
 
@@ -108,7 +115,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         BrowserUtil.openCustomTab(requireContext(), url);
                     }
                 });
-                ((VideoCardHolder) holder).mCv.setOnLongClickListener(new View.OnLongClickListener() {
+                holder.mCv.setOnLongClickListener(new View.OnLongClickListener() {
 
                     private long aid = mHistory.getData().getList().get(position).getHistory().getOid();
                     private String url;
@@ -123,14 +130,14 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     @Override
                     public boolean onLongClick(View v) {
 
-                        PopupMenu popupMenu = new PopupMenu(requireContext(), ((VideoCardHolder) holder).mCv);
+                        PopupMenu popupMenu = new PopupMenu(requireContext(), holder.mCv);
                         popupMenu.getMenuInflater().inflate(R.menu.video_card, popupMenu.getMenu());
                         popupMenu.setOnMenuItemClickListener(item -> {
                             switch (item.getItemId()) {
                                 case R.id.check_cover:
                                     Intent intent = new Intent(getContext(), PhotoViewActivity.class);
                                     intent.putExtra("url", url);
-                                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "img").toBundle());
+                                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), holder.mIv, "img").toBundle());
                                     break;
                                 case R.id.add_to_watch_later:
                                     new Thread() {
@@ -165,24 +172,6 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     return 0;
                 } else {
                     return mHistory.getData().getList().size();
-                }
-            }
-
-            class VideoCardHolder extends RecyclerView.ViewHolder {
-
-                private ImageView mIv;
-                private TextView mTvTitle, mTvUp, mTvBadge;
-                private CardView mCv;
-
-
-                VideoCardHolder(@NonNull View itemView) {
-                    super(itemView);
-                    mIv = itemView.findViewById(R.id.iv);
-                    mTvTitle = itemView.findViewById(R.id.tv_title);
-                    mTvUp = itemView.findViewById(R.id.tv_up);
-                    mTvBadge = itemView.findViewById(R.id.tv_badge);
-                    mCv = itemView.findViewById(R.id.cv);
-                    ((RelativeLayout) itemView.findViewById(R.id.rl)).removeView(itemView.findViewById(R.id.civ_face));
                 }
             }
         });
@@ -288,6 +277,25 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                             }
                         }
                     });
+        }
+    }
+
+    static class VideoCardHolder extends RecyclerView.ViewHolder {
+
+        private ImageView mIv;
+        private TextView mTvTitle, mTvUp, mTvBadge;
+        private CardView mCv;
+        private ProgressBar pb;
+
+        VideoCardHolder(@NonNull View itemView) {
+            super(itemView);
+            mIv = itemView.findViewById(R.id.iv);
+            mTvTitle = itemView.findViewById(R.id.tv_title);
+            mTvUp = itemView.findViewById(R.id.tv_up);
+            mTvBadge = itemView.findViewById(R.id.tv_badge);
+            mCv = itemView.findViewById(R.id.cv);
+            ((RelativeLayout) itemView.findViewById(R.id.rl)).removeView(itemView.findViewById(R.id.civ_face));
+            pb = itemView.findViewById(R.id.pb);
         }
     }
 }

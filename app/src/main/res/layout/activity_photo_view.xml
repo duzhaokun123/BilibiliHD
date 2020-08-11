@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
@@ -14,39 +12,40 @@
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/pv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:transitionName="img" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:transitionName="img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/rl"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/ib_pip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:paddingBottom="40dp">
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/bg_text"
+            android:contentDescription="@string/pip"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/ic_pip"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <ImageButton
-                android:id="@+id/ib_pip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="40dp"
-                android:background="@drawable/bg_text"
-                android:foreground="?selectableItemBackground"
-                android:src="@drawable/ic_pip" />
+        <ImageButton
+            android:id="@+id/ib_dl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/bg_text"
+            android:contentDescription="@string/download"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/ic_dl_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ib_pip" />
 
-            <ImageButton
-                android:id="@+id/ib_dl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="30dp"
-                android:layout_toStartOf="@id/ib_pip"
-                android:background="@drawable/bg_text"
-                android:foreground="?selectableItemBackground"
-                android:src="@drawable/ic_dl_white" />
-        </RelativeLayout>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -17,7 +16,6 @@ public class GlideUtil {
     public static void loadUrlInto(Context context, String url, ImageView imageView, boolean autoAspectRation) {
         if (url == null) {
             imageView.setImageDrawable(null);
-            Log.w("GlideUtil", "loadUrlInto: url is null");
             return;
         }
         Glide.with(context).load(url).listener(new RequestListener<Drawable>() {
