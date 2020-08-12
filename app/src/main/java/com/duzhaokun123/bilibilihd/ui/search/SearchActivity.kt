@@ -120,6 +120,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
                     page = 1
                     searchResult = PBilibiliClient.pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
                     handler?.sendEmptyMessage(WHAT_REFRESH_END)
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                     runOnUiThread { TipUtil.showToast(e.message) }
@@ -129,6 +130,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
                 baseBind.xrv.refreshComplete()
                 baseBind.xrv.adapter = SearchAdapter(this, searchResult!!)
                 XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, searchResult!!.data.item.size - 1)
+                handlerCallback(Message().apply { what = WHAT_LOAD_MORE })
+                handlerCallback(Message().apply { what = WHAT_LOAD_MORE })
             }
             WHAT_LOAD_MORE -> Thread {
                 try {

@@ -64,6 +64,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     private Handler handler;
 
+    @Nullable
     private VideoShot videoShot;
 
     private long aid;
@@ -181,6 +182,9 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
             @Override
             public void onScrubMove(@NonNull TimeBar timeBar, long position) {
+                if (videoShot == null) {
+                    return;
+                }
                 int timeS = (int) (position / 1000);
                 int index = -1;
                 int gap = -1;
