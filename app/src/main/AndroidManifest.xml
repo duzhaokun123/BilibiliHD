@@ -17,13 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.universal.reply.ChildReplyActivity"></activity>
+        <activity
+            android:name=".ui.universal.reply.ChildReplyActivity"
+            android:label="@string/child_reply"></activity>
         <activity
             android:name=".ui.universal.reply.RootReplyActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode" />
+
         <service
             android:name=".services.PlayControlService"
             android:exported="false" />
+
         <activity
             android:name=".ui.settings.DanmakuTestActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"

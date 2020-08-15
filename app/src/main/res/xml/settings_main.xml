@@ -3,33 +3,26 @@
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsUsersFragment"
         app:icon="@drawable/ic_account_circle"
-        app:key="users"
         app:title="@string/users" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsDisplayFragment"
-        app:key="display"
         app:title="@string/display" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment"
         app:icon="@drawable/ic_outline_play_circle"
-        app:key="play"
         app:title="@string/play" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment"
-        app:key="danmaku"
         app:title="@string/danmaku" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsDownloadFragment"
         app:icon="@drawable/ic_dl"
-        app:key="download"
         app:title="@string/download" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsAdsFragment"
-        app:key="ads"
         app:title="@string/ad" />
     <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.AboutFragment"
         app:icon="@drawable/ic_info"
-        app:key="about"
         app:title="@string/about" />
 </PreferenceScreen>

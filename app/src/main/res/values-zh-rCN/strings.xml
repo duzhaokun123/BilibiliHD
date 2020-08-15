@@ -129,4 +129,6 @@
     <string name="favorited_s">收藏至: %s</string>
     <string name="cant_pass_geetest">bilibili HD 无法通过极验\n请等待几小时到几天，或更换IP地址并重试\n如仍无法登录，请尝试通过抓包获取LoginResponse</string>
     <string name="desktop_ua">桌面UA</string>
+    <string name="child_reply">子回复</string>
+    <string name="check_dialog">检查对话</string>
 </resources>

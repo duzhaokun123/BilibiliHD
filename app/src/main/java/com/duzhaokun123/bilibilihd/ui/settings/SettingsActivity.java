@@ -14,15 +14,11 @@ import com.duzhaokun123.bilibilihd.databinding.ActivitySettingsBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 
 public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
-
-    public static int WHAT_CHANGE_TITLE = 0;
-    public static String BUNDLE_KEY_TITLE = "title";
-
     private boolean first = true;
 
     @Override
     protected int initConfig() {
-        return FIX_LAYOUT | NEED_HANDLER;
+        return FIX_LAYOUT;
     }
 
     @Override
@@ -63,20 +59,6 @@ public class SettingsActivity extends BaseActivity<ActivitySettingsBinding> {
     public FrameLayout get2ndFl() {
         return baseBind.flSettings2nd;
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setTitle(R.string.settings);
-    }
-
-    @Override
-    public void handlerCallback(@NonNull Message msg) {
-        if (msg.what == WHAT_CHANGE_TITLE) {
-            setTitle(msg.getData().getString(BUNDLE_KEY_TITLE));
-        }
-    }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

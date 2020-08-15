@@ -16,47 +16,38 @@ import java.util.Objects;
 
 public class SettingsMainFragment extends PreferenceFragmentCompat {
 
-    Preference users, display, play, danmaku, download, ads, about;
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_main, rootKey);
-
-        users = findPreference("users");
-        display = findPreference("display");
-        play = findPreference("play");
-        danmaku = findPreference("danmaku");
-        download = findPreference("download");
-        ads = findPreference("ads");
-        about = findPreference("about");
-
-        MyOnPreferenceClickListener myOnPreferenceClickListener = new MyOnPreferenceClickListener();
-
-        users.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        display.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        play.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        danmaku.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        download.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        ads.setOnPreferenceClickListener(myOnPreferenceClickListener);
-        about.setOnPreferenceClickListener(myOnPreferenceClickListener);
     }
 
-    @Nullable
-    Handler getSettingsActivityHandler() {
-        Handler settingsActivityHandler = null;
-        if (getActivity() instanceof SettingsActivity) {
-            settingsActivityHandler = ((SettingsActivity) getActivity()).getHandler();
+    @Override
+    public boolean onPreferenceTreeClick(Preference preference) {
+        FrameLayout settingActivity2ndFl = getSettingActivity2ndFl();
+        if (settingActivity2ndFl != null) {
+            try {
+                getParentFragmentManager().beginTransaction().replace(settingActivity2ndFl.getId(), (Fragment) Class.forName(preference.getFragment()).newInstance()).commitAllowingStateLoss();
+            } catch (IllegalAccessException | java.lang.InstantiationException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else {
+            CharSequence title = preference.getTitle();
+            changeActivityTitle(title);
+            return super.onPreferenceTreeClick(preference);
         }
-        return settingsActivityHandler;
     }
 
-    void changeSettingsActivityTitle(String title) {
-        Bundle bundle = new Bundle();
-        bundle.putString(SettingsActivity.BUNDLE_KEY_TITLE, title);
-        Message message = new Message();
-        message.what = SettingsActivity.WHAT_CHANGE_TITLE;
-        message.setData(bundle);
-        Objects.requireNonNull(getSettingsActivityHandler()).sendMessage(message);
+    @Override
+    public void onResume() {
+        super.onResume();
+        changeActivityTitle(getString(R.string.settings));
+    }
+
+    void changeActivityTitle(CharSequence title) {
+        if (getActivity() != null) {
+            getActivity().setTitle(title);
+        }
     }
 
     @Nullable
@@ -65,41 +56,6 @@ public class SettingsMainFragment extends PreferenceFragmentCompat {
             return ((SettingsActivity) getActivity()).get2ndFl();
         } else {
             return null;
-        }
-    }
-
-    class MyOnPreferenceClickListener implements Preference.OnPreferenceClickListener {
-
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            FrameLayout settingActivity2ndFl = getSettingActivity2ndFl();
-            if (settingActivity2ndFl != null) {
-                try {
-                    getParentFragmentManager().beginTransaction().replace(settingActivity2ndFl.getId(), (Fragment) Class.forName(preference.getFragment()).newInstance()).commitAllowingStateLoss();
-                } catch (IllegalAccessException | java.lang.InstantiationException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            } else {
-                String title = "";
-                if (preference == users) {
-                    title = getString(R.string.users);
-                } else if (preference == display) {
-                    title = getString(R.string.display);
-                } else if (preference == play) {
-                    title = getString(R.string.play);
-                } else if (preference == danmaku) {
-                    title = getString(R.string.danmaku);
-                } else if (preference == download) {
-                    title = getString(R.string.download);
-                } else if (preference == ads) {
-                    title = getString(R.string.ad);
-                } else if (preference == about) {
-                    title = getString(R.string.about);
-                }
-                changeSettingsActivityTitle(title);
-            }
-            return false;
         }
     }
 }

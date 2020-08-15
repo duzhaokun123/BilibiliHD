@@ -20,20 +20,4 @@ public class FileUtil {
             }
         }
     }
-    public static boolean deleteDir(File dir) {
-        if (dir.isFile()) {
-            return dir.delete();
-        } else {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (!deleteDir(file)) {
-                        return false;
-                    }
-                }
-            }
-            return dir.delete();
-        }
-    }
-
 }

@@ -68,7 +68,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
 
             baseBind.btnAction.setOnClickListener {
                 val popupMenu = PopupMenu(context, baseBind.btnAction)
-                popupMenu.menuInflater.inflate(R.menu.reply_action, popupMenu.menu)
+                popupMenu.menuInflater.inflate(R.menu.child_reply_action, popupMenu.menu)
                 popupMenu.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.like -> {
@@ -133,6 +133,9 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                             message.data = bundle
                             message.what = ChildReplyActivity.WHAT_SET_PARENT
                             baseActivity?.handler?.sendMessage(message)
+                        }
+                        R.id.check_dialog -> {
+                            // TODO: 20-8-15
                         }
                         R.id.delete -> {
                             Thread {

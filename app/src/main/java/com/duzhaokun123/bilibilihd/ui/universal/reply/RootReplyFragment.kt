@@ -133,13 +133,13 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                     if (reply.data.top == null && reply.data.replies == null) {
                         isEnd = true
                     }
-                    handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 }
+                handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
             }.start()
             WHAT_REPLY_REFRESH_END -> {
                 baseBind.xrv.adapter = RootReplyAdapter(requireContext(), reply!!)
                 baseBind.xrv.refreshComplete()
-                reply!!.data.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
+                reply?.data?.replies?.size?.let { XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, it - 1) }
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
@@ -156,15 +156,15 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
                         ListUtil.addAll(this.reply?.data?.replies, it)
                     }
                     isEnd = reply!!.data.cursor.isEnd
-                            if (reply!!.data.top == null && reply!!.data.replies == null) {
-                                isEnd = true
-                            }
-                    handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
+                    if (reply!!.data.top == null && reply!!.data.replies == null) {
+                        isEnd = true
+                    }
                 }
+                handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
             }.start()
             WHAT_REPLY_LOAD_MORE_END -> {
                 baseBind.xrv.loadMoreComplete()
-                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply!!.data.replies!!.size - 1)
+                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, reply?.data?.replies?.size?.minus(1) ?: 0)
             }
         }
     }

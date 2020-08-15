@@ -93,7 +93,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha05'
     //okhttp3
-    implementation 'com.squareup.okhttp3:okhttp:4.8.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.8.1'
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
     //exoplayer
@@ -148,11 +148,13 @@ dependencies {
 //    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
     //Preference
     implementation 'androidx.preference:preference:1.1.1'
-//    //lifecycle
-//    // Lifecycles only (without ViewModel or LiveData)
-//    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha05'
-//    // alternately
-//    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.0-alpha05'
+
+    //lifecycle
+    // ViewModel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha06'
+    // LiveData
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-alpha06'
+
     //MediaRouter
     implementation 'androidx.mediarouter:mediarouter:1.1.0'
     //protobuf-lite

@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.universal.reply
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
@@ -78,10 +79,17 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                     val emote = emotes.get(key)
                     val emoteText = emote["text"].asString
                     val emoteSize = OtherUtils.dp2px(20f) * emote["meta"]["size"].asInt
-                    val emoteBitmap = Glide.with(context).asBitmap().load(emote["url"].asString).submit(emoteSize, emoteSize).get()
-                    var index = -1
-                    while (messageSSB.indexOf(emoteText, index + 1).also { index = it } != -1) {
-                        messageSSB.setSpan(ImageSpan(context, emoteBitmap), index, index + emoteText.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    var emoteBitmap: Bitmap? = null
+                    try {
+                        emoteBitmap = Glide.with(context).asBitmap().load(emote["url"].asString).submit(emoteSize, emoteSize).get()
+                    } catch (e: Exception){
+                        //ignore
+                    }
+                    if (emoteBitmap != null) {
+                        var index = -1
+                        while (messageSSB.indexOf(emoteText, index + 1).also { index = it } != -1) {
+                            messageSSB.setSpan(ImageSpan(context, emoteBitmap), index, index + emoteText.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        }
                     }
                 }
             }
@@ -93,7 +101,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
 
         baseBind.btnAction.setOnClickListener {
             val popupMenu = PopupMenu(context, baseBind.btnAction)
-            popupMenu.menuInflater.inflate(R.menu.reply_action, popupMenu.menu)
+            popupMenu.menuInflater.inflate(R.menu.root_reply_action, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.like -> {

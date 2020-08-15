@@ -114,16 +114,19 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
                     if (childReply.data.root.replies == null) {
                         isEnd = true
                     }
-                    handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     runOnUiThread { TipUtil.showTip(this, e.message) }
+                } finally {
+                    handler?.sendEmptyMessage(WHAT_REPLY_REFRESH_END)
                 }
             }.start()
             WHAT_REPLY_REFRESH_END -> {
-                baseBind.xrv.adapter = ChildReplyAdapter(this, childReply)
-                baseBind.xrv.refreshComplete()
-                baseBind.tvRcount.text = childReply.data.root.rcount.toString()
+                if (::childReply.isInitialized) {
+                    baseBind.xrv.adapter = ChildReplyAdapter(this, childReply)
+                    baseBind.xrv.refreshComplete()
+                    baseBind.tvRcount.text = childReply.data.root.rcount.toString()
+                }
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 try {
@@ -136,15 +139,19 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
                     childReply2.data.root.replies?.let {
                         ListUtil.addAll(childReply.data.root.replies, it)
                     }
-                    handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                     runOnUiThread { TipUtil.showTip(this, e.message) }
+                } finally {
+                    handler?.sendEmptyMessage(WHAT_REPLY_LOAD_MORE_END)
                 }
             }.start()
             WHAT_REPLY_LOAD_MORE_END -> {
                 baseBind.xrv.loadMoreComplete()
-                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, childReply.data.root.replies!!.lastIndex)
+                if (::childReply.isInitialized) {
+                    XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, childReply.data.root.replies!!.lastIndex)
+                }
             }
             WHAT_SET_PARENT -> {
                 baseBind.etParent.setText(msg.data.getLong(EXTRA_PARENT).toString())
