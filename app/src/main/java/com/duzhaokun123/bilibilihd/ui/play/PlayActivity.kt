@@ -313,7 +313,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
         })
 
-        notificationBuilder = NotificationCompat.Builder(this, NotificationUtil.CHANNEL_CHANNEL_ID_VIDEO_PLAY_BACKGROUND)
+        notificationBuilder = NotificationCompat.Builder(this, NotificationUtil.CHANNEL_ID_VIDEO_PLAY_BACKGROUND)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(androidx.media.app.NotificationCompat.MediaStyle())
                 .setSmallIcon(R.drawable.ic_pause)

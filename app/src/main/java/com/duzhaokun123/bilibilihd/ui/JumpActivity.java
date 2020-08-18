@@ -8,7 +8,7 @@ import android.util.Log;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityJumpBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
-import com.duzhaokun123.bilibilihd.utils.LogUtil;
+import com.duzhaokun123.bilibilihd.utils.Logcat;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
@@ -73,7 +73,7 @@ public class JumpActivity extends BaseActivity<ActivityJumpBinding> {
                 TipUtil.showToast("class not found " + e.getMessage());
             }
         });
-        baseBind.btnSaveLog.setOnClickListener(v -> LogUtil.saveLog(this));
+        baseBind.btnSaveLog.setOnClickListener(v -> Logcat.saveLog(this));
     }
 
     @Override

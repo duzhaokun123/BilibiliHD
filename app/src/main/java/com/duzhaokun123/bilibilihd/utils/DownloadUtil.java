@@ -54,7 +54,7 @@ public class DownloadUtil {
                             }
                             File file = new File(dir, String.valueOf(System.currentTimeMillis()));
                             fileOutputStream = new FileOutputStream(file);
-                            FileUtil.copy(fileInputStream, fileOutputStream);
+                            IOUtil.copy(fileInputStream, fileOutputStream);
                             Application.runOnUiThread(() -> TipUtil.showToast(R.string.saved));
                         } catch (Exception e) {
                             e.printStackTrace();

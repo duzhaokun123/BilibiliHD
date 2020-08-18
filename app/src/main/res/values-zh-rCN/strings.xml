@@ -131,4 +131,5 @@
     <string name="desktop_ua">桌面UA</string>
     <string name="child_reply">子回复</string>
     <string name="check_dialog">检查对话</string>
+    <string name="saved_to_s">保存至%s</string>
 </resources>

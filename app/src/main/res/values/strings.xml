@@ -133,4 +133,5 @@
     <string name="desktop_ua">desktop UA</string>
     <string name="child_reply">child reply</string>
     <string name="check_dialog">check dialog</string>
+    <string name="saved_to_s">saved to %s</string>
 </resources>

@@ -126,7 +126,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         try {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //ignore
                         }
                     }
 
@@ -168,7 +168,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
                         try {
                             aid = Long.parseLong(homePage.getData().getItems().get(position).getParam());
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //ignore
                         }
                     }
 

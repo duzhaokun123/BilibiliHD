@@ -9,9 +9,7 @@ class TestActivity : BaseActivity<ActivityTestBinding>() {
     override fun initConfig() = FIX_LAYOUT
     override fun initLayout() = R.layout.activity_test
 
-    override fun initView() {
-
-    }
+    override fun initView() {}
 
     override fun initData() {}
 

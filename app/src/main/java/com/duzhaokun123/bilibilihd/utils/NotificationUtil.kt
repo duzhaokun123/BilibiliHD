@@ -10,7 +10,7 @@ import java.util.*
 
 object NotificationUtil {
     const val CHANNEL_GROUP_ID_PLAY = "play"
-    const val CHANNEL_CHANNEL_ID_VIDEO_PLAY_BACKGROUND = "play_background"
+    const val CHANNEL_ID_VIDEO_PLAY_BACKGROUND = "play_background"
 
     private var notificationMap: MutableMap<Int, Notification> = HashMap()
     private var context: Context? = null
@@ -37,7 +37,7 @@ object NotificationUtil {
     fun init(context: Context) {
         val notificationChannelGroup = NotificationChannelGroup(CHANNEL_GROUP_ID_PLAY, context.getString(R.string.play))
         notificationManager?.createNotificationChannelGroup(notificationChannelGroup)
-        val notificationChannel = NotificationChannel(CHANNEL_CHANNEL_ID_VIDEO_PLAY_BACKGROUND, context.getString(R.string.play_background), NotificationManager.IMPORTANCE_MIN)
+        val notificationChannel = NotificationChannel(CHANNEL_ID_VIDEO_PLAY_BACKGROUND, context.getString(R.string.play_background), NotificationManager.IMPORTANCE_MIN)
         notificationChannel.enableLights(false)
         notificationChannel.enableVibration(true)
         notificationChannel.group = CHANNEL_GROUP_ID_PLAY
