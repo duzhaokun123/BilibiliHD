@@ -13,6 +13,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
+import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil
 import com.duzhaokun123.bilibilihd.utils.GlideUtil
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
@@ -72,6 +73,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
             baseBind.tvPlay.text = it.stat.view.toString()
             baseBind.tvDanmaku.text = it.stat.danmaku.toString()
             baseBind.tvUp.text = it.owner?.name
+            baseBind.tvDuration.text = DateTimeFormatUtil.getStringForTime(it.duration.toLong() * 1000)
             GlideUtil.loadUrlInto(context, it.pic, baseBind.ivCover, false)
         }
     }

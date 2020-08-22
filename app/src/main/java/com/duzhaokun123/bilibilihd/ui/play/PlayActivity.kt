@@ -16,7 +16,6 @@ import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.mediarouter.app.MediaRouteActionProvider
 import androidx.mediarouter.media.MediaControlIntent
 import androidx.mediarouter.media.MediaRouteSelector
@@ -77,6 +76,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private val notificationId = NotificationUtil.getNewId()
     private var isFullscreen = false
     private var isPlayingBeforeActivityPause = false
+    private var isActivityStopped = true
 
     private val mediaRouteCallback = object : MediaRouter.Callback() {
         override fun onRouteSelected(router: MediaRouter?, route: MediaRouter.RouteInfo?) {
@@ -322,7 +322,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 .addAction(R.drawable.ic_play_arrow, getString(R.string.resume), PlayControlService.newResumePendingIntent(this, playId))
 
         val model: RootReplyFragment.AllCountViewModel by viewModels()
-        model.allCount.observe(this, Observer { allCount ->
+        model.allCount.observe(this, { allCount ->
             baseBind.tl.getTabAt(1)?.text = getString(R.string.comment_num, allCount)
         })
     }
@@ -347,6 +347,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 remotePlayControlFragment = null
             }
         }
+        isActivityStopped = true
     }
 
     override fun onStart() {
@@ -358,6 +359,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         } else {
             NotificationUtil.remove(notificationId)
         }
+        isActivityStopped = false
     }
 
     override fun onResume() {
@@ -530,6 +532,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                         }
                     })
                     Thread.sleep(15000)
+                    if ( isActivityStopped ) {
+                        Thread.yield()
+                    }
                     if (Settings.play.isAutoRecordingHistory) {
                         handler?.sendEmptyMessage(WHAT_ADD_HISTORY)
                     }

@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.universal.reply
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Message
 import android.text.Spannable
@@ -52,11 +53,18 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                     for (key in emotes.keySet()) {
                         val emote = emotes.get(key)
                         val emoteText = emote["text"].asString
+                        var emoteBitmap: Bitmap? = null
                         val emoteSize = OtherUtils.dp2px(20f) * emote["meta"]["size"].asInt
-                        val emoteBitmap = Glide.with(context).asBitmap().load(emote["url"].asString).submit(emoteSize, emoteSize).get()
-                        var index = -1
-                        while (messageSSB.indexOf(emoteText, index + 1).also { index = it } != -1) {
-                            messageSSB.setSpan(ImageSpan(context, emoteBitmap), index, index + emoteText.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        try {
+                            emoteBitmap = Glide.with(context).asBitmap().load(emote["url"].asString).submit(emoteSize, emoteSize).get()
+                        } catch (e: Exception) {
+                            //ignore
+                        }
+                        if (emoteBitmap != null) {
+                            var index = -1
+                            while (messageSSB.indexOf(emoteText, index + 1).also { index = it } != -1) {
+                                messageSSB.setSpan(ImageSpan(context, emoteBitmap), index, index + emoteText.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            }
                         }
                     }
                 }

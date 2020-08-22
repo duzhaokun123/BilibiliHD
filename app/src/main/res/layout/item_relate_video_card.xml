@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data />
@@ -20,7 +21,8 @@
                 android:layout_width="140dp"
                 android:layout_height="80dp"
                 android:scaleType="fitCenter"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@tools:sample/backgrounds/scenic[5]" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -29,7 +31,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iv_cover"
                 android:textColor="@color/ordinaryText"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="title" />
 
             <TextView
                 android:id="@+id/tv_up"
@@ -38,8 +41,9 @@
                 android:layout_above="@id/ll"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iv_cover"
-                android:drawableStart="@drawable/ic_up"
-                android:drawablePadding="5dp" />
+                android:drawablePadding="5dp"
+                app:drawableStartCompat="@drawable/ic_up"
+                tools:text="up" />
 
             <LinearLayout
                 android:id="@+id/ll"
@@ -54,17 +58,32 @@
                     android:id="@+id/tv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_play"
-                    android:drawablePadding="5dp" />
+                    android:drawablePadding="5dp"
+                    app:drawableStartCompat="@drawable/ic_play"
+                    tools:text="0" />
 
                 <TextView
                     android:id="@+id/tv_danmaku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:drawableStart="@drawable/ic_danmaku"
-                    android:drawablePadding="5dp" />
+                    android:drawablePadding="5dp"
+                    app:drawableStartCompat="@drawable/ic_danmaku"
+                    tools:text="0" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/iv_cover"
+                android:layout_alignBottom="@id/iv_cover"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/bg_text"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="1:30" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

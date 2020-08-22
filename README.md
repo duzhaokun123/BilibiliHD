@@ -36,6 +36,7 @@
         - [x] 精准空降
         - [ ] 屏幕滑动进度控制
         - [x] 远程播放 (仅在本机通过模拟辅助显示设备测试)
+        - [ ] 4K (如何抓grpc的包?)
     - [ ] 弹幕
         - [x] 显示普通弹幕
         - [x] 显示高级弹幕 (可能有部分无法显示)
@@ -103,11 +104,12 @@
 ### TODO
 - ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
 在 API >= 23 的设备上没有必要
-- 重作界面
+- 重作界
+- 下载
 
 ### 从源代码构建注意
 ```shell script
-git clone https://github.com/duzhaokun123/BilibiliHD.git
+git clone https://github.com/duzhaokun123/BilibiliHD.git #一定要完整克隆, 否则版本号不正确
 git clone https://github.com/duzhaokun123/bilibili-api.git
 git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git
 ```
