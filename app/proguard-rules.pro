@@ -23,4 +23,5 @@
 -keep public class * extends com.duzhaokun123.bilibilihd.bases*
 -keep public class * extends androidx.fragment.app.Fragment
 -keep public class com.duzhaokun123.bilibilihd.mybilibiliapi** {*;}
+-keep public class com.duzhaokun123.bilibilihd.model** {*;}
 -keep public class com.hiczp.bilibili.api** {*;}

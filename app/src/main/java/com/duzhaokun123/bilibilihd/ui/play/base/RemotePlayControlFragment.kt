@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.play
+package com.duzhaokun123.bilibilihd.ui.play.base
 
 import android.os.Message
 import android.view.View

@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.play;
+package com.duzhaokun123.bilibilihd.ui.play.ordinary;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -282,7 +282,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
 
     private void sendBack() {
         Message message = new Message();
-        message.what = PlayActivity.WHAT_INTRO_FRAGMENT_SEND_BACK;
+        message.what = OrdinaryPlayActivity.WHAT_INTRO_FRAGMENT_SEND_BACK;
         Bundle bundle = new Bundle();
         bundle.putInt("page", page);
         bundle.putString("videoPlayUrl", GsonUtil.getGsonInstance().toJson(videoPlayUrl));

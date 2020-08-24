@@ -219,7 +219,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         this.danmakuLoadListener = danmakuLoadListener;
     }
 
-    public void loadDanmaku(long aid, long cid, int durationS) {
+    public void loadDanmakuByAidCid(long aid, long cid, int durationS) {
         pbExoBuffering.setVisibility(VISIBLE);
         overlayBaseBind.dv.release();
         new Thread() {

@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -207,8 +206,8 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         return baseBind.bpv;
     }
 
-    public void loadDanmaku(long aid, long cid, int durationS) {
-        baseBind.bpv.loadDanmaku(aid, cid, durationS);
+    public void loadDanmakuByAidCid(long aid, long cid, int durationS) {
+        baseBind.bpv.loadDanmakuByAidCid(aid, cid, durationS);
     }
 
     public void setOnPlayerErrorListener(OnPlayerErrorListener onPlayerErrorListener) {

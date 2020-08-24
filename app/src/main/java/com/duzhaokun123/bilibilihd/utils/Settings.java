@@ -3,6 +3,7 @@ package com.duzhaokun123.bilibilihd.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
@@ -112,6 +113,15 @@ public class Settings {
             } else {
                 return GLIDE_CACHE_FIRST;
             }
+        }
+
+        @Nullable
+        public String getOfficialAppDownloadDir() {
+            return sharedPreferences.getString("official_app_download_dir", null);
+        }
+
+        public void setOfficialAppDownloadDir(String dir) {
+            sharedPreferences.edit().putString("official_app_download_dir", dir).apply();
         }
     }
 

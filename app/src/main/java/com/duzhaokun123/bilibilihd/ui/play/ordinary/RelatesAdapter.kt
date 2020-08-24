@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.play
+package com.duzhaokun123.bilibilihd.ui.play.ordinary
 
 import android.app.ActivityOptions
 import android.content.Context
@@ -32,9 +32,9 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
     override fun initView(baseBind: ItemRelateVideoCardBinding, position: Int) {
         baseBind.cv.setOnClickListener {
             if (biliView.data.relates!![position].aid != 0) {
-                val intent = Intent(context, PlayActivity::class.java)
+                val intent = Intent(context, OrdinaryPlayActivity::class.java)
                 intent.putExtra("aid", biliView.data.relates!![position].aid.toLong())
-                intent.putExtra(PlayActivity.EXTRA_FAST_LOAD_COVER_URL, biliView.data.relates!![position].pic)
+                intent.putExtra(OrdinaryPlayActivity.EXTRA_FAST_LOAD_COVER_URL, biliView.data.relates!![position].pic)
                 ContextCompat.startActivity(context, intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "cover").toBundle())
             } else {
                 BrowserUtil.openCustomTab(context, biliView.data.relates!![position].uri)

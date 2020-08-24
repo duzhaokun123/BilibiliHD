@@ -18,8 +18,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.play.local.LocalPlayActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme.TransparencyActionBar.DarkActionBar" />
+        <activity
             android:name=".ui.universal.reply.ChildReplyActivity"
-            android:label="@string/child_reply"></activity>
+            android:label="@string/child_reply" />
         <activity
             android:name=".ui.universal.reply.RootReplyActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode" />
@@ -69,7 +74,7 @@
             android:label="@string/logout" />
         <activity android:name=".ui.userspace.FavoriteActivity" />
         <activity
-            android:name=".ui.play.PlayActivity"
+            android:name=".ui.play.ordinary.OrdinaryPlayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:supportsPictureInPicture="true"
             android:theme="@style/AppTheme.TransparencyActionBar.DarkActionBar" />

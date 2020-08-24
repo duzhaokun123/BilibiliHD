@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.play
+package com.duzhaokun123.bilibilihd.ui.play.ordinary
 
 import android.content.Context
 import com.duzhaokun123.bilibilihd.R

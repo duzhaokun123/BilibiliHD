@@ -45,13 +45,14 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     public static final String EXTRA_FACE_CACHE_ID = "face_cache_id";
     public static final String EXTRA_NAME_CACHE_ID = "name_cache_id";
 
+    @SuppressWarnings("unchecked")
     public static void enter(Activity activity, long uid,
                              @Nullable View faceView, @Nullable Drawable faceDrawable,
                              @Nullable View nameView, @Nullable CharSequence nameCS) {
         Intent intent = new Intent(activity, UserSpaceActivity.class);
         intent.putExtra(EXTRA_UID, uid);
         if (Settings.layout.isUserSpaceUseWebView()) {
-            activity.startActivity(intent);
+            BrowserUtil.openWebViewActivity(activity, "https://space.bilibili.com/" + uid, true, true);
         } else {
             intent.putExtra(EXTRA_FACE_CACHE_ID, ObjectCache.put(faceDrawable));
             intent.putExtra(EXTRA_NAME_CACHE_ID, ObjectCache.put(nameCS));

@@ -8,4 +8,10 @@
         app:key="downloader"
         app:title="@string/downloader"
         app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:title="@string/official_app_download_dir"
+        app:key="official_app_download_dir"
+        app:iconSpaceReserved="false"
+        app:defaultValue="@null"/>
 </PreferenceScreen>

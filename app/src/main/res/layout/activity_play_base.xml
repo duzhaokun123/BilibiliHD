@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutDescription="@xml/activity_play_scene"
-                tools:context=".ui.play.PlayActivity">
+                tools:context=".ui.play.ordinary.OrdinaryPlayActivity">
 
                 <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
                     android:id="@+id/bpvpv"
@@ -39,29 +39,22 @@
                 <View
                     android:id="@+id/v_bpvpv"
                     android:layout_width="0dp"
-                    android:layout_height="400dp"
+                    android:layout_height="300dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tl"
+
+                <FrameLayout
+                    android:id="@+id/fl_ext"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:elevation="1dp"
-                    android:theme="@style/AppTheme.Navigation"
-                    app:layout_constraintBottom_toTopOf="@id/vp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/v_bpvpv" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@id/vp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tl"
-                    app:layout_constraintTop_toBottomOf="@id/tl" />
+
             </androidx.constraintlayout.motion.widget.MotionLayout>
 
             <FrameLayout
