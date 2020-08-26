@@ -23,17 +23,19 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     @Nullable
     protected Handler handler;
 
+    private boolean firstCreate = true;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            firstCreate = false;
+        }
+
         super.onCreate(savedInstanceState);
 
         int config = initConfig();
         if ((config & NEED_HANDLER) == NEED_HANDLER) {
             handler = new Handler(this);
-        }
-
-        if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState);
         }
     }
 
@@ -42,6 +44,11 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         baseBind = DataBindingUtil.inflate(inflater, initLayout(), container, false);
         View parentView = baseBind.getRoot();
+
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
+        }
+
         findViews(parentView);
         initView();
         initData();
@@ -79,6 +86,10 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
             throw new IllegalStateException("Fragment " + this + " not attached to an baseActivity.");
         }
         return activity;
+    }
+
+    public boolean isFirstCreate() {
+        return firstCreate;
     }
 
     protected abstract int initConfig();

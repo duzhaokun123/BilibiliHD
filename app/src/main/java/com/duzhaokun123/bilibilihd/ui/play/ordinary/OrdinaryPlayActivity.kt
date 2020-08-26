@@ -27,6 +27,7 @@ import com.hiczp.bilibili.api.app.model.View as BiliView
 class OrdinaryPlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
     companion object {
         const val EXTRA_FAST_LOAD_COVER_URL = "fast_load_cover_url"
+        const val EXTRA_AID = "aid"
         const val EXTRA_BVID = "bvid"
 
         const val WHAT_LOAD_BILIVIEW = 0
@@ -55,7 +56,7 @@ class OrdinaryPlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
 
     override fun initData() {
         if (aid == 0L) {
-            aid = startIntent.getLongExtra("aid", 0)
+            aid = startIntent.getLongExtra(EXTRA_AID, 0)
             if (aid == 0L) {
                 aid = MyBilibiliClientUtil.bv2av(startIntent.getStringExtra(EXTRA_BVID))
             }

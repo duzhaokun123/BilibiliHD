@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemRelateVideoCardBinding
@@ -35,7 +34,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
                 val intent = Intent(context, OrdinaryPlayActivity::class.java)
                 intent.putExtra("aid", biliView.data.relates!![position].aid.toLong())
                 intent.putExtra(OrdinaryPlayActivity.EXTRA_FAST_LOAD_COVER_URL, biliView.data.relates!![position].pic)
-                ContextCompat.startActivity(context, intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "cover").toBundle())
+                context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "cover").toBundle())
             } else {
                 BrowserUtil.openCustomTab(context, biliView.data.relates!![position].uri)
             }
@@ -48,7 +47,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
                     R.id.check_cover -> {
                         val intent = Intent(context, PhotoViewActivity::class.java)
                         intent.putExtra("url", biliView.data.relates!![position].pic)
-                        ContextCompat.startActivity(context, intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "img").toBundle())
+                        context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "img").toBundle())
                     }
                     R.id.add_to_watch_later -> object : Thread() {
                         override fun run() {

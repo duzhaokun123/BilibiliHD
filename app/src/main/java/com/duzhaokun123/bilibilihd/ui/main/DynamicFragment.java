@@ -2,12 +2,15 @@ package com.duzhaokun123.bilibilihd.ui.main;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.annotation.NonNull;
 
 import com.duzhaokun123.bilibilihd.Params;
 import com.duzhaokun123.bilibilihd.R;
@@ -65,6 +68,20 @@ public class DynamicFragment extends BaseFragment<LayoutWebViewBinding> {
 
     @Override
     protected void initData() {
-        baseBind.wv.loadUrl("https://t.bilibili.com");
+        if (isFirstCreate()) {
+            baseBind.wv.loadUrl("https://t.bilibili.com");
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        baseBind.wv.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        baseBind.wv.restoreState(savedInstanceState);
     }
 }

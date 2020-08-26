@@ -13,7 +13,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.duzhaokun123.bilibilihd.Params
 import com.duzhaokun123.bilibilihd.R
@@ -30,13 +29,9 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     private val configViewModel: ConfigViewModel by viewModels()
 
-    override fun initConfig(): Int {
-        return FIX_LAYOUT
-    }
+    override fun initConfig() = DISABLE_FULLSCREEN_LAYOUT
 
-    override fun initLayout(): Int {
-        return R.layout.layout_web_view
-    }
+    override fun initLayout() = R.layout.layout_web_view
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.web_view_activity, menu)
@@ -85,9 +80,11 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        configViewModel.desktopUA.value = startIntent.getBooleanExtra(EXTRA_DESKTOP_UA, true)
-        configViewModel.interceptAll.value = startIntent.getBooleanExtra(EXTRA_INTERCEPT_ALL, false)
-        configViewModel.finishWhenIntercept.value = startIntent.getBooleanExtra(EXTRA_FINISH_WHEN_INTERCEPT, false)
+        if (isFirstCreate) {
+            configViewModel.desktopUA.value = startIntent.getBooleanExtra(EXTRA_DESKTOP_UA, true)
+            configViewModel.interceptAll.value = startIntent.getBooleanExtra(EXTRA_INTERCEPT_ALL, false)
+            configViewModel.finishWhenIntercept.value = startIntent.getBooleanExtra(EXTRA_FINISH_WHEN_INTERCEPT, false)
+        }
         supportActionBar?.let {
             it.setHomeAsUpIndicator(R.drawable.ic_clear)
             it.setDisplayShowHomeEnabled(true)
@@ -96,7 +93,6 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun initView() {
-        baseBind.wv.settings.javaScriptEnabled = true
         baseBind.wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 return if ("bilibili" == request?.url?.scheme || configViewModel.interceptAll.value!!) {
@@ -135,14 +131,21 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
                 setTitle(title)
             }
         }
-        configViewModel.desktopUA.observe(this, Observer { desktopUA ->
+        configViewModel.desktopUA.observe(this, { desktopUA ->
             if (desktopUA) {
                 baseBind.wv.settings.userAgentString = Params.DESKTOP_USER_AGENT
             } else {
                 baseBind.wv.settings.userAgentString = Params.TABLETS_USER_AGENT
             }
         })
-        baseBind.wv.settings.domStorageEnabled = true
+        baseBind.wv.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            useWideViewPort = true
+            setSupportZoom(true)
+            builtInZoomControls = true
+            displayZoomControls = false
+        }
     }
 
     override fun initData() {

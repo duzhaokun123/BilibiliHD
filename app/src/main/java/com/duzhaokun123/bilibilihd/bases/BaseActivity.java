@@ -28,6 +28,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     protected static final int FULLSCREEN = 0b001;
     protected static final int NEED_HANDLER = 0b010;
     protected static final int FIX_LAYOUT = 0b0100;
+    protected static final int DISABLE_FULLSCREEN_LAYOUT = 0b01000;
 
     private int config;
     private boolean layoutFixed = false;
@@ -46,6 +47,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
     private Map<Integer, IRequestPermissionCallback> iRequestPermissionCallbackMap;
     private int permissionNum = 0;
+    private boolean firstCreate = true;
 
     /**
      * 只在上部刘海屏与 stateBar 同高时正确
@@ -70,6 +72,10 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            firstCreate = false;
+        }
+
         super.onCreate(savedInstanceState);
 
         config = initConfig();
@@ -149,7 +155,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
             displayCutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
         }
 
-        if ((config & FIX_LAYOUT) != 0 && !layoutFixed) {
+        if ((config & DISABLE_FULLSCREEN_LAYOUT) == 0 && (config & FIX_LAYOUT) != 0 && !layoutFixed) {
             layoutFixed = true;
             if (navigationBarOnButton) {
                 actionBarHeight = -1;
@@ -169,7 +175,13 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
             onLayoutFixInfoReady();
         }
 
-        if ((config & FIX_LAYOUT) != 0 && layoutFixed && !navigationBarOnButton) {
+        if ((config & DISABLE_FULLSCREEN_LAYOUT) == 0 && (config & FIX_LAYOUT) != 0 && layoutFixed && !navigationBarOnButton) {
+            getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
+                    & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
+        }
+
+        if ((config & DISABLE_FULLSCREEN_LAYOUT) != 0) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
                     & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
@@ -219,6 +231,10 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Nullable
     public Handler getHandler() {
         return handler;
+    }
+
+    public boolean isFirstCreate() {
+        return firstCreate;
     }
 
     protected abstract int initConfig();
