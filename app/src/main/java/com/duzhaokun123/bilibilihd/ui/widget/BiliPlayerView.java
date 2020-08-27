@@ -345,6 +345,11 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         return overlayBaseBind.dv;
     }
 
+    public void danmakuHide() {
+        btnDanmaku.setVisibility(INVISIBLE);
+        overlayBaseBind.dv.hide();
+    }
+
     public interface DanmakuLoadListener {
         void onDanmakuLoadEnd(@Nullable Exception e);
     }

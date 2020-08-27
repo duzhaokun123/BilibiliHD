@@ -133,4 +133,8 @@
     <string name="check_dialog">检查对话</string>
     <string name="saved_to_s">保存至%s</string>
     <string name="official_app_download_dir">官方应用下载路径</string>
+    <string name="visibility">可见性</string>
+    <string name="visible">可见</string>
+    <string name="invisible">不可见</string>
+    <string name="no_load">不加载</string>
 </resources>

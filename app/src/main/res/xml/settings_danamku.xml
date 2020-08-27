@@ -8,6 +8,14 @@
         app:iconSpaceReserved="false"
         app:key="sync"
         app:title="@string/sync" />
+    <DropDownPreference
+        app:defaultValue="0"
+        app:entries="@array/danmaku_visibility_entries"
+        app:entryValues="@array/danmaku_visibility_values"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_visibility"
+        app:title="@string/visibility"
+        app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/danmaku_drawing" />
@@ -79,8 +87,8 @@
         app:entries="@array/allow_danmaku_overlapping_entries"
         app:entryValues="@array/allow_danmaku_overlapping_values"
         app:iconSpaceReserved="false"
-        app:title="@string/allow_danmaku_overlapping"
-        app:key="prevent_danmaku_overlapping" />
+        app:key="prevent_danmaku_overlapping"
+        app:title="@string/allow_danmaku_overlapping" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/block" />

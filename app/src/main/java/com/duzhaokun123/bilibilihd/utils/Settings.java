@@ -170,6 +170,10 @@ public class Settings {
         public Set<String> getAllowDanmakuOverlapping() {
             return sharedPreferences.getStringSet("prevent_danmaku_overlapping", new HashSet<>());
         }
+
+        public int getDanmakuVisibility() {
+            return getIntByString("danmaku_visibility", 0);
+        }
     }
 
     public static class Ads {

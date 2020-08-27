@@ -1,5 +1,5 @@
 include ':app'
-rootProject.name='bilibili HD'
+rootProject.name = 'bilibili HD'
 // git://github.com/duzhaokun123/bilibili-api
 includeBuild '../../Kotlin/bilibili-api'
 // git://github.com/duzhaokun123/DanmakuFlameMaster

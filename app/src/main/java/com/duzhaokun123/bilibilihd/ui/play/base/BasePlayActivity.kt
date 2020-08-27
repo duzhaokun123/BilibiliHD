@@ -25,7 +25,6 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBaseBinding
 import com.duzhaokun123.bilibilihd.services.PlayControlService
-import com.duzhaokun123.bilibilihd.ui.play.ordinary.OrdinaryPlayActivity
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
@@ -206,6 +205,10 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 .setShowWhen(false)
                 .addAction(R.drawable.ic_pause, getString(R.string.pause), PlayControlService.newPausePendingIntent(this, playId))
                 .addAction(R.drawable.ic_play_arrow, getString(R.string.resume), PlayControlService.newResumePendingIntent(this, playId))
+
+        if (Settings.danmaku.danmakuVisibility != 0) {
+            baseBind.bpvpv.biliPlayerView.danmakuHide()
+        }
     }
 
     final override fun initRegisterCoordinatorLayout() = baseBind.clRoot
