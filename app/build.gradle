@@ -33,12 +33,12 @@ def isHasChange = { ->
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.duzhaokun123.bilibilihd"
         minSdkVersion 26
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode getGitCommitCount()
         versionName "0.1-git.${getGitHash()}${isHasChange() ? "-changed" : ""}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -110,7 +110,7 @@ dependencies {
     //bilibili-api
     implementation 'com.hiczp:bilibili-api:0.2.1'
 //    DrawerLayout
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
@@ -161,11 +161,14 @@ dependencies {
     //html-textview
     implementation 'org.sufficientlysecure:html-textview:3.9'
     //ktx
-    implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.activity:activity-ktx:1.1.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
     //flexbox-layout
     implementation 'com.google.android:flexbox:2.0.1'
+
+    //core
+    implementation 'androidx.core:core:1.5.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha02'
 }
 
 protobuf {

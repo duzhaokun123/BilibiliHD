@@ -47,7 +47,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         }
         return when (item.itemId) {
             R.id.open_in_browser -> {
-                BrowserUtil.openCustomTab(this, baseBind.wv.url)
+                baseBind.wv.url?.let { BrowserUtil.openCustomTab(this, it) }
                 true
             }
             R.id.reload -> {
