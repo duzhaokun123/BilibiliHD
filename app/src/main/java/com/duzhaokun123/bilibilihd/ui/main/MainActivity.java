@@ -152,6 +152,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         baseBind.dlMain.close();
                     } else {
                         baseBind.dlMain.open();
+                        reloadMyInfo();
                     }
                 }
                 if (baseBind.ml != null) {
@@ -159,6 +160,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                         baseBind.ml.transitionToEnd();
                     } else {
                         baseBind.ml.transitionToStart();
+                        reloadMyInfo();
                     }
                 }
                 return true;

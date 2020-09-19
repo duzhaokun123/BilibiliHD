@@ -277,6 +277,10 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         this.qualityId = qualityId;
     }
 
+    public void syncDanmakuProgress() {
+        baseBind.bpv.getDanmakuView().seekTo(player.getContentPosition());
+    }
+
     public interface OnFullscreenClickListener {
         void onClick(boolean isFullscreen);
     }

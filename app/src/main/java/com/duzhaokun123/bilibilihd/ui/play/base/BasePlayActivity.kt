@@ -268,6 +268,10 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 baseBind.bpvpv.player.retry()
                 true
             }
+            R.id.sync_danmaku_progress -> {
+                syncDanmakuProgress()
+                true
+            }
             R.id.play_settings -> {
                 if (showingFragment == null) {
                     showingFragment = SettingsPlayFragment()
@@ -439,6 +443,10 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
 
     fun setVideoMediaSource(mediaSource: MediaSource) {
         baseBind.bpvpv.player.prepare(mediaSource)
+    }
+
+    fun syncDanmakuProgress() {
+        baseBind.bpvpv.syncDanmakuProgress()
     }
 
     abstract fun initExtLayout(): Int

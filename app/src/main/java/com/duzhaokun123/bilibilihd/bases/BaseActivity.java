@@ -79,9 +79,13 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
         super.onCreate(savedInstanceState);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         config = initConfig();
+
+        if ((config & DISABLE_FULLSCREEN_LAYOUT) != 0) {
+            WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+        } else {
+            WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        }
 
         if ((config & FULLSCREEN) != 0) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
@@ -144,10 +148,6 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-//        getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int viewHeight = displayMetrics.heightPixels;
@@ -160,20 +160,21 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
         if ((config & DISABLE_FULLSCREEN_LAYOUT) == 0 && (config & FIX_LAYOUT) != 0 && !layoutFixed) {
             layoutFixed = true;
-            if (navigationBarOnButton) {
-                actionBarHeight = -1;
-                if (getSupportActionBar() != null) {
-                    actionBarHeight = getSupportActionBar().getHeight();
-                }
 
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) baseBind.getRoot().getLayoutParams();
+            actionBarHeight = -1;
+            if (getSupportActionBar() != null) {
+                actionBarHeight = getSupportActionBar().getHeight();
+            }
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) baseBind.getRoot().getLayoutParams();
+            if (navigationBarOnButton) {
                 params.topMargin = getFixTopHeight();
-                baseBind.getRoot().setLayoutParams(params);
             } else {
                 getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
                         & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
+                params.topMargin = actionBarHeight / 2; // fixme: 不知道为什么, 就是要这么算
             }
+            baseBind.getRoot().setLayoutParams(params);
 
             onLayoutFixInfoReady();
         }
@@ -182,13 +183,12 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
                     & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
-        }
-
-        if ((config & DISABLE_FULLSCREEN_LAYOUT) != 0) {
+        } else if ((config & DISABLE_FULLSCREEN_LAYOUT) != 0) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()
                     & ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE));
         }
+
     }
 
     @Override

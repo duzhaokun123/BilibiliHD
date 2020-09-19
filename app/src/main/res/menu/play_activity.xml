@@ -50,6 +50,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/sync_danmaku_progress"
+        android:title="@string/sync_danmaku_progress"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/play_settings"
         android:title="@string/play_settings"
         app:showAsAction="never" />

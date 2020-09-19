@@ -31,6 +31,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.model.VideoShot;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
+import com.duzhaokun123.bilibilihd.utils.EmptyBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
@@ -208,6 +209,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 overlayBaseBind.ivPreview.setVisibility(GONE);
             }
         });
+
+        overlayBaseBind.dv.prepare(EmptyBiliDanmakuParser.INSTANCE, DanmakuUtil.INSTANCE.getDanmakuContext());
     }
 
     public void release() {

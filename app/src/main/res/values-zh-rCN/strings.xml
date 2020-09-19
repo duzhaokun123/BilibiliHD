@@ -137,4 +137,5 @@
     <string name="visible">可见</string>
     <string name="invisible">不可见</string>
     <string name="no_load">不加载</string>
+    <string name="sync_danmaku_progress">同步弹幕进度</string>
 </resources>
