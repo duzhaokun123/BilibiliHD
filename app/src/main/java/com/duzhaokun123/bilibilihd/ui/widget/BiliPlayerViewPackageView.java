@@ -30,6 +30,8 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
+
 public class BiliPlayerViewPackageView extends FrameLayout {
     private LayoutBiliPlayerViewPackageViewBinding baseBind;
 
@@ -208,6 +210,10 @@ public class BiliPlayerViewPackageView extends FrameLayout {
 
     public void loadDanmakuByAidCid(long aid, long cid, int durationS) {
         baseBind.bpv.loadDanmakuByAidCid(aid, cid, durationS);
+    }
+
+    public void loadDanmakuByBiliDanmakuParser(BaseDanmakuParser danmakuParser) {
+        baseBind.bpv.loadDanmakuByBiliDanmakuParser(danmakuParser);
     }
 
     public void setOnPlayerErrorListener(OnPlayerErrorListener onPlayerErrorListener) {

@@ -42,6 +42,7 @@ import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.Objects;
 
+import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
@@ -251,6 +252,11 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
             }
         }.start();
+    }
+
+    public void loadDanmakuByBiliDanmakuParser(BaseDanmakuParser danmakuParser) {
+        overlayBaseBind.dv.release();
+        overlayBaseBind.dv.prepare(danmakuParser, DanmakuUtil.INSTANCE.getDanmakuContext());
     }
 
     public void setPbExoBufferingVisibility(int visibility) {

@@ -32,6 +32,7 @@ import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
 
 abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<ActivityPlayBaseBinding>() {
     protected lateinit var extBind: extLayout
@@ -269,7 +270,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 true
             }
             R.id.sync_danmaku_progress -> {
-                syncDanmakuProgress()
+                baseBind.bpvpv.syncDanmakuProgress()
                 true
             }
             R.id.play_settings -> {
@@ -437,16 +438,16 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         baseBind.bpvpv.loadDanmakuByAidCid(aid, cid, durationS)
     }
 
+    fun loadDanmakuByBiliDanmakuParser(danmakuParser: BaseDanmakuParser) {
+        baseBind.bpvpv.loadDanmakuByBiliDanmakuParser(danmakuParser)
+    }
+
     fun setVideoUrlAdapter(videoUrlAdapter: BiliPlayerViewPackageView.VideoUrlAdapter?) {
         baseBind.bpvpv.videoUrlAdapter = videoUrlAdapter
     }
 
     fun setVideoMediaSource(mediaSource: MediaSource) {
         baseBind.bpvpv.player.prepare(mediaSource)
-    }
-
-    fun syncDanmakuProgress() {
-        baseBind.bpvpv.syncDanmakuProgress()
     }
 
     abstract fun initExtLayout(): Int

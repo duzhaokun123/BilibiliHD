@@ -17,6 +17,7 @@ import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
 import com.duzhaokun123.bilibilihd.utils.Settings
+import com.duzhaokun123.bilibilihd.utils.XmlBiliDanmakuParser
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.MergingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -70,6 +71,11 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
         })
         model.widthHeight.observe(this, {
             setWidthHeight(it.first, it.second)
+        })
+        model.danmakuUri.observe(this, {
+            Thread {
+                loadDanmakuByBiliDanmakuParser(XmlBiliDanmakuParser(it))
+            }.start()
         })
     }
 
