@@ -38,8 +38,10 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:label="@string/danmaku_test"
             android:launchMode="singleTop" />
-        <activity android:name=".ui.WebViewActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"/>
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
+            android:supportsPictureInPicture="true" />
         <activity
             android:name=".ui.article.ArticleActivity"
             android:label=""

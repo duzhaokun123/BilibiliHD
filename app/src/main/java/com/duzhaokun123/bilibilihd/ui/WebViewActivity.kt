@@ -1,9 +1,12 @@
 package com.duzhaokun123.bilibilihd.ui
 
 import android.annotation.SuppressLint
+import android.app.PictureInPictureParams
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Rational
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,6 +28,8 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
         const val EXTRA_DESKTOP_UA = "desktop_ua"
         const val EXTRA_INTERCEPT_ALL = "intercept_all"
         const val EXTRA_FINISH_WHEN_INTERCEPT = "finish_when_intercept"
+
+        val PIP_PARAMS = PictureInPictureParams.Builder().setAspectRatio(Rational(16, 9)).build()!!
     }
 
     private val configViewModel: ConfigViewModel by viewModels()
@@ -56,6 +61,10 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
             }
             R.id.stop -> {
                 baseBind.wv.stopLoading()
+                true
+            }
+            R.id.pip -> {
+                enterPictureInPictureMode(PIP_PARAMS)
                 true
             }
             R.id.desktop_ua -> {
@@ -157,6 +166,15 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
             baseBind.wv.goBack()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (isInPictureInPictureMode) {
+            supportActionBar?.hide()
+        } else {
+            supportActionBar?.show()
         }
     }
 
