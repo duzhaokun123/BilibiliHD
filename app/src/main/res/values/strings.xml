@@ -140,4 +140,5 @@
     <string name="invisible">invisible</string>
     <string name="no_load">no load</string>
     <string name="sync_danmaku_progress">sync danmaku progress</string>
+    <string name="refresh">refresh</string>
 </resources>

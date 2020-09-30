@@ -30,6 +30,7 @@ import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
+import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -41,7 +42,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
+public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> implements Refreshable {
     private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
     private HomePage homePage;
 
@@ -277,6 +278,11 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("homePage", ObjectCache.put(homePage));
+    }
+
+    @Override
+    public void onRefresh() {
+        baseBind.xrv.refresh();
     }
 
     class Refresh extends Thread {

@@ -10,7 +10,7 @@ import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 
-class LoginActivity : BaseActivity<ActivityLoginBinding?>() {
+class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     companion object {
         const val WHAT_FINISH = 0
         const val WHAT_DO_GEETEST = 1
@@ -21,11 +21,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding?>() {
     public override fun initLayout() = R.layout.activity_login
 
     public override fun initView() {
-        baseBind!!.btnLogin.setOnClickListener {
+        baseBind.btnLogin.setOnClickListener {
             Thread {
                 var loginResponse: LoginResponse? = null
                 try {
-                    loginResponse = PBilibiliClient.login(baseBind!!.etUsername.text.toString(), baseBind!!.etPassword.text.toString())
+                    loginResponse = PBilibiliClient.login(baseBind.etUsername.text.toString(), baseBind.etPassword.text.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                     if (e is BilibiliApiException && e.commonResponse.code == -105) {

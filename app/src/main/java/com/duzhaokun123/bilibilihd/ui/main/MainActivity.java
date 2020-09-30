@@ -31,6 +31,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
+import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
 
@@ -166,6 +167,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                 return true;
             case R.id.search:
                 onSearchRequested();
+                return true;
+            case R.id.refresh:
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_main);
+                if (fragment instanceof Refreshable) {
+                    ((Refreshable) fragment).onRefresh();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -31,6 +31,7 @@ import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
+import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
@@ -39,7 +40,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> {
+public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> implements Refreshable {
 
     private History mHistory;
 
@@ -219,6 +220,11 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("mHistory", ObjectCache.put(mHistory));
+    }
+
+    @Override
+    public void onRefresh() {
+        baseBind.xrv.refresh();
     }
 
     class Refresh extends Thread {

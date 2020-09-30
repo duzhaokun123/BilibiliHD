@@ -17,11 +17,12 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
+import com.duzhaokun123.bilibilihd.utils.Refreshable;
 
 /**
  * 这个类用 Kotlin 写会崩溃
  */
-public class DynamicFragment extends BaseFragment<LayoutWebViewBinding> {
+public class DynamicFragment extends BaseFragment<LayoutWebViewBinding> implements Refreshable {
 
     @Override
     protected int initConfig() {
@@ -83,5 +84,10 @@ public class DynamicFragment extends BaseFragment<LayoutWebViewBinding> {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         baseBind.wv.restoreState(savedInstanceState);
+    }
+
+    @Override
+    public void onRefresh() {
+        baseBind.wv.reload();
     }
 }

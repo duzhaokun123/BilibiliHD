@@ -225,7 +225,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     public void loadDanmakuByAidCid(long aid, long cid, int durationS) {
         pbExoBuffering.setVisibility(VISIBLE);
-        overlayBaseBind.dv.release();
         new Thread() {
             @Override
             public void run() {
@@ -243,7 +242,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                     message.setData(bundle);
                     handler.sendMessage(message);
                 }
-                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
+                loadDanmakuByBiliDanmakuParser(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
+//                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
                 try {
                     sleep(100);
                 } catch (InterruptedException e) {
@@ -295,7 +295,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 }
                 if (getPlayer() != null) {
                     overlayBaseBind.dv.seekTo(getPlayer().getContentPosition());
-                    if (!getPlayer().getPlayWhenReady()) {
+                    if (!getPlayer().isPlaying()) {
                         overlayBaseBind.dv.pause();
                     }
                 }
