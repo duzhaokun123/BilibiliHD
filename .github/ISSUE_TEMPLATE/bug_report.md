@@ -27,7 +27,7 @@ assignees: ''
  - 设备:
  - 系统:
  - 应用版本:
- - 应用构建类型: (Release or Debug)
+ - 应用构建类型: (release or debug)
 
 ### 其他背景
 <!-- 在此处添加有关该问题的任何其他背景 -->

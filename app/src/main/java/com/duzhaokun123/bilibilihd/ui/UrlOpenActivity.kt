@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity
-import com.duzhaokun123.bilibilihd.ui.play.ordinary.OrdinaryPlayActivity
+import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
@@ -51,7 +51,7 @@ class UrlOpenActivity : AppCompatActivity() {
                             }
                         }
                         Type.VIDEO -> {
-                            intent1 = Intent(this, OrdinaryPlayActivity::class.java)
+                            intent1 = Intent(this, OnlinePlayActivity::class.java)
                             if (path != null) {
                                 try {
                                     intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path.substring(7)))
@@ -79,7 +79,7 @@ class UrlOpenActivity : AppCompatActivity() {
             } else {
                 when (host) {
                     "video" -> {
-                        intent1 = Intent(this, OrdinaryPlayActivity::class.java)
+                        intent1 = Intent(this, OnlinePlayActivity::class.java)
                         try {
                             intent1.putExtra("aid", path!!.substring(1).toLong())
                         } catch (e: NumberFormatException) {

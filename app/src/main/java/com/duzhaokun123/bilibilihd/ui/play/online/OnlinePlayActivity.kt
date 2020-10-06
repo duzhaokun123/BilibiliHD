@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.ui.play.ordinary
+package com.duzhaokun123.bilibilihd.ui.play.online
 
 import android.content.Intent
 import android.os.Message
@@ -24,7 +24,7 @@ import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
-class OrdinaryPlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
+class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
     companion object {
         const val EXTRA_FAST_LOAD_COVER_URL = "fast_load_cover_url"
         const val EXTRA_AID = "aid"
@@ -159,7 +159,7 @@ class OrdinaryPlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
                     override fun getName(index: Int) = videoPlayUrl?.data?.acceptDescription?.get(index)!!
 
                     override fun onVideoIsNull() {
-                        TipUtil.showTip(this@OrdinaryPlayActivity, R.string.not_vip)
+                        TipUtil.showTip(this@OnlinePlayActivity, R.string.not_vip)
                     }
 
                     override fun getCount() = videoPlayUrl?.data?.acceptQuality?.size!!

@@ -28,7 +28,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.ui.play.ordinary.OrdinaryPlayActivity;
+import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -116,9 +116,9 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                         GlideUtil.loadUrlInto(FavoriteActivity.this, infos.getData().get(position).getCover(), ((VideoCardHolder) holder).mIv, true);
                     }
                     ((VideoCardHolder) holder).mCv.setOnClickListener(v -> {
-                        Intent intent = new Intent(FavoriteActivity.this, OrdinaryPlayActivity.class);
+                        Intent intent = new Intent(FavoriteActivity.this, OnlinePlayActivity.class);
                         intent.putExtra("aid", ids.getData().get(position).getId());
-                        intent.putExtra(OrdinaryPlayActivity.EXTRA_FAST_LOAD_COVER_URL, infos.getData().get(position).getCover());
+                        intent.putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, infos.getData().get(position).getCover());
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(FavoriteActivity.this, ((VideoCardHolder) holder).mIv, "cover").toBundle());
                     });
                     if (infos != null) {

@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutDescription="@xml/activity_play_scene"
-                tools:context=".ui.play.ordinary.OrdinaryPlayActivity">
+                tools:context=".ui.play.online.OnlinePlayActivity">
 
                 <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
                     android:id="@+id/bpvpv"

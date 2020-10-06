@@ -25,7 +25,7 @@ import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.ui.play.ordinary.OrdinaryPlayActivity;
+import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
@@ -136,9 +136,9 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
                         Intent intent = null;
                         Bundle options = null;
                         if ("av".equals(cardGoto)) {
-                            intent = new Intent(getContext(), OrdinaryPlayActivity.class);
+                            intent = new Intent(getContext(), OnlinePlayActivity.class);
                             intent.putExtra("aid", aid);
-                            intent.putExtra(OrdinaryPlayActivity.EXTRA_FAST_LOAD_COVER_URL, homePage.getData().getItems().get(position).getCover());
+                            intent.putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, homePage.getData().getItems().get(position).getCover());
                             options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "cover").toBundle();
                         } else if ("article".equals(cardGoto) || "article_s".equals(cardGoto)) {
                             BrowserUtil.openCustomTab(getContext(), homePage.getData().getItems().get(position).getUri());

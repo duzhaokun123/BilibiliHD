@@ -13,7 +13,7 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemLocalVideoCardBinding
 import com.duzhaokun123.bilibilihd.model.Entry
-import com.duzhaokun123.bilibilihd.ui.play.ordinary.OrdinaryPlayActivity
+import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.utils.GlideUtil
 import com.duzhaokun123.bilibilihd.utils.GsonUtil
 import com.duzhaokun123.bilibilihd.utils.OtherUtils
@@ -85,9 +85,9 @@ class LocalAdapter(context: Context, root: Uri, private val model: LocalPlayActi
                         model.aid.value = entry.aid
                     }
                     baseBind.cv.setOnClickListener {
-                        val intent = Intent(context, OrdinaryPlayActivity::class.java).apply {
-                            putExtra(OrdinaryPlayActivity.EXTRA_AID, entry.aid)
-                            putExtra(OrdinaryPlayActivity.EXTRA_FAST_LOAD_COVER_URL, entry.cover)
+                        val intent = Intent(context, OnlinePlayActivity::class.java).apply {
+                            putExtra(OnlinePlayActivity.EXTRA_AID, entry.aid)
+                            putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, entry.cover)
                         }
                         context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "cover").toBundle())
                     }

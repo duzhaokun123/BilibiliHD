@@ -1,6 +1,7 @@
 include ':app'
 rootProject.name = 'bilibili HD'
-// git://github.com/duzhaokun123/bilibili-api
-includeBuild '../../Kotlin/bilibili-api'
-// git://github.com/duzhaokun123/DanmakuFlameMaster
-includeBuild '../DanmakuFlameMaster'
+
+// https://github.com/duzhaokun123/bilibili-api.git
+includeBuild 'third_party/bilibili-api'
+// https://github.com/duzhaokun123/DanmakuFlameMaster.git
+includeBuild 'third_party/DanmakuFlameMaster'

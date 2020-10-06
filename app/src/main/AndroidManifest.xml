@@ -77,7 +77,7 @@
             android:label="@string/logout" />
         <activity android:name=".ui.userspace.FavoriteActivity" />
         <activity
-            android:name=".ui.play.ordinary.OrdinaryPlayActivity"
+            android:name=".ui.play.online.OnlinePlayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:supportsPictureInPicture="true"
             android:theme="@style/AppTheme.TransparencyActionBar.DarkActionBar" />

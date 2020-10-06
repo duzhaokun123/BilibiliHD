@@ -1,4 +1,7 @@
 # Bilibili HD
+[![Build Status](https://travis-ci.com/duzhaokun123/BilibiliHD.svg?branch=dev)](https://travis-ci.com/duzhaokun123/BilibiliHD)
+[![GitHub license](https://c/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
+
 非官方哔哩哔哩客户端
 
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
@@ -99,35 +102,23 @@
 - 评论快速滚动会闪烁
 - 在`Chrome OS`上由于解码器问题(大)部分视频无法播放, 建议使用官方客户端
 - 无法加载本地弹幕
+- [更多](https://github.com/duzhaokun123/BilibiliHD/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 - 更多 BUG 等你发现
 
 ### TODO
 - ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
 在 API >= 23 的设备上没有必要
-- 重作界
+- 重作界面
 - 下载
+- 迁移所有 API 至`bilibili-api`
 
 ### 从源代码构建注意
 ```shell script
 git clone https://github.com/duzhaokun123/BilibiliHD.git #一定要完整克隆, 否则版本号不正确
+mkdir BilibiliHD/third_party
+cd BilibiliHD/third_party
 git clone https://github.com/duzhaokun123/bilibili-api.git
 git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git
-```
-
-在`BilibiliHD/settings.gradle`中
-
-```groovy
-//...
-includeBuild '../../Kotlin/bilibili-api'
-includeBuild '../DanmakuFlameMaster'
-```
-
-改为
-
-```groovy
-//...
-includeBuild 'path/to/bilibili-api'
-includeBuild 'path/to/DanmakuFlameMaster'
 ```
 
 ### 鸣谢
