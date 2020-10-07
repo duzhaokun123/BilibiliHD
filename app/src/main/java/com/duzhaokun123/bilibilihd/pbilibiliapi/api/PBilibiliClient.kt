@@ -3,12 +3,17 @@ package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.hiczp.bilibili.api.BilibiliClient
+import com.hiczp.bilibili.api.BilibiliClientProperties
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
+import okhttp3.logging.HttpLoggingInterceptor
 
-object PBilibiliClient {
-    val bilibiliClient by lazy { BilibiliClient() }
+class PBilibiliClient(private val bilibiliClientProperties: BilibiliClientProperties,
+                      logLevel: HttpLoggingInterceptor.Level) {
+    constructor() : this(object : BilibiliClientProperties {}, HttpLoggingInterceptor.Level.NONE)
+
+    val bilibiliClient by lazy { BilibiliClient(bilibiliClientProperties, logLevel) }
     val pAppAPI by lazy { PAppAPI(bilibiliClient.appAPI) }
     val pPlayerAPI by lazy { PPlayerAPI(bilibiliClient.playerAPI) }
     val pMainAPI by lazy { PMainAPI(bilibiliClient.mainAPI) }
@@ -76,4 +81,7 @@ object PBilibiliClient {
         }
         return bilibiliWebCookie
     }
+
+    val uid
+        get() = loginResponse?.userId ?: 0
 }

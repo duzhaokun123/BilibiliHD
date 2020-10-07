@@ -139,4 +139,5 @@
     <string name="no_load">不加载</string>
     <string name="sync_danmaku_progress">同步弹幕进度</string>
     <string name="refresh">刷新</string>
+    <string name="custom">自定义</string>
 </resources>

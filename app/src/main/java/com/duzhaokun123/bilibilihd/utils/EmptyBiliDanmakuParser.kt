@@ -1,16 +1,12 @@
 package com.duzhaokun123.bilibilihd.utils
 
-import master.flame.danmaku.danmaku.model.IDanmakus
 import master.flame.danmaku.danmaku.model.android.Danmakus
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
 
-object EmptyBiliDanmakuParser: BaseDanmakuParser() {
-    private lateinit var danmakus: Danmakus
-
-    override fun parse(): IDanmakus {
-        if (::danmakus.isInitialized.not()) {
-            danmakus = Danmakus()
-        }
-        return danmakus
+object EmptyBiliDanmakuParser : BaseDanmakuParser() {
+    private val danmakus by lazy {
+        Danmakus()
     }
+
+    override fun parse() = danmakus
 }

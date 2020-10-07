@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentPlayIntroBinding;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
@@ -119,7 +119,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         }
         baseBind.tvLike.setOnClickListener(v -> new Thread(() -> {
             try {
-                LikeResponse likeResponse = PBilibiliClient.INSTANCE.getPAppAPI().like(aid, true);
+                LikeResponse likeResponse = Application.getPBilibiliClient().getPAppAPI().like(aid, true);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         TipUtil.showTip(getContext(), likeResponse.getData().getToast());
@@ -135,7 +135,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         }).start());
         baseBind.tvDislike.setOnClickListener(v -> new Thread(() -> {
             try {
-                PBilibiliClient.INSTANCE.getPAppAPI().dislike(aid, true);
+                Application.getPBilibiliClient().getPAppAPI().dislike(aid, true);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), R.string.disliked));
                 }
@@ -154,7 +154,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             }
             popupMenu.setOnMenuItemClickListener(item -> {
                 try {
-                    PBilibiliClient.INSTANCE.getPAppAPI().addCoin(aid, item.getOrder());
+                    Application.getPBilibiliClient().getPAppAPI().addCoin(aid, item.getOrder());
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             TipUtil.showTip(getContext(), getString(R.string.added_coin_d, item.getOrder()));
@@ -173,7 +173,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         });
         baseBind.tvFavorite.setOnClickListener(v -> new Thread(() -> {
             try {
-                FavoritePage favoritePage = PBilibiliClient.INSTANCE.getPAppAPI().favoritePage();
+                FavoritePage favoritePage = Application.getPBilibiliClient().getPAppAPI().favoritePage(Application.getPBilibiliClient().getUid());
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         PopupMenu popupMenu = new PopupMenu(requireContext(), baseBind.tvFavorite);
@@ -183,7 +183,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                         popupMenu.setOnMenuItemClickListener(item -> {
                             new Thread(() -> {
                                 try {
-                                    PBilibiliClient.INSTANCE.getPMainAPI().addFavoriteVideo(aid, favoritePage.getData().getFavorite().getItems().get(item.getOrder()).getFid());
+                                    Application.getPBilibiliClient().getPMainAPI().addFavoriteVideo(aid, favoritePage.getData().getFavorite().getItems().get(item.getOrder()).getFid());
                                     if (getActivity() != null) {
                                         getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), getString(R.string.favorited_s, favoritePage.getData().getFavorite().getItems().get(item.getOrder()).getName())));
                                     }
@@ -302,7 +302,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         @Override
         public void run() {
             try {
-                videoPlayUrl = PBilibiliClient.INSTANCE.getPPlayerAPI().videoPlayUrl(aid, cid);
+                videoPlayUrl = Application.getPBilibiliClient().getPPlayerAPI().videoPlayUrl(aid, cid);
                 if (handler != null) {
                     handler.sendEmptyMessage(what);
                 }

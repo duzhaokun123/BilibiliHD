@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
@@ -43,7 +44,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> implements Refreshable {
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
+    private PBilibiliClient pBilibiliClient = Application.getPBilibiliClient();
     private HomePage homePage;
 
     @Override

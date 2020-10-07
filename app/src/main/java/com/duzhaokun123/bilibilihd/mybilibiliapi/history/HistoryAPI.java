@@ -1,8 +1,8 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.history;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 import com.hiczp.bilibili.api.retrofit.CommonResponse;
@@ -31,7 +31,7 @@ public class HistoryAPI {
     }
 
     public void getHistory(long max, int maxTp, String business, MyBilibiliClient.ICallback<History> callback) {
-        LoginResponse loginResponse = PBilibiliClient.INSTANCE.getBilibiliClient().getLoginResponse();
+        LoginResponse loginResponse = Application.getPBilibiliClient().getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
         }
@@ -70,7 +70,7 @@ public class HistoryAPI {
     }
 
     public void setAidHistory(long aid, long cid, long playedTime, MyBilibiliClient.ICallback<CommonResponse> callback) {
-        LoginResponse loginResponse = PBilibiliClient.INSTANCE.getBilibiliClient().getLoginResponse();
+        LoginResponse loginResponse = Application.getPBilibiliClient().getBilibiliClient().getLoginResponse();
         if (loginResponse == null) {
             return;
         }

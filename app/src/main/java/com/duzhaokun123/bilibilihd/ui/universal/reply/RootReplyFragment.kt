@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseFragment
 import com.duzhaokun123.bilibilihd.databinding.FragmentRootReplyBinding
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
@@ -70,7 +70,7 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
             Thread {
                 var sendReplyResponse: SendReplyResponse? = null
                 try {
-                    sendReplyResponse = PBilibiliClient.pMainAPI.sendReply(oid, baseBind.etText.text.toString(), type = type)
+                    sendReplyResponse = Application.getPBilibiliClient().pMainAPI.sendReply(oid, baseBind.etText.text.toString(), type = type)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showToast(e.message) }
@@ -120,7 +120,7 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
             WHAT_REPLY_REFRESH -> Thread {
                 var reply: Reply? = null
                 try {
-                    reply = PBilibiliClient.pMainAPI.reply(oid, null, baseBind.etMode.text.toString().toInt(), type)
+                    reply = Application.getPBilibiliClient().pMainAPI.reply(oid, null, baseBind.etMode.text.toString().toInt(), type)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
@@ -144,7 +144,7 @@ class RootReplyFragment(private val oid: Long, private val defMode: Int, private
             WHAT_REPLY_LOAD_MORE -> Thread {
                 var reply: Reply? = null
                 try {
-                    reply = PBilibiliClient.pMainAPI.reply(oid, next, baseBind.etMode.text.toString().toInt(), type)
+                    reply = Application.getPBilibiliClient().pMainAPI.reply(oid, next, baseBind.etMode.text.toString().toInt(), type)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     activity?.runOnUiThread { TipUtil.showTip(context, e.message) }

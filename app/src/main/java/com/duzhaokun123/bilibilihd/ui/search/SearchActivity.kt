@@ -13,10 +13,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivitySearchBinding
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.TipUtil
@@ -118,7 +118,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
             WHAT_REFRESH -> Thread {
                 try {
                     page = 1
-                    searchResult = PBilibiliClient.pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
+                    searchResult = Application.getPBilibiliClient().pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
                     handler?.sendEmptyMessage(WHAT_REFRESH_END)
 
                 } catch (e: Exception) {
@@ -136,7 +136,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
             WHAT_LOAD_MORE -> Thread {
                 try {
                     page++
-                    val searchResult = PBilibiliClient.pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
+                    val searchResult = Application.getPBilibiliClient().pAppAPI.search(intent.getStringExtra(SearchManager.QUERY)!!, page)
                     ListUtil.addAll(this.searchResult!!.data.item, searchResult.data.item)
                     handler?.sendEmptyMessage(WHAT_LOAD_MORE_END)
                 } catch (e: Exception) {

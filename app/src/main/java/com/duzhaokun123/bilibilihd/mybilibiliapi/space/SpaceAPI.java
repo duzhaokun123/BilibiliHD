@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.space;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
@@ -29,7 +30,7 @@ public class SpaceAPI {
     public void getSpace(long uid, MyBilibiliClient.ICallback<Space> callback) {
 
         if (pBilibiliClient == null) {
-            pBilibiliClient = PBilibiliClient.INSTANCE;
+            pBilibiliClient = Application.getPBilibiliClient();
         }
         try {
             String response = MyBilibiliClient.getInstance().getResponseByGet(new MyBilibiliClient.Request() {

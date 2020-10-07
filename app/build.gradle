@@ -124,7 +124,7 @@ dependencies {
     //browser
     implementation 'androidx.browser:browser:1.2.0'
     //bilibili-api
-    implementation 'com.hiczp:bilibili-api:0.2.1'
+    implementation 'com.hiczp:bilibili-api:0.3.0'
     implementation 'javax.xml.stream:stax-api:1.0'
     implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
 //    DrawerLayout

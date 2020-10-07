@@ -1,6 +1,6 @@
 # Bilibili HD
 [![Build Status](https://travis-ci.com/duzhaokun123/BilibiliHD.svg?branch=dev)](https://travis-ci.com/duzhaokun123/BilibiliHD)
-[![GitHub license](https://c/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
 
 非官方哔哩哔哩客户端
 
@@ -15,8 +15,6 @@
 建议配合[web端哔哩哔哩](https://www.bilibili.com)使用
 
 暂且不建议屏幕较小或没有触摸屏的用户使用
-
-# B站迟早要完
 
 ### 将支持的功能
 - [x] 多用户登录 (不完全, 无法通过验证, 不总是影响登录, 这因该是`bilibli-api`的问题, 多用户登录理论上实现)

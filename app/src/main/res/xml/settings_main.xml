@@ -22,6 +22,9 @@
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsAdsFragment"
         app:title="@string/ad" />
     <Preference
+        app:fragment="com.duzhaokun123.bilibilihd.ui.settings.SettingsBilibiliApiFragment"
+        app:title="bilibili-api" />
+    <Preference
         app:fragment="com.duzhaokun123.bilibilihd.ui.settings.AboutFragment"
         app:icon="@drawable/ic_info"
         app:title="@string/about" />

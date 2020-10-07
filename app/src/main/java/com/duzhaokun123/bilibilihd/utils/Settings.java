@@ -10,6 +10,8 @@ import androidx.preference.PreferenceManager;
 import java.util.HashSet;
 import java.util.Set;
 
+import okhttp3.logging.HttpLoggingInterceptor;
+
 public class Settings {
     private static LoginUserInfoMap loginUserInfoMap;
     private static SharedPreferences sharedPreferences;
@@ -31,6 +33,7 @@ public class Settings {
     public static final Download download = new Download();
     public static final Danmaku danmaku = new Danmaku();
     public static final Ads ads = new Ads();
+    public static final BilibiliApi bilibiliApi = new BilibiliApi();
 
     public static LoginUserInfoMap getLoginUserInfoMap() {
         if (loginUserInfoMap == null) {
@@ -187,6 +190,65 @@ public class Settings {
 
         public boolean shouldShowWelcomeAd() {
             return isShowWelcomeAd() && isAllowAllAds();
+        }
+    }
+
+    public static class BilibiliApi {
+        public boolean isCustom() {
+            return sharedPreferences.getBoolean("bilibili_api_custom", false);
+        }
+
+        public void setCustom(boolean custom) {
+            sharedPreferences.edit().putBoolean("bilibili_api_custom", custom).apply();
+        }
+
+        public HttpLoggingInterceptor.Level getLogLevel() {
+            switch (getIntByString("bilibili_api_log_level", 0)) {
+                case 1:
+                    return HttpLoggingInterceptor.Level.BASIC;
+                case 2:
+                    return HttpLoggingInterceptor.Level.HEADERS;
+                case 3:
+                    return HttpLoggingInterceptor.Level.BODY;
+                default:
+                    return HttpLoggingInterceptor.Level.NONE;
+            }
+        }
+
+        public String getDefaultUserAgent() {
+            return sharedPreferences.getString("defaultUserAgent", null);
+        }
+
+        public String getAppKey() {
+            return sharedPreferences.getString("appKey", null);
+        }
+
+        public String getAppSecret() {
+            return sharedPreferences.getString("appSecret", null);
+        }
+
+        public String getPlatform() {
+            return sharedPreferences.getString("platform", null);
+        }
+
+        public String getChannel() {
+            return sharedPreferences.getString("channel", null);
+        }
+
+        public String getHardwareId() {
+            return sharedPreferences.getString("hardwareId", null);
+        }
+
+        public String getVersion() {
+            return sharedPreferences.getString("version", null);
+        }
+
+        public String getBuild() {
+            return sharedPreferences.getString("build", null);
+        }
+
+        public String getBuildVersionId() {
+            return sharedPreferences.getString("buildVersionId", null);
         }
     }
 

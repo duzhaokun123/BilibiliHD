@@ -7,11 +7,11 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtOrdinaryBinding
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
 import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
@@ -85,7 +85,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
             WHAT_LOAD_BILIVIEW ->
                 Thread {
                     try {
-                        biliView = PBilibiliClient.pAppAPI.view(aid)
+                        biliView = Application.getPBilibiliClient().pAppAPI.view(aid)
                         handler?.sendEmptyMessage(WHAT_BILIVIEW_LOAD_OVER)
                     } catch (e: Exception) {
                         e.printStackTrace()

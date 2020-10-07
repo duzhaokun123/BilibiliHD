@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <DropDownPreference
+        app:defaultValue="0"
+        app:entries="@array/http_log_level_entries"
+        app:entryValues="@array/http_log_values"
+        app:iconSpaceReserved="false"
+        app:key="bilibili_api_log_level"
+        app:title="LogLevel"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="defaultUserAgent"
+        app:title="defaultUserAgent"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="appKey"
+        app:title="appKey"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="appSecret"
+        app:title="appSecret"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="platform"
+        app:title="platform"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="channel"
+        app:title="channel"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="hardwareId"
+        app:title="hardwareId"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="version"
+        app:title="version"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="build"
+        app:title="build"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="buildVersionId"
+        app:title="buildVersionId"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>

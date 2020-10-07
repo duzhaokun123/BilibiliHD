@@ -6,14 +6,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
+import com.duzhaokun123.bilibilihd.utils.CustomBilibiliClientProperties;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
+import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class Application extends android.app.Application implements Handler.IHandlerMessageCallback {
     private static Application application;
     private static Handler handler;
+    private static PBilibiliClient pBilibiliClient;
 
     @NonNull
     public static Application getInstance() {
@@ -42,11 +45,23 @@ public class Application extends android.app.Application implements Handler.IHan
             Settings.setLastVersionCode(BuildConfig.VERSION_CODE);
         }
         LoginResponse loginResponse = Settings.getLoginUserInfoMap().getLoggedLoginResponse();
-        PBilibiliClient.INSTANCE.setLoginResponse(loginResponse);
         if (Settings.isFirstStart()) {
             NotificationUtil.INSTANCE.init(this);
             Settings.setFirstStart(false);
         }
+        getPBilibiliClient().setLoginResponse(loginResponse);
         AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
+    }
+
+    public static PBilibiliClient getPBilibiliClient() {
+        if (pBilibiliClient == null) {
+            if (Settings.bilibiliApi.isCustom()) {
+                pBilibiliClient = new PBilibiliClient(new CustomBilibiliClientProperties(),
+                        Settings.bilibiliApi.getLogLevel());
+            } else {
+                pBilibiliClient = new PBilibiliClient();
+            }
+        }
+        return pBilibiliClient;
     }
 }

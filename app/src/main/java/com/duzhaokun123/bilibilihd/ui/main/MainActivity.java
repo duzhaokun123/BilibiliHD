@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
@@ -47,7 +48,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private Fragment homeFragment, historyFragment, dynamicFragment;
 
     private long lastBackPassTime = -1L;
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
+    private PBilibiliClient pBilibiliClient = Application.getPBilibiliClient();
     private MyInfo myInfo;
     private boolean first = true;
     private String title;

@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.toview;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.GsonUtil;
@@ -23,7 +24,7 @@ public class ToViewAPI {
 
     private ToViewAPI() {}
 
-    private PBilibiliClient pBilibiliClient = PBilibiliClient.INSTANCE;
+    private PBilibiliClient pBilibiliClient = Application.getPBilibiliClient();
 
     public void addAid(long aid, MyBilibiliClient.ICallback<CommonResponse> callback) {
         LoginResponse loginResponse = pBilibiliClient.getLoginResponse();

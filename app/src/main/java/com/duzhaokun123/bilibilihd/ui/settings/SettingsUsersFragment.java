@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsUsersBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
@@ -87,7 +87,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((UserCardHolder) holder).mTvContent.setText(String.valueOf(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId()));
                 ((UserCardHolder) holder).mCv.setOnClickListener(v -> {
-                    PBilibiliClient.INSTANCE.setLoginResponse(loginUserInfoMap.getByIndex(position));
+                    Application.getPBilibiliClient().setLoginResponse(loginUserInfoMap.getByIndex(position));
                     loginUserInfoMap.setLoggedUid(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
                     Settings.saveLoginUserInfoMap();
                     reloadLoggedUserInfo();
@@ -112,7 +112,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                                             loginUserInfoMap.remove(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
                                             XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap.size());
                                             Settings.saveLoginUserInfoMap();
-                                            PBilibiliClient.INSTANCE.setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
+                                            Application.getPBilibiliClient().setLoginResponse(loginUserInfoMap.getLoggedLoginResponse());
                                             reloadLoggedUserInfo();
                                         })
                                         .setNegativeButton(android.R.string.cancel, null)
@@ -191,7 +191,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
         baseBind.ibDelete.setOnClickListener(v -> {
             loginUserInfoMap.setLoggedUid(0);
             Settings.saveLoginUserInfoMap();
-            PBilibiliClient.INSTANCE.setLoginResponse(null);
+            Application.getPBilibiliClient().setLoginResponse(null);
             reloadLoggedUserInfo();
             BrowserUtil.syncLoggedLoginResponse();
         });
@@ -270,7 +270,7 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     @Override
                     public void run() {
                         try {
-                            myInfo = PBilibiliClient.INSTANCE.getPAppAPI().getMyInfo();
+                            myInfo = Application.getPBilibiliClient().getPAppAPI().getMyInfo();
                             if (handler != null) {
                                 handler.sendEmptyMessage(2);
                             }

@@ -5,12 +5,12 @@ import android.os.Message
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityChildReplyBinding
 import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.ReplyAPI
 import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.model.ChildReply
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
@@ -81,7 +81,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
             Thread {
                 var sendReplyResponse: SendReplyResponse? = null
                 try {
-                    sendReplyResponse = PBilibiliClient.pMainAPI.sendReply(oid, baseBind.etText.text.toString(),
+                    sendReplyResponse = Application.getPBilibiliClient().pMainAPI.sendReply(oid, baseBind.etText.text.toString(),
                             baseBind.etParent.text.toString().toLongOrNull() ?: root, root, type)
                 } catch (e: Exception) {
                     e.printStackTrace()

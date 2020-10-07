@@ -1,10 +1,10 @@
 package com.duzhaokun123.bilibilihd.ui.login
 
 import android.os.Message
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityLoginBinding
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.hiczp.bilibili.api.passport.model.LoginResponse
@@ -25,7 +25,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             Thread {
                 var loginResponse: LoginResponse? = null
                 try {
-                    loginResponse = PBilibiliClient.login(baseBind.etUsername.text.toString(), baseBind.etPassword.text.toString())
+                    loginResponse = Application.getPBilibiliClient().login(baseBind.etUsername.text.toString(), baseBind.etPassword.text.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                     if (e is BilibiliApiException && e.commonResponse.code == -105) {
@@ -41,7 +41,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                         Settings.saveLoginUserInfoMap()
                         handler?.sendEmptyMessage(WHAT_FINISH)
                     } else {
-                        PBilibiliClient.loginResponse = null
+                        Application.getPBilibiliClient().loginResponse = null
                         TipUtil.showToast("无法登录")
                     }
                 }

@@ -9,11 +9,11 @@ import android.text.style.ImageSpan
 import android.view.View
 import android.widget.PopupMenu
 import com.bumptech.glide.Glide
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemReplyBinding
 import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.ReplyAPI
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.github.salomonbrys.kotson.get
@@ -107,7 +107,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                     R.id.like -> {
                         Thread {
                             try {
-                                PBilibiliClient.pMainAPI.likeReply(1, aReply.oid, aReply.rpid, aReply.type)
+                                Application.getPBilibiliClient().pMainAPI.likeReply(1, aReply.oid, aReply.rpid, aReply.type)
                                 activity?.runOnUiThread {
                                     TipUtil.showTip(context, R.string.liked)
                                     baseBind.tvAction.setText(R.string.liked)
@@ -122,7 +122,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                     R.id.dislike -> {
                         Thread {
                             try {
-                                PBilibiliClient.pMainAPI.dislikeReply(1, aReply.oid, aReply.rpid, aReply.type)
+                                Application.getPBilibiliClient().pMainAPI.dislikeReply(1, aReply.oid, aReply.rpid, aReply.type)
                                 activity?.runOnUiThread {
                                     TipUtil.showTip(context, R.string.disliked)
                                     baseBind.tvAction.setText(R.string.disliked)
@@ -141,9 +141,9 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                                 1, 2 -> {
                                     try {
                                         if (aReply.action == 1) {
-                                            PBilibiliClient.pMainAPI.likeReply(0, aReply.oid, aReply.rpid, aReply.type)
+                                            Application.getPBilibiliClient().pMainAPI.likeReply(0, aReply.oid, aReply.rpid, aReply.type)
                                         } else {
-                                            PBilibiliClient.pMainAPI.dislikeReply(0, aReply.oid, aReply.rpid, aReply.type)
+                                            Application.getPBilibiliClient().pMainAPI.dislikeReply(0, aReply.oid, aReply.rpid, aReply.type)
                                         }
                                         aReply.action = 0
                                         activity?.runOnUiThread {

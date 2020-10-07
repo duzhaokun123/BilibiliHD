@@ -2,6 +2,7 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi;
 
 import androidx.annotation.NonNull;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
@@ -22,7 +23,7 @@ public class MyBilibiliClient {
 
     public static MyBilibiliClient getInstance() {
         if (myBilibiliClient == null) {
-            myBilibiliClient = new MyBilibiliClient(PBilibiliClient.INSTANCE);
+            myBilibiliClient = new MyBilibiliClient(Application.getPBilibiliClient());
         }
         return myBilibiliClient;
     }
@@ -65,8 +66,8 @@ public class MyBilibiliClient {
     }
 
     public String getResponseByPost(Request getRequest) throws IOException {
-        bilibiliClientProperties = PBilibiliClient.INSTANCE.getBilibiliClient().getBillingClientProperties();
-        BilibiliWebCookie bilibiliWebCookie = PBilibiliClient.INSTANCE.getBilibiliWebCookie();
+        bilibiliClientProperties = pBilibiliClient.getBilibiliClient().getBillingClientProperties();
+        BilibiliWebCookie bilibiliWebCookie = pBilibiliClient.getBilibiliWebCookie();
         StringBuilder paramsSB = new StringBuilder();
         Map<String, String> paramsMap = new TreeMap<>();
         if (bilibiliWebCookie != null) {
