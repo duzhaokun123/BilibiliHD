@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding;
-import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.JumpActivity;
 import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
@@ -48,7 +47,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private Fragment homeFragment, historyFragment, dynamicFragment;
 
     private long lastBackPassTime = -1L;
-    private PBilibiliClient pBilibiliClient = Application.getPBilibiliClient();
     private MyInfo myInfo;
     private boolean first = true;
     private String title;
@@ -114,12 +112,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     private void reloadMyInfo() {
-        if (pBilibiliClient.getBilibiliClient().isLogin()) {
+        if (Application.getPBilibiliClient().isLogin()) {
             new Thread() {
                 @Override
                 public void run() {
                     try {
-                        myInfo = pBilibiliClient.getPAppAPI().getMyInfo();
+                        myInfo = Application.getPBilibiliClient().getPAppAPI().getMyInfo();
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> {
@@ -261,9 +259,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         });
 
         mRlMyInfo.setOnClickListener(v -> {
-            if (pBilibiliClient.getBilibiliClient().isLogin()) {
-                assert pBilibiliClient.getBilibiliClient().getUserId() != null;
-                UserSpaceActivity.enter(this, pBilibiliClient.getBilibiliClient().getUserId(), mCivFace, mTvUsername);
+            if (Application.getPBilibiliClient().isLogin()) {
+                UserSpaceActivity.enter(this, Application.getPBilibiliClient().getUid(), mCivFace, mTvUsername);
             } else {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);

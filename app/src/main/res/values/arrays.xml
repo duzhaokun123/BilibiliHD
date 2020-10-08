@@ -80,10 +80,10 @@
     </string-array>
 
     <string-array name="http_log_level_entries">
-        <item>none</item>
-        <item>basic</item>
-        <item>headers</item>
-        <item>body</item>
+        <item>NONE</item>
+        <item>BASIC</item>
+        <item>HEADERS</item>
+        <item>BODY</item>
     </string-array>
     <string-array name="http_log_values">
         <item>0</item>

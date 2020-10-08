@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
         app:iconSpaceReserved="false"
         app:key="test"
@@ -8,7 +9,7 @@
         app:iconSpaceReserved="false"
         app:key="sync"
         app:title="@string/sync" />
-    <DropDownPreference
+    <SimpleMenuPreference
         app:defaultValue="0"
         app:entries="@array/danmaku_visibility_entries"
         app:entryValues="@array/danmaku_visibility_values"
@@ -23,7 +24,7 @@
         app:iconSpaceReserved="false"
         app:key="danmaku_click"
         app:title="@string/click_to_learn_more" />
-    <DropDownPreference
+    <SimpleMenuPreference
         app:defaultValue="2"
         app:entries="@array/danmaku_style_entries"
         app:entryValues="@array/danmaku_style_values"
@@ -32,17 +33,20 @@
         app:title="@string/danmaku_style"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:defaultValue="0.5"
         app:iconSpaceReserved="false"
         app:key="danmaku_style_p1"
         app:title="p1"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:iconSpaceReserved="false"
         app:key="danmaku_style_p2"
         app:title="p2"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:iconSpaceReserved="false"
         app:key="danmaku_style_p3"
         app:title="p3"
@@ -56,6 +60,7 @@
         app:key="duplicate_merging"
         app:title="@string/duplicate_merging" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:defaultValue="1.2"
         app:dialogMessage="@string/zero_is_default"
         app:iconSpaceReserved="false"
@@ -63,6 +68,7 @@
         app:title="@string/danmaku_scroll_speed_factor"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:defaultValue="@integer/danmaku_scale_text_size"
         app:dialogMessage="@string/zero_is_default"
         app:iconSpaceReserved="false"
@@ -70,6 +76,7 @@
         app:title="@string/text_size"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal"
         app:defaultValue="@integer/danmaku_margin"
         app:dialogMessage="@string/zero_is_default"
         app:iconSpaceReserved="false"
@@ -77,6 +84,7 @@
         app:title="@string/danmaku_margin"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
+        android:inputType="numberDecimal|numberSigned"
         app:defaultValue="-1"
         app:dialogMessage="@string/minus_one_is_auto_zero_is_unlimited"
         app:iconSpaceReserved="false"

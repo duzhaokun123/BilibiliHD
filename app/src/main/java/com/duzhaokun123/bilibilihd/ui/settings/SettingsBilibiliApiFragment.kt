@@ -1,13 +1,14 @@
 package com.duzhaokun123.bilibilihd.ui.settings
 
 import android.os.Bundle
-import androidx.preference.PreferenceFragmentCompat
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseFragment
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsBilibiliApiBinding
 import com.duzhaokun123.bilibilihd.utils.Settings
+import com.takisoft.preferencex.PreferenceFragmentCompat
 
+@Suppress("unused")
 class SettingsBilibiliApiFragment : BaseFragment<FragmentSettingsBilibiliApiBinding>() {
     private val customPreferenceFragment by lazy { CustomPreferenceFragment() }
 
@@ -24,11 +25,21 @@ class SettingsBilibiliApiFragment : BaseFragment<FragmentSettingsBilibiliApiBind
                 childFragmentManager.beginTransaction().remove(customPreferenceFragment).commitAllowingStateLoss()
             }
         }
+        baseBind.btnSync.setOnClickListener {
+            Application.recreatePBilibiliClient()
+            loadBilibiliClientProperties()
+        }
     }
 
     override fun initData() {
         baseBind.swCustom.isChecked = Settings.bilibiliApi.isCustom
-        Application.getPBilibiliClient().bilibiliClient.billingClientProperties.apply {
+        loadBilibiliClientProperties()
+    }
+
+    private fun loadBilibiliClientProperties() {
+        Application.getPBilibiliClient().apply {
+            baseBind.tvHttpLogLevel.text = logLevel.name
+        }.bilibiliClientProperties.apply {
             baseBind.tvDefaultUserAgent.text = defaultUserAgent
             baseBind.tvAppKey.text = appKey
             baseBind.tvAppSecret.text = appSecret
@@ -45,7 +56,7 @@ class SettingsBilibiliApiFragment : BaseFragment<FragmentSettingsBilibiliApiBind
     }
 
     class CustomPreferenceFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.settings_bilibili_api, rootKey)
         }
     }

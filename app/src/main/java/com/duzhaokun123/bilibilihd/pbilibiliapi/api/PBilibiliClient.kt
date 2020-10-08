@@ -9,8 +9,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 import okhttp3.logging.HttpLoggingInterceptor
 
-class PBilibiliClient(private val bilibiliClientProperties: BilibiliClientProperties,
-                      logLevel: HttpLoggingInterceptor.Level) {
+class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
+                      val logLevel: HttpLoggingInterceptor.Level) {
     constructor() : this(object : BilibiliClientProperties {}, HttpLoggingInterceptor.Level.NONE)
 
     val bilibiliClient by lazy { BilibiliClient(bilibiliClientProperties, logLevel) }
@@ -84,4 +84,7 @@ class PBilibiliClient(private val bilibiliClientProperties: BilibiliClientProper
 
     val uid
         get() = loginResponse?.userId ?: 0
+
+    val isLogin
+        get() = bilibiliClient.isLogin
 }

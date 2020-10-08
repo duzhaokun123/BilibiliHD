@@ -6,10 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.utils.Settings;
+import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 public class SettingsDownloadFragment extends PreferenceFragmentCompat {
 
@@ -18,7 +18,7 @@ public class SettingsDownloadFragment extends PreferenceFragmentCompat {
     private Preference officialAppDownloadDir;
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_download, rootKey);
 
         officialAppDownloadDir = findPreference("official_app_download_dir");

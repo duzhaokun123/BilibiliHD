@@ -151,3 +151,5 @@ git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git
 [html-textview](https://github.com/SufficientlySecure/html-textview)
 
 [okttp](https://square.github.io/okhttp/)
+
+[preferencex-android](https://github.com/takisoft/preferencex-android)

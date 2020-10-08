@@ -5,17 +5,17 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
+import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 public class SettingsDanmakuFragment extends PreferenceFragmentCompat {
 
     Preference test, sync, danmakuClick;
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_danamku, rootKey);
 
         test = findPreference("test");

@@ -11,9 +11,9 @@
         app:defaultValue="false"
         app:iconSpaceReserved="false"
         app:key="play_background"
-        app:title="@string/play_background"/>
+        app:title="@string/play_background" />
 
-    <DropDownPreference
+    <SimpleMenuPreference
         android:defaultValue="0"
         app:entries="@array/play_default_quality_entries"
         app:entryValues="@array/play_default_quality_values"

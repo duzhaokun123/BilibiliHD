@@ -10,7 +10,6 @@ import com.duzhaokun123.bilibilihd.utils.CustomBilibiliClientProperties;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
-import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
 
 public class Application extends android.app.Application implements Handler.IHandlerMessageCallback {
@@ -26,6 +25,28 @@ public class Application extends android.app.Application implements Handler.IHan
     public static void runOnUiThread(Runnable callback) {
         Message message = Message.obtain(handler, callback);
         handler.sendMessage(message);
+    }
+
+    @NonNull
+    public static PBilibiliClient getPBilibiliClient() {
+        if (pBilibiliClient == null) {
+            recreatePBilibiliClient();
+        }
+        return pBilibiliClient;
+    }
+
+    public static void recreatePBilibiliClient() {
+        LoginResponse loginResponse = null;
+        if (pBilibiliClient != null) {
+            loginResponse = pBilibiliClient.getLoginResponse();
+        }
+        if (Settings.bilibiliApi.isCustom()) {
+            pBilibiliClient = new PBilibiliClient(new CustomBilibiliClientProperties(),
+                    Settings.bilibiliApi.getLogLevel());
+        } else {
+            pBilibiliClient = new PBilibiliClient();
+        }
+        pBilibiliClient.setLoginResponse(loginResponse);
     }
 
     public Application() {
@@ -51,17 +72,5 @@ public class Application extends android.app.Application implements Handler.IHan
         }
         getPBilibiliClient().setLoginResponse(loginResponse);
         AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
-    }
-
-    public static PBilibiliClient getPBilibiliClient() {
-        if (pBilibiliClient == null) {
-            if (Settings.bilibiliApi.isCustom()) {
-                pBilibiliClient = new PBilibiliClient(new CustomBilibiliClientProperties(),
-                        Settings.bilibiliApi.getLogLevel());
-            } else {
-                pBilibiliClient = new PBilibiliClient();
-            }
-        }
-        return pBilibiliClient;
     }
 }

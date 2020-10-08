@@ -29,18 +29,12 @@ before_script:
   - yes | sdkmanager "build-tools;30.0.2"
   - chmod +x ./gradlew
 script:
-  - "./gradlew clean"
   - "./gradlew assembleRelease"
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
-deploy:
-  provider: releases
-  api_key:
-    secure: KNqOWrrBBqoSkyeVGXnqyHeUceMbUWUA6S9rZNoprrP4pOwtVWvET+y/q5eESbIatOmVLylgW+pLrQgwQRLalyhFRxRzJkEGl1PmIaDZgFcwH3HbJiC5R4ns1ocKjP9MymSuevGLjE2u8sRcm0uxm/6W4unC1KA8ZYjWK5MEHwFfzr5p63HN52CA6oLDojdtRszZD2bLFXKprLMQayyXPGtOd15neEE3nZxXYRgM2GGNVYKZ8C71k0NRAvCjVReZLChwIqcOhgMlsoPHDWcWl50w4VrGswwRxAnZvxGzaauy+9DY215Eanx3Wr4iwdEtP1GsMM9QpvwpvAKg7nEwFNpeFxn1kBcnyB+EwPddVD86iEcIFtpEz3CtcIz4uJ3TkH90Dh2cnIBvpp26xzZ8QSnf+a8bdP9FdiFCJMNsgq47WAVdx5X/NfUy66d73XLemrjFUzGYlund9TU9iszlIFNgRQ5eBUnfmdcGMfh2BTfYt+Ma4Qu9TCytUd5rmU+5YpJN91TOFq16kXmMRw6FtINOeVclHmr3bkJ1WaniIyZmpOS07Q/3vGxFpW5Nra2FORsfv4Ta2rc4spUXMoD5N315CUCAIM2qsb9l+uNsp8ZpVrqCXbJs2jKDVpg0NEcQ6L+GDcPHwHb/BsOGUWDWpEVh9jgBorbs1RmS+6VMBS4=
-  file: app/build/outputs/apk/release/*.apk
-  on:
-    repo: duzhaokun123/BilibiliHD
-    branch: dev
-  skip_cleanup: 'true'
-  prerelease: 'true'
+after_success:
+  - curl
+    -T app/build/outputs/apk/release/*.apk
+    --user "$jianguoyun_username:$jianguoyun_password"
+    "https://dav.jianguoyun.com/dav/BilibiliHD/"

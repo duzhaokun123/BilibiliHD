@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-    <DropDownPreference
+    <SimpleMenuPreference
         app:defaultValue="0"
         app:entries="@array/http_log_level_entries"
         app:entryValues="@array/http_log_values"

@@ -16,6 +16,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="httpLogLevel: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_httpLogLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="defaultUserAgent: "
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -236,11 +255,25 @@
                 android:textIsSelectable="true" />
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/sw_custom"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/custom" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sync"
+                android:textColor="@color/ordinaryText" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sw_custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/custom" />
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/fl"
