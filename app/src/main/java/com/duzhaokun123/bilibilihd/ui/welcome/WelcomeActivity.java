@@ -1,9 +1,11 @@
 package com.duzhaokun123.bilibilihd.ui.welcome;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityWelcomeBinding;
@@ -32,7 +34,18 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (Settings.layout.isDisableWelcome()) {
+            startMainActivity();
+        }
+    }
+
+    @Override
     public void initView() {
+        if (Settings.layout.isDisableWelcome()) {
+            return;
+        }
         if (welcomeAd == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.fl, new WelcomeFragment()).commitAllowingStateLoss();
         } else {
@@ -42,6 +55,9 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
     @Override
     public void initData() {
+        if (Settings.layout.isDisableWelcome()) {
+            return;
+        }
         if (Settings.ads.shouldShowWelcomeAd()) {
             new Thread() {
                 @Override

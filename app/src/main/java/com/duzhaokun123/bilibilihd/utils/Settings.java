@@ -89,6 +89,10 @@ public class Settings {
         public boolean isUserSpaceUseWebView() {
             return sharedPreferences.getBoolean("user_space_use_web_view", false);
         }
+
+        public boolean isDisableWelcome() {
+            return sharedPreferences.getBoolean("disable_welcome", false);
+        }
     }
 
     public static class Play {

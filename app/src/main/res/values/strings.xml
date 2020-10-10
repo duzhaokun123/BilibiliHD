@@ -143,4 +143,5 @@
     <string name="refresh">refresh</string>
     <string name="custom">custom</string>
     <string name="expired">expired</string>
+    <string name="disable_welcome_screen">disable welcome screen</string>
 </resources>
