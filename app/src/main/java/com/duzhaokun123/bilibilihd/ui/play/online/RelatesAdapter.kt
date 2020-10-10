@@ -8,13 +8,8 @@ import androidx.appcompat.widget.PopupMenu
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemRelateVideoCardBinding
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
-import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
-import com.duzhaokun123.bilibilihd.utils.BrowserUtil
-import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil
-import com.duzhaokun123.bilibilihd.utils.GlideUtil
-import com.hiczp.bilibili.api.retrofit.CommonResponse
+import com.duzhaokun123.bilibilihd.utils.*
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSimpleAdapter<ItemRelateVideoCardBinding>(context) {
@@ -49,15 +44,16 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
                         intent.putExtra("url", biliView.data.relates!![position].pic)
                         context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "img").toBundle())
                     }
-                    R.id.add_to_watch_later -> object : Thread() {
-                        override fun run() {
-                            ToViewAPI.getInstance().addAid(biliView.data.relates!![position].aid.toLong(), object : MyBilibiliClient.ICallback<CommonResponse> {
-                                override fun onException(e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            })
-                        }
-                    }.start()
+                    R.id.add_to_watch_later ->
+                        Thread {
+                            try {
+                                pBilibiliClient.pMainAPI.toView(aid = biliView.data.relates!![position].aid.toLong())
+                                runOnUiThread { TipUtil.showTip(context, R.string.added) }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                runOnUiThread { TipUtil.showTip(context, e.message) }
+                            }
+                        }.start()
                 }
                 true
             }

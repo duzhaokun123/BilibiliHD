@@ -7,21 +7,18 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityWelcomeBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.WelcomeAdApi;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
 import com.duzhaokun123.bilibilihd.ui.main.MainActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
-
-import org.jetbrains.annotations.NotNull;
+import com.hiczp.bilibili.api.app.model.SplashList;
 
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
-    private WelcomeAd welcomeAd;
+    private SplashList splashList;
 
     @Override
     protected int initConfig() {
@@ -46,10 +43,10 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
         if (Settings.layout.isDisableWelcome()) {
             return;
         }
-        if (welcomeAd == null) {
+        if (splashList == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.fl, new WelcomeFragment()).commitAllowingStateLoss();
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(welcomeAd)).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(splashList)).commitAllowingStateLoss();
         }
     }
 
@@ -59,29 +56,20 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
             return;
         }
         if (Settings.ads.shouldShowWelcomeAd()) {
-            new Thread() {
-                @Override
-                public void run() {
-                    WelcomeAdApi.getInstance().getWelcomeAd(new MyBilibiliClient.ICallback<WelcomeAd>() {
-                        @Override
-                        public void onException(@NotNull Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-                            if (handler != null) {
-                                handler.sendEmptyMessageDelayed(1, 2000);
-                            }
-                        }
-
-                        @Override
-                        public void onSuccess(@NotNull WelcomeAd welcomeAd) {
-                            WelcomeActivity.this.welcomeAd = welcomeAd;
-                            if (handler != null) {
-                                handler.sendEmptyMessage(2);
-                            }
-                        }
-                    });
+            new Thread(() -> {
+                try {
+                    splashList = Application.getPBilibiliClient().getPAppAPI().splashList();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(2);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> TipUtil.showTip(WelcomeActivity.this, e.getMessage()));
+                    if (handler != null) {
+                        handler.sendEmptyMessage(1);
+                    }
                 }
-            }.start();
+            }).start();
         } else {
             if (handler != null) {
                 handler.sendEmptyMessageDelayed(1, 2000);
@@ -96,7 +84,7 @@ public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
                 startMainActivity();
                 break;
             case 2:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(welcomeAd)).commitAllowingStateLoss();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fl, new WelcomeAdFragment(splashList)).commitAllowingStateLoss();
                 break;
         }
     }

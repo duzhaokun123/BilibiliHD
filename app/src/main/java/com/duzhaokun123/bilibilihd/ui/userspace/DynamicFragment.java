@@ -10,8 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.R;
-//import com.hiczp.bilibili.api.app.model.Space;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
+import com.hiczp.bilibili.api.app.model.Space;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 public class DynamicFragment extends Fragment {

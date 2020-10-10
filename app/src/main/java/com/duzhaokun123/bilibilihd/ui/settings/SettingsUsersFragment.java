@@ -23,21 +23,18 @@ import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsUsersBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
+import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.LoginUserInfoMap;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.MyInfo;
+import com.hiczp.bilibili.api.app.model.Space;
 import com.hiczp.bilibili.api.passport.model.LoginResponse;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -125,39 +122,20 @@ public class SettingsUsersFragment extends BaseFragment<FragmentSettingsUsersBin
                     return true;
                 });
 
-                new Thread() {
-
-                    private long uid = Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId();
-
-                    @Override
-                    public void run() {
-                        SpaceAPI.getInstance().getSpace(uid, new MyBilibiliClient.ICallback<Space>() {
-                            @Override
-                            public void onException(@NotNull Exception e) {
-                                e.printStackTrace();
-                                if (getContext() != null) {
-                                    if (getActivity() != null) {
-                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
-                                    }
-                                }
+                new Thread(() -> {
+                    try {
+                        Space space = Application.getPBilibiliClient().getPAppAPI().space(Objects.requireNonNull(loginUserInfoMap.getByIndex(position)).getUserId());
+                        Application.runOnUiThread(() -> {
+                            if (getContext() != null) {
+                                GlideUtil.loadUrlInto(getContext(), space.getData().getCard().getFace(), ((UserCardHolder) holder).mCivFace, false);
                             }
-
-                            @Override
-                            public void onSuccess(@NotNull Space space) {
-                                Message message = Message.obtain(null, () -> {
-                                    if (getContext() != null) {
-                                        Glide.with(getContext()).load(space.getData().getCard().getFace()).into(((UserCardHolder) holder).mCivFace);
-                                    }
-                                    ((UserCardHolder) holder).mTvName.setText(space.getData().getCard().getName());
-                                });
-                                message.what = 0;
-                                if (handler != null) {
-                                    handler.sendMessage(message);
-                                }
-                            }
+                            ((UserCardHolder) holder).mTvName.setText(space.getData().getCard().getName());
                         });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                     }
-                }.start();
+                }).start();
 
             }
 

@@ -45,7 +45,7 @@ class PAppAPI(private var appAPI: AppAPI) {
             }
         }.get()
         if (exception != null) {
-            throw exception as Exception;
+            throw exception as Exception
         }
 
         return view
@@ -67,5 +67,13 @@ class PAppAPI(private var appAPI: AppAPI) {
         return GlobalScope.future {
             appAPI.favoritePage(vmId = vmId).await()
         }.get()
+    }
+
+    fun splashList(): SplashList {
+        return GlobalScope.future { appAPI.splashList().await() }.get()
+    }
+
+    fun history(business: String, max: Long = 0, maxTp: Int = 0): History {
+        return GlobalScope.future { appAPI.history(business, max, maxTp).await() }.get()
     }
 }

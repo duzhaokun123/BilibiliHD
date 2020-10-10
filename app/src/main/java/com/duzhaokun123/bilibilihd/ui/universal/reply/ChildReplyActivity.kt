@@ -9,11 +9,11 @@ import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.ActivityChildReplyBinding
-import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.ReplyAPI
-import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.model.ChildReply
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
+import com.duzhaokun123.bilibilihd.utils.pBilibiliClient
+import com.hiczp.bilibili.api.main.model.ChildReply2
 import com.hiczp.bilibili.api.main.model.SendReplyResponse
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
@@ -39,7 +39,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
     private var next = 0L
     private var isEnd = false
 
-    private lateinit var childReply: ChildReply
+    private lateinit var childReply: ChildReply2
 
     override fun initConfig() = FIX_LAYOUT or NEED_HANDLER
 
@@ -108,7 +108,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
         when (msg.what) {
             WHAT_REPLY_REFRESH -> Thread {
                 try {
-                    childReply = ReplyAPI.getChildReply(oid, root, type)
+                    childReply = pBilibiliClient.pMainAPI.childReply2(oid, root, type, next)
                     next = childReply.data.cursor.next
                     isEnd = childReply.data.cursor.isEnd
                     if (childReply.data.root.replies == null) {
@@ -130,7 +130,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
             }
             WHAT_REPLY_LOAD_MORE -> Thread {
                 try {
-                    val childReply2 = ReplyAPI.getChildReply(oid, root, type, next)
+                    val childReply2 = pBilibiliClient.pMainAPI.childReply2(oid, root, type, next)
                     next = childReply2.data.cursor.next
                     isEnd = childReply2.data.cursor.isEnd
                     if (childReply.data.root.replies == null) {

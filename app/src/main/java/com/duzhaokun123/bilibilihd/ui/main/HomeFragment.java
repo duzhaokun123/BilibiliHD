@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity;
@@ -36,7 +34,6 @@ import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
-import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.Objects;
@@ -187,20 +184,15 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
                                     startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), ((VideoCardHolder) holder).mIv, "img").toBundle());
                                     break;
                                 case R.id.add_to_watch_later:
-                                    new Thread() {
-                                        @Override
-                                        public void run() {
-                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<CommonResponse>() {
-                                                @Override
-                                                public void onException(@NonNull Exception e) {
-                                                    e.printStackTrace();
-                                                    if (getActivity() != null) {
-                                                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
-                                                    }
-                                                }
-                                            });
+                                    new Thread(() -> {
+                                        try {
+                                            Application.getPBilibiliClient().getPMainAPI().toView(aid, null);
+                                            Application.runOnUiThread(() -> TipUtil.showTip(getContext(), R.string.added));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                                         }
-                                    }.start();
+                                    }).start();
                                     break;
                             }
                             return true;

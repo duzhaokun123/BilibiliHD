@@ -20,13 +20,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.model.History;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
@@ -35,10 +32,10 @@ import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
-import com.hiczp.bilibili.api.retrofit.CommonResponse;
+import com.hiczp.bilibili.api.app.model.History;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.Objects;
 
 public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> implements Refreshable {
 
@@ -98,7 +95,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                 holder.mTvTitle.setText(mHistory.getData().getList().get(position).getTitle());
                 GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCover(), holder.mIv, true);
                 if (mHistory.getData().getList().get(position).getCovers() != null) {
-                    GlideUtil.loadUrlInto(getContext(), mHistory.getData().getList().get(position).getCovers().get(0), holder.mIv, true);
+                    GlideUtil.loadUrlInto(getContext(), Objects.requireNonNull(mHistory.getData().getList().get(position).getCovers()).get(0), holder.mIv, true);
                 }
                 holder.mTvBadge.setText(mHistory.getData().getList().get(position).getBadge());
                 holder.mTvUp.setText(mHistory.getData().getList().get(position).getName());
@@ -124,7 +121,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                     {
                         url = mHistory.getData().getList().get(position).getCover();
                         if (mHistory.getData().getList().get(position).getCovers() != null) {
-                            url = mHistory.getData().getList().get(position).getCovers().get(0);
+                            url = Objects.requireNonNull(mHistory.getData().getList().get(position).getCovers()).get(0);
                         }
                     }
 
@@ -141,22 +138,15 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                                     startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), holder.mIv, "img").toBundle());
                                     break;
                                 case R.id.add_to_watch_later:
-                                    new Thread() {
-                                        @Override
-                                        public void run() {
-                                            ToViewAPI.getInstance().addAid(aid, new MyBilibiliClient.ICallback<CommonResponse>() {
-                                                @Override
-                                                public void onException(@NotNull Exception e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                @Override
-                                                public void onSuccess(@NotNull CommonResponse commonResponse) {
-
-                                                }
-                                            });
+                                    new Thread(() -> {
+                                        try {
+                                            Application.getPBilibiliClient().getPMainAPI().toView(aid, null);
+                                            Application.runOnUiThread(() -> TipUtil.showTip(getContext(), R.string.added));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                                         }
-                                    }.start();
+                                    }).start();
                                     break;
                             }
                             return true;
@@ -230,59 +220,43 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
     class Refresh extends Thread {
         @Override
         public void run() {
-            HistoryAPI.getInstance().getHistory("all", new MyBilibiliClient.ICallback<History>() {
-                @Override
-                public void onException(@NotNull Exception e) {
-                    e.printStackTrace();
-                    if (handler != null) {
-                        handler.sendEmptyMessage(2);
-                    }
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
-                    }
+            try {
+                mHistory = Application.getPBilibiliClient().getPAppAPI().history("all", 0, 0);
+                LoadMore loadMore = new LoadMore();
+                for (int i = 0; i < 2; i++) {
+                    loadMore.run();
                 }
-
-                @Override
-                public void onSuccess(@NotNull History history) {
-                    mHistory = history;
-                    LoadMore loadMore = new LoadMore();
-                    for (int i = 0; i < 2; i++) {
-                        loadMore.run();
-                    }
-                    if (handler != null) {
-                        handler.sendEmptyMessage(0);
-                    }
+                if (handler != null) {
+                    handler.sendEmptyMessage(0);
                 }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (handler != null) {
+                    handler.sendEmptyMessage(2);
+                }
+                Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+            }
         }
     }
 
     class LoadMore extends Thread {
         @Override
         public void run() {
-            HistoryAPI.getInstance().getHistory(mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMax_tp(),
-                    "all", new MyBilibiliClient.ICallback<History>() {
-                        @Override
-                        public void onException(@NotNull Exception e) {
-                            e.printStackTrace();
-                            if (handler != null) {
-                                handler.sendEmptyMessage(2);
-                            }
-                            if (getActivity() != null) {
-                                getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
-                            }
-                        }
-
-                        @Override
-                        public void onSuccess(@NotNull History history) {
-                            mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
-                            mHistory.getData().getCursor().setMax_tp(history.getData().getCursor().getMax_tp());
-                            mHistory.getData().getList().addAll(history.getData().getList());
-                            if (handler != null) {
-                                handler.sendEmptyMessage(1);
-                            }
-                        }
-                    });
+            try {
+                History history = Application.getPBilibiliClient().getPAppAPI().history("all", mHistory.getData().getCursor().getMax(), mHistory.getData().getCursor().getMaxTp());
+                mHistory.getData().getCursor().setMax(history.getData().getCursor().getMax());
+                mHistory.getData().getCursor().setMaxTp(history.getData().getCursor().getMaxTp());
+                mHistory.getData().getList().addAll(history.getData().getList());
+                if (handler != null) {
+                    handler.sendEmptyMessage(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (handler != null) {
+                    handler.sendEmptyMessage(2);
+                }
+                Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+            }
         }
     }
 

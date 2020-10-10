@@ -9,8 +9,7 @@ import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.databinding.FragmentWelcomeAdBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.WelcomeAdApi;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.welcomeAd.model.WelcomeAd;
+import com.duzhaokun123.bilibilihd.utils.ApiUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -21,6 +20,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.hiczp.bilibili.api.app.model.SplashList;
 
 import java.util.Objects;
 
@@ -29,13 +29,13 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
     public WelcomeAdFragment() {
     }
 
-    WelcomeAdFragment(@NonNull WelcomeAd welcomeAd) {
-        this.welcomeAd = welcomeAd;
+    WelcomeAdFragment(@NonNull SplashList splashList) {
+        this.splashList = splashList;
     }
 
     private SimpleExoPlayer player;
 
-    private WelcomeAd welcomeAd;
+    private SplashList splashList;
 
     private boolean keep = false;
 
@@ -68,7 +68,7 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
     @Override
     protected void initData() {
         baseBind.tvVersion.setText(BuildConfig.VERSION_NAME);
-        WelcomeAd.Data.List_ list_ = WelcomeAdApi.getShowList(welcomeAd);
+        SplashList.Data.List_ list_ = ApiUtil.INSTANCE.getShowList(splashList);
         if (list_ != null) {
             if (list_.isAd()) {
                 baseBind.tvAd.setVisibility(View.VISIBLE);

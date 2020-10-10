@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewWithVBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
+import com.hiczp.bilibili.api.app.model.Space;
 
 public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBinding> {
 

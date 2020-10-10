@@ -1,12 +1,11 @@
 package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
 import com.hiczp.bilibili.api.main.MainAPI
-import com.hiczp.bilibili.api.main.model.Reply
-import com.hiczp.bilibili.api.main.model.SendDanmakuResponse
-import com.hiczp.bilibili.api.main.model.SendReplyResponse
+import com.hiczp.bilibili.api.main.model.*
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
+import java.lang.RuntimeException
 
 class PMainAPI(private var mainAPI: MainAPI) {
     fun sendDanmaku(aid: Long, cid: Long, progress: Long, message: String, mode: Int, color: Int): SendDanmakuResponse {
@@ -29,7 +28,25 @@ class PMainAPI(private var mainAPI: MainAPI) {
         return GlobalScope.future { mainAPI.dislikeReply(action, oid, replyId, type).await() }.get()
     }
 
-    fun addFavoriteVideo(aid: Long, fid: Long) : CommonResponse {
+    fun addFavoriteVideo(aid: Long, fid: Long): CommonResponse {
         return GlobalScope.future { mainAPI.addFavoriteVideo(aid, fid.toString()).await() }.get()
+    }
+
+    fun toView(aid: Long? = null, bvid: String? = null): CommonResponse {
+        return GlobalScope.future {
+            when {
+                aid != null -> mainAPI.toView(aid).await()
+                bvid != null -> mainAPI.toView(bvid).await()
+                else -> throw RuntimeException("both aid and bvid is null")
+            }
+        }.get()
+    }
+
+    fun delReply(type: Int, oid: Long, rpid: Long): CommonResponse {
+        return GlobalScope.future { mainAPI.delReply(type, oid, rpid).await() }.get()
+    }
+
+    fun childReply2(oid: Long, root: Long, type: Int, next: Long?): ChildReply2 {
+        return GlobalScope.future { mainAPI.childReply2(oid, root, type, next ?: 0).await() }.get()
     }
 }

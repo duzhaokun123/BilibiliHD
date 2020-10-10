@@ -19,11 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.SpaceAPI;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.space.model.Space;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
@@ -35,8 +33,7 @@ import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import org.jetbrains.annotations.NotNull;
+import com.hiczp.bilibili.api.app.model.Space;
 
 import java.util.ArrayList;
 
@@ -146,28 +143,39 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         if (Settings.layout.isUserSpaceUseWebView()) {
             return;
         }
-        new Thread() {
-            @Override
-            public void run() {
-
-                SpaceAPI.getInstance().getSpace(getStartIntent().getLongExtra(EXTRA_UID, 0), new MyBilibiliClient.ICallback<Space>() {
-                    @Override
-                    public void onException(@NotNull @NonNull Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-                    }
-
-                    @Override
-                    public void onSuccess(@NotNull @NonNull Space space) {
-                        mSpace = space;
-                        if (handler != null) {
-                            handler.sendEmptyMessage(0);
-                        }
-                    }
-                });
-
+//        new Thread() {
+//            @Override
+//            public void run() {
+//
+//                SpaceAPI.getInstance().getSpace(, new MyBilibiliClient.ICallback<Space>() {
+//                    @Override
+//                    public void onException(@NotNull @NonNull Exception e) {
+//                        e.printStackTrace();
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(@NotNull @NonNull Space space) {
+//                        mSpace = space;
+//                        if (handler != null) {
+//
+//                        }
+//                    }
+//                });
+//
+//            }
+//        }.start();
+        new Thread(() -> {
+            try {
+                mSpace = Application.getPBilibiliClient().getPAppAPI().space(getStartIntent().getLongExtra(EXTRA_UID, 0));
+                if (handler != null) {
+                    handler.sendEmptyMessage(0);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
             }
-        }.start();
+        }).start();
     }
 
     @Override

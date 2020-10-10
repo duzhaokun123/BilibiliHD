@@ -13,13 +13,12 @@ import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemReplyBinding
-import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.ReplyAPI
-import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.model.ChildReply
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.github.salomonbrys.kotson.get
+import com.hiczp.bilibili.api.main.model.ChildReply2
 
-class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : BaseSimpleAdapter<ItemReplyBinding>(context) {
+class ChildReplyAdapter(context: Context, private val childReply: ChildReply2) : BaseSimpleAdapter<ItemReplyBinding>(context) {
     override fun getItemCount() = childReply.data.root.replies?.size ?: 0
 
     override fun initLayout() = R.layout.item_reply
@@ -145,20 +144,19 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply) : 
                         R.id.check_dialog -> {
                             // TODO: 20-8-15
                         }
-                        R.id.delete -> {
+                        R.id.delete ->
                             Thread {
                                 try {
-                                    ReplyAPI.del(reply.type, reply.oid, reply.rpid)
-                                    activity?.runOnUiThread {
+                                    pBilibiliClient.pMainAPI.delReply(reply.type, reply.oid, reply.rpid)
+                                    runOnUiThread {
                                         TipUtil.showTip(context, R.string.deleted)
                                         baseBind.tvAction.setText(R.string.deleted)
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
-                                    activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
+                                    runOnUiThread { TipUtil.showTip(context, e.message) }
                                 }
                             }.start()
-                        }
                         R.id.report -> BrowserUtil.openWebViewActivity(context,
                                 "https://www.bilibili.com/h5/comment/report?&pageType=${reply.type}&oid=${reply.oid}&rpid=${reply.rpid}", false, false)
                     }

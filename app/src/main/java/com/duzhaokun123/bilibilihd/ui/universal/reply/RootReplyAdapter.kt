@@ -13,7 +13,6 @@ import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemReplyBinding
-import com.duzhaokun123.bilibilihd.mybilibiliapi.reply.ReplyAPI
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.github.salomonbrys.kotson.get
@@ -82,7 +81,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                     var emoteBitmap: Bitmap? = null
                     try {
                         emoteBitmap = Glide.with(context).asBitmap().load(emote["url"].asString).submit(emoteSize, emoteSize).get()
-                    } catch (e: Exception){
+                    } catch (e: Exception) {
                         //ignore
                     }
                     if (emoteBitmap != null) {
@@ -165,20 +164,19 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
                         intent.putExtra(ChildReplyActivity.EXTRA_ROOT, aReply.rpid)
                         activity?.startActivity(intent)
                     }
-                    R.id.delete -> {
+                    R.id.delete ->
                         Thread {
                             try {
-                                ReplyAPI.del(aReply.type, aReply.oid, aReply.rpid)
-                                activity?.runOnUiThread {
+                                pBilibiliClient.pMainAPI.delReply(aReply.type, aReply.oid, aReply.rpid)
+                                runOnUiThread {
                                     TipUtil.showTip(context, R.string.deleted)
                                     baseBind.tvAction.setText(R.string.deleted)
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                activity?.runOnUiThread { TipUtil.showTip(context, e.message) }
+                                runOnUiThread { TipUtil.showTip(context, e.message) }
                             }
                         }.start()
-                    }
                     R.id.report -> BrowserUtil.openWebViewActivity(context,
                             "https://www.bilibili.com/h5/comment/report?&pageType=${aReply.type}&oid=${aReply.oid}&rpid=${aReply.rpid}", false, false)
                 }

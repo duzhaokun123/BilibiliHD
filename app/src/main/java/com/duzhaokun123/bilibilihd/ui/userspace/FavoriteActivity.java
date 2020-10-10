@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.MediaListAPI;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Ids;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.medialist.model.Infos;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.toview.ToViewAPI;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
@@ -34,7 +34,6 @@ import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
-import com.hiczp.bilibili.api.retrofit.CommonResponse;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -140,18 +139,15 @@ public class FavoriteActivity extends BaseActivity<LayoutXrecyclerviewOnlyBindin
                                             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(FavoriteActivity.this, ((VideoCardHolder) holder).mIv, "img").toBundle());
                                             break;
                                         case R.id.add_to_watch_later:
-                                            new Thread() {
-                                                @Override
-                                                public void run() {
-                                                    ToViewAPI.getInstance().addBvid(bvid, new MyBilibiliClient.ICallback<CommonResponse>() {
-                                                        @Override
-                                                        public void onException(@NotNull Exception e) {
-                                                            e.printStackTrace();
-                                                            runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
-                                                        }
-                                                    });
+                                            new Thread(() -> {
+                                                try {
+                                                    Application.getPBilibiliClient().getPMainAPI().toView(null, bvid);
+                                                    Application.runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, R.string.added));
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    Application.runOnUiThread(() -> TipUtil.showTip(FavoriteActivity.this, e.getMessage()));
                                                 }
-                                            }.start();
+                                            }).start();
                                             break;
                                     }
                                     return true;

@@ -109,7 +109,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -126,11 +126,11 @@ dependencies {
     implementation 'androidx.browser:browser:1.2.0'
 
     //bilibili-api
-    implementation 'com.hiczp:bilibili-api:0.3.0'
+    implementation 'com.hiczp:bilibili-api:0.3.1'
     implementation 'javax.xml.stream:stax-api:1.0'
     implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
 
-//    DrawerLayout
+    //DrawerLayout
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
     //CircleImageView
@@ -149,6 +149,7 @@ dependencies {
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
+
     //okhttp3
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
 
