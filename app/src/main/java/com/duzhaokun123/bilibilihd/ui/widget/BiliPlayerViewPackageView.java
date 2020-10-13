@@ -268,7 +268,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
     }
 
     public boolean isPlaying() {
-        return player.getPlayWhenReady();
+        return player.isPlaying();
     }
 
     public void clickIbFullscreen() {
