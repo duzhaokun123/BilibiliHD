@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'com.google.protobuf'
+    id "org.jetbrains.kotlin.kapt"
 }
 
 def getGitHash = { ->
@@ -120,7 +121,7 @@ dependencies {
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     //browser
     implementation 'androidx.browser:browser:1.2.0'
@@ -180,7 +181,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01'
 
     //MediaRouter
-    implementation 'androidx.mediarouter:mediarouter:1.1.0'
+    implementation 'androidx.mediarouter:mediarouter:1.2.0'
 
     //protobuf-lite
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
@@ -196,13 +197,15 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
     //core
-    implementation 'androidx.core:core:1.5.0-alpha04'
     implementation 'androidx.core:core-ktx:1.5.0-alpha04'
 
     //preferencex
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.takisoft.preferencex:preferencex:1.1.0'
     implementation 'com.takisoft.preferencex:preferencex-simplemenu:1.1.0'
+
+    //dataBinding
+    kapt "com.android.databinding:compiler:3.1.4"
 }
 
 protobuf {

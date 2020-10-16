@@ -29,6 +29,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
         const val EXTRA_FAST_LOAD_COVER_URL = "fast_load_cover_url"
         const val EXTRA_AID = "aid"
         const val EXTRA_BVID = "bvid"
+        const val EXTRA_PAGE = "page"
 
         const val WHAT_LOAD_BILIVIEW = 0
         const val WHAT_BILIVIEW_LOAD_OVER = 1
@@ -60,7 +61,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
             if (aid == 0L) {
                 aid = MyBilibiliClientUtil.bv2av(startIntent.getStringExtra(EXTRA_BVID))
             }
-            page = startIntent.getIntExtra("page", 1)
+            page = startIntent.getIntExtra(EXTRA_PAGE, 1)
             handler?.sendEmptyMessage(WHAT_LOAD_BILIVIEW)
         }
         title = ""

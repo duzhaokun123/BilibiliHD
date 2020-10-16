@@ -68,6 +68,10 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         enter(activity, uid, faceView, faceView != null ? faceView.getDrawable() : null, nameView, nameView != null ? nameView.getText() : null);
     }
 
+    public static void enter(Activity activity, long uid) {
+        enter(activity, uid, null, null);
+    }
+
     private Space mSpace;
 
     @Override

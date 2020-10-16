@@ -26,6 +26,7 @@ import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding;
 import com.duzhaokun123.bilibilihd.ui.JumpActivity;
+import com.duzhaokun123.bilibilihd.ui.ToolActivity;
 import com.duzhaokun123.bilibilihd.ui.login.LoginActivity;
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity;
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity;
@@ -244,6 +245,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     }
                     setTitle(R.string.history);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_main, historyFragment).commitAllowingStateLoss();
+                    break;
+                case R.id.tools:
+                    intent = new Intent(MainActivity.this, ToolActivity.class);
                     break;
                 case R.id.settings:
                     intent = new Intent(MainActivity.this, SettingsActivity.class);

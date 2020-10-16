@@ -28,6 +28,9 @@ class UrlOpenActivity : AppCompatActivity() {
         Log.d(TAG, "scheme: $scheme")
         Log.d(TAG, "host: $host")
         Log.d(TAG, "path: $path")
+        uri.queryParameterNames.forEach {
+            Log.d(TAG, "query: $it: ${uri.getQueryParameter(it)}")
+        }
 
         try {
             var intent1: Intent? = null
@@ -94,6 +97,7 @@ class UrlOpenActivity : AppCompatActivity() {
                         intent1 = Intent(this, UserSpaceActivity::class.java)
                         intent1.putExtra("uid", path!!.substring(1).toLong())
                     }
+                    "live" -> BrowserUtil.openWebViewActivity(this, "https://live.bilibili.com/${path!!.substring(1)}", false)
                     else -> TipUtil.showToast("不支持 $uri")
                 }
             }

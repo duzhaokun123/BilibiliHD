@@ -30,14 +30,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="av"
-                android:inputType="number" />
+                android:importantForAutofill="no"
+                android:inputType="number"
+                tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/et_bv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="bv" />
+                android:hint="BV"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -52,8 +57,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:rotationX="-9"
                 android:text="av2bv"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
 
             <Button
                 android:id="@+id/btn_bv2av"
@@ -62,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="bv2av"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <TextView
@@ -84,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="type"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLines="1"
                 tools:ignore="HardcodedText" />
@@ -94,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="oid"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLines="1"
                 tools:ignore="HardcodedText" />
@@ -105,6 +115,66 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="GO"
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_uid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="uid"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btn_uid_go"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="go"
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_video_n"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="av or BV"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/et_video_page"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="page"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btn_video_go"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="go"
                 android:textColor="@color/ordinaryText"
                 tools:ignore="HardcodedText" />
         </LinearLayout>

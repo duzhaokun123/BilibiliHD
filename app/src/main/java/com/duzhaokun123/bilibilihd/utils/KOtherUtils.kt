@@ -23,3 +23,11 @@ val gson
     get() = GsonUtil.getGsonInstance()
 
 fun runOnUiThread(block: () -> Unit) = Application.runOnUiThread(block)
+
+fun String.toIntOrDefault(defaultValue: Int): Int {
+    return try {
+        toInt()
+    } catch (_: NumberFormatException) {
+        defaultValue
+    }
+}
