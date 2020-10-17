@@ -10,8 +10,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtOrdinaryBinding
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient
-import com.duzhaokun123.bilibilihd.mybilibiliapi.history.HistoryAPI
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
@@ -21,7 +19,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
-import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
@@ -191,12 +188,12 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
             WHAT_ADD_HISTORY -> {
                 val playedTime = baseBind.bpvpv.player.currentPosition
                 Thread {
-                    HistoryAPI.getInstance().setAidHistory(aid, biliView!!.data.cid.toLong(), playedTime / 1000, object : MyBilibiliClient.ICallback<CommonResponse> {
-                        override fun onException(e: java.lang.Exception) {
-                            e.printStackTrace()
-                            runOnUiThread { TipUtil.showToast(e.message) }
-                        }
-                    })
+                    try {
+                        pBilibiliClient.pWebAPI.heartbeat(aid = aid,cid = cid , playedTime = playedTime / 1000)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        runOnUiThread { TipUtil.showToast(e.message) }
+                    }
                     Thread.sleep(15000)
                     if (isActivityStopped) {
                         Thread.yield()

@@ -18,8 +18,8 @@
     </group>
     <item
         android:id="@+id/tools"
-        android:title="@string/tools"
-        />
+        android:icon="@drawable/ic_carpenter"
+        android:title="@string/tools" />
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"

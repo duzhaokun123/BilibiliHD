@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends RecyclerView.Adapter<BaseSimpleAdapter<layout>.ViewHolder> {
     public final String CLASS_NAME = this.getClass().getSimpleName();
 
-    private Context mContext;
+    private final Context mContext;
 
     public BaseSimpleAdapter(Context context) {
         mContext = context;
@@ -53,7 +53,7 @@ public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends 
     protected abstract void initData(@NonNull layout baseBind, int position);
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private layout baseBind;
+        private final layout baseBind;
 
         public ViewHolder(layout viewDataBinding) {
             super(viewDataBinding.getRoot());

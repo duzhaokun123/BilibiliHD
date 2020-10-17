@@ -81,11 +81,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
 
         config = initConfig();
 
-        if ((config & DISABLE_FULLSCREEN_LAYOUT) != 0) {
-            WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
-        } else {
-            WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        }
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), (config & DISABLE_FULLSCREEN_LAYOUT) != 0);
 
         if ((config & FULLSCREEN) != 0) {
             getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility()

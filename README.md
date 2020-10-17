@@ -108,15 +108,12 @@
 在 API >= 23 的设备上没有必要
 - 重作界面
 - 下载
-- 迁移所有 API 至`bilibili-api`
 
 ### 从源代码构建注意
 ```shell script
 git clone https://github.com/duzhaokun123/BilibiliHD.git #一定要完整克隆, 否则版本号不正确
-mkdir BilibiliHD/third_party
-cd BilibiliHD/third_party
-git clone https://github.com/duzhaokun123/bilibili-api.git
-git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git
+chmod +x script/sync_third_party.sh
+script/sync_third_party.sh
 ```
 
 ### 鸣谢

@@ -82,4 +82,8 @@ public class MyBilibiliClientUtil {
     public static String getB23Url(long aid) {
         return "https://b23.tv/" + av2bv(aid);
     }
+
+    public static String getUserSpaceLink(long uid) {
+        return "https://space.bilibili.com/" + uid;
+    }
 }

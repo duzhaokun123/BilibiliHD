@@ -24,10 +24,7 @@ import androidx.databinding.DataBindingUtil;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.MyBilibiliClient;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.ShotAPi;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.model.VideoShot;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
@@ -39,6 +36,7 @@ import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
+import com.hiczp.bilibili.api.web.model.VideoShot;
 
 import java.util.Objects;
 
@@ -225,33 +223,30 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     public void loadDanmakuByAidCid(long aid, long cid, int durationS) {
         pbExoBuffering.setVisibility(VISIBLE);
-        new Thread() {
-            @Override
-            public void run() {
-                BiliDanmaku.DmSegMobileReply[] dmSegMobileReplies = new BiliDanmaku.DmSegMobileReply[durationS / 360 + 1];
-                try {
-                    for (int i = 0; i < dmSegMobileReplies.length; i++) {
-                        dmSegMobileReplies[i] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, i + 1);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("exception", e);
-                    Message message = new Message();
-                    message.what = WHAT_DANMAKU_LOAD_EXCEPTION;
-                    message.setData(bundle);
-                    handler.sendMessage(message);
+        new Thread(() -> {
+            BiliDanmaku.DmSegMobileReply[] dmSegMobileReplies = new BiliDanmaku.DmSegMobileReply[durationS / 360 + 1];
+            try {
+                for (int i = 0; i < dmSegMobileReplies.length; i++) {
+                    dmSegMobileReplies[i] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, i + 1);
                 }
-                loadDanmakuByBiliDanmakuParser(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
-//                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("exception", e);
+                Message message = new Message();
+                message.what = WHAT_DANMAKU_LOAD_EXCEPTION;
+                message.setData(bundle);
+                handler.sendMessage(message);
             }
-        }.start();
+            loadDanmakuByBiliDanmakuParser(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
+//                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
+        }).start();
     }
 
     public void loadDanmakuByBiliDanmakuParser(BaseDanmakuParser danmakuParser) {
@@ -302,18 +297,26 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 pbExoBuffering.setVisibility(INVISIBLE);
                 break;
             case WHAT_LOAD_SHOT:
-                new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
-                    @Override
-                    public void onException(@NonNull Exception e) {
+//                new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
+//                    @Override
+//                    public void onException(@NonNull Exception e) {
+//                        e.printStackTrace();
+//                        Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(@NonNull VideoShot videoShot) {
+//                        BiliPlayerView.this.videoShot = videoShot;
+//                    }
+//                })).start();
+                new Thread(() -> {
+                    try {
+                        this.videoShot = Application.getPBilibiliClient().getPWebAPI().videoshot(aid, cid);
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+                        Application.runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
                     }
-
-                    @Override
-                    public void onSuccess(@NonNull VideoShot videoShot) {
-                        BiliPlayerView.this.videoShot = videoShot;
-                    }
-                })).start();
+                }).start();
                 break;
         }
     }

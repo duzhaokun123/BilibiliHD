@@ -3,6 +3,7 @@ package com.duzhaokun123.bilibilihd.utils
 import com.duzhaokun123.bilibilihd.Application
 import com.github.salomonbrys.kotson.fromJson
 import com.hiczp.bilibili.api.main.model.Reply
+import okhttp3.OkHttpClient
 
 fun Reply.Data.Top.Upper.toCommonReply(): Reply.Data.Reply {
     return gson.fromJson(GsonUtil.getGsonInstance().toJson(this))
@@ -21,6 +22,10 @@ val pBilibiliClient
 
 val gson
     get() = GsonUtil.getGsonInstance()
+
+val okHttpClient by lazy {
+    OkHttpClient()
+}
 
 fun runOnUiThread(block: () -> Unit) = Application.runOnUiThread(block)
 

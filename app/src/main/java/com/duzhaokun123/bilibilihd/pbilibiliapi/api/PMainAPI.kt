@@ -49,4 +49,12 @@ class PMainAPI(private var mainAPI: MainAPI) {
     fun childReply2(oid: Long, root: Long, type: Int, next: Long?): ChildReply2 {
         return GlobalScope.future { mainAPI.childReply2(oid, root, type, next ?: 0).await() }.get()
     }
+
+    fun resourceIds(mediaId: Long, mid: Long): ResourceIds {
+        return GlobalScope.future { mainAPI.resourceIds(mediaId, mid).await() }.get()
+    }
+
+    fun resourceInfos(mediaId: Long, resources: String, mid: Long): ResourceInfos {
+        return GlobalScope.future { mainAPI.resourceInfos(mediaId, resources, mid).await() }.get()
+    }
 }

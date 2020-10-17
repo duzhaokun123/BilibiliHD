@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.Application.runOnUiThread
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.mybilibiliapi.shot.model.VideoShot
+import com.hiczp.bilibili.api.web.model.VideoShot
 import java.util.concurrent.ExecutionException
 
 object ImageViewUtil {
@@ -37,7 +37,7 @@ object ImageViewUtil {
         }
     }
 
-    fun setPreview(imageView: ImageView, videoShot: VideoShot?, index: Int) {
+    fun setPreview(imageView: ImageView, videoShot: com.hiczp.bilibili.api.web.model.VideoShot?, index: Int) {
         if (index >= 0 && videoShot != null) {
             Thread {
                 try {

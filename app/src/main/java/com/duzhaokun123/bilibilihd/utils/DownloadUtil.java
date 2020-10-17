@@ -31,49 +31,46 @@ public class DownloadUtil {
                     ((DownloadManager) Objects.requireNonNull(context.getSystemService(Context.DOWNLOAD_SERVICE))).enqueue(dmRequest);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    TipUtil.showToast(R.string.saved);
+                    TipUtil.showTip(context, e.getMessage());
                 }
                 break;
             case Settings.Download.GLIDE_CACHE_FIRST:
-                new Thread() {
-                    @Override
-                    public void run() {
-                        FileInputStream fileInputStream = null;
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            File srcFile = Glide.with(context).asFile().load(url).submit().get();
-                            fileInputStream = new FileInputStream(Objects.requireNonNull(srcFile));
-                            File dir;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "bilibili HD");
-                            } else {
-                                dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD");
-                            }
-                            if (!dir.exists() && !dir.mkdirs()) {
-                                return;
-                            }
-                            File file = new File(dir, String.valueOf(System.currentTimeMillis()));
-                            fileOutputStream = new FileOutputStream(file);
-                            IOUtil.copy(fileInputStream, fileOutputStream);
-                            Application.runOnUiThread(() -> TipUtil.showToast(R.string.saved));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-                        } finally {
-                            try {
-                                if (fileInputStream != null) {
-                                    fileInputStream.close();
-                                }
-                                if (fileOutputStream != null) {
-                                    fileOutputStream.close();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                new Thread(() -> {
+                    FileInputStream fileInputStream = null;
+                    FileOutputStream fileOutputStream = null;
+                    try {
+                        File srcFile = Glide.with(context).asFile().load(url).submit().get();
+                        fileInputStream = new FileInputStream(Objects.requireNonNull(srcFile));
+                        File dir;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "bilibili HD");
+                        } else {
+                            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD");
                         }
-
+                        if (!dir.exists() && !dir.mkdirs()) {
+                            return;
+                        }
+                        File file = new File(dir, String.valueOf(System.currentTimeMillis()));
+                        fileOutputStream = new FileOutputStream(file);
+                        IOUtil.copy(fileInputStream, fileOutputStream);
+                        Application.runOnUiThread(() -> TipUtil.showToast(Application.getInstance().getString(R.string.saved_to_s, file.getPath())));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
+                    } finally {
+                        try {
+                            if (fileInputStream != null) {
+                                fileInputStream.close();
+                            }
+                            if (fileOutputStream != null) {
+                                fileOutputStream.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }.start();
+
+                }).start();
                 break;
         }
 

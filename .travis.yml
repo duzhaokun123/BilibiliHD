@@ -15,12 +15,8 @@ cache:
     - third_party/
 before_install:
   - git fetch --unshallow #拒绝浅克隆
-  - rm -rf third_party
-  - mkdir third_party -p
-  - git clone https://github.com/duzhaokun123/bilibili-api.git third_party/bilibili-api
-    --depth 1
-  - git clone https://github.com/duzhaokun123/DanmakuFlameMaster.git third_party/DanmakuFlameMaster
-    --depth 1
+  - chmod +x script/sync_third_party.sh
+  - script/sync_third_party.sh
 before_script:
   - openssl aes-256-cbc -K $encrypted_ad045b714f03_key -iv $encrypted_ad045b714f03_iv
     -in ReleaseKey.jks.enc -out ReleaseKey.jks -d
@@ -29,7 +25,7 @@ before_script:
   - yes | sdkmanager "build-tools;30.0.2"
   - chmod +x ./gradlew
 script:
-  - "./gradlew assembleRelease"
+  - ./gradlew assembleRelease
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/

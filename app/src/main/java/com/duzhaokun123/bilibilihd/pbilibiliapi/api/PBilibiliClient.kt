@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
-import com.duzhaokun123.bilibilihd.model.BilibiliWebCookie
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.hiczp.bilibili.api.BilibiliClient
 import com.hiczp.bilibili.api.BilibiliClientProperties
@@ -17,8 +16,7 @@ class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
     val pAppAPI by lazy { PAppAPI(bilibiliClient.appAPI) }
     val pPlayerAPI by lazy { PPlayerAPI(bilibiliClient.playerAPI) }
     val pMainAPI by lazy { PMainAPI(bilibiliClient.mainAPI) }
-
-    private var bilibiliWebCookie: BilibiliWebCookie? = null
+    val pWebAPI by lazy { PWebAPI(bilibiliClient.webAPI) }
 
     fun logout() {
         GlobalScope.future { bilibiliClient.logout() }.get()
@@ -31,7 +29,6 @@ class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
 
     @Throws(Exception::class)
     fun login(username: String, password: String, challenge: String?, secCode: String?, validate: String?): LoginResponse? {
-        bilibiliWebCookie = null
         var exception: Exception? = null
         var loginResponse: LoginResponse? = null
         GlobalScope.future {
@@ -53,34 +50,9 @@ class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
     var loginResponse
         get() = bilibiliClient.loginResponse
         set(value) {
-            bilibiliWebCookie = null
             bilibiliClient.loginResponse = value
             BrowserUtil.syncLoggedLoginResponse()
         }
-
-    fun getBilibiliWebCookie(): BilibiliWebCookie? {
-        if (bilibiliWebCookie == null && loginResponse != null) {
-            var biliJct: String? = null
-            var dedeUserID: String? = null
-            var dedeUserIDckMd5: String? = null
-            var sid: String? = null
-            var sessdata: String? = null
-            for ((_, _, name, value) in loginResponse!!.data.cookieInfo.cookies) {
-                when (name) {
-                    "bili_jct" -> biliJct = value
-                    "DedeUserID" -> dedeUserID = value
-                    "DedeUserID__ckMd5" -> dedeUserIDckMd5 = value
-                    "sid" -> sid = value
-                    "SESSDATA" -> sessdata = value
-
-                }
-            }
-            if (biliJct != null && dedeUserID != null && dedeUserIDckMd5 != null && sid != null && sessdata != null) {
-                bilibiliWebCookie = BilibiliWebCookie(biliJct, dedeUserID, dedeUserIDckMd5, sid, sessdata)
-            }
-        }
-        return bilibiliWebCookie
-    }
 
     val uid
         get() = loginResponse?.userId ?: 0

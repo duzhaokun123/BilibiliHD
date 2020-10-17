@@ -1,11 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -18,16 +12,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
+import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding;
 import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.utils.BilibiliUrlUtil;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.LinkifyUtil;
+import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -83,7 +83,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_in_browser) {
-            BrowserUtil.openCustomTab(this, BilibiliUrlUtil.getUserSpaceLink(getStartIntent().getLongExtra(EXTRA_UID, 0)));
+            BrowserUtil.openCustomTab(this, MyBilibiliClientUtil.getUserSpaceLink(getStartIntent().getLongExtra(EXTRA_UID, 0)));
             return true;
         }
         return super.onOptionsItemSelected(item);

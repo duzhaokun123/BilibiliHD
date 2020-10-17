@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.utils;
 
+import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ public class Handler extends android.os.Handler {
     private IHandlerMessageCallback iHandlerMessageCallback;
 
     public Handler(IHandlerMessageCallback iHandlerMessageCallback) {
+        super(Looper.myLooper());
         this.iHandlerMessageCallback = iHandlerMessageCallback;
     }
 

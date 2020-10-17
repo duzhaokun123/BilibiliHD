@@ -30,8 +30,9 @@ object Logcat {
                         """.trimIndent())
                         outputStreamWriter.write("\n")
                         outputStreamWriter.flush()
-                        val exec = Runtime.getRuntime().exec("logcat -d")
-                        IOUtil.copy(exec.inputStream, fileOutputStream)
+                        Runtime.getRuntime().exec("logcat -d").inputStream.use {
+                            IOUtil.copy(it, fileOutputStream)
+                        }
                     }
                 }
                 Application.runOnUiThread { TipUtil.showToast(Application.getInstance().getString(R.string.saved_to_s, file.absolutePath)) }
@@ -40,6 +41,4 @@ object Logcat {
             }
         }.start()
     }
-
-
 }

@@ -4,17 +4,18 @@ import android.content.Intent;
 import android.view.View;
 
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
-import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
+import com.duzhaokun123.bilibilihd.utils.EmptyBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding> {
-    private static long aid = 61733031;
-    private static long cid = 107356773;
+    private static final long aid = 61733031;
+    private static final long cid = 107356773;
 
     @Override
     protected int initConfig() {
@@ -41,32 +42,31 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
 
         baseBind.dv.enableDanmakuDrawingCache(true);
         baseBind.dv.showFPS(true);
+        baseBind.dv.prepare(EmptyBiliDanmakuParser.INSTANCE, DanmakuUtil.INSTANCE.getDanmakuContext());
     }
 
     @Override
     protected void initData() {
-        new Thread() {
-            @Override
-            public void run() {
-                BiliDanmaku.DmSegMobileReply[] dmSegMobileReply = new BiliDanmaku.DmSegMobileReply[1];
-                try {
-                    dmSegMobileReply[0] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, 1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
-                }
-                if (dmSegMobileReply[0] != null) {
-                    baseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReply), DanmakuUtil.INSTANCE.getDanmakuContext());
-                    runOnUiThread(() -> TipUtil.showToast("加载成功"));
-                }
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread(() -> baseBind.dv.start());
+        new Thread(() -> {
+            BiliDanmaku.DmSegMobileReply[] dmSegMobileReply = new BiliDanmaku.DmSegMobileReply[1];
+            try {
+                dmSegMobileReply[0] = DanmakuAPI.INSTANCE.getBiliDanmaku(aid, cid, 1, 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
             }
-        }.start();
+            if (dmSegMobileReply[0] != null) {
+                baseBind.dv.release();
+                baseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReply), DanmakuUtil.INSTANCE.getDanmakuContext());
+                runOnUiThread(() -> TipUtil.showToast("加载成功"));
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(() -> baseBind.dv.start());
+        }).start();
     }
 
     @Override
