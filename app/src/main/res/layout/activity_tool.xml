@@ -57,7 +57,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:rotationX="-9"
                 android:text="av2bv"
                 android:textColor="@color/ordinaryText"
                 tools:ignore="HardcodedText" />
@@ -178,5 +177,14 @@
                 android:textColor="@color/ordinaryText"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_save_log"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="save log"
+            android:textColor="@color/ordinaryText"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 </layout>

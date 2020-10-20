@@ -11,6 +11,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.toIntOrDefault
 import okhttp3.internal.toLongOrDefault
 import android.content.Intent
+import com.duzhaokun123.bilibilihd.utils.Logcat
 import java.lang.Exception
 
 class ToolActivity : BaseActivity<ActivityToolBinding>() {
@@ -54,6 +55,7 @@ class ToolActivity : BaseActivity<ActivityToolBinding>() {
             }
             startActivity(intent)
         }
+        baseBind.btnSaveLog.setOnClickListener { Logcat.saveLog(this) }
     }
 
     override fun initData() {}

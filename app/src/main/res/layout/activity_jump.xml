@@ -112,16 +112,6 @@
                     android:textColor="@color/ordinaryText"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_save_log"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="save log"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-
         </LinearLayout>
     </ScrollView>
 </layout>

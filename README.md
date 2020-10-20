@@ -112,6 +112,7 @@
 ### 从源代码构建注意
 ```shell script
 git clone https://github.com/duzhaokun123/BilibiliHD.git #一定要完整克隆, 否则版本号不正确
+cd BilibiliHD
 chmod +x script/sync_third_party.sh
 script/sync_third_party.sh
 ```
