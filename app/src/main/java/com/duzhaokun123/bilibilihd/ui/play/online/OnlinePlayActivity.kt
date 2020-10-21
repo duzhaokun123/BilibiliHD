@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.play.online
 
-import android.content.Intent
 import android.os.Message
 import androidx.activity.viewModels
 import androidx.core.util.Pair
@@ -10,7 +9,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtOrdinaryBinding
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
@@ -231,9 +229,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
     override fun onGetShareTitle() = biliView?.data?.title
 
     override fun onCheckCover() {
-        val pvIntent = Intent(this, PhotoViewActivity::class.java)
-        pvIntent.putExtra("url", biliView?.data?.pic)
-        startActivity(pvIntent)
+        biliView?.let { ImageViewUtil.viewImage(this, it.data.pic) }
     }
 
     override fun onDownload() {

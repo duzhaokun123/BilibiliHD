@@ -1,13 +1,18 @@
 package com.duzhaokun123.bilibilihd.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.view.LayoutInflater
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.Application.runOnUiThread
 import com.duzhaokun123.bilibilihd.R
+import com.duzhaokun123.bilibilihd.databinding.LayoutIvOverlayBinding
 import com.hiczp.bilibili.api.web.model.VideoShot
+import com.stfalcon.imageviewer.StfalconImageViewer
 import java.util.concurrent.ExecutionException
 
 object ImageViewUtil {
@@ -37,7 +42,7 @@ object ImageViewUtil {
         }
     }
 
-    fun setPreview(imageView: ImageView, videoShot: com.hiczp.bilibili.api.web.model.VideoShot?, index: Int) {
+    fun setPreview(imageView: ImageView, videoShot: VideoShot?, index: Int) {
         if (index >= 0 && videoShot != null) {
             Thread {
                 try {
@@ -62,5 +67,25 @@ object ImageViewUtil {
                 }
             }.start()
         }
+    }
+
+    fun viewImage(context: Context, pImage: String, pImageView: ImageView? = null) {
+        val overlayBinding =
+                DataBindingUtil.inflate<LayoutIvOverlayBinding>(LayoutInflater.from(context), R.layout.layout_iv_overlay, null, false)
+        overlayBinding.tb.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.download -> {
+                    DownloadUtil.downloadPicture(context, pImage)
+                    true
+                }
+                else -> false
+            }
+        }
+        StfalconImageViewer.Builder(context, arrayOf(pImage)) { imageView, image ->
+            Glide.with(context).load(image).into(imageView)
+        }
+                .withTransitionFrom(pImageView)
+                .withOverlayView(overlayBinding.root)
+                .show()
     }
 }

@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.play.local
 
-import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.view.View
@@ -13,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtLocalBinding
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
+import com.duzhaokun123.bilibilihd.utils.ImageViewUtil
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
 import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.XmlBiliDanmakuParser
@@ -105,9 +104,7 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
     override fun onGetShareTitle() = model.title.value.let { "${it?.first}" }
 
     override fun onCheckCover() {
-        val pvIntent = Intent(this, PhotoViewActivity::class.java)
-        pvIntent.putExtra("url", model.cover.value)
-        startActivity(pvIntent)
+        model.cover.value?.let { ImageViewUtil.viewImage(this, it) }
     }
 
     override fun onDownload() {

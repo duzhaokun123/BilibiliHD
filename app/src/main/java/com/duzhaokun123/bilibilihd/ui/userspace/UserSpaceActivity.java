@@ -23,7 +23,6 @@ import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding;
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.LinkifyUtil;
@@ -126,9 +125,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
         baseBind.civFace.setOnClickListener(v -> {
             if (mSpace != null) {
-                Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
-                intent.putExtra("url", mSpace.getData().getCard().getFace());
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, baseBind.civFace, "img").toBundle());
+                ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getCard().getFace(), baseBind.civFace);
             }
         });
 
@@ -175,7 +172,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
                 if (handler != null) {
                     handler.sendEmptyMessage(0);
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
             }
@@ -187,18 +184,10 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         Glide.with(this).load(mSpace.getData().getCard().getFace()).into(baseBind.civFace);
         if (mSpace.getData().getImages().getImgUrl().equals("")) {
             Glide.with(this).load("https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png").into(baseBind.ivSpaceImage);
-            baseBind.ivSpaceImage.setOnClickListener(v -> {
-                Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
-                intent.putExtra("url", "https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png");
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, baseBind.ivSpaceImage, "img").toBundle());
-            });
+            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, "https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png", baseBind.ivSpaceImage));
         } else {
             Glide.with(this).load(mSpace.getData().getImages().getImgUrl()).into(baseBind.ivSpaceImage);
-            baseBind.ivSpaceImage.setOnClickListener(v -> {
-                Intent intent = new Intent(UserSpaceActivity.this, PhotoViewActivity.class);
-                intent.putExtra("url", mSpace.getData().getImages().getImgUrl());
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, baseBind.ivSpaceImage, "img").toBundle());
-            });
+            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getImages().getImgUrl(), baseBind.ivSpaceImage));
         }
         ImageViewUtil.INSTANCE.setSixDrawable(baseBind.ivSex, mSpace.getData().getCard().getSex());
         ImageViewUtil.INSTANCE.setLevelDrawable(baseBind.ivLevel, mSpace.getData().getCard().getLevelInfo().getCurrentLevel());

@@ -130,7 +130,7 @@ script/sync_third_party.sh
 
 [Material](https://material.io)
 
-[PhotoView](https://github.com/chrisbanes/PhotoView)
+[StfalconImageViewer](https://github.com/stfalcon-studio/StfalconImageViewer)
 
 [XRecyclerView](https://github.com/XRecyclerView/XRecyclerView)
 

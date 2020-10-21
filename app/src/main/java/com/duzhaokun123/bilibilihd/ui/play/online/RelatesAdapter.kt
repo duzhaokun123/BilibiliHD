@@ -8,7 +8,6 @@ import androidx.appcompat.widget.PopupMenu
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemRelateVideoCardBinding
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
@@ -40,9 +39,7 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
             popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                 when (item.itemId) {
                     R.id.check_cover -> {
-                        val intent = Intent(context, PhotoViewActivity::class.java)
-                        intent.putExtra("url", biliView.data.relates!![position].pic)
-                        context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "img").toBundle())
+                        ImageViewUtil.viewImage(context, biliView.data.relates!![position].pic, baseBind.ivCover)
                     }
                     R.id.add_to_watch_later ->
                         Thread {

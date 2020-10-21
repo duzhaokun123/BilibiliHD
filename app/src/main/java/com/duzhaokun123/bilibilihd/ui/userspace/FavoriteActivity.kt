@@ -21,7 +21,6 @@ import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.duzhaokun123.bilibilihd.utils.ApiUtil.resources
@@ -110,12 +109,7 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
                                 popupMenu.menuInflater.inflate(R.menu.video_card, popupMenu.menu)
                                 popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                                     when (item.itemId) {
-                                        R.id.check_cover -> {
-                                            val intent = Intent(this@FavoriteActivity, PhotoViewActivity::class.java).apply {
-                                                putExtra("url", data.cover)
-                                            }
-                                            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@FavoriteActivity, holder.mIv, "img").toBundle())
-                                        }
+                                        R.id.check_cover -> ImageViewUtil.viewImage(this@FavoriteActivity, data.cover, holder.mIv)
                                         R.id.add_to_watch_later -> ApiUtil.addToView(this@FavoriteActivity, bvid = data.bvid)
                                     }
                                     true

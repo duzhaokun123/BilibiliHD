@@ -1,7 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.main;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,11 +20,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
+import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
-import com.duzhaokun123.bilibilihd.ui.PhotoViewActivity;
-import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
+import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -133,9 +131,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         popupMenu.setOnMenuItemClickListener(item -> {
                             switch (item.getItemId()) {
                                 case R.id.check_cover:
-                                    Intent intent = new Intent(getContext(), PhotoViewActivity.class);
-                                    intent.putExtra("url", url);
-                                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), holder.mIv, "img").toBundle());
+                                    ImageViewUtil.INSTANCE.viewImage(requireContext(), url, holder.mIv);
                                     break;
                                 case R.id.add_to_watch_later:
                                     new Thread(() -> {

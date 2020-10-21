@@ -148,10 +148,6 @@ dependencies {
 //    implementation "androidx.cardview:cardview:1.0.0"
 //    implementation "com.google.android.material:material:1.1.0"
 
-    //PhotoView
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
-
     //okhttp3
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
 
@@ -206,6 +202,9 @@ dependencies {
 
     //dataBinding
     kapt "com.android.databinding:compiler:3.1.4"
+
+    //StfalconImageViewer
+    implementation 'com.github.stfalcon:stfalcon-imageviewer:1.0.1'
 }
 
 protobuf {
