@@ -1,5 +1,6 @@
 language: android
 dist: trusty
+if: branch = dev AND type = push
 android:
   components:
     - build-tools-30.0.2

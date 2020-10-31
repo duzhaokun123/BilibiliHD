@@ -91,7 +91,7 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
                     if (infos == null) {
                         (holder as VideoCardHolder).mTvTitle.text = ids!!.data[position].bvid
                     } else {
-                        infos!!.data[position].let {data ->
+                        infos!!.data[position].let { data ->
                             (holder as VideoCardHolder).mTvTitle.text = data.title
                             holder.mTvUp.text = "${data.upper.name}\n${data.intro}"
                             GlideUtil.loadUrlInto(this@FavoriteActivity, data.cover, holder.mIv, true)
@@ -99,7 +99,7 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
 
                             holder.mCv.setOnClickListener {
                                 val intent = Intent(this@FavoriteActivity, OnlinePlayActivity::class.java).apply {
-                                    putExtra(OnlinePlayActivity.EXTRA_AID, data.id)
+                                    putExtra(OnlinePlayActivity.EXTRA_BVID, data.bvId)
                                     putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, data.cover)
                                 }
                                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@FavoriteActivity, holder.mIv, "cover").toBundle())

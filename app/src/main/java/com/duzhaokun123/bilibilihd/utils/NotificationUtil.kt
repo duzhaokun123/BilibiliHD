@@ -14,7 +14,7 @@ object NotificationUtil {
 
     private var notificationMap: MutableMap<Int, Notification> = HashMap()
     private var context: Context? = null
-    private var notificationManager: NotificationManager? = null
+    private lateinit var notificationManager: NotificationManager
 
     fun isIdUnregistered(id: Int): Boolean {
         return notificationMap[id] == null
@@ -36,18 +36,18 @@ object NotificationUtil {
 
     fun init(context: Context) {
         val notificationChannelGroup = NotificationChannelGroup(CHANNEL_GROUP_ID_PLAY, context.getString(R.string.play))
-        notificationManager?.createNotificationChannelGroup(notificationChannelGroup)
+        notificationManager.createNotificationChannelGroup(notificationChannelGroup)
         val notificationChannel = NotificationChannel(CHANNEL_ID_VIDEO_PLAY_BACKGROUND, context.getString(R.string.play_background), NotificationManager.IMPORTANCE_MIN)
         notificationChannel.enableLights(false)
         notificationChannel.enableVibration(true)
         notificationChannel.group = CHANNEL_GROUP_ID_PLAY
-        notificationManager?.createNotificationChannel(notificationChannel)
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 
     fun show(id: Int, notification: Notification) {
         notificationMap[id] = notification
         try {
-            notificationManager?.notify(id, notification)
+            notificationManager.notify(id, notification)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -58,7 +58,7 @@ object NotificationUtil {
             return
         }
         try {
-            notificationManager?.notify(id, notificationMap[id])
+            notificationManager.notify(id, notificationMap[id])
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -70,14 +70,14 @@ object NotificationUtil {
         }
         notificationMap[id] = notification
         try {
-            notificationManager?.notify(id, notification)
+            notificationManager.notify(id, notification)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     fun remove(id: Int) {
-        notificationManager?.cancel(id)
+        notificationManager.cancel(id)
         notificationMap.remove(id)
     }
 
