@@ -125,7 +125,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
         baseBind.civFace.setOnClickListener(v -> {
             if (mSpace != null) {
-                ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getCard().getFace(), baseBind.civFace);
+                ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getCard().getFace(), baseBind.civFace, true);
             }
         });
 
@@ -184,10 +184,10 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         Glide.with(this).load(mSpace.getData().getCard().getFace()).into(baseBind.civFace);
         if (mSpace.getData().getImages().getImgUrl().equals("")) {
             Glide.with(this).load("https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png").into(baseBind.ivSpaceImage);
-            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, "https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png", baseBind.ivSpaceImage));
+            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, "https://i0.hdslb.com/bfs/space/cb1c3ef50e22b6096fde67febe863494caefebad.png", baseBind.ivSpaceImage, true));
         } else {
             Glide.with(this).load(mSpace.getData().getImages().getImgUrl()).into(baseBind.ivSpaceImage);
-            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getImages().getImgUrl(), baseBind.ivSpaceImage));
+            baseBind.ivSpaceImage.setOnClickListener(v -> ImageViewUtil.INSTANCE.viewImage(this, mSpace.getData().getImages().getImgUrl(), baseBind.ivSpaceImage, true));
         }
         ImageViewUtil.INSTANCE.setSixDrawable(baseBind.ivSex, mSpace.getData().getCard().getSex());
         ImageViewUtil.INSTANCE.setLevelDrawable(baseBind.ivLevel, mSpace.getData().getCard().getLevelInfo().getCurrentLevel());

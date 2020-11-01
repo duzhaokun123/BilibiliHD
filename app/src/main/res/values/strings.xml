@@ -146,4 +146,6 @@
     <string name="disable_welcome_screen">disable welcome screen</string>
     <string name="added">added</string>
     <string name="tools">tools</string>
+    <string name="unshareable">unshareable</string>
+    <string name="share_to">share to</string>
 </resources>

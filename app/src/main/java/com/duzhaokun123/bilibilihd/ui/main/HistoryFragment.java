@@ -131,7 +131,7 @@ public class HistoryFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding
                         popupMenu.setOnMenuItemClickListener(item -> {
                             switch (item.getItemId()) {
                                 case R.id.check_cover:
-                                    ImageViewUtil.INSTANCE.viewImage(requireContext(), url, holder.mIv);
+                                    ImageViewUtil.INSTANCE.viewImage(requireContext(), url, holder.mIv, true);
                                     break;
                                 case R.id.add_to_watch_later:
                                     new Thread(() -> {

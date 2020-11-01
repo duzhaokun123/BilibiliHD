@@ -144,4 +144,6 @@
     <string name="disable_welcome_screen">禁用欢迎屏</string>
     <string name="added">已添加</string>
     <string name="tools">工具</string>
+    <string name="unshareable">无法分享</string>
+    <string name="share_to">分享至</string>
 </resources>

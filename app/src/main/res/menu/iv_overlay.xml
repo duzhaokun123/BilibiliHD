@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share_white"
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/download"
         android:icon="@drawable/ic_dl_white"
         android:title="@string/download"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>
