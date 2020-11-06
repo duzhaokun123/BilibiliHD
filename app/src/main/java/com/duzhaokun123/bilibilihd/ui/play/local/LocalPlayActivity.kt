@@ -16,7 +16,7 @@ import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
 import com.duzhaokun123.bilibilihd.utils.Settings
-import com.duzhaokun123.bilibilihd.utils.XmlBiliDanmakuParser
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.XmlBiliDanmakuParser
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.MergingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource

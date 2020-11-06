@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
@@ -31,7 +33,10 @@ public class TipUtil {
         map.remove(context);
     }
 
-    public static void showToast(CharSequence msg) {
+    public static void showToast(@Nullable CharSequence msg) {
+        if (msg == null) {
+            msg = "null";
+        }
         Toast.makeText(Application.getInstance(), msg, Toast.LENGTH_LONG).show();
     }
 
@@ -39,15 +44,21 @@ public class TipUtil {
         Toast.makeText(Application.getInstance(), resId, Toast.LENGTH_LONG).show();
     }
 
-    public static void showSnackbar(CoordinatorLayout coordinatorLayout, CharSequence msg) {
+    public static void showSnackbar(@NonNull CoordinatorLayout coordinatorLayout, @Nullable CharSequence msg) {
+        if (msg == null) {
+            msg = "null";
+        }
         Snackbar.make(coordinatorLayout, msg, BaseTransientBottomBar.LENGTH_LONG).show();
     }
 
-    public static void showSnackbar(CoordinatorLayout coordinatorLayout, @StringRes int resId) {
+    public static void showSnackbar(@NonNull CoordinatorLayout coordinatorLayout, @StringRes int resId) {
         showSnackbar(coordinatorLayout, Application.getInstance().getString(resId));
     }
 
-    public static void showTip(Context context, CharSequence msg) {
+    public static void showTip(@Nullable Context context, @Nullable CharSequence msg) {
+        if (msg == null) {
+            msg = "null";
+        }
         for (Context registeredContext : map.keySet()) {
             if (registeredContext == context) {
                 if (context instanceof Activity && ((Activity) context).getWindow().getDecorView().getVisibility() == View.VISIBLE) {
@@ -62,7 +73,7 @@ public class TipUtil {
         showToast(msg);
     }
 
-    public static void showTip(Context context, @StringRes int resId) {
+    public static void showTip(@Nullable Context context, @StringRes int resId) {
         showTip(context, Application.getInstance().getString(resId));
     }
 }

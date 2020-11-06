@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.utils
+package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 
 import android.graphics.Color
 import android.text.TextUtils

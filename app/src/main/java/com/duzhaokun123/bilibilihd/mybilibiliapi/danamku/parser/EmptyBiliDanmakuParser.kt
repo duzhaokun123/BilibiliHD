@@ -1,4 +1,4 @@
-package com.duzhaokun123.bilibilihd.utils
+package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 
 import master.flame.danmaku.danmaku.model.android.Danmakus
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser

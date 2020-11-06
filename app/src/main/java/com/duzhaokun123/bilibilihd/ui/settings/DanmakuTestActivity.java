@@ -9,8 +9,8 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
-import com.duzhaokun123.bilibilihd.utils.EmptyBiliDanmakuParser;
-import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.EmptyBiliDanmakuParser;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
 public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding> {

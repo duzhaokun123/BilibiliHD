@@ -1,9 +1,9 @@
-package com.duzhaokun123.bilibilihd.utils
+package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 
 import android.graphics.Color
 import android.net.Uri
 import com.duzhaokun123.bilibilihd.Application
-import com.duzhaokun123.bilibilihd.utils.ProtobufBiliDanmakuParser.Companion.initialSpecailDanmakuData
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser.Companion.initialSpecailDanmakuData
 import master.flame.danmaku.danmaku.model.*
 import master.flame.danmaku.danmaku.model.android.DanmakuFactory
 import master.flame.danmaku.danmaku.model.android.Danmakus
