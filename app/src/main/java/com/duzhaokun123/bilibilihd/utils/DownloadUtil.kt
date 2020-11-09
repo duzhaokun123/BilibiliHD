@@ -44,6 +44,9 @@ object DownloadUtil {
                         } catch (e: IOException) {
                             e.printStackTrace()
                             exception = e
+                        } finally {
+                            inputStream.close()
+                            outputStream.close()
                         }
                     } else {
                         val resolver = context.contentResolver

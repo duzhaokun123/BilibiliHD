@@ -19,22 +19,25 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toStartOf="@id/view"
+            motion:layout_constraintEnd_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
             android:id="@id/view"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            motion:layout_constraintEnd_toStartOf="@id/fl_main" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
             android:id="@id/fl_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
 
     </ConstraintSet>
