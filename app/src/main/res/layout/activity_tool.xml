@@ -178,6 +178,31 @@
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_live_cid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="live cid"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btn_live_go"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="go"
+                android:textColor="@color/ordinaryText"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_save_log"
             style="@style/Widget.MaterialComponents.Button.TextButton"

@@ -37,6 +37,12 @@
     <CheckBoxPreference
         app:defaultValue="false"
         app:iconSpaceReserved="false"
+        app:key="live_use_web_view"
+        app:title="@string/live_use_web_view" />
+
+    <CheckBoxPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
         app:key="disable_welcome"
         app:title="@string/disable_welcome_screen" />
 </PreferenceScreen>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.duzhaokun123.bilibilihd.ui.article.ArticleActivity
+import com.duzhaokun123.bilibilihd.ui.play.live.LivePlayActivity
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
@@ -74,7 +75,12 @@ class UrlOpenActivity : AppCompatActivity() {
                         }
                         else -> throw RuntimeException("shouldn't be here")
                     }
-                    Type.B23TV, Type.LIVE -> BrowserUtil.openWebViewActivity(this, uri.toString(), false, false, true)
+                    Type.B23TV -> BrowserUtil.openWebViewActivity(this, uri.toString(), false, false, true)
+                    Type.LIVE -> {
+                        if (path != null) {
+                            LivePlayActivity.enter(this, path.substring(1).toLong())
+                        }
+                    }
                     Type.T -> BrowserUtil.openWebViewActivity(this, uri.toString(), true, true)
                     Type.UNKNOWN -> BrowserUtil.openWebViewActivity(this, uri.toString(), true, false)
                     else -> throw RuntimeException("shouldn't be here")
@@ -97,7 +103,7 @@ class UrlOpenActivity : AppCompatActivity() {
                         intent1 = Intent(this, UserSpaceActivity::class.java)
                         intent1.putExtra("uid", path!!.substring(1).toLong())
                     }
-                    "live" -> BrowserUtil.openWebViewActivity(this, "https://live.bilibili.com/${path!!.substring(1)}", false)
+                    "live" -> LivePlayActivity.enter(this, path!!.substring(1).toLong())
                     else -> TipUtil.showToast("不支持 $uri")
                 }
             }
@@ -106,10 +112,9 @@ class UrlOpenActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            TipUtil.showToast("不支持 $uri")
             if ("bilibili" != scheme) {
                 BrowserUtil.openWebViewActivity(this, uri.toString(), true, false)
-            } else {
-                TipUtil.showToast("不支持 $uri")
             }
         }
         finish()

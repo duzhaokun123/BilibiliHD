@@ -1,8 +1,8 @@
 package com.duzhaokun123.bilibilihd.ui.play.online
 
+import android.net.Uri
 import android.os.Message
 import androidx.activity.viewModels
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -11,8 +11,12 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtOrdinaryBinding
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
-import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
+import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
 import com.duzhaokun123.bilibilihd.utils.*
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.MergingMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -129,65 +133,78 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
                 page = msg.data.getInt("page")
-                cid = biliView?.data?.pages?.get(page - 1)?.cid?.toLong()!!
-                baseBind.bpvpv.biliPlayerView.loadShot(aid, cid)
+                cid = biliView!!.data.pages[page - 1].cid.toLong()
+                baseBind.bpvwv.biliPlayerView.loadShot(aid, cid)
                 loadDanmakuByAidCid(aid, cid, biliView!!.data.pages[page - 1].duration)
-                setVideoUrlAdapter(object : BiliPlayerViewPackageView.VideoUrlAdapter {
-                    override fun getUrl(id: Int): Pair<String, String> {
+                setVideoMediaSourceAdapter(object : BiliPlayerViewWrapperView.VideoMediaSourceAdapter {
+                    val dataSourceFactory = DefaultDataSourceFactory(Application.getInstance(), pBilibiliClient.bilibiliClientProperties.defaultUserAgent)
+
+                    override fun getMediaSource(id: Int): MediaSource? {
                         var videoUrl: String? = null
-                        val audioUrl: String? = videoPlayUrl?.data?.dash?.audio?.get(0)?.baseUrl
-                        for (video in videoPlayUrl?.data?.dash?.video!!) {
+                        val audioUrl: String? = videoPlayUrl!!.data.dash.audio?.get(0)?.baseUrl
+                        for (video in videoPlayUrl!!.data.dash.video) {
                             if (video.id == id) {
                                 videoUrl = video.baseUrl
                             }
                         }
-                        return Pair(videoUrl, audioUrl)
+                        var mediaSource: MediaSource? = null
+                        when {
+                            videoUrl == null -> TipUtil.showTip(this@OnlinePlayActivity, R.string.not_vip)
+                            audioUrl != null -> {
+                                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                                        .createMediaSource(Uri.parse(videoUrl))
+                                val audioSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                                        .createMediaSource(Uri.parse(audioUrl))
+                                mediaSource = MergingMediaSource(videoSource, audioSource)
+                            }
+                            else -> {
+                                mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                                        .createMediaSource(Uri.parse(videoUrl))
+                            }
+                        }
+                        return mediaSource
                     }
 
                     override fun getDefaultIndex(): Int {
                         return if (Settings.play.defaultQualityType == 1) {
-                            videoPlayUrl?.data?.acceptQuality?.indexOf(videoPlayUrl?.data?.quality)!!
+                            videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.quality)
                         } else {
-                            videoPlayUrl?.data?.acceptQuality?.indexOf(videoPlayUrl?.data?.dash?.video?.get(0)?.id)!!
+                            videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.dash.video[0].id)
                         }
                     }
 
-                    override fun getName(index: Int) = videoPlayUrl?.data?.acceptDescription?.get(index)!!
+                    override fun getName(index: Int) = videoPlayUrl!!.data.acceptDescription[index]
 
-                    override fun onVideoIsNull() {
-                        TipUtil.showTip(this@OnlinePlayActivity, R.string.not_vip)
-                    }
+                    override fun getCount() = videoPlayUrl!!.data.acceptQuality.size
 
-                    override fun getCount() = videoPlayUrl?.data?.acceptQuality?.size!!
-
-                    override fun getId(index: Int) = videoPlayUrl?.data?.acceptQuality?.get(index)!!
+                    override fun getId(index: Int) = videoPlayUrl!!.data.acceptQuality[index]
                 })
-                biliView?.data?.pages?.get(page - 1)?.dimension?.let {
+                biliView!!.data.pages[page - 1].dimension.let {
                     if (it.rotate == 0) {
                         setWidthHeight(it.width, it.height)
                     } else {
                         setWidthHeight(it.height, it.width)
                     }
                 }
-                biliView?.data?.pages?.let {
+                biliView!!.data.pages.let {
                     if (it.size > page) {
-                        baseBind.bpvpv.biliPlayerView.setOnIbNextClickListener {
+                        baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener {
                             val message = Message()
                             message.what = IntroFragment.WHAT_LOAD_NEW_PAGE
                             message.arg1 = page + 1
                             introFragment?.handler?.sendMessage(message)
                         }
                     } else {
-                        baseBind.bpvpv.biliPlayerView.setOnIbNextClickListener(null)
+                        baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener(null)
                     }
                 }
                 setNotificationContentText(biliView?.data?.pages?.get(page - 1)?.part)
             }
             WHAT_ADD_HISTORY -> {
-                val playedTime = baseBind.bpvpv.player.currentPosition
+                val playedTime = baseBind.bpvwv.player.currentPosition
                 Thread {
                     try {
-                        pBilibiliClient.pWebAPI.heartbeat(aid = aid,cid = cid , playedTime = playedTime / 1000)
+                        pBilibiliClient.pWebAPI.heartbeat(aid = aid, cid = cid, playedTime = playedTime / 1000)
                     } catch (e: Exception) {
                         e.printStackTrace()
                         runOnUiThread { TipUtil.showToast(e.message) }
@@ -234,7 +251,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
 
     override fun onDownload() {
         if (biliView != null && videoPlayUrl != null) {
-            VideoDownloadInfoDialog(this, biliView!!, videoPlayUrl!!, page, baseBind.bpvpv.qualityId).show()
+            VideoDownloadInfoDialog(this, biliView!!, videoPlayUrl!!, page, baseBind.bpvwv.qualityId).show()
         }
     }
 

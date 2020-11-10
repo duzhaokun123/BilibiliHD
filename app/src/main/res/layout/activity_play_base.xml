@@ -24,8 +24,8 @@
                 app:layoutDescription="@xml/activity_play_scene"
                 tools:context=".ui.play.online.OnlinePlayActivity">
 
-                <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
-                    android:id="@+id/bpvpv"
+                <com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
+                    android:id="@+id/bpvwv"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@android:color/black"

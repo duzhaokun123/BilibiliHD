@@ -90,6 +90,10 @@ public class Settings {
             return sharedPreferences.getBoolean("user_space_use_web_view", false);
         }
 
+        public boolean isLiveUseWebView() {
+            return sharedPreferences.getBoolean("live_use_web_view", false);
+        }
+
         public boolean isDisableWelcome() {
             return sharedPreferences.getBoolean("disable_welcome", false);
         }

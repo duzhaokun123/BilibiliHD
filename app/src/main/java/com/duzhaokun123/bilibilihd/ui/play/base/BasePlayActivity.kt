@@ -27,7 +27,7 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityPlayBaseBinding
 import com.duzhaokun123.bilibilihd.services.PlayControlService
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
-import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
+import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
 import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -76,7 +76,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     override fun initView() {
         extBind = DataBindingUtil.inflate(layoutInflater, initExtLayout(), baseBind.flExt, true)
 
-        baseBind.bpvpv.onFullscreenClickListener = BiliPlayerViewPackageView.OnFullscreenClickListener { isFullscreen ->
+        baseBind.bpvwv.onFullscreenClickListener = BiliPlayerViewWrapperView.OnFullscreenClickListener { isFullscreen ->
             this.isFullscreen = isFullscreen
 
             if (this.isFullscreen) {
@@ -101,7 +101,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY).inv())
             }
         }
-        baseBind.bpvpv.setControllerVisibilityListener { visibility ->
+        baseBind.bpvwv.setControllerVisibilityListener { visibility ->
             if (visibility != View.VISIBLE) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LOW_PROFILE
                 if (isFullscreen && isInMultiWindowMode.not()) {
@@ -120,9 +120,9 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 supportActionBar?.show()
             }
         }
-        baseBind.bpvpv.setOnPlayingStatusChangeListener { playingStatus ->
+        baseBind.bpvwv.setOnPlayingStatusChangeListener { playingStatus ->
             when (playingStatus) {
-                BiliPlayerViewPackageView.PlayingStatus.PLAYING -> {
+                BiliPlayerViewWrapperView.PlayingStatus.PLAYING -> {
                     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     if (firstPlay) {
                         firstPlay = false
@@ -142,7 +142,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                     NotificationUtil.reshow(notificationId, notificationBuilder?.build())
                     NotificationUtil.setNotificationCleanable(notificationId, false)
                 }
-                BiliPlayerViewPackageView.PlayingStatus.PAUSED -> {
+                BiliPlayerViewWrapperView.PlayingStatus.PAUSED -> {
                     val actions: MutableList<RemoteAction> = ArrayList()
                     actions.add(RemoteAction(
                             Icon.createWithResource(this, R.drawable.ic_play_arrow),
@@ -154,16 +154,16 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                     notificationBuilder?.setSmallIcon(R.drawable.ic_pause)
                     NotificationUtil.reshow(notificationId, notificationBuilder?.build())
                 }
-                BiliPlayerViewPackageView.PlayingStatus.ENDED -> {
+                BiliPlayerViewWrapperView.PlayingStatus.ENDED -> {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 }
                 else -> OtherUtils.doNothing() // TODO: 20-7-16
             }
         }
-        baseBind.bpvpv.setOnPlayerErrorListener { error ->
+        baseBind.bpvwv.setOnPlayerErrorListener { error ->
             error.printStackTrace()
             Snackbar.make(baseBind.clRoot, error.message!!, BaseTransientBottomBar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry) { baseBind.bpvpv.player.retry() }
+                    .setAction(R.string.retry) { baseBind.bpvwv.player.retry() }
                     .show()
         }
 
@@ -191,11 +191,11 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         playId = System.currentTimeMillis()
         PlayControlService.putId(playId, object : PlayControlService.ICallback {
             override fun onPause() {
-                runOnUiThread { baseBind.bpvpv.pause() }
+                runOnUiThread { baseBind.bpvwv.pause() }
             }
 
             override fun onResume() {
-                runOnUiThread { baseBind.bpvpv.resume() }
+                runOnUiThread { baseBind.bpvwv.resume() }
             }
         })
 
@@ -208,7 +208,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 .addAction(R.drawable.ic_play_arrow, getString(R.string.resume), PlayControlService.newResumePendingIntent(this, playId))
 
         if (Settings.danmaku.danmakuVisibility != 0) {
-            baseBind.bpvpv.biliPlayerView.danmakuHide()
+            baseBind.bpvwv.biliPlayerView.danmakuHide()
         }
     }
 
@@ -236,7 +236,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
             }
             R.id.pip -> {
                 val actions: MutableList<RemoteAction> = ArrayList()
-                if (baseBind.bpvpv.isPlaying) {
+                if (baseBind.bpvwv.isPlaying) {
                     actions.add(RemoteAction(
                             Icon.createWithResource(this, R.drawable.ic_pause),
                             getString(R.string.pause),
@@ -266,11 +266,11 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 true
             }
             R.id.retry -> {
-                baseBind.bpvpv.player.retry()
+                baseBind.bpvwv.player.retry()
                 true
             }
             R.id.sync_danmaku_progress -> {
-                baseBind.bpvpv.syncDanmakuProgress()
+                baseBind.bpvwv.syncDanmakuProgress()
                 true
             }
             R.id.play_settings -> {
@@ -296,11 +296,11 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     override fun onStop() {
         super.onStop()
         if (!Settings.play.isPlayBackground) {
-            isPlayingBeforeActivityPause = baseBind.bpvpv.isPlaying
-            baseBind.bpvpv.pause()
+            isPlayingBeforeActivityPause = baseBind.bpvwv.isPlaying
+            baseBind.bpvwv.pause()
         } else {
             NotificationUtil.show(notificationId, notificationBuilder?.build()!!)
-            if (baseBind.bpvpv.isPlaying) {
+            if (baseBind.bpvwv.isPlaying) {
                 NotificationUtil.setNotificationCleanable(notificationId, false)
             }
         }
@@ -319,7 +319,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         super.onStart()
         if (!Settings.play.isPlayBackground) {
             if (isPlayingBeforeActivityPause) {
-                baseBind.bpvpv.resume()
+                baseBind.bpvwv.resume()
             }
         } else {
             NotificationUtil.remove(notificationId)
@@ -347,7 +347,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     override fun onDestroy() {
         super.onDestroy()
         PlayControlService.removeId(playId)
-        baseBind.bpvpv.release()
+        baseBind.bpvwv.release()
         NotificationUtil.remove(notificationId)
     }
 
@@ -356,18 +356,18 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         baseBind.ml.enableTransition(R.id.player_transition, isInPictureInPictureMode.not())
         if (isInPictureInPictureMode) {
             if (!isFullscreen) {
-                baseBind.bpvpv.clickIbFullscreen()
+                baseBind.bpvwv.clickIbFullscreen()
             }
-            baseBind.bpvpv.biliPlayerView.useController = false
+            baseBind.bpvwv.biliPlayerView.useController = false
         } else {
-            baseBind.bpvpv.biliPlayerView.useController = true
+            baseBind.bpvwv.biliPlayerView.useController = true
         }
     }
 
     override fun onBackPressed() {
         when {
             showingFragment != null -> baseBind.dl.closeDrawer(GravityCompat.END)
-            isFullscreen -> baseBind.bpvpv.clickIbFullscreen()
+            isFullscreen -> baseBind.bpvwv.clickIbFullscreen()
             else -> super.onBackPressed()
         }
     }
@@ -386,9 +386,9 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         }
 
         if (presentation == null && selectedDisplay != null) {
-            presentation = PlayPresentation(this, selectedDisplay, baseBind.bpvpv)
-            remotePlayControlFragment = RemotePlayControlFragment(baseBind.bpvpv.player, selectedRoute.name) { baseBind.bpvpv.biliPlayerView.danmakuSwitch() }
-            supportFragmentManager.beginTransaction().add(R.id.bpvpv, remotePlayControlFragment as RemotePlayControlFragment).commitAllowingStateLoss()
+            presentation = PlayPresentation(this, selectedDisplay, baseBind.bpvwv)
+            remotePlayControlFragment = RemotePlayControlFragment(baseBind.bpvwv.player, selectedRoute.name) { baseBind.bpvwv.biliPlayerView.danmakuSwitch() }
+            supportFragmentManager.beginTransaction().add(R.id.bpvwv, remotePlayControlFragment as RemotePlayControlFragment).commitAllowingStateLoss()
             presentation!!.setOnDismissListener {
                 presentation?.release()
                 presentation = null
@@ -411,7 +411,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     }
 
     fun setCover(url: String?) {
-        baseBind.bpvpv.setCover(url)
+        baseBind.bpvwv.setCover(url)
         if (url != null) {
             Thread {
                 notificationBuilder?.setLargeIcon(Glide.with(this).asBitmap().load(url).submit().get())
@@ -431,23 +431,23 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     }
 
     fun seekTo(positionMs: Long) {
-        baseBind.bpvpv.player.seekTo(positionMs)
+        baseBind.bpvwv.player.seekTo(positionMs)
     }
 
     fun loadDanmakuByAidCid(aid: Long, cid: Long, durationS: Int) {
-        baseBind.bpvpv.loadDanmakuByAidCid(aid, cid, durationS)
+        baseBind.bpvwv.loadDanmakuByAidCid(aid, cid, durationS)
     }
 
     fun loadDanmakuByBiliDanmakuParser(danmakuParser: BaseDanmakuParser) {
-        baseBind.bpvpv.loadDanmakuByBiliDanmakuParser(danmakuParser)
+        baseBind.bpvwv.loadDanmakuByBiliDanmakuParser(danmakuParser)
     }
 
-    fun setVideoUrlAdapter(videoUrlAdapter: BiliPlayerViewPackageView.VideoUrlAdapter?) {
-        baseBind.bpvpv.videoUrlAdapter = videoUrlAdapter
+    fun setVideoMediaSourceAdapter(videoMediaSourceAdapter: BiliPlayerViewWrapperView.VideoMediaSourceAdapter?) {
+        baseBind.bpvwv.videoMediaSourceAdapter = videoMediaSourceAdapter
     }
 
     fun setVideoMediaSource(mediaSource: MediaSource) {
-        baseBind.bpvpv.player.prepare(mediaSource)
+        baseBind.bpvwv.player.prepare(mediaSource)
     }
 
     abstract fun initExtLayout(): Int

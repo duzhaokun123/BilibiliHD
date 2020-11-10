@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.widget;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,55 +10,48 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
 
-import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.databinding.LayoutBiliPlayerViewPackageViewBinding;
+import com.duzhaokun123.bilibilihd.databinding.LayoutBiliPlayerViewWapperViewBinding;
 import com.duzhaokun123.bilibilihd.utils.GlideUtil;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MergingMediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 
-public class BiliPlayerViewPackageView extends FrameLayout {
-    private LayoutBiliPlayerViewPackageViewBinding baseBind;
+public class BiliPlayerViewWrapperView extends FrameLayout {
+    private LayoutBiliPlayerViewWapperViewBinding baseBind;
 
     private OnPlayingStatusChangeListener onPlayingStatusChangeListener;
     private OnPlayerErrorListener onPlayerErrorListener;
-    private VideoUrlAdapter videoUrlAdapter;
+    private VideoMediaSourceAdapter videoMediaSourceAdapter;
 
     private SimpleExoPlayer player;
 
     private int qualityId = 0;
 
-    public BiliPlayerViewPackageView(@NonNull Context context) {
+    public BiliPlayerViewWrapperView(@NonNull Context context) {
         this(context, null);
     }
 
-    public BiliPlayerViewPackageView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BiliPlayerViewWrapperView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BiliPlayerViewPackageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BiliPlayerViewWrapperView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         if (isInEditMode()) {
-            LayoutInflater.from(context).inflate(R.layout.layout_bili_player_view_package_view, this);
+            LayoutInflater.from(context).inflate(R.layout.layout_bili_player_view_wapper_view, this);
             return;
         }
 
-        baseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_bili_player_view_package_view, this, true);
+        baseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_bili_player_view_wapper_view, this, true);
         player = new SimpleExoPlayer.Builder(context).build();
         baseBind.bpv.setPlayer(player);
     }
@@ -107,7 +99,7 @@ public class BiliPlayerViewPackageView extends FrameLayout {
             }
 
             @Override
-            public void onPlayerError(ExoPlaybackException error) {
+            public void onPlayerError(@NonNull ExoPlaybackException error) {
                 if (onPlayingStatusChangeListener != null) {
                     onPlayingStatusChangeListener.onPlayingStatusChange(PlayingStatus.ERROR);
                 }
@@ -126,14 +118,15 @@ public class BiliPlayerViewPackageView extends FrameLayout {
             }
         });
         baseBind.bpv.getBtnQuality().setOnClickListener(view -> {
-            if (videoUrlAdapter == null) {
+            if (videoMediaSourceAdapter == null) {
                 return;
             }
 
             PopupMenu popupMenu = new PopupMenu(getContext(), baseBind.bpv.getBtnQuality());
             Menu menu = popupMenu.getMenu();
-            for (int i = 0; i < videoUrlAdapter.getCount(); i++) {
-                menu.add(0, i, i, videoUrlAdapter.getName(i));
+            for (int i = 0; i < videoMediaSourceAdapter.getCount(); i++) {
+                String name = videoMediaSourceAdapter.getName(i);
+                menu.add(0, i, i, name != null ? name : String.valueOf(i));
             }
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 changeQuality(menuItem.getItemId());
@@ -220,45 +213,32 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         this.onPlayerErrorListener = onPlayerErrorListener;
     }
 
-    public VideoUrlAdapter getVideoUrlAdapter() {
-        return videoUrlAdapter;
+    public VideoMediaSourceAdapter getVideoMediaSourceAdapter() {
+        return videoMediaSourceAdapter;
     }
 
-    public void setVideoUrlAdapter(VideoUrlAdapter videoUrlAdapter) {
-        this.videoUrlAdapter = videoUrlAdapter;
+    public void setVideoMediaSourceAdapter(VideoMediaSourceAdapter videoMediaSourceAdapter) {
+        this.videoMediaSourceAdapter = videoMediaSourceAdapter;
         player.seekTo(0);
-        changeQuality(videoUrlAdapter.getDefaultIndex());
+        changeQuality(videoMediaSourceAdapter.getDefaultIndex());
     }
 
     private void changeQuality(int index) {
-        if (videoUrlAdapter == null) {
+        if (videoMediaSourceAdapter == null) {
             baseBind.bpv.getBtnQuality().setVisibility(GONE);
         } else {
-            int qualityIdTemp = videoUrlAdapter.getId(index);
-            baseBind.bpv.getBtnQuality().setVisibility(VISIBLE);
-            Pair<String, String> url = videoUrlAdapter.getUrl(qualityIdTemp);
-            String video = url.first;
-            String audio = url.second;
-            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Application.getInstance(), Util.getUserAgent(Application.getInstance(), Application.getInstance().getString(R.string.app_name)));
-            MediaSource mediaSource = null;
-            if (video == null) {
-                videoUrlAdapter.onVideoIsNull();
-            } else if (audio != null) {
-                MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(video));
-                MediaSource audioSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(audio));
-                mediaSource = new MergingMediaSource(videoSource, audioSource);
-            } else {
-                mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(video));
-            }
-            if (mediaSource != null) {
-                long playedTime = player.getCurrentPosition();
-                player.prepare(mediaSource);
-                player.seekTo(playedTime);
-                baseBind.bpv.getBtnQuality().setText(videoUrlAdapter.getName(index));
-                qualityId = qualityIdTemp;
+            int count = videoMediaSourceAdapter.getCount();
+            if (count > index) {
+                int qualityIdTemp = videoMediaSourceAdapter.getId(index);
+                baseBind.bpv.getBtnQuality().setVisibility(VISIBLE);
+                MediaSource mediaSource = videoMediaSourceAdapter.getMediaSource(qualityIdTemp);
+                if (mediaSource != null) {
+                    long playedTime = player.getCurrentPosition();
+                    player.prepare(mediaSource);
+                    player.seekTo(playedTime);
+                    baseBind.bpv.getBtnQuality().setText(videoMediaSourceAdapter.getName(index));
+                    qualityId = qualityIdTemp;
+                }
             }
         }
     }
@@ -299,16 +279,16 @@ public class BiliPlayerViewPackageView extends FrameLayout {
         void onPlayingStatusChange(@NonNull PlayingStatus playingStatus);
     }
 
-    public interface VideoUrlAdapter {
-        Pair<String, String> getUrl(int id);
+    public interface VideoMediaSourceAdapter {
+        @Nullable
+        MediaSource getMediaSource(int id);
 
         int getCount();
 
+        @Nullable
         String getName(int index);
 
         int getDefaultIndex();
-
-        void onVideoIsNull();
 
         int getId(int index);
     }

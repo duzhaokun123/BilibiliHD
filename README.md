@@ -54,12 +54,18 @@
     - [x] 发布
     - [x] 楼层
     - [x] 举报
-- [x] 直播 (WebView, 移动ua)
+- [ ] 直播 (可使用 WebView)
+    - [x] 能播出来
+    - [x] 控制清晰度
+    - [ ] 弹幕
+    - [ ] 状态
 - [ ] 私信
 - [x] 视频下载 (仅获取链接)
 - [x] 视频封面下载, 用户头像下载
 - [ ] 移动网络警告
-- [x] 添加历史记录
+- [ ] 历史记录
+    - [x] 添加
+    - [ ] 分类
 - [ ] 广告
     - [ ] 普通广告
         - [ ] 显示 (部分)
@@ -139,8 +145,6 @@ script/sync_third_party.sh
 [bilibili-api](https://github.com/czp3009/bilibili-api)
 
 [flexbox-layout](https://github.com/google/flexbox-layout)
-
-[geetest-validator](https://github.com/kuresaru/geetest-validator)
 
 [glide](https://bumptech.github.io/glide/)
 

@@ -3,6 +3,10 @@ package com.duzhaokun123.bilibilihd.utils
 import com.duzhaokun123.bilibilihd.Application
 import com.github.salomonbrys.kotson.fromJson
 import com.hiczp.bilibili.api.main.model.Reply
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
 fun Reply.Data.Top.Upper.toCommonReply(): Reply.Data.Reply {
@@ -27,7 +31,9 @@ val okHttpClient by lazy {
     OkHttpClient()
 }
 
-fun runOnUiThread(block: () -> Unit) = Application.runOnUiThread(block)
+fun runOnUiThread(block: suspend CoroutineScope.() -> Unit) {
+    GlobalScope.launch(Dispatchers.Main, block = block)
+}
 
 fun String.toIntOrDefault(defaultValue: Int): Int {
     return try {

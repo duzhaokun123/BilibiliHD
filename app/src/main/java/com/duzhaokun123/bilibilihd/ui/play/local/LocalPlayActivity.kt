@@ -37,7 +37,7 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
 
     override fun initView() {
         super.initView()
-        baseBind.bpvpv.biliPlayerView.setOnIbNextClickListener(null)
+        baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener(null)
         officialAppDownloadUri = Uri.parse(Settings.download.officialAppDownloadDir)
         extBind.rv.addItemDecoration(object : ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -65,7 +65,7 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
                 sources.add(ProgressiveMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(it.second))
             }
-            baseBind.bpvpv.player.playWhenReady = false
+            baseBind.bpvwv.player.playWhenReady = false
             setVideoMediaSource(MergingMediaSource(*sources.toTypedArray()))
         })
         model.widthHeight.observe(this, {

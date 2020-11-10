@@ -146,4 +146,5 @@
     <string name="tools">工具</string>
     <string name="unshareable">无法分享</string>
     <string name="share_to">分享至</string>
+    <string name="live_use_web_view">直播使用 WebView</string>
 </resources>

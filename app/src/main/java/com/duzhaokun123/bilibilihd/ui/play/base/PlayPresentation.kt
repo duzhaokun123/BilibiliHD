@@ -7,13 +7,13 @@ import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewPackageView
+import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
 
-class PlayPresentation(context: Context, display: Display, biliPlayerViewPackageView: BiliPlayerViewPackageView) : Presentation(context, display) {
+class PlayPresentation(context: Context, display: Display, biliPlayerViewWrapperView: BiliPlayerViewWrapperView) : Presentation(context, display) {
 
     private var frameLayout: FrameLayout? = null
     private var released = false
-    private val biliPlayerView = biliPlayerViewPackageView.biliPlayerView
+    private val biliPlayerView = biliPlayerViewWrapperView.biliPlayerView
     private val oldParent = biliPlayerView.parent
 
     override fun onCreate(savedInstanceState: Bundle?) {

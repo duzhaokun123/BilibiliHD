@@ -60,7 +60,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private TimeBar exoTimeBar;
 
     private DanmakuLoadListener danmakuLoadListener;
-    private BiliPlayerViewPackageView.OnFullscreenClickListener onFullscreenClickListener;
+    private BiliPlayerViewWrapperView.OnFullscreenClickListener onFullscreenClickListener;
 
     private Handler handler;
 
@@ -321,11 +321,11 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         }
     }
 
-    public BiliPlayerViewPackageView.OnFullscreenClickListener getOnFullscreenClickListener() {
+    public BiliPlayerViewWrapperView.OnFullscreenClickListener getOnFullscreenClickListener() {
         return onFullscreenClickListener;
     }
 
-    public void setOnFullscreenClickListener(BiliPlayerViewPackageView.OnFullscreenClickListener onFullscreenClickListener) {
+    public void setOnFullscreenClickListener(BiliPlayerViewWrapperView.OnFullscreenClickListener onFullscreenClickListener) {
         this.onFullscreenClickListener = onFullscreenClickListener;
     }
 
