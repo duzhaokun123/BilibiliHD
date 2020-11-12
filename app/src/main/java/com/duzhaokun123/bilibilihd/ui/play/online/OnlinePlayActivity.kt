@@ -139,15 +139,17 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
                 setVideoMediaSourceAdapter(object : BiliPlayerViewWrapperView.VideoMediaSourceAdapter {
                     val dataSourceFactory = DefaultDataSourceFactory(Application.getInstance(), pBilibiliClient.bilibiliClientProperties.defaultUserAgent)
 
-                    override fun getMediaSource(id: Int): MediaSource? {
+                    override fun getMediaSources(id: Int): MutableList<Pair<String, MediaSource>>? {
                         var videoUrl: String? = null
                         val audioUrl: String? = videoPlayUrl!!.data.dash.audio?.get(0)?.baseUrl
-                        for (video in videoPlayUrl!!.data.dash.video) {
+                        var videoIndex = 0
+                        videoPlayUrl!!.data.dash.video.forEachIndexed { index, video ->
                             if (video.id == id) {
                                 videoUrl = video.baseUrl
+                                videoIndex = index
                             }
                         }
-                        var mediaSource: MediaSource? = null
+                        val mediaSources: MutableList<Pair<String, MediaSource>> = ArrayList()
                         when {
                             videoUrl == null -> TipUtil.showTip(this@OnlinePlayActivity, R.string.not_vip)
                             audioUrl != null -> {
@@ -155,14 +157,23 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
                                         .createMediaSource(Uri.parse(videoUrl))
                                 val audioSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                                         .createMediaSource(Uri.parse(audioUrl))
-                                mediaSource = MergingMediaSource(videoSource, audioSource)
+                                mediaSources.add(Pair(getString(R.string.main_line), MergingMediaSource(videoSource, audioSource)))
+                                videoPlayUrl!!.data.dash.video[videoIndex].backupUrl.forEachIndexed { index, url ->
+                                    val backupVideoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                                            .createMediaSource(Uri.parse(url))
+                                    mediaSources.add(Pair(getString(R.string.spare_line_d, index + 1), MergingMediaSource(backupVideoSource, audioSource)))
+                                }
                             }
                             else -> {
-                                mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                                        .createMediaSource(Uri.parse(videoUrl))
+                                mediaSources.add(Pair(getString(R.string.main_line), ProgressiveMediaSource.Factory(dataSourceFactory)
+                                        .createMediaSource(Uri.parse(videoUrl))))
+                                videoPlayUrl!!.data.dash.video[videoIndex].backupUrl.forEachIndexed { index, url ->
+                                    mediaSources.add(Pair(getString(R.string.spare_line_d, index + 1), ProgressiveMediaSource.Factory(dataSourceFactory)
+                                            .createMediaSource(Uri.parse(url))))
+                                }
                             }
                         }
-                        return mediaSource
+                        return if (mediaSources.isEmpty()) null else mediaSources
                     }
 
                     override fun getDefaultIndex(): Int {

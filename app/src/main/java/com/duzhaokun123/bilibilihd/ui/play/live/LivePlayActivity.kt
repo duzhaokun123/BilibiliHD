@@ -43,6 +43,7 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
 
     override fun initView() {
         super.initView()
+        setLive(true)
         baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener(null)
         extBind.btnPlay.setOnClickListener {
             loadLiveVideo(extBind.etCid.text.toString().toLongOrDefault(0))
@@ -62,9 +63,7 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
 //        TODO("Not yet implemented")
     }
 
-    override fun onDownload() {
-//        TODO("Not yet implemented")
-    }
+    override fun onDownload() {}
 
     override fun onStartAddToHistory() {
 //        TODO("Not yet implemented")
@@ -88,15 +87,19 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
                     setVideoMediaSourceAdapter(object : BiliPlayerViewWrapperView.VideoMediaSourceAdapter {
                         val dataSourceFactory = DefaultHttpDataSourceFactory(pBilibiliClient.bilibiliClientProperties.defaultUserAgent)
 
-                        override fun getMediaSource(id: Int): MediaSource? {
-                            var mediaSource: MediaSource? = null
+                        override fun getMediaSources(id: Int): MutableList<Pair<String, MediaSource>>? {
+                            val mediaSources: MutableList<Pair<String, MediaSource>> = ArrayList()
                             urls.forEach { url ->
                                 if (url.data.currentQn == id) {
-                                    mediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                                            .createMediaSource(Uri.parse(url.data.durl[0].url))
+                                    url.data.durl.forEachIndexed { index, durl ->
+                                        mediaSources.add(Pair(if (index == 0) getString(R.string.main_line) else getString(R.string.spare_line_d, index),
+                                                HlsMediaSource.Factory(dataSourceFactory)
+                                                        .createMediaSource(Uri.parse(durl.url))))
+                                    }
+                                    return if (mediaSources.isEmpty()) null else mediaSources
                                 }
                             }
-                            return mediaSource
+                            return null
                         }
 
                         override fun getCount(): Int {

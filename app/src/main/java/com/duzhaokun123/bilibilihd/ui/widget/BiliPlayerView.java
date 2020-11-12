@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,9 +56,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private FrameLayout overlay;
     private ProgressBar pbExoBuffering;
     private ImageButton ibFullscreen, ibNext;
-    private Button btnDanmakuSwitch, btnDanmaku, btnQuality;
+    private Button btnDanmakuSwitch, btnDanmaku, btnQuality, btnLine;
     private LinearLayout llTime;
     private TimeBar exoTimeBar;
+    private TextView tvLive;
 
     private DanmakuLoadListener danmakuLoadListener;
     private BiliPlayerViewWrapperView.OnFullscreenClickListener onFullscreenClickListener;
@@ -96,8 +98,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmakuSwitch = findViewById(R.id.btn_danmaku_switch);
         btnDanmaku = findViewById(R.id.btn_danmaku);
         btnQuality = findViewById(R.id.btn_quality);
+        btnLine = findViewById(R.id.btn_line);
         llTime = findViewById(R.id.ll_time);
         exoTimeBar = findViewById(R.id.exo_progress);
+        tvLive = findViewById(R.id.tv_live);
     }
 
     @Override
@@ -239,7 +243,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 handler.sendMessage(message);
             }
             loadDanmakuByBiliDanmakuParser(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
-//                overlayBaseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReplies), DanmakuUtil.INSTANCE.getDanmakuContext());
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -297,18 +300,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 pbExoBuffering.setVisibility(INVISIBLE);
                 break;
             case WHAT_LOAD_SHOT:
-//                new Thread(() -> ShotAPi.INSTANCE.getShot(aid, cid, new MyBilibiliClient.ICallback<VideoShot>() {
-//                    @Override
-//                    public void onException(@NonNull Exception e) {
-//                        e.printStackTrace();
-//                        Application.runOnUiThread(() -> TipUtil.showToast(e.getMessage()));
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(@NonNull VideoShot videoShot) {
-//                        BiliPlayerView.this.videoShot = videoShot;
-//                    }
-//                })).start();
                 new Thread(() -> {
                     try {
                         this.videoShot = Application.getPBilibiliClient().getPWebAPI().videoshot(aid, cid);
@@ -342,6 +333,10 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         return btnQuality;
     }
 
+    public Button getBtnLine() {
+        return btnLine;
+    }
+
     public void loadShot(long aid, long cid) {
         videoShot = null;
         this.aid = aid;
@@ -360,6 +355,16 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     public void danmakuHide() {
         btnDanmaku.setVisibility(INVISIBLE);
         overlayBaseBind.dv.hide();
+    }
+
+    public void setLive(boolean isLive) {
+        if (isLive) {
+            llTime.setVisibility(GONE);
+            tvLive.setVisibility(VISIBLE);
+        } else {
+            llTime.setVisibility(VISIBLE);
+            tvLive.setVisibility(GONE);
+        }
     }
 
     public interface DanmakuLoadListener {

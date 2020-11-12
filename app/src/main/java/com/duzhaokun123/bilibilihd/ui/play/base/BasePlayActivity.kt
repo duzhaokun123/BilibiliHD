@@ -51,6 +51,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     private var isFullscreen = false
     private var isPlayingBeforeActivityPause = false
     private var firstPlay = true
+    private var isLive = false
 
     private val mediaRouteCallback = object : MediaRouter.Callback() {
         override fun onRouteSelected(router: MediaRouter?, route: MediaRouter.RouteInfo?) {
@@ -216,6 +217,12 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.play_activity, menu)
+        if (isLive) {
+            menu?.let{
+                it.findItem(R.id.download).isVisible = false
+                it.findItem(R.id.sync_danmaku_progress).isVisible = false
+            }
+        }
 
         val mediaRouteItem = menu?.findItem(R.id.media_route)
         val mediaRouteActionProvider = MenuItemCompat.getActionProvider(mediaRouteItem) as MediaRouteActionProvider
@@ -448,6 +455,11 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
 
     fun setVideoMediaSource(mediaSource: MediaSource) {
         baseBind.bpvwv.player.prepare(mediaSource)
+    }
+
+    fun setLive(isLive: Boolean) {
+        this.isLive = isLive
+        baseBind.bpvwv.setLive(isLive)
     }
 
     abstract fun initExtLayout(): Int

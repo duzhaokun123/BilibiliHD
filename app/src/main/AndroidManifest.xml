@@ -48,7 +48,22 @@
         <activity
             android:name=".ui.WebViewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
-            android:supportsPictureInPicture="true" />
+            android:supportsPictureInPicture="true">
+            <intent-filter android:label="@string/open_with_webview">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*.bilibili.com"
+                    android:scheme="http" />
+                <data
+                    android:host="*.bilibili.com"
+                    android:scheme="https" />
+                <data android:host="b23.tv" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.article.ArticleActivity"
             android:label=""

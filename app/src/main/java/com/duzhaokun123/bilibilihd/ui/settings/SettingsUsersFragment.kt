@@ -49,7 +49,7 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
         baseBind.xrv.addItemDecoration(object : ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 super.getItemOffsets(outRect, view, parent, state)
-                outRect[0, 0, 0] = resources.getDimensionPixelOffset(R.dimen.divider_height)
+                outRect.set(0, 0, 0, resources.getDimensionPixelOffset(R.dimen.divider_height))
             }
         })
         baseBind.xrv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

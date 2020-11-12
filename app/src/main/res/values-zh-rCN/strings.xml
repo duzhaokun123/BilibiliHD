@@ -148,4 +148,8 @@
     <string name="share_to">分享至</string>
     <string name="live_use_web_view">直播使用 WebView</string>
     <string name="auth_to_export">认证以导出</string>
+    <string name="live">直播</string>
+    <string name="main_line">主线</string>
+    <string name="spare_line_d">备线%d</string>
+    <string name="open_with_webview">使用 WebView 打开</string>
 </resources>

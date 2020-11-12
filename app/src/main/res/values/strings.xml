@@ -150,4 +150,8 @@
     <string name="share_to">share to</string>
     <string name="live_use_web_view">live use web view</string>
     <string name="auth_to_export">Authentication to export</string>
+    <string name="live">live</string>
+    <string name="main_line">main line</string>
+    <string name="spare_line_d">spare line %d</string>
+    <string name="open_with_webview">open with WebView</string>
 </resources>

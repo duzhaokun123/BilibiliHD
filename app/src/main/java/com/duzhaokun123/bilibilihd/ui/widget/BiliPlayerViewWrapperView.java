@@ -22,6 +22,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 
+import java.util.List;
+
+import kotlin.Pair;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 
 public class BiliPlayerViewWrapperView extends FrameLayout {
@@ -231,17 +234,43 @@ public class BiliPlayerViewWrapperView extends FrameLayout {
             if (count > index) {
                 int qualityIdTemp = videoMediaSourceAdapter.getId(index);
                 baseBind.bpv.getBtnQuality().setVisibility(VISIBLE);
-                MediaSource mediaSource = videoMediaSourceAdapter.getMediaSource(qualityIdTemp);
-                if (mediaSource != null) {
-                    long playedTime = player.getCurrentPosition();
-                    player.prepare(mediaSource);
-                    player.seekTo(playedTime);
+                List<Pair<String, MediaSource>> mediaSources = videoMediaSourceAdapter.getMediaSources(qualityIdTemp);
+                if (mediaSources != null) {
+                    updateMediaSource(mediaSources.get(0).getSecond());
                     baseBind.bpv.getBtnQuality().setText(videoMediaSourceAdapter.getName(index));
+                    baseBind.bpv.getBtnLine().setText(mediaSources.get(0).getFirst());
                     qualityId = qualityIdTemp;
+                    baseBind.bpv.getBtnLine().setOnClickListener(
+                            new OnClickListener() {
+                                private int order = 0;
+
+                                @Override
+                                public void onClick(View v) {
+                                    PopupMenu popupMenu = new PopupMenu(getContext(), v);
+                                    for (int i = 0; i < mediaSources.size(); i++) {
+                                        popupMenu.getMenu().add(0, i, i, mediaSources.get(i).getFirst());
+                                    }
+                                    popupMenu.setOnMenuItemClickListener(item -> {
+                                                if (order != item.getOrder()) {
+                                                    order = item.getOrder();
+                                                    updateMediaSource(mediaSources.get(order).getSecond());
+                                                    baseBind.bpv.getBtnLine().setText(mediaSources.get(order).getFirst());
+
+                                                }
+                                                return true;
+                                            }
+                                    );
+                                    popupMenu.show();
+                                }
+
+
+                            }
+                    );
                 }
             }
         }
     }
+
 
     public SimpleExoPlayer getPlayer() {
         return player;
@@ -267,6 +296,16 @@ public class BiliPlayerViewWrapperView extends FrameLayout {
         baseBind.bpv.getDanmakuView().seekTo(player.getContentPosition());
     }
 
+    public void setLive(boolean isLive) {
+        baseBind.bpv.setLive(isLive);
+    }
+
+    private void updateMediaSource(MediaSource mediaSource) {
+        long playedTime = player.getCurrentPosition();
+        player.prepare(mediaSource);
+        player.seekTo(playedTime);
+    }
+
     public interface OnFullscreenClickListener {
         void onClick(boolean isFullscreen);
     }
@@ -281,7 +320,7 @@ public class BiliPlayerViewWrapperView extends FrameLayout {
 
     public interface VideoMediaSourceAdapter {
         @Nullable
-        MediaSource getMediaSource(int id);
+        List<Pair<String, MediaSource>> getMediaSources(int id);
 
         int getCount();
 
