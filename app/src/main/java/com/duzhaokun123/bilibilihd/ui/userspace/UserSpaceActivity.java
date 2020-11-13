@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -98,6 +99,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         return R.layout.activity_user_space;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void initView() {
         if (Settings.layout.isUserSpaceUseWebView()) {
@@ -108,6 +110,7 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
         baseBind.civFace.setImageDrawable((Drawable) ObjectCache.get(getStartIntent().getStringExtra(EXTRA_FACE_CACHE_ID)));
         baseBind.tvName.setText((CharSequence) ObjectCache.get(getStartIntent().getStringExtra(EXTRA_NAME_CACHE_ID)));
+        baseBind.tvUid.setText("UID: " + getStartIntent().getLongExtra(EXTRA_UID, 0));
 
         baseBind.vp.setAdapter(new MyFragmentStateAdapter(this));
         new TabLayoutMediator(baseBind.tl, baseBind.vp, (tab, position) -> {
@@ -133,9 +136,9 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
 
 
         baseBind.tvFans.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this,
-                "https://space.bilibili.com/h5/follow?type=fans&mid" + getStartIntent().getLongExtra(EXTRA_UID, 0) + "&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
+                "https://space.bilibili.com/h5/follow?type=fans&mid=" + getStartIntent().getLongExtra(EXTRA_UID, 0) + "&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
         baseBind.tvWatching.setOnClickListener(v -> BrowserUtil.openWebViewActivity(this,
-                "https://space.bilibili.com/h5/follow?type=follow&mid" + getStartIntent().getLongExtra(EXTRA_UID, 0) + "night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
+                "https://space.bilibili.com/h5/follow?type=follow&mid=" + getStartIntent().getLongExtra(EXTRA_UID, 0) + "&night=" + (OtherUtils.isNightMode() ? 1 : 0), false, true));
 
     }
 
@@ -144,28 +147,6 @@ public class UserSpaceActivity extends BaseActivity<ActivityUserSpaceBinding> {
         if (Settings.layout.isUserSpaceUseWebView()) {
             return;
         }
-//        new Thread() {
-//            @Override
-//            public void run() {
-//
-//                SpaceAPI.getInstance().getSpace(, new MyBilibiliClient.ICallback<Space>() {
-//                    @Override
-//                    public void onException(@NotNull @NonNull Exception e) {
-//                        e.printStackTrace();
-//
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(@NotNull @NonNull Space space) {
-//                        mSpace = space;
-//                        if (handler != null) {
-//
-//                        }
-//                    }
-//                });
-//
-//            }
-//        }.start();
         new Thread(() -> {
             try {
                 mSpace = Application.getPBilibiliClient().getPAppAPI().space(getStartIntent().getLongExtra(EXTRA_UID, 0));

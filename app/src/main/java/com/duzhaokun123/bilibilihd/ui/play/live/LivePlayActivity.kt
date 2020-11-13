@@ -4,23 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtLiveBinding
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
+import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
-import com.duzhaokun123.bilibilihd.utils.BrowserUtil
-import com.duzhaokun123.bilibilihd.utils.Settings
-import com.duzhaokun123.bilibilihd.utils.TipUtil
-import com.duzhaokun123.bilibilihd.utils.pBilibiliClient
+import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.hiczp.bilibili.api.live.model.AnchorInRoom
+import com.hiczp.bilibili.api.live.model.RoomInfo
 import com.hiczp.bilibili.api.weblive.model.PlayUrl
+import kotlinx.android.synthetic.main.layout_user.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.internal.toLongOrDefault
+import kotlin.properties.Delegates
 
 class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
     companion object {
@@ -37,39 +38,112 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
         }
     }
 
-    override fun initConfig() = 0
+    private var cid by Delegates.notNull<Long>()
+    private lateinit var roomInfo: RoomInfo
+    private lateinit var anchorInRoom: AnchorInRoom
 
+    override fun initConfig() = 0
     override fun initExtLayout() = R.layout.play_ext_live
 
     override fun initView() {
         super.initView()
         setLive(true)
         baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener(null)
-        extBind.btnPlay.setOnClickListener {
-            loadLiveVideo(extBind.etCid.text.toString().toLongOrDefault(0))
-        }
-        baseBind.bpvwv.biliPlayerView.findViewById<DefaultTimeBar>(R.id.exo_progress).visibility = View.GONE
     }
 
     override fun initData() {
-        extBind.etCid.setText(startIntent.getLongExtra(EXTRA_CID, 0).toString())
+        cid = startIntent.getLongExtra(EXTRA_CID, 0)
+        extBind.tvId.text = cid.toString()
+        loadRoomInfo()
+        loadAnchorInRoom()
+        loadLiveVideo()
+        if (Settings.play.isAutoRecordingHistory) {
+            enterAction()
+        }
     }
 
-    override fun onGetShareUrl() = "https://live.bilibili.com/${extBind.etCid.text}"
+    override fun onGetShareUrl() = "https://live.bilibili.com/${cid}"
 
-    override fun onGetShareTitle() = extBind.etCid.text.toString()
+    override fun onGetShareTitle() =
+            if (::roomInfo.isInitialized) roomInfo.data.title else cid.toString()
 
     override fun onCheckCover() {
-//        TODO("Not yet implemented")
+        if (::roomInfo.isInitialized) {
+            ImageViewUtil.viewImage(this, roomInfo.data.userCover)
+        }
     }
 
     override fun onDownload() {}
 
     override fun onStartAddToHistory() {
-//        TODO("Not yet implemented")
+        enterAction()
     }
 
-    private fun loadLiveVideo(cid: Long) {
+    override fun onSendDanmaku() {
+        DanmakuSendDialog(this, cid).show()
+    }
+
+    override fun onLayoutFixInfoReady() {
+        val params = extBind.v.layoutParams
+        params.height = fixButtonHeight
+        extBind.v.layoutParams = params
+    }
+
+    private fun enterAction() {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                pBilibiliClient.bilibiliClient.liveAPI.roomEntryAction(cid).await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kRunOnUiThread { TipUtil.showTip(this@LivePlayActivity, e.message) }
+            }
+        }
+    }
+
+    private fun loadRoomInfo() {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                roomInfo = pBilibiliClient.bilibiliClient.liveAPI.getInfo(cid).await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kRunOnUiThread { TipUtil.showTip(this@LivePlayActivity, e.message) }
+            }
+            if (::roomInfo.isInitialized)
+                kRunOnUiThread {
+                    roomInfo.data.let { data ->
+                        title = data.title
+                        setCover(data.userCover)
+                        extBind.tvTitle.text = data.title
+                        extBind.htvDesc.setHtml(data.description)
+                    }
+                }
+        }
+    }
+
+    private fun loadAnchorInRoom() {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                anchorInRoom = pBilibiliClient.bilibiliClient.liveAPI.getAnchorInRoom(cid).await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kRunOnUiThread { TipUtil.showTip(this@LivePlayActivity, e.message) }
+            }
+            if (::anchorInRoom.isInitialized)
+                kRunOnUiThread {
+                    anchorInRoom.data.info.let { info ->
+                        Glide.with(this@LivePlayActivity).load(info.face).into(civ_face)
+                        tv_name.text = info.uname
+                        val enterUserSpace = { _: View ->
+                            UserSpaceActivity.enter(this@LivePlayActivity, info.uid, civ_face, null)
+                        }
+                        civ_face.setOnClickListener(enterUserSpace)
+                        tv_name.setOnClickListener(enterUserSpace)
+                    }
+                }
+        }
+    }
+
+    private fun loadLiveVideo() {
         GlobalScope.launch(Dispatchers.IO) {
             val pns = listOf(80, 150, 400, 10000)
             val playUrls = mutableListOf<PlayUrl>()

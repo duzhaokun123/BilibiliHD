@@ -35,6 +35,8 @@ fun runOnUiThread(block: suspend CoroutineScope.() -> Unit) {
     GlobalScope.launch(Dispatchers.Main, block = block)
 }
 
+fun kRunOnUiThread(block: suspend CoroutineScope.() -> Unit) = runOnUiThread(block)
+
 fun String.toIntOrDefault(defaultValue: Int): Int {
     return try {
         toInt()

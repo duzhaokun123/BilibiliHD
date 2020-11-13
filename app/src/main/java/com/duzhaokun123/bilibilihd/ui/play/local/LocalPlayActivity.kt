@@ -114,4 +114,8 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
     override fun onStartAddToHistory() {
         //ignore
     }
+
+    override fun onSendDanmaku() {
+        //ignore
+    }
 }

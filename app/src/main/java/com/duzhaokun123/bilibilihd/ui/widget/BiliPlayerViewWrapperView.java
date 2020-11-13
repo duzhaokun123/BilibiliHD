@@ -300,6 +300,10 @@ public class BiliPlayerViewWrapperView extends FrameLayout {
         baseBind.bpv.setLive(isLive);
     }
 
+    public void setOnDanmakuSendClickListener(OnClickListener listener) {
+        baseBind.bpv.setDanmakuSendClickListener(listener);
+    }
+
     private void updateMediaSource(MediaSource mediaSource) {
         long playedTime = player.getCurrentPosition();
         player.prepare(mediaSource);

@@ -2,7 +2,7 @@ package com.duzhaokun123.bilibilihd.ui.play.online
 
 import android.content.Context
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseDialog
+import com.duzhaokun123.bilibilihd.bases.BaseDialogBuilder
 import com.duzhaokun123.bilibilihd.databinding.DialogVideoDownloadInfoBinding
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.app.model.View as BiliView
@@ -12,7 +12,7 @@ class VideoDownloadInfoDialog(context: Context,
                               private val videoPlayUrl: VideoPlayUrl,
                               private val page: Int,
                               private val qualityId: Int)
-    : BaseDialog<DialogVideoDownloadInfoBinding>(context) {
+    : BaseDialogBuilder<DialogVideoDownloadInfoBinding>(context) {
     override fun initConfig() = 0
 
     override fun initLayout() = R.layout.dialog_video_download_info

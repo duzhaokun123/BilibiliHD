@@ -26,15 +26,16 @@ import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.EmptyBiliDanmakuParser;
+import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.EmptyBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.hiczp.bilibili.api.web.model.VideoShot;
@@ -49,8 +50,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private static final int WHAT_DANMAKU_LOAD_SUCCESSFUL = 1;
     private static final int WHAT_LOAD_SHOT = 2;
 
-    private final String TAG = this.getClass().getSimpleName();
     private int defaultIbNextWidth;
+    private boolean isLive = false;
 
     private LayoutPlayerOverlayBinding overlayBaseBind;
     private FrameLayout overlay;
@@ -58,8 +59,9 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private ImageButton ibFullscreen, ibNext;
     private Button btnDanmakuSwitch, btnDanmaku, btnQuality, btnLine;
     private LinearLayout llTime;
-    private TimeBar exoTimeBar;
+    private DefaultTimeBar exoProgress;
     private TextView tvLive;
+    private LinearLayout ll;
 
     private DanmakuLoadListener danmakuLoadListener;
     private BiliPlayerViewWrapperView.OnFullscreenClickListener onFullscreenClickListener;
@@ -100,8 +102,9 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnQuality = findViewById(R.id.btn_quality);
         btnLine = findViewById(R.id.btn_line);
         llTime = findViewById(R.id.ll_time);
-        exoTimeBar = findViewById(R.id.exo_progress);
+        exoProgress = findViewById(R.id.exo_progress);
         tvLive = findViewById(R.id.tv_live);
+        ll = findViewById(R.id.ll);
     }
 
     @Override
@@ -123,20 +126,22 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 ibFullscreen.setImageResource(R.drawable.ic_fullscreen);
                 ibNextNewWidth = 0;
             }
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(ibNextParams.width, ibNextNewWidth);
-            valueAnimator.addUpdateListener(animation -> {
-                ibNextParams.width = (int) animation.getAnimatedValue();
-                ibNext.setLayoutParams(ibNextParams);
-            });
-            valueAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (ibNextParams.width == 0) {
-                        ibNext.setVisibility(GONE);
+            if (!isLive) {
+                ValueAnimator valueAnimator = ValueAnimator.ofInt(ibNextParams.width, ibNextNewWidth);
+                valueAnimator.addUpdateListener(animation -> {
+                    ibNextParams.width = (int) animation.getAnimatedValue();
+                    ibNext.setLayoutParams(ibNextParams);
+                });
+                valueAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (ibNextParams.width == 0) {
+                            ibNext.setVisibility(GONE);
+                        }
                     }
-                }
-            });
-            valueAnimator.start();
+                });
+                valueAnimator.start();
+            }
             if (onFullscreenClickListener != null) {
                 onFullscreenClickListener.onClick(isFullscreen);
             }
@@ -150,7 +155,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 overlayBaseBind.dv.show();
             }
         });
-        btnDanmaku.setOnClickListener(view -> TipUtil.showTip(getContext(), "没有实现"));
         overlayBaseBind.dv.enableDanmakuDrawingCache(true);
         llTime.setOnClickListener(v -> {
             boolean isPlayingBefore = Objects.requireNonNull(getPlayer()).getPlayWhenReady();
@@ -178,7 +182,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                     .setView(editText)
                     .create().show();
         });
-        exoTimeBar.addListener(new TimeBar.OnScrubListener() {
+        exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override
             public void onScrubStart(@NonNull TimeBar timeBar, long position) {
                 overlayBaseBind.ivPreview.setVisibility(VISIBLE);
@@ -211,6 +215,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             public void onScrubStop(@NonNull TimeBar timeBar, long position, boolean canceled) {
                 overlayBaseBind.ivPreview.setVisibility(GONE);
             }
+        });
+        ll.setOnClickListener(v -> {
         });
 
         overlayBaseBind.dv.prepare(EmptyBiliDanmakuParser.INSTANCE, DanmakuUtil.INSTANCE.getDanmakuContext());
@@ -358,13 +364,21 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     }
 
     public void setLive(boolean isLive) {
+        this.isLive = isLive;
         if (isLive) {
             llTime.setVisibility(GONE);
+            exoProgress.setVisibility(GONE);
+            ibNext.setVisibility(GONE);
             tvLive.setVisibility(VISIBLE);
         } else {
             llTime.setVisibility(VISIBLE);
+            exoProgress.setVisibility(VISIBLE);
             tvLive.setVisibility(GONE);
         }
+    }
+
+    public void setDanmakuSendClickListener(OnClickListener listener) {
+        btnDanmaku.setOnClickListener(listener);
     }
 
     public interface DanmakuLoadListener {

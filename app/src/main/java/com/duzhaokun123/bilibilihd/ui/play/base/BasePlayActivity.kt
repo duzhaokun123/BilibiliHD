@@ -32,6 +32,9 @@ import com.duzhaokun123.bilibilihd.utils.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
 
 abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<ActivityPlayBaseBinding>() {
@@ -167,6 +170,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                     .setAction(R.string.retry) { baseBind.bpvwv.player.retry() }
                     .show()
         }
+        baseBind.bpvwv.setOnDanmakuSendClickListener { onSendDanmaku() }
 
         baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         baseBind.dl.addDrawerListener(object : DrawerLayout.DrawerListener {
@@ -218,7 +222,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.play_activity, menu)
         if (isLive) {
-            menu?.let{
+            menu?.let {
                 it.findItem(R.id.download).isVisible = false
                 it.findItem(R.id.sync_danmaku_progress).isVisible = false
             }
@@ -420,9 +424,14 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     fun setCover(url: String?) {
         baseBind.bpvwv.setCover(url)
         if (url != null) {
-            Thread {
-                notificationBuilder?.setLargeIcon(Glide.with(this).asBitmap().load(url).submit().get())
-            }.start()
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    notificationBuilder?.setLargeIcon(Glide.with(this@BasePlayActivity).asBitmap().load(url).submit().get())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    kRunOnUiThread { TipUtil.showTip(this@BasePlayActivity, e.message) }
+                }
+            }
         }
     }
 
@@ -468,4 +477,5 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     abstract fun onCheckCover()
     abstract fun onDownload()
     abstract fun onStartAddToHistory()
+    abstract fun onSendDanmaku()
 }

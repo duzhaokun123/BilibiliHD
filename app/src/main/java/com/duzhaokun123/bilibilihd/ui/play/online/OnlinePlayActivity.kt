@@ -269,4 +269,8 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
     override fun onStartAddToHistory() {
         handler?.sendEmptyMessage(WHAT_ADD_HISTORY)
     }
+
+    override fun onSendDanmaku() {
+        TipUtil.showTip(this, "没有实现")
+    }
 }
