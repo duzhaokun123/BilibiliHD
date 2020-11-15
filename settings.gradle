@@ -1,7 +1,8 @@
 include ':app'
+include ':bilibili-api'
 rootProject.name = 'bilibili HD'
 
 // https://github.com/duzhaokun123/bilibili-api.git
-includeBuild 'third_party/bilibili-api'
+project(':bilibili-api').projectDir = new File(rootDir, 'third_party/bilibili-api')
 // https://github.com/duzhaokun123/DanmakuFlameMaster.git
 includeBuild 'third_party/DanmakuFlameMaster'

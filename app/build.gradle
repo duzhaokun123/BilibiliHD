@@ -127,8 +127,7 @@ dependencies {
     implementation 'androidx.browser:browser:1.2.0'
 
     //bilibili-api
-    implementation 'com.hiczp:bilibili-api:0.3.3'
-    compileOnly fileTree(dir: '../third_party/bilibili-api')
+    implementation project(":bilibili-api")
     implementation 'javax.xml.stream:stax-api:1.0'
     implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
 

@@ -75,7 +75,8 @@ object ImageViewUtil {
         }
     }
 
-    fun viewImage(context: Context, pImage: String, pImageView: ImageView? = null, share: Boolean = true) {
+    fun viewImage(context: Context, pImage: String?, pImageView: ImageView? = null, share: Boolean = true) {
+        if (pImage == null) return
         var shareUri: Uri = Uri.EMPTY
         if (share) {
             Thread {

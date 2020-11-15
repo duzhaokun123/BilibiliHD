@@ -83,12 +83,6 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
         DanmakuSendDialog(this, cid).show()
     }
 
-    override fun onLayoutFixInfoReady() {
-        val params = extBind.v.layoutParams
-        params.height = fixButtonHeight
-        extBind.v.layoutParams = params
-    }
-
     private fun enterAction() {
         GlobalScope.launch(Dispatchers.IO) {
             try {

@@ -1,18 +1,21 @@
 package com.duzhaokun123.bilibilihd.ui.play.online
 
 import android.content.Context
+import android.util.Log
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseDialogBuilder
 import com.duzhaokun123.bilibilihd.databinding.DialogVideoDownloadInfoBinding
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
+// FIXME: 20-11-14 传入的值全变成 null 或 0
 class VideoDownloadInfoDialog(context: Context,
                               private val biliView: BiliView,
                               private val videoPlayUrl: VideoPlayUrl,
                               private val page: Int,
                               private val qualityId: Int)
     : BaseDialogBuilder<DialogVideoDownloadInfoBinding>(context) {
+
     override fun initConfig() = 0
 
     override fun initLayout() = R.layout.dialog_video_download_info
@@ -21,6 +24,7 @@ class VideoDownloadInfoDialog(context: Context,
     }
 
     override fun initData() {
+        Log.d(CLASS_NAME, "initData: biliView == null: ${biliView == null}")
         baseBind.tvPageNumber.text = page.toString()
         biliView.data.let { data ->
             baseBind.tvAid.text = data.aid.toString()

@@ -2,7 +2,6 @@ package com.duzhaokun123.bilibilihd.bases;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +12,7 @@ import androidx.databinding.ViewDataBinding;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 
 public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends AlertDialog.Builder implements Handler.IHandlerMessageCallback {
-    protected BaseDialogBuilder(@NonNull Context context) {
+    public BaseDialogBuilder(@NonNull Context context) {
         super(context);
 
         config = initConfig();
@@ -23,11 +22,9 @@ public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends 
 
 
         baseBind = DataBindingUtil.inflate(LayoutInflater.from(context), initLayout(), null, false);
-        View rootView = baseBind.getRoot();
-        findViews(rootView);
+        setView(baseBind.getRoot());
         initView();
         initData();
-        setView(baseBind.getRoot());
 
         setOnDismissListener(dialogInterface -> {
             if (handler != null) {
@@ -50,7 +47,7 @@ public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends 
 
     public final String CLASS_NAME = this.getClass().getSimpleName();
 
-    private int config;
+    private final int config;
 
     protected layout baseBind;
     @Nullable
@@ -65,9 +62,6 @@ public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends 
     protected abstract int initConfig();
 
     protected abstract int initLayout();
-
-    protected void findViews(View rootView) {
-    }
 
     protected abstract void initView();
 

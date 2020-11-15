@@ -2,6 +2,8 @@ package com.duzhaokun123.bilibilihd.ui.play.online
 
 import android.net.Uri
 import android.os.Message
+import android.util.Log
+import android.view.Menu
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -68,6 +70,14 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
         model.allCount.observe(this, { allCount ->
             extBind.tl.getTabAt(1)?.text = getString(R.string.comment_num, allCount)
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val re = super.onCreateOptionsMenu(menu)
+        if (menu != null) {
+            menu.findItem(R.id.download).title = getString(R.string.download) + "(BUG 勿动)"
+        }
+        return re
     }
 
     override fun onStop() {
@@ -262,6 +272,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
 
     override fun onDownload() {
         if (biliView != null && videoPlayUrl != null) {
+            Log.d(CLASS_NAME, "onDownload: biliView == null: ${biliView == null}")
             VideoDownloadInfoDialog(this, biliView!!, videoPlayUrl!!, page, baseBind.bpvwv.qualityId).show()
         }
     }
