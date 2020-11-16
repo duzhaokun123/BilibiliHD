@@ -72,14 +72,6 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val re = super.onCreateOptionsMenu(menu)
-        if (menu != null) {
-            menu.findItem(R.id.download).title = getString(R.string.download) + "(BUG 勿动)"
-        }
-        return re
-    }
-
     override fun onStop() {
         super.onStop()
         isActivityStopped = true
@@ -271,10 +263,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
     }
 
     override fun onDownload() {
-        if (biliView != null && videoPlayUrl != null) {
-            Log.d(CLASS_NAME, "onDownload: biliView == null: ${biliView == null}")
-            VideoDownloadInfoDialog(this, biliView!!, videoPlayUrl!!, page, baseBind.bpvwv.qualityId).show()
-        }
+        TipUtil.showTip(this, "没有实现")
     }
 
     override fun onStartAddToHistory() {

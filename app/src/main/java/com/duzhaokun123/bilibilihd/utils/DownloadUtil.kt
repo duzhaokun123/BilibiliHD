@@ -37,16 +37,18 @@ object DownloadUtil {
                     var success = false
                     val inputStream = FileInputStream(Glide.with(context).asFile().load(url).submit().get())
                     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                        val outputStream = FileOutputStream(File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD${File.separatorChar}${System.currentTimeMillis()}"))
                         try {
-                            IOUtil.copy(inputStream, outputStream)
-                            success = true
-                        } catch (e: IOException) {
+                            FileOutputStream(File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD${File.separatorChar}${System.currentTimeMillis()}").apply {
+                                parentFile!!.mkdirs()
+                            }).use {
+                                IOUtil.copy(inputStream, it)
+                                success = true
+                            }
+                        } catch (e: Exception) {
                             e.printStackTrace()
                             exception = e
                         } finally {
                             inputStream.close()
-                            outputStream.close()
                         }
                     } else {
                         val resolver = context.contentResolver
