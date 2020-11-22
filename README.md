@@ -116,6 +116,7 @@
 在 API >= 23 的设备上没有必要
 - 重作界面
 - 下载
+- 迁移到`DanmakuView`
 
 ### 从源代码构建注意
 ```shell script
@@ -132,7 +133,7 @@ script/sync_third_party.sh
 
 [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 
-[DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
+[DanmakuView](https://github.com/duzhoakun123/DanmakuView)
 
 [ExoPlayer](https://exoplayer.dev/)
 

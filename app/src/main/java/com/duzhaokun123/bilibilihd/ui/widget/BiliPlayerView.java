@@ -26,24 +26,20 @@ import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.databinding.LayoutPlayerOverlayBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.EmptyBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
-import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
+import com.duzhaokun123.danmakuview.ui.DanmakuView;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.hiczp.bilibili.api.web.model.VideoShot;
 
 import java.util.Objects;
-
-import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
-import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessageCallback {
     private static final int WHAT_DANMAKU_LOAD_EXCEPTION = 0;
@@ -149,13 +145,12 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmakuSwitch.setOnClickListener(view -> {
             if (btnDanmaku.getVisibility() == VISIBLE) {
                 btnDanmaku.setVisibility(INVISIBLE);
-                overlayBaseBind.dv.hide();
+                overlayBaseBind.dv.setVisibility(INVISIBLE);
             } else {
                 btnDanmaku.setVisibility(VISIBLE);
-                overlayBaseBind.dv.show();
+                overlayBaseBind.dv.setVisibility(VISIBLE);
             }
         });
-        overlayBaseBind.dv.enableDanmakuDrawingCache(true);
         llTime.setOnClickListener(v -> {
             boolean isPlayingBefore = Objects.requireNonNull(getPlayer()).getPlayWhenReady();
             getPlayer().setPlayWhenReady(false);
@@ -218,13 +213,11 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         });
         ll.setOnClickListener(v -> {
         });
-
-        overlayBaseBind.dv.prepare(EmptyBiliDanmakuParser.INSTANCE, DanmakuUtil.INSTANCE.getDanmakuContext());
     }
 
     public void release() {
         handler.destroy();
-        overlayBaseBind.dv.release();
+        overlayBaseBind.dv.destroy();
     }
 
     public void setDanmakuLoadListener(DanmakuLoadListener danmakuLoadListener) {
@@ -248,7 +241,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 message.setData(bundle);
                 handler.sendMessage(message);
             }
-            loadDanmakuByBiliDanmakuParser(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
+            overlayBaseBind.dv.parse(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -256,11 +249,6 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             }
             handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
         }).start();
-    }
-
-    public void loadDanmakuByBiliDanmakuParser(BaseDanmakuParser danmakuParser) {
-        overlayBaseBind.dv.release();
-        overlayBaseBind.dv.prepare(danmakuParser, DanmakuUtil.INSTANCE.getDanmakuContext());
     }
 
     public void setPbExoBufferingVisibility(int visibility) {
@@ -360,7 +348,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
 
     public void danmakuHide() {
         btnDanmaku.setVisibility(INVISIBLE);
-        overlayBaseBind.dv.hide();
+        overlayBaseBind.dv.setVisibility(INVISIBLE);
     }
 
     public void setLive(boolean isLive) {

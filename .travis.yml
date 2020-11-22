@@ -16,6 +16,7 @@ cache:
     - third_party/
 before_install:
   - git fetch --unshallow #拒绝浅克隆
+  - rm -rf third_party/DanmakuFlameMaster #this push delete DanmakuFlameMaster
   - chmod +x script/sync_third_party.sh
   - script/sync_third_party.sh
 before_script:

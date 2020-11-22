@@ -2,13 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <master.flame.danmaku.ui.widget.DanmakuView
+        <com.duzhaokun123.danmakuview.ui.DanmakuView
             android:id="@+id/dv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

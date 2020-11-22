@@ -72,9 +72,12 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
             setWidthHeight(it.first, it.second)
         })
         model.danmakuUri.observe(this, {
-            Thread {
-                loadDanmakuByBiliDanmakuParser(XmlBiliDanmakuParser(it))
-            }.start()
+            it?.let { it1 ->
+                val inputStream = contentResolver.openInputStream(it1) ?: return@let
+                loadDanmakuByBiliDanmakuParser(XmlBiliDanmakuParser(inputStream)) {
+                    inputStream.close()
+                }
+            }
         })
     }
 

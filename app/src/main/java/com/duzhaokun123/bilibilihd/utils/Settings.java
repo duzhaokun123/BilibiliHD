@@ -146,11 +146,11 @@ public class Settings {
         }
 
         public float getTextSize() {
-            return getIntByString("text_size", 0);
+            return getIntByString("text_size", 1);
         }
 
-        public int getDanmakuMargin() {
-            return getIntByString("DanmakuMargin", 0);
+        public int getLineHeight() {
+            return getIntByString("danmaku_line_height", 40);
         }
 
         public float getP1() {
@@ -165,9 +165,9 @@ public class Settings {
             return getFloatByString("danmaku_style_p3", 0);
         }
 
-        public float getScrollSpeedFactor() {
-            float f = getFloatByString("danmaku_scroll_speed_factor", 1.2f);
-            return f != 0 ? f : 1.2f;
+        public float getDurationCoeff() {
+            float f = getFloatByString("danmaku_duration_coeff", 1.0f);
+            return f != 0 ? f : 1.0f;
         }
 
         public int getMaximumVisibleSizeInScreen() {
@@ -178,8 +178,8 @@ public class Settings {
             return sharedPreferences.getStringSet("block_by_place", new HashSet<>());
         }
 
-        public Set<String> getAllowDanmakuOverlapping() {
-            return sharedPreferences.getStringSet("prevent_danmaku_overlapping", new HashSet<>());
+        public Boolean getAllowDanmakuOverlapping() {
+            return sharedPreferences.getBoolean("prevent_danmaku_overlapping", true);
         }
 
         public int getDanmakuVisibility() {

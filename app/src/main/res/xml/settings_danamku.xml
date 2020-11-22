@@ -61,27 +61,24 @@
         app:title="@string/duplicate_merging" />
     <EditTextPreference
         android:inputType="numberDecimal"
-        app:defaultValue="1.2"
-        app:dialogMessage="@string/zero_is_default"
+        app:defaultValue="1.0"
         app:iconSpaceReserved="false"
-        app:key="danmaku_scroll_speed_factor"
-        app:title="@string/danmaku_scroll_speed_factor"
+        app:key="danmaku_duration_coeff"
+        app:title="@string/danmaku_duration_coeff"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal"
-        app:defaultValue="@integer/danmaku_scale_text_size"
-        app:dialogMessage="@string/zero_is_default"
+        app:defaultValue="1"
         app:iconSpaceReserved="false"
         app:key="text_size"
-        app:title="@string/text_size"
+        app:title="@string/text_size_coeff"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal"
-        app:defaultValue="@integer/danmaku_margin"
-        app:dialogMessage="@string/zero_is_default"
+        app:defaultValue="40"
         app:iconSpaceReserved="false"
-        app:key="danmaku_margin"
-        app:title="@string/danmaku_margin"
+        app:key="danmaku_line_height"
+        app:title="@string/line_height"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal|numberSigned"
@@ -91,9 +88,8 @@
         app:key="danmaku_maximum_visible_size_in_screen"
         app:title="@string/maximum_visible_size_in_screen"
         app:useSimpleSummaryProvider="true" />
-    <MultiSelectListPreference
-        app:entries="@array/allow_danmaku_overlapping_entries"
-        app:entryValues="@array/allow_danmaku_overlapping_values"
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
         app:iconSpaceReserved="false"
         app:key="prevent_danmaku_overlapping"
         app:title="@string/allow_danmaku_overlapping" />

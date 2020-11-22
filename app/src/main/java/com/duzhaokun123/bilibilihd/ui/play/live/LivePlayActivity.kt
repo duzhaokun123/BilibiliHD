@@ -170,16 +170,17 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
                             return null
                         }
 
-                        override fun getCount(): Int {
-                            return if (urls.size > 0)
+                        override val count
+                            get() = if (urls.size > 0)
                                 urls[0].data.qualityDescription.size
                             else
                                 0
-                        }
+
 
                         override fun getName(index: Int) = urls[0].data.qualityDescription[index].desc
 
-                        override fun getDefaultIndex() = 0
+                        override val defaultIndex
+                            get() = 0
 
                         override fun getId(index: Int) = urls[0].data.qualityDescription[index].qn
                     })

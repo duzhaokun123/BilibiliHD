@@ -9,7 +9,6 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityDanmakuTestBinding;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.DanmakuAPI;
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku;
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
-import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.EmptyBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 
@@ -40,9 +39,7 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 .add(R.id.fl_danmaku_settings, new SettingsDanmakuFragment())
                 .commitAllowingStateLoss();
 
-        baseBind.dv.enableDanmakuDrawingCache(true);
-        baseBind.dv.showFPS(true);
-        baseBind.dv.prepare(EmptyBiliDanmakuParser.INSTANCE, DanmakuUtil.INSTANCE.getDanmakuContext());
+        baseBind.dv.setDrawDebugInfo(true);
     }
 
     @Override
@@ -56,8 +53,7 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
                 runOnUiThread(() -> TipUtil.showToast("无法加载弹幕\n" + e.getMessage()));
             }
             if (dmSegMobileReply[0] != null) {
-                baseBind.dv.release();
-                baseBind.dv.prepare(new ProtobufBiliDanmakuParser(dmSegMobileReply), DanmakuUtil.INSTANCE.getDanmakuContext());
+                baseBind.dv.parse(new ProtobufBiliDanmakuParser(dmSegMobileReply));
                 runOnUiThread(() -> TipUtil.showToast("加载成功"));
             }
             try {
@@ -78,6 +74,6 @@ public class DanmakuTestActivity extends BaseActivity<ActivityDanmakuTestBinding
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        baseBind.dv.release();
+        baseBind.dv.destroy();
     }
 }

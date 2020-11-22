@@ -2,8 +2,6 @@ package com.duzhaokun123.bilibilihd.ui.play.online
 
 import android.net.Uri
 import android.os.Message
-import android.util.Log
-import android.view.Menu
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -178,17 +176,17 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
                         return if (mediaSources.isEmpty()) null else mediaSources
                     }
 
-                    override fun getDefaultIndex(): Int {
-                        return if (Settings.play.defaultQualityType == 1) {
+                    override val defaultIndex
+                        get() =  if (Settings.play.defaultQualityType == 1) {
                             videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.quality)
                         } else {
                             videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.dash.video[0].id)
                         }
-                    }
 
                     override fun getName(index: Int) = videoPlayUrl!!.data.acceptDescription[index]
 
-                    override fun getCount() = videoPlayUrl!!.data.acceptQuality.size
+                    override val count
+                        get() = videoPlayUrl!!.data.acceptQuality.size
 
                     override fun getId(index: Int) = videoPlayUrl!!.data.acceptQuality[index]
                 })

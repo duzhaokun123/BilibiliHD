@@ -77,12 +77,12 @@
     <string name="stroken">描边</string>
     <string name="projection">投影</string>
     <string name="duplicate_merging">合并重复</string>
-    <string name="text_size">字体大小</string>
-    <string name="danmaku_margin">弹幕间距</string>
+    <string name="text_size_coeff">字体大小系数</string>
+    <string name="line_height">行高</string>
     <string name="danmaku_drawing">弹幕绘制</string>
     <string name="click_to_learn_more">点击了解更多</string>
     <string name="danmaku_drawing_more">阴影模式下p1传入阴影半径\n描边模式下p1传入描边宽度\n投影模式下p1, p2, p3传入 offsetX, offsetY, alpha  offsetX/offsetY: x/y 方向上的偏移量 alpha: 投影透明度 [0, 255] \n填入浮点数</string>
-    <string name="danmaku_scroll_speed_factor">幕滚动速度系数</string>
+    <string name="danmaku_duration_coeff">弹幕持续时间系数</string>
     <string name="maximum_visible_size_in_screen">同屏弹幕密度</string>
     <string name="minus_one_is_auto_zero_is_unlimited">-1 = 自动\n0 = 无限制</string>
     <string name="allow_all_ads">允许所有广告</string>

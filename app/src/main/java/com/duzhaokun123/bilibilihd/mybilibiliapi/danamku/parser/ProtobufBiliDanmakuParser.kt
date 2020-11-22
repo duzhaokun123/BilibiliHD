@@ -3,134 +3,114 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 import android.graphics.Color
 import android.text.TextUtils
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku
-import master.flame.danmaku.danmaku.model.*
-import master.flame.danmaku.danmaku.model.android.DanmakuContext
-import master.flame.danmaku.danmaku.model.android.DanmakuFactory
-import master.flame.danmaku.danmaku.model.android.Danmakus
-import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
-import master.flame.danmaku.danmaku.util.DanmakuUtils
+import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
+import com.duzhaokun123.bilibilihd.utils.DanmakuUtil.toDanmakuType
+import com.duzhaokun123.bilibilihd.utils.toFloatOrDefault
+import com.duzhaokun123.danmakuview.Value
+import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
+import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
+import com.duzhaokun123.danmakuview.model.Danmakus
 import org.json.JSONArray
 import org.json.JSONException
 
-class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmaku.DmSegMobileReply?>) : BaseDanmakuParser() {
+class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmaku.DmSegMobileReply?>) : DanmakuParser {
     companion object {
-        private const val TRUE_STRING = "true"
-
-        private fun isPercentageNumber(number: String?): Boolean {
-            //return number >= 0f && number <= 1f;
-            return number != null && number.contains(".")
-        }
-
-        private fun parseFloat(floatStr: String?): Float {
-            return try {
-                floatStr?.toFloat() ?: 0.0f
-            } catch (e: NumberFormatException) {
-                0.0f
-            }
-        }
-
-        private fun parseInteger(intStr: String?): Int {
-            return try {
-                intStr?.toInt() ?: 0
-            } catch (e: java.lang.NumberFormatException) {
-                0
-            }
-        }
-
-        fun initialSpecailDanmakuData(baseDanmaku: BaseDanmaku, context: DanmakuContext, dispScaleX: Float, dispScaleY: Float) {
-            val text: String = baseDanmaku.text.toString().trim { it <= ' ' }
-            if (baseDanmaku.type == BaseDanmaku.TYPE_SPECIAL && text.startsWith("[")
-                    && text.endsWith("]")) {
-                //text = text.substring(1, text.length() - 1);
-                var textArr: Array<String?>? = null //text.split(",", -1);
+        fun initialSpecialDanmakuData(danmaku: SpecialDanmaku) {
+            val text = danmaku.text.trim { it <= ' ' }
+            if (text.startsWith('[')) {
+                var textArray: Array<String?>? = null
                 try {
                     val jsonArray = JSONArray(text)
-                    textArr = arrayOfNulls(jsonArray.length())
-                    for (i in textArr.indices) {
-                        textArr[i] = jsonArray.getString(i)
+                    textArray = arrayOfNulls(jsonArray.length())
+                    for (i in textArray.indices) {
+                        textArray[i] = jsonArray.getString(i)
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-                if (textArr != null && textArr.size >= 5 && TextUtils.isEmpty(textArr[4]).not()) {
-                    DanmakuUtils.fillText(baseDanmaku, textArr[4])
-                    var beginX: Float = parseFloat(textArr[0])
-                    var beginY: Float = parseFloat(textArr[1])
+                if (textArray != null && textArray.size >= 5 && textArray[4].isNullOrEmpty().not()) {
+                    danmaku.text = textArray[4]!!
+                    danmaku.fillText()
+                    var beginX = textArray[0]!!.toFloatOrDefault()
+                    var beginY = textArray[1]!!.toFloatOrDefault()
                     var endX = beginX
                     var endY = beginY
-                    val alphaArr = textArr[2]!!.split("-".toRegex()).toTypedArray()
-                    val beginAlpha = (AlphaValue.MAX * parseFloat(alphaArr[0])).toInt()
+                    val alphaArray = textArray[2]!!.split("-".toRegex()).toTypedArray()
+                    val beginAlpha = (Value.ALPHA_MAX * alphaArray[0].toFloatOrDefault()).toInt()
                     var endAlpha = beginAlpha
-                    if (alphaArr.size > 1) {
-                        endAlpha = (AlphaValue.MAX * parseFloat(alphaArr[1])).toInt()
+                    if (alphaArray.size > 1) {
+                        endAlpha = (Value.ALPHA_MAX * alphaArray[1].toFloatOrDefault()).toInt()
                     }
-                    val alphaDuraion = (parseFloat(textArr[3]) * 1000).toLong()
-                    var translationDuration = alphaDuraion
-                    var translationStartDelay: Long = 0
-                    var rotateY = 0f
-                    var rotateZ = 0f
-                    if (textArr.size >= 7) {
-                        rotateZ = parseFloat(textArr[5])
-                        rotateY = parseFloat(textArr[6])
+                    val alphaDuration = (textArray[3]!!.toFloatOrDefault() * 1000).toLong()
+                    var translationDuration = alphaDuration
+                    var translationStartDelay = 0L
+                    var rotateY = 0F
+                    var rotateZ = 0F
+                    if (textArray.size >= 7) {
+                        rotateZ = textArray[5]!!.toFloatOrDefault()
+                        rotateY = textArray[6]!!.toFloatOrDefault()
                     }
-                    if (textArr.size >= 11) {
-                        endX = parseFloat(textArr[7])
-                        endY = parseFloat(textArr[8])
-                        if ("" != textArr[9]) {
-                            translationDuration = parseInteger(textArr[9]).toLong()
+                    if (textArray.size >= 11) {
+                        endX = textArray[7]!!.toFloatOrDefault()
+                        endY = textArray[8]!!.toFloatOrDefault()
+                        if (textArray[9].isNullOrEmpty().not())
+                            translationDuration = textArray[9]!!.toLong()
+                        if (textArray[10].isNullOrEmpty().not())
+                            translationStartDelay = textArray[10]!!.toFloatOrDefault().toLong()
+
+                    }
+                    if (textArray[0]!!.contains('.')) {
+                        beginX *= DanmakuUtil.BILI_PLAYER_WIDTH
+                    }
+                    if (textArray[1]!!.contains('.')) {
+                        beginY *= DanmakuUtil.BILI_PLAYER_HEIGHT
+                    }
+                    if (textArray.size >= 8 && textArray[7]!!.contains('.')) {
+                        endX *= DanmakuUtil.BILI_PLAYER_WIDTH
+                    }
+                    if (textArray.size >= 9 && textArray[8]!!.contains('.')) {
+                        endY *= DanmakuUtil.BILI_PLAYER_HEIGHT
+                    }
+                    danmaku.duration = alphaDuration
+                    danmaku.rotationZ = rotateZ
+                    danmaku.rotationY = rotateY
+                    danmaku.beginX = beginX
+                    danmaku.beginY = beginY
+                    danmaku.endX = endX
+                    danmaku.endY = endY
+                    danmaku.translationDuration = translationDuration
+                    danmaku.translationStartDelay = translationStartDelay
+                    danmaku.beginAlpha = beginAlpha
+                    danmaku.endAlpha = endAlpha
+                    if (textArray.size >= 12) {
+                        if (textArray[11].isNullOrEmpty().not() && textArray[11].toBoolean()) {
+                            danmaku.textShadowColor = Color.TRANSPARENT
                         }
-                        if ("" != textArr[10]) {
-                            translationStartDelay = parseFloat(textArr[10]).toLong()
-                        }
                     }
-                    if (isPercentageNumber(textArr[0])) {
-                        beginX *= DanmakuFactory.BILI_PLAYER_WIDTH
+                    if (textArray.size >= 13) {
+                        //TODO 字体 textArray[12]
                     }
-                    if (isPercentageNumber(textArr[1])) {
-                        beginY *= DanmakuFactory.BILI_PLAYER_HEIGHT
-                    }
-                    if (textArr.size >= 8 && isPercentageNumber(textArr[7])) {
-                        endX *= DanmakuFactory.BILI_PLAYER_WIDTH
-                    }
-                    if (textArr.size >= 9 && isPercentageNumber(textArr[8])) {
-                        endY *= DanmakuFactory.BILI_PLAYER_HEIGHT
-                    }
-                    baseDanmaku.duration = Duration(alphaDuraion)
-                    baseDanmaku.rotationZ = rotateZ
-                    baseDanmaku.rotationY = rotateY
-                    context.mDanmakuFactory.fillTranslationData(baseDanmaku, beginX,
-                            beginY, endX, endY, translationDuration, translationStartDelay, dispScaleX, dispScaleY)
-                    context.mDanmakuFactory.fillAlphaData(baseDanmaku, beginAlpha, endAlpha, alphaDuraion)
-                    if (textArr.size >= 12) {
-                        // 是否有描边
-                        if (!TextUtils.isEmpty(textArr[11]) && TRUE_STRING.equals(textArr[11], ignoreCase = true)) {
-                            baseDanmaku.textShadowColor = Color.TRANSPARENT
-                        }
-                    }
-                    if (textArr.size >= 13) {
-                        //TODO 字体 textArr[12]
-                    }
-                    if (textArr.size >= 14) {
+                    if (textArray.size >= 14) {
                         // Linear.easeIn or Quadratic.easeOut
-                        (baseDanmaku as SpecialDanmaku).isQuadraticEaseOut = "0" == textArr[13]
+                        danmaku.isQuadraticEaseOut = "0" == textArray[13]
                     }
-                    if (textArr.size >= 15) {
+                    if (textArray.size >= 15) {
                         // 路径数据
-                        if ("" != textArr[14]) {
-                            val motionPathString = textArr[14]!!.substring(1)
+                        if ("" != textArray[14]) {
+                            val motionPathString = textArray[14]!!.substring(1)
                             if (!TextUtils.isEmpty(motionPathString)) {
                                 val pointStrArray = motionPathString.split("L".toRegex()).toTypedArray()
                                 if (pointStrArray.isNotEmpty()) {
                                     val points = Array(pointStrArray.size) { FloatArray(2) }
                                     for (i in pointStrArray.indices) {
-                                        val pointArray = pointStrArray[i].split(",".toRegex()).toTypedArray()
+                                        val pointArray =
+                                                pointStrArray[i].split(",".toRegex()).toTypedArray()
                                         if (pointArray.size >= 2) {
-                                            points[i][0] = parseFloat(pointArray[0])
-                                            points[i][1] = parseFloat(pointArray[1])
+                                            points[i][0] = pointArray[0].toFloatOrDefault()
+                                            points[i][1] = pointArray[1].toFloatOrDefault()
                                         }
                                     }
-                                    DanmakuFactory.fillLinePathData(baseDanmaku, points, dispScaleX,
-                                            dispScaleY)
+                                    danmaku.setLinePathData(points)
                                 }
                             }
                         }
@@ -140,49 +120,31 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
         }
     }
 
-    private var danmakus: Danmakus? = null
+    private lateinit var danmakus: Danmakus
 
-    private var mDispScaleX = 0f
-    private var mDispScaleY = 0f
-
-    override fun parse(): IDanmakus {
-        if (danmakus == null) {
-            danmakus = Danmakus(IDanmakus.ST_BY_TIME, false, mContext.baseComparator)
-            var index = 0
+    override fun parse(): Danmakus {
+        if (::danmakus.isInitialized.not()) {
+            danmakus = Danmakus()
             for (dmSegMobileReply in dmSegMobileReplies) {
                 if (dmSegMobileReply != null) {
                     for (danmakuElem in dmSegMobileReply.elemsList) {
-                        val type = danmakuElem.mode
+                        val type = danmakuElem.mode.toDanmakuType()
                         val color = -0x1000000 or danmakuElem.color
-                        val baseDanmaku = mContext.mDanmakuFactory.createDanmaku(type, mContext)
-                        if (baseDanmaku != null) {
-                            baseDanmaku.time = danmakuElem.progress.toLong()
-                            baseDanmaku.textSize = danmakuElem.fontzsie * (mDispDensity - 0.6f)
-                            baseDanmaku.textColor = color
-                            baseDanmaku.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
+                        val danmaku = DanmakuUtil.simpleDanmakuFactory.create(type)
+                        danmaku.offset = danmakuElem.progress.toLong()
+                        danmaku.textSize = danmakuElem.fontzsie.toFloat()
+                        danmaku.textColor = color
+                        danmaku.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
+                        danmaku.text = danmakuElem.content
 
-                            DanmakuUtils.fillText(baseDanmaku, danmakuElem.content)
-                            baseDanmaku.index = index++
+                        if (danmaku is SpecialDanmaku)
+                            initialSpecialDanmakuData(danmaku)
 
-                            initialSpecailDanmakuData(baseDanmaku, mContext, mDispScaleX, mDispScaleY)
-
-                            if (baseDanmaku.duration != null) {
-                                baseDanmaku.timer = mTimer
-                                baseDanmaku.flags = mContext.mGlobalFlagValues
-                                danmakus!!.addItem(baseDanmaku)
-                            }
-                        }
+                        danmakus.add(danmaku)
                     }
                 }
             }
         }
-        return danmakus!!
-    }
-
-    override fun setDisplayer(disp: IDisplayer): BaseDanmakuParser {
-        super.setDisplayer(disp)
-        mDispScaleX = mDispWidth / DanmakuFactory.BILI_PLAYER_WIDTH
-        mDispScaleY = mDispHeight / DanmakuFactory.BILI_PLAYER_HEIGHT
-        return this
+        return danmakus
     }
 }

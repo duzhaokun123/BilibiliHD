@@ -1,84 +1,87 @@
 package com.duzhaokun123.bilibilihd.utils
 
-import com.duzhaokun123.bilibilihd.Application
-import com.duzhaokun123.bilibilihd.R
-import master.flame.danmaku.danmaku.model.BaseDanmaku
-import master.flame.danmaku.danmaku.model.IDisplayer
-import master.flame.danmaku.danmaku.model.android.DanmakuContext
-import java.util.*
+import android.util.Log
+import com.duzhaokun123.danmakuview.danmaku.*
+import com.duzhaokun123.danmakuview.interfaces.DanmakuBlocker
+import com.duzhaokun123.danmakuview.ui.DanmakuView
 
 object DanmakuUtil {
-    private lateinit var danmakuContext: DanmakuContext
+    private const val TAG = "DanmakuUtil"
 
-    fun syncDanmakuSettings() {
-        if (::danmakuContext.isInitialized.not()) {
-            return
-        }
+    const val BILI_PLAYER_WIDTH = 682.0F
+    const val BILI_PLAYER_HEIGHT = 438.0F
 
-        val overlappingEnablePair = HashMap<Int, Boolean>()
-        overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = true
-        overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = true
-        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = true
-        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = true
+    val simpleDanmakuFactory by lazy { SimpleDanmakuFactory() }
 
-        for (allow in Settings.danmaku.allowDanmakuOverlapping) {
-            when (allow) {
-                "top" -> overlappingEnablePair[BaseDanmaku.TYPE_FIX_TOP] = false
-                "bottom" -> overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = false
-                "r2l" -> overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = false
-                "l2r" -> overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = false
-            }
-        }
+    private val danmakuConfig
+        get() = DanmakuView.defaultDanmakuConfig
 
-        danmakuContext
-                .setDuplicateMergingEnabled(Settings.danmaku.isDuplicateMerging)
-                .setScrollSpeedFactor(Settings.danmaku.scrollSpeedFactor)
-                //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-                //                .setMaximumLines(maxLinesPair) //设置最大行数
-                .preventOverlapping(overlappingEnablePair)
-                .setMaximumVisibleSizeInScreen(Settings.danmaku.maximumVisibleSizeInScreen)
-
-
-        when (Settings.danmaku.danmakuStyle) {
-            IDisplayer.DANMAKU_STYLE_NONE -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_NONE)
-            IDisplayer.DANMAKU_STYLE_SHADOW -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, Settings.danmaku.p1)
-            IDisplayer.DANMAKU_STYLE_STROKEN -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, Settings.danmaku.p1)
-            IDisplayer.DANMAKU_STYLE_PROJECTION -> danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_PROJECTION, Settings.danmaku.p1, Settings.danmaku.p2, Settings.danmaku.p3)
-        }
-
-        if (Settings.danmaku.textSize != 0f) {
-            danmakuContext.setScaleTextSize(Settings.danmaku.textSize)
-        } else {
-            danmakuContext.setScaleTextSize(Application.getInstance().resources.getInteger(R.integer.danmaku_scale_text_size).toFloat())
-        }
-
-        if (Settings.danmaku.danmakuMargin != 0) {
-            danmakuContext.setDanmakuMargin(Settings.danmaku.danmakuMargin)
-        } else {
-            danmakuContext.setDanmakuMargin(Application.getInstance().resources.getInteger(R.integer.danmaku_margin))
-        }
-
-        danmakuContext.ftDanmakuVisibility = true
-        danmakuContext.fbDanmakuVisibility = true
-        danmakuContext.r2LDanmakuVisibility = true
-        danmakuContext.l2RDanmakuVisibility = true
-        danmakuContext.specialDanmakuVisibility = true
-        for (place in Settings.danmaku.blockByPlace) {
-            when (place) {
-                "top" -> danmakuContext.ftDanmakuVisibility = false
-                "bottom" -> danmakuContext.fbDanmakuVisibility = false
-                "r2l" -> danmakuContext.r2LDanmakuVisibility = false
-                "l2r" -> danmakuContext.l2RDanmakuVisibility = false
-                "special" -> danmakuContext.specialDanmakuVisibility = false
+    fun Int.toDanmakuType(): SimpleDanmakuFactory.Type {
+        return when (this) {
+            1 -> SimpleDanmakuFactory.Type.R2L_DANMAKU
+            4 -> SimpleDanmakuFactory.Type.BOTTOM_DANMAKU
+            5 -> SimpleDanmakuFactory.Type.TOP_DANMAKU
+            6 -> SimpleDanmakuFactory.Type.L2R_DANMAKU
+            7 -> SimpleDanmakuFactory.Type.SPECIAL_DANMAKU
+            else -> {
+                Log.e(TAG, "unknowen type $this, R2L_DANMAKU as default")
+                SimpleDanmakuFactory.Type.R2L_DANMAKU
             }
         }
     }
 
-    fun getDanmakuContext(): DanmakuContext {
-        if (::danmakuContext.isInitialized.not()) {
-            danmakuContext = DanmakuContext.create()
+    fun syncDanmakuSettings() {
+        danmakuConfig.blockers.add(ClassDanmakuBlocker)
+        danmakuConfig.allowCovering = Settings.danmaku.allowDanmakuOverlapping
+
+        // TODO: 20-11-23 Settings.danmaku.isDuplicateMerging
+        // TODO: 20-11-23 Settings.danmaku.maximumVisibleSizeInScreen
+
+        danmakuConfig.durationCoeff = Settings.danmaku.durationCoeff
+
+        // TODO: 20-11-23 Settings.danmaku.danmakuStyle
+
+        danmakuConfig.textSizeCoeff = Settings.danmaku.textSize
+        danmakuConfig.lineHeight = Settings.danmaku.lineHeight
+
+        ClassDanmakuBlocker.reset()
+        ClassDanmakuBlocker.apply {
+            for (place in Settings.danmaku.blockByPlace) {
+                when (place) {
+                    "top" -> blockTop = true
+                    "bottom" -> blockBottom = true
+                    "r2l" -> blockR2L = true
+                    "l2r" -> blockL2R = true
+                    "special" -> blockSpecial = true
+                }
+            }
         }
-        syncDanmakuSettings()
-        return danmakuContext
+
+        // TODO: 20-11-23 其他配置
+    }
+
+    object ClassDanmakuBlocker : DanmakuBlocker {
+        var blockTop = false
+        var blockBottom = false
+        var blockR2L = false
+        var blockL2R = false
+        var blockSpecial = false
+
+        override fun shouldBlock(danmaku: Danmaku): Boolean {
+            if (blockTop && danmaku is TopDanmaku) return true
+            if (blockBottom && danmaku is BottomDanmaku) return true
+            if (blockR2L && danmaku is R2LDanmaku) return true
+            if (blockL2R && danmaku is L2RDanmaku) return true
+            if (blockSpecial && danmaku is SpecialDanmaku) return true
+            return false
+        }
+
+        fun reset() {
+            blockTop = false
+            blockBottom = false
+            blockR2L = false
+            blockL2R = false
+            blockSpecial = false
+        }
     }
 }

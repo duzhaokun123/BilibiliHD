@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import java.lang.Exception
 
 fun Reply.Data.Top.Upper.toCommonReply(): Reply.Data.Reply {
     return gson.fromJson(GsonUtil.getGsonInstance().toJson(this))
@@ -42,5 +43,21 @@ fun String.toIntOrDefault(defaultValue: Int): Int {
         toInt()
     } catch (_: NumberFormatException) {
         defaultValue
+    }
+}
+
+fun String.toFloatOrDefault(default: Float = 0F): Float {
+    return try {
+        this.toFloat()
+    } catch (e: Exception) {
+        default
+    }
+}
+
+fun String.toLongOrDefault(default: Long = 0L): Long {
+    return try {
+        this.toLong()
+    } catch (e: Exception) {
+        default
     }
 }

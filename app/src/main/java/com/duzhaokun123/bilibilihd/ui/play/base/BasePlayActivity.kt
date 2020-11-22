@@ -29,13 +29,14 @@ import com.duzhaokun123.bilibilihd.ui.settings.SettingsDanmakuFragment
 import com.duzhaokun123.bilibilihd.ui.settings.SettingsPlayFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
 import com.duzhaokun123.bilibilihd.utils.*
+import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
+import com.duzhaokun123.danmakuview.model.Danmakus
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
 
 abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<ActivityPlayBaseBinding>() {
     protected lateinit var extBind: extLayout
@@ -80,29 +81,30 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     override fun initView() {
         extBind = DataBindingUtil.inflate(layoutInflater, initExtLayout(), baseBind.flExt, true)
 
-        baseBind.bpvwv.onFullscreenClickListener = BiliPlayerViewWrapperView.OnFullscreenClickListener { isFullscreen ->
-            this.isFullscreen = isFullscreen
-
-            if (this.isFullscreen) {
-                baseBind.ml.transitionToEnd()
-                if (presentation == null) {
-                    supportActionBar?.hide()
-                }
-                if (isInMultiWindowMode.not()) {
+        baseBind.bpvwv.onFullscreenClickListener = object: BiliPlayerViewWrapperView.OnFullscreenClickListener {
+            override fun onClick(isFullscreen: Boolean) {
+                this@BasePlayActivity.isFullscreen = isFullscreen
+                if (this@BasePlayActivity.isFullscreen) {
+                    baseBind.ml.transitionToEnd()
+                    if (presentation == null) {
+                        supportActionBar?.hide()
+                    }
+                    if (isInMultiWindowMode.not()) {
+                        window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
+                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                    }
+                } else {
+                    baseBind.ml.transitionToStart()
+                    supportActionBar?.show()
                     window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
-                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            and (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY).inv())
                 }
-            } else {
-                baseBind.ml.transitionToStart()
-                supportActionBar?.show()
-                window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
-                        and (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY).inv())
             }
         }
         baseBind.bpvwv.setControllerVisibilityListener { visibility ->
@@ -124,7 +126,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 supportActionBar?.show()
             }
         }
-        baseBind.bpvwv.setOnPlayingStatusChangeListener { playingStatus ->
+        baseBind.bpvwv.onPlayingStatusChangeListener = { playingStatus ->
             when (playingStatus) {
                 BiliPlayerViewWrapperView.PlayingStatus.PLAYING -> {
                     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -164,7 +166,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 else -> OtherUtils.doNothing() // TODO: 20-7-16
             }
         }
-        baseBind.bpvwv.setOnPlayerErrorListener { error ->
+        baseBind.bpvwv.onPlayerErrorListener = { error ->
             error.printStackTrace()
             Snackbar.make(baseBind.clRoot, error.message!!, BaseTransientBottomBar.LENGTH_INDEFINITE)
                     .setAction(R.string.retry) { baseBind.bpvwv.player.retry() }
@@ -454,8 +456,9 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         baseBind.bpvwv.loadDanmakuByAidCid(aid, cid, durationS)
     }
 
-    fun loadDanmakuByBiliDanmakuParser(danmakuParser: BaseDanmakuParser) {
-        baseBind.bpvwv.loadDanmakuByBiliDanmakuParser(danmakuParser)
+    @JvmOverloads
+    fun loadDanmakuByBiliDanmakuParser(danmakuParser: DanmakuParser, onEnd: ((danmakus: Danmakus) -> Unit)? = null) {
+        baseBind.bpvwv.loadDanmakuByBiliDanmakuParser(danmakuParser, onEnd)
     }
 
     fun setVideoMediaSourceAdapter(videoMediaSourceAdapter: BiliPlayerViewWrapperView.VideoMediaSourceAdapter?) {
