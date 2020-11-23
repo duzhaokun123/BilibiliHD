@@ -9,7 +9,7 @@
         app:iconSpaceReserved="false"
         app:key="sync"
         app:title="@string/sync" />
-    <SimpleMenuPreference
+    <com.takisoft.preferencex.SimpleMenuPreference
         app:defaultValue="0"
         app:entries="@array/danmaku_visibility_entries"
         app:entryValues="@array/danmaku_visibility_values"
@@ -17,15 +17,16 @@
         app:key="danmaku_visibility"
         app:title="@string/visibility"
         app:useSimpleSummaryProvider="true" />
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_draw_debug_info"
+        app:title="@string/draw_debug_info" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/danmaku_drawing" />
-    <Preference
-        app:iconSpaceReserved="false"
-        app:key="danmaku_click"
-        app:title="@string/click_to_learn_more" />
-    <SimpleMenuPreference
-        app:defaultValue="2"
+    <com.takisoft.preferencex.SimpleMenuPreference
+        app:defaultValue="0"
         app:entries="@array/danmaku_style_entries"
         app:entryValues="@array/danmaku_style_values"
         app:iconSpaceReserved="false"
@@ -34,22 +35,24 @@
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal"
-        app:defaultValue="0.5"
+        app:defaultValue="0"
         app:iconSpaceReserved="false"
-        app:key="danmaku_style_p1"
-        app:title="p1"
+        app:key="danmaku_shadow_dx"
+        app:title="shadow dx"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal"
+        app:defaultValue="0"
         app:iconSpaceReserved="false"
-        app:key="danmaku_style_p2"
-        app:title="p2"
+        app:key="danmaku_shadow_dy"
+        app:title="shadow dy"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal"
+        app:defaultValue="5"
         app:iconSpaceReserved="false"
-        app:key="danmaku_style_p3"
-        app:title="p3"
+        app:key="danmaku_shadow_radius"
+        app:title="shadow radius"
         app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
         app:iconSpaceReserved="false"

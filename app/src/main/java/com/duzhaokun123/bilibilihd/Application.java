@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.utils.CustomBilibiliClientProperties;
+import com.duzhaokun123.bilibilihd.utils.DanmakuUtil;
 import com.duzhaokun123.bilibilihd.utils.Handler;
 import com.duzhaokun123.bilibilihd.utils.NotificationUtil;
 import com.duzhaokun123.bilibilihd.utils.Settings;
@@ -72,5 +73,6 @@ public class Application extends android.app.Application implements Handler.IHan
         }
         getPBilibiliClient().setLoginResponse(loginResponse);
         AppCompatDelegate.setDefaultNightMode(Settings.layout.getUiMode());
+        DanmakuUtil.INSTANCE.syncDanmakuSettings();
     }
 }

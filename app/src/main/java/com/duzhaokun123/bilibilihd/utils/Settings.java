@@ -141,8 +141,12 @@ public class Settings {
             return getIntByString("danmaku_style", 1);
         }
 
-        public boolean isDuplicateMerging() {
-            return sharedPreferences.getBoolean("duplicate_merging", false);
+//        public boolean isDuplicateMerging() {
+//            return sharedPreferences.getBoolean("duplicate_merging", false);
+//        }
+
+        public boolean isDrawDebugInfo() {
+            return sharedPreferences.getBoolean("danmaku_draw_debug_info", false);
         }
 
         public float getTextSize() {
@@ -153,16 +157,16 @@ public class Settings {
             return getIntByString("danmaku_line_height", 40);
         }
 
-        public float getP1() {
-            return getFloatByString("danmaku_style_p1", 0.5f);
+        public float getShadowDx() {
+            return getFloatByString("danmaku_shadow_dx", 0);
         }
 
-        public float getP2() {
-            return getFloatByString("danmaku_style_p2", 0);
+        public float getShadowDy() {
+            return getFloatByString("danmaku_shadow_dy", 0);
         }
 
-        public float getP3() {
-            return getFloatByString("danmaku_style_p3", 0);
+        public float getShadowRadius() {
+            return getFloatByString("danmaku_shadow_radius", 5F);
         }
 
         public float getDurationCoeff() {

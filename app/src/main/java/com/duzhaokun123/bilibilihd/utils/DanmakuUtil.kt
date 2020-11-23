@@ -3,13 +3,11 @@ package com.duzhaokun123.bilibilihd.utils
 import android.util.Log
 import com.duzhaokun123.danmakuview.danmaku.*
 import com.duzhaokun123.danmakuview.interfaces.DanmakuBlocker
+import com.duzhaokun123.danmakuview.model.DanmakuConfig
 import com.duzhaokun123.danmakuview.ui.DanmakuView
 
 object DanmakuUtil {
     private const val TAG = "DanmakuUtil"
-
-    const val BILI_PLAYER_WIDTH = 682.0F
-    const val BILI_PLAYER_HEIGHT = 438.0F
 
     val simpleDanmakuFactory by lazy { SimpleDanmakuFactory() }
 
@@ -22,7 +20,7 @@ object DanmakuUtil {
             4 -> SimpleDanmakuFactory.Type.BOTTOM_DANMAKU
             5 -> SimpleDanmakuFactory.Type.TOP_DANMAKU
             6 -> SimpleDanmakuFactory.Type.L2R_DANMAKU
-            7 -> SimpleDanmakuFactory.Type.SPECIAL_DANMAKU
+            7 -> SimpleDanmakuFactory.Type.BILI_SPECIAL_DANMAKU
             else -> {
                 Log.e(TAG, "unknowen type $this, R2L_DANMAKU as default")
                 SimpleDanmakuFactory.Type.R2L_DANMAKU
@@ -39,7 +37,15 @@ object DanmakuUtil {
 
         danmakuConfig.durationCoeff = Settings.danmaku.durationCoeff
 
-        // TODO: 20-11-23 Settings.danmaku.danmakuStyle
+        when (Settings.danmaku.danmakuStyle) {
+            0 -> danmakuConfig.drawMode = DanmakuConfig.DrawMode.DEFAULT
+            1 -> {
+                danmakuConfig.drawMode = DanmakuConfig.DrawMode.SHADOW
+                danmakuConfig.shadowDx = Settings.danmaku.shadowDx
+                danmakuConfig.shadowDy = Settings.danmaku.shadowDy
+                danmakuConfig.shadowRadius = Settings.danmaku.shadowRadius
+            }
+        }
 
         danmakuConfig.textSizeCoeff = Settings.danmaku.textSize
         danmakuConfig.lineHeight = Settings.danmaku.lineHeight
@@ -57,7 +63,7 @@ object DanmakuUtil {
             }
         }
 
-        // TODO: 20-11-23 其他配置
+        // TODO: 20-11-23 其他配置: 字体, 边距
     }
 
     object ClassDanmakuBlocker : DanmakuBlocker {
@@ -72,7 +78,7 @@ object DanmakuUtil {
             if (blockBottom && danmaku is BottomDanmaku) return true
             if (blockR2L && danmaku is R2LDanmaku) return true
             if (blockL2R && danmaku is L2RDanmaku) return true
-            if (blockSpecial && danmaku is SpecialDanmaku) return true
+            if (blockSpecial && danmaku is BiliSpecialDanmaku) return true
             return false
         }
 

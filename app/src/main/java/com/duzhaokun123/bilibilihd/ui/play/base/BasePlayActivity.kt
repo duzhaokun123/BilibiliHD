@@ -173,6 +173,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                     .show()
         }
         baseBind.bpvwv.setOnDanmakuSendClickListener { onSendDanmaku() }
+        baseBind.bpvwv.biliPlayerView.danmakuView.drawDebugInfo = Settings.danmaku.isDrawDebugInfo
 
         baseBind.dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         baseBind.dl.addDrawerListener(object : DrawerLayout.DrawerListener {
@@ -300,6 +301,10 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                     supportFragmentManager.beginTransaction().add(R.id.fl_end, showingFragment as Fragment).commitAllowingStateLoss()
                     baseBind.dl.openDrawer(GravityCompat.END)
                 }
+                true
+            }
+            R.id.clean_danmaku_cache -> {
+                baseBind.bpvwv.biliPlayerView.danmakuView.cleanCache()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -49,10 +49,6 @@
         android:title="@string/retry"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/sync_danmaku_progress"
-        android:title="@string/sync_danmaku_progress"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/play_settings"
@@ -60,7 +56,18 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/danmaku_settings"
-        android:title="@string/danmaku_settings"
-        app:showAsAction="never" />
+        android:title="@string/danmaku"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/sync_danmaku_progress"
+                android:title="@string/sync_danmaku_progress" />
+            <item
+                android:id="@+id/clean_danmaku_cache"
+                android:title="@string/clean_danmaku_cache" />
+            <item
+                android:id="@+id/danmaku_settings"
+                android:title="@string/danmaku_settings" />
+        </menu>
+    </item>
 </menu>

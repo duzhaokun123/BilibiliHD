@@ -65,9 +65,10 @@ android {
 
         release {
             // FIXME: 由于 XML 解析器, 不能删减
+            minifyEnabled false
 //            minifyEnabled true
 //            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
             if (isRunningOnTravis()) {
                 signingConfig signingConfigs.release

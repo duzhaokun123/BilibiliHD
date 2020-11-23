@@ -7,7 +7,7 @@ import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil.toDanmakuType
 import com.duzhaokun123.bilibilihd.utils.toFloatOrDefault
 import com.duzhaokun123.danmakuview.Value
-import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
+import com.duzhaokun123.danmakuview.danmaku.BiliSpecialDanmaku
 import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
 import com.duzhaokun123.danmakuview.model.Danmakus
 import org.json.JSONArray
@@ -15,7 +15,7 @@ import org.json.JSONException
 
 class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmaku.DmSegMobileReply?>) : DanmakuParser {
     companion object {
-        fun initialSpecialDanmakuData(danmaku: SpecialDanmaku) {
+        fun initialSpecialDanmakuData(danmaku: BiliSpecialDanmaku) {
             val text = danmaku.text.trim { it <= ' ' }
             if (text.startsWith('[')) {
                 var textArray: Array<String?>? = null
@@ -60,16 +60,16 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
 
                     }
                     if (textArray[0]!!.contains('.')) {
-                        beginX *= DanmakuUtil.BILI_PLAYER_WIDTH
+                        beginX *= BiliSpecialDanmaku.BILI_PLAYER_WIDTH
                     }
                     if (textArray[1]!!.contains('.')) {
-                        beginY *= DanmakuUtil.BILI_PLAYER_HEIGHT
+                        beginY *= BiliSpecialDanmaku.BILI_PLAYER_HEIGHT
                     }
                     if (textArray.size >= 8 && textArray[7]!!.contains('.')) {
-                        endX *= DanmakuUtil.BILI_PLAYER_WIDTH
+                        endX *= BiliSpecialDanmaku.BILI_PLAYER_WIDTH
                     }
                     if (textArray.size >= 9 && textArray[8]!!.contains('.')) {
-                        endY *= DanmakuUtil.BILI_PLAYER_HEIGHT
+                        endY *= BiliSpecialDanmaku.BILI_PLAYER_HEIGHT
                     }
                     danmaku.duration = alphaDuration
                     danmaku.rotationZ = rotateZ
@@ -137,7 +137,7 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                         danmaku.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
                         danmaku.text = danmakuElem.content
 
-                        if (danmaku is SpecialDanmaku)
+                        if (danmaku is BiliSpecialDanmaku)
                             initialSpecialDanmakuData(danmaku)
 
                         danmakus.add(danmaku)

@@ -3,7 +3,7 @@ package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser.Companion.initialSpecialDanmakuData
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil.toDanmakuType
-import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
+import com.duzhaokun123.danmakuview.danmaku.BiliSpecialDanmaku
 import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
 import com.duzhaokun123.danmakuview.model.Danmakus
 import java.io.InputStream
@@ -48,7 +48,7 @@ class XmlBiliDanmakuParser(inputStream: InputStream) : DanmakuParser {
                             danmaku.textColor = color
                             danmaku.textShadowColor =
                                     if (color <= android.graphics.Color.BLACK) android.graphics.Color.WHITE else android.graphics.Color.BLACK
-                            if (danmaku is SpecialDanmaku) initialSpecialDanmakuData(danmaku)
+                            if (danmaku is BiliSpecialDanmaku) initialSpecialDanmakuData(danmaku)
 //                        initialSpecailDanmakuData(danmaku, mContext, mDispScaleX, mDispScaleY)
                             danmakus.add(danmaku)
                         }

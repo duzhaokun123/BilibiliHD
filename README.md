@@ -107,13 +107,11 @@
 - 即使使`minSdkVersion 25`也无法在[Anbox](https://anbox.io)下运行
 - 评论快速滚动会闪烁
 - 在`Chrome OS`上由于解码器问题(大)部分视频无法播放, 建议使用官方客户端
-- 无法加载本地弹幕
+- 似乎一些操作会导致弹幕计时器变快, 暂停再播放可以恢复
 - [更多](https://github.com/duzhaokun123/BilibiliHD/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 - 更多 BUG 等你发现
 
 ### TODO
-- ~~DanmakuFlameMaster 64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
-在 API >= 23 的设备上没有必要
 - 重作界面
 - 下载
 - 迁移到`DanmakuView`

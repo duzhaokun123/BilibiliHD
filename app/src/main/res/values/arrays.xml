@@ -21,16 +21,16 @@
     </string-array>
 
     <string-array name="danmaku_style_entries">
-        <item>@string/none</item>
+        <item>@string/default_</item>
         <item>@string/shadow</item>
-        <item>@string/stroken</item>
-        <item>@string/projection</item>
+<!--        <item>@string/stroken</item>-->
+<!--        <item>@string/projection</item>-->
     </string-array>
     <string-array name="danmaku_style_values">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
-        <item>3</item>
+<!--        <item>2</item>-->
+<!--        <item>3</item>-->
     </string-array>
 
     <string-array name="play_default_quality_entries">
@@ -55,19 +55,6 @@
         <item>top</item>
         <item>bottom</item>
         <item>special</item>
-    </string-array>
-
-    <string-array name="allow_danmaku_overlapping_entries">
-        <item>@string/r2l</item>
-        <item>@string/l2r</item>
-        <item>@string/top</item>
-        <item>@string/bottom</item>
-    </string-array>
-    <string-array name="allow_danmaku_overlapping_values">
-        <item>r2l</item>
-        <item>l2r</item>
-        <item>top</item>
-        <item>bottom</item>
     </string-array>
 
     <string-array name="danmaku_visibility_entries">

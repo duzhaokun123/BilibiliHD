@@ -81,8 +81,6 @@
     <string name="text_size_coeff">text size coeff</string>
     <string name="line_height">line height</string>
     <string name="danmaku_drawing">danmaku drawing</string>
-    <string name="click_to_learn_more">click to learn more</string>
-    <string name="danmaku_drawing_more">The shadow radius of p1 in shadow mode\nIn stroke mode p1 incoming stroke width\nIn projection mode, p1, p2, p3 input offsetX, offsetY, alpha offsetX/offsetY: offset in x/y direction alpha: projection transparency [0, 255]\nFill in floating point</string>
     <string name="danmaku_duration_coeff">danmaku duration coeff</string>
     <string name="maximum_visible_size_in_screen">maximum visible size in screen</string>
     <string name="minus_one_is_auto_zero_is_unlimited">-1 = auto\n0 = unlimited</string>
@@ -154,4 +152,6 @@
     <string name="main_line">main line</string>
     <string name="spare_line_d">spare line %d</string>
     <string name="open_with_webview">open with WebView</string>
+    <string name="draw_debug_info">draw debug info</string>
+    <string name="clean_danmaku_cache">clean danmaku cache</string>
 </resources>

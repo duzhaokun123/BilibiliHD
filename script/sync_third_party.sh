@@ -9,8 +9,8 @@ else
   git clone https://github.com/duzhaokun123/bilibili-api.git $BILIBILI_API_DIR --depth 1
 fi
 
-if [ -d DANMAKU_VIEW_DIR ]; then
-  git -C DANMAKU_VIEW_DIR pull
+if [ -d $DANMAKU_VIEW_DIR ]; then
+  git -C $DANMAKU_VIEW_DIR pull
 else
-  git clone https://github.com/duzhaokun123/DanmakuView.git DANMAKU_VIEW_DIR --depth 1
+  git clone https://github.com/duzhaokun123/DanmakuView.git $DANMAKU_VIEW_DIR --depth 1
 fi
