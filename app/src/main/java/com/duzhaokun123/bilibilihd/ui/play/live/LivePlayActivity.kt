@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtLiveBinding
@@ -17,7 +18,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.hiczp.bilibili.api.live.model.AnchorInRoom
 import com.hiczp.bilibili.api.live.model.RoomInfo
 import com.hiczp.bilibili.api.weblive.model.PlayUrl
-import kotlinx.android.synthetic.main.layout_user.*
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,8 +43,16 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
     private lateinit var roomInfo: RoomInfo
     private lateinit var anchorInRoom: AnchorInRoom
 
+    private lateinit var civFace: CircleImageView
+    private lateinit var tvName: TextView
+
     override fun initConfig() = 0
     override fun initExtLayout() = R.layout.play_ext_live
+
+    override fun findViews2() {
+        civFace =   extBind.root. findViewById(R.id.civ_face)
+        tvName = extBind.root. findViewById(R.id.tv_name)
+    }
 
     override fun initView() {
         super.initView()
@@ -125,13 +134,13 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
             if (::anchorInRoom.isInitialized)
                 kRunOnUiThread {
                     anchorInRoom.data.info.let { info ->
-                        Glide.with(this@LivePlayActivity).load(info.face).into(civ_face)
-                        tv_name.text = info.uname
+                        Glide.with(this@LivePlayActivity).load(info.face).into(civFace)
+                        tvName.text = info.uname
                         val enterUserSpace = { _: View ->
-                            UserSpaceActivity.enter(this@LivePlayActivity, info.uid, civ_face, null)
+                            UserSpaceActivity.enter(this@LivePlayActivity, info.uid, civFace, null)
                         }
-                        civ_face.setOnClickListener(enterUserSpace)
-                        tv_name.setOnClickListener(enterUserSpace)
+                        civFace.setOnClickListener(enterUserSpace)
+                        tvName.setOnClickListener(enterUserSpace)
                     }
                 }
         }

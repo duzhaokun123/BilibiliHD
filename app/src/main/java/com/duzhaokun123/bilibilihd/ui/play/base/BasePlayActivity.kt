@@ -80,6 +80,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
 
     override fun initView() {
         extBind = DataBindingUtil.inflate(layoutInflater, initExtLayout(), baseBind.flExt, true)
+        findViews2()
 
         baseBind.bpvwv.onFullscreenClickListener = object: BiliPlayerViewWrapperView.OnFullscreenClickListener {
             override fun onClick(isFullscreen: Boolean) {
@@ -486,4 +487,6 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     abstract fun onDownload()
     abstract fun onStartAddToHistory()
     abstract fun onSendDanmaku()
+
+    protected open fun findViews2() {}
 }

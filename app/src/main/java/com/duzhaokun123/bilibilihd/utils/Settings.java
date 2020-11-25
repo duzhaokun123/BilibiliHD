@@ -157,6 +157,14 @@ public class Settings {
             return getIntByString("danmaku_line_height", 40);
         }
 
+        public int getMarginTop() {
+            return getIntByString("danmaku_margin_top", 0);
+        }
+
+        public int getMarginBottom() {
+            return getIntByString("danmaku_margin_bottom", 0);
+        }
+
         public float getShadowDx() {
             return getFloatByString("danmaku_shadow_dx", 0);
         }
@@ -188,6 +196,10 @@ public class Settings {
 
         public int getDanmakuVisibility() {
             return getIntByString("danmaku_visibility", 0);
+        }
+
+        public int getTypefaceUse() {
+            return getIntByString("danmaku_typeface", 0);
         }
     }
 

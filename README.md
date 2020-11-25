@@ -6,7 +6,10 @@
 
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
-下载 https://pan.baidu.com/s/1usDwGbrNi9zAZ1AWU8G7dQ 密码: v9oa (最新提交)
+下载 https://pan.baidu.com/s/1usDwGbrNi9zAZ1AWU8G7dQ 密码: v9oa (随缘更新)
+
+下载 https://wws.lanzous.com/b01tqmbej 密码: 233 (最新提交, 所有密码: 233)
+    - v0.1 https://wws.lanzous.com/b01tqpnaf 密码: 233
 
 下载 https://github.com/duzhaokun123/BilibiliHD/releases (重大发布)
 

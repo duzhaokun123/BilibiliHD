@@ -1,9 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'com.google.protobuf'
-    id "org.jetbrains.kotlin.kapt"
+    id "kotlin-kapt"
 }
 
 def getGitHash = { ->
@@ -119,7 +118,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.1'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'

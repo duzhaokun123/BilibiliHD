@@ -54,6 +54,14 @@
         app:key="danmaku_shadow_radius"
         app:title="shadow radius"
         app:useSimpleSummaryProvider="true" />
+    <com.takisoft.preferencex.SimpleMenuPreference
+        app:defaultValue="0"
+        app:entries="@array/danmaku_typeface_entries"
+        app:entryValues="@array/danmaku_typeface_values"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_typeface"
+        app:title="@string/font"
+        app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/display" />
@@ -82,6 +90,20 @@
         app:iconSpaceReserved="false"
         app:key="danmaku_line_height"
         app:title="@string/line_height"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        android:inputType="number"
+        app:defaultValue="0"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_margin_top"
+        app:title="@string/margin_top"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        android:inputType="number"
+        app:defaultValue="0"
+        app:iconSpaceReserved="false"
+        app:key="danmaku_margin_bottom"
+        app:title="@string/margin_bottom"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:inputType="numberDecimal|numberSigned"

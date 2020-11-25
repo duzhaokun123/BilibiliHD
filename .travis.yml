@@ -16,7 +16,6 @@ cache:
     - third_party/
 before_install:
   - git fetch --unshallow #拒绝浅克隆
-  - rm -rf DANMAKU_VIEW_DIR #this push delete DANMAKU_VIEW_DIR (bad file name)
   - chmod +x script/sync_third_party.sh
   - script/sync_third_party.sh
 before_script:
@@ -36,3 +35,5 @@ after_success:
     -T app/build/outputs/apk/release/*.apk
     --user "$jianguoyun_username:$jianguoyun_password"
     "https://dav.jianguoyun.com/dav/BilibiliHD/"
+  - pip3 install lanzou-api --upgrade
+  - python3 script/upload_to_lanzou.py app/build/outputs/apk/release/*.apk

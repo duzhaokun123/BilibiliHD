@@ -23,14 +23,14 @@
     <string-array name="danmaku_style_entries">
         <item>@string/default_</item>
         <item>@string/shadow</item>
-<!--        <item>@string/stroken</item>-->
-<!--        <item>@string/projection</item>-->
+        <!--        <item>@string/stroken</item>-->
+        <!--        <item>@string/projection</item>-->
     </string-array>
     <string-array name="danmaku_style_values">
         <item>0</item>
         <item>1</item>
-<!--        <item>2</item>-->
-<!--        <item>3</item>-->
+        <!--        <item>2</item>-->
+        <!--        <item>3</item>-->
     </string-array>
 
     <string-array name="play_default_quality_entries">
@@ -77,5 +77,20 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+    </string-array>
+
+    <string-array name="danmaku_typeface_entries">
+        <item>DEFAULT</item>
+        <item>DEFAULT_BOLD</item>
+        <item>SERIF</item>
+        <item>SANS_SERIF</item>
+        <item>MONOSPACE</item>
+    </string-array>
+    <string-array name="danmaku_typeface_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 </resources>

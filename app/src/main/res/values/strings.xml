@@ -154,4 +154,7 @@
     <string name="open_with_webview">open with WebView</string>
     <string name="draw_debug_info">draw debug info</string>
     <string name="clean_danmaku_cache">clean danmaku cache</string>
+    <string name="margin_top">margin top</string>
+    <string name="margin_bottom">margin bottom</string>
+    <string name="font">font</string>
 </resources>

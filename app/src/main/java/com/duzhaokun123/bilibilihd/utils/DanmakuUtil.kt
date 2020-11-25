@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.utils
 
+import android.graphics.Typeface
 import android.util.Log
 import com.duzhaokun123.danmakuview.danmaku.*
 import com.duzhaokun123.danmakuview.interfaces.DanmakuBlocker
@@ -49,6 +50,8 @@ object DanmakuUtil {
 
         danmakuConfig.textSizeCoeff = Settings.danmaku.textSize
         danmakuConfig.lineHeight = Settings.danmaku.lineHeight
+        danmakuConfig.marginTop = Settings.danmaku.marginTop
+        danmakuConfig.marginBottom = Settings.danmaku.marginBottom
 
         ClassDanmakuBlocker.reset()
         ClassDanmakuBlocker.apply {
@@ -62,8 +65,17 @@ object DanmakuUtil {
                 }
             }
         }
-
-        // TODO: 20-11-23 其他配置: 字体, 边距
+        danmakuConfig.typeface =
+                when (Settings.danmaku.typefaceUse) {
+                    0 -> Typeface.DEFAULT
+                    1 -> Typeface.DEFAULT_BOLD
+                    2 -> Typeface.SERIF
+                    3 -> Typeface.SANS_SERIF
+                    4 -> Typeface.MONOSPACE
+                    // TODO: 20-11-26 文件选择
+                    else -> Typeface.DEFAULT
+                }
+        // TODO: 20-11-23 其他配置
     }
 
     object ClassDanmakuBlocker : DanmakuBlocker {
