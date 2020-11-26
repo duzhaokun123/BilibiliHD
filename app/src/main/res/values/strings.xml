@@ -157,4 +157,5 @@
     <string name="margin_top">margin top</string>
     <string name="margin_bottom">margin bottom</string>
     <string name="font">font</string>
+    <string name="file">file</string>
 </resources>

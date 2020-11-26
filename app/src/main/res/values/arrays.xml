@@ -85,6 +85,7 @@
         <item>SERIF</item>
         <item>SANS_SERIF</item>
         <item>MONOSPACE</item>
+        <item>@string/file</item>
     </string-array>
     <string-array name="danmaku_typeface_values">
         <item>0</item>
@@ -92,5 +93,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </string-array>
 </resources>

@@ -2,10 +2,12 @@ package com.duzhaokun123.bilibilihd.utils
 
 import android.graphics.Typeface
 import android.util.Log
+import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.danmakuview.danmaku.*
 import com.duzhaokun123.danmakuview.interfaces.DanmakuBlocker
 import com.duzhaokun123.danmakuview.model.DanmakuConfig
 import com.duzhaokun123.danmakuview.ui.DanmakuView
+import java.io.File
 
 object DanmakuUtil {
     private const val TAG = "DanmakuUtil"
@@ -72,7 +74,15 @@ object DanmakuUtil {
                     2 -> Typeface.SERIF
                     3 -> Typeface.SANS_SERIF
                     4 -> Typeface.MONOSPACE
-                    // TODO: 20-11-26 文件选择
+                    5-> {
+                        try {
+                            Typeface.createFromFile(File(Application.getInstance().filesDir, "font.ttf"))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            TipUtil.showToast("自定义字体无效")
+                            Typeface.DEFAULT
+                        }
+                    }
                     else -> Typeface.DEFAULT
                 }
         // TODO: 20-11-23 其他配置

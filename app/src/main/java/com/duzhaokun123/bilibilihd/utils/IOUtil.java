@@ -3,13 +3,14 @@ package com.duzhaokun123.bilibilihd.utils;
 import android.os.Build;
 import android.os.FileUtils;
 
-import java.io.File;
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class IOUtil {
-    public static void copy(InputStream in, OutputStream out) throws IOException {
+    public static void copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             FileUtils.copy(in, out);
         } else {

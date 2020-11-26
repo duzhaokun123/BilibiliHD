@@ -35,5 +35,6 @@ after_success:
     -T app/build/outputs/apk/release/*.apk
     --user "$jianguoyun_username:$jianguoyun_password"
     "https://dav.jianguoyun.com/dav/BilibiliHD/"
+  - sudo apt-get install -y python3-pip
   - pip3 install lanzou-api --upgrade
   - python3 script/upload_to_lanzou.py app/build/outputs/apk/release/*.apk
