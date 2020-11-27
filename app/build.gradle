@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -14,15 +16,6 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 
-def getGitCommitCount = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine "git", "rev-list", "dev", "--count"
-        standardOutput = stdout
-    }
-    return stdout.toString().toInteger()
-}
-
 def isHasChange = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
@@ -32,8 +25,9 @@ def isHasChange = { ->
     return !stdout.toString().trim().isEmpty()
 }
 
-def isRunningOnTravis = { ->
-    return System.getenv("TRAVIS") == "true"
+def isRunningOnCI = { ->
+    //TODO
+    return false
 }
 
 android {
@@ -43,14 +37,14 @@ android {
         applicationId "com.duzhaokun123.bilibilihd"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode getGitCommitCount()
-        versionName "0.1-git.${getGitHash()}${isRunningOnTravis() ? "-travis" : ""}${isHasChange() ? "-changed" : ""}"
+        versionCode 137
+        versionName "0.1.0+${getGitHash()}${isRunningOnCI() ? "-ci" : ""}${isHasChange() ? "-changed" : ""}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "IS_GIT_VERSION", "true")
         multiDexEnabled true
         resConfigs "en", "zh-rCN"
     }
-    if (isRunningOnTravis()) {
+    if (isRunningOnCI()) {
         signingConfigs {
             release {
                 storeFile = file("../ReleaseKey.jks")
@@ -67,7 +61,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-            if (isRunningOnTravis()) {
+            if (isRunningOnCI()) {
                 signingConfig signingConfigs.release
             }
         }
@@ -101,7 +95,7 @@ android {
     }
     applicationVariants.all { variants ->
         variants.outputs.all {
-            outputFileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${defaultConfig.versionCode}_${buildType.name}.apk"
+            outputFileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${defaultConfig.versionCode}_${buildType.name}_${new SimpleDateFormat("yy-MM-dd-HH-mm").format(System.currentTimeMillis())}.apk"
         }
     }
 }

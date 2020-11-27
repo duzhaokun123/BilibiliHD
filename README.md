@@ -1,5 +1,4 @@
 # Bilibili HD
-[![Build Status](https://travis-ci.com/duzhaokun123/BilibiliHD.svg?branch=dev)](https://travis-ci.com/duzhaokun123/BilibiliHD)
 [![GitHub license](https://img.shields.io/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
 
 非官方哔哩哔哩客户端
@@ -119,7 +118,7 @@
 
 ### 从源代码构建注意
 ```shell script
-git clone https://github.com/duzhaokun123/BilibiliHD.git #一定要完整克隆, 否则版本号不正确
+git clone https://github.com/duzhaokun123/BilibiliHD.git
 cd BilibiliHD
 chmod +x script/sync_third_party.sh
 script/sync_third_party.sh
