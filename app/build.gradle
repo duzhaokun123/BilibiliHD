@@ -63,10 +63,8 @@ android {
     buildTypes {
 
         release {
-            // FIXME: 由于 XML 解析器, 不能删减
-            minifyEnabled false
-//            minifyEnabled true
-//            shrinkResources true
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
             if (isRunningOnTravis()) {
@@ -129,8 +127,6 @@ dependencies {
 
     //bilibili-api
     implementation project(":bilibili-api")
-    implementation 'javax.xml.stream:stax-api:1.0'
-    implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
 
     //DrawerLayout
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'

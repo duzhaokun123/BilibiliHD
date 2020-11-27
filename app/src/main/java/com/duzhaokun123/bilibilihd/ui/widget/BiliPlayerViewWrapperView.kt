@@ -59,7 +59,7 @@ class BiliPlayerViewWrapperView @JvmOverloads constructor(context: Context, attr
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying) {
                     baseBind.bpv.danmakuResume()
-                    baseBind.bpv.setPbExoBufferingVisibility(INVISIBLE)
+                    baseBind.bpv.setPbExoBufferingVisibility(GONE)
                     if (onPlayingStatusChangeListener != null) {
                         onPlayingStatusChangeListener!!(PlayingStatus.PLAYING)
                     }

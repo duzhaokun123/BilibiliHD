@@ -90,7 +90,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         overlayBaseBind = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_player_overlay, overlay, true);
         handler = new Handler(this);
 
-        pbExoBuffering = findViewById(R.id.exo_buffering);
+        pbExoBuffering = overlayBaseBind.pb;
         ibFullscreen = findViewById(R.id.ib_fullscreen);
         ibNext = findViewById(R.id.ib_next);
         btnDanmakuSwitch = findViewById(R.id.btn_danmaku_switch);

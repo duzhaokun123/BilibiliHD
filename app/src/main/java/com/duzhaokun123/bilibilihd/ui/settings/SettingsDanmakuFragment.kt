@@ -32,8 +32,8 @@ class SettingsDanmakuFragment : PreferenceFragmentCompat() {
             true
         }
         findPreference<SimpleMenuPreference>("danmaku_typeface")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+            File(requireContext().filesDir, "font.ttf").delete()
             if (newValue == "5") {
-                File(requireContext().filesDir, "font.ttf").delete()
                 startActivityForResult(Intent(Intent.ACTION_GET_CONTENT).apply {
                     type = "font/ttf"
                     addCategory(Intent.CATEGORY_OPENABLE)
