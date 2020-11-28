@@ -1,4 +1,5 @@
 # Bilibili HD
+[![CI](https://github.com/duzhaokun123/BilibiliHD/workflows/build/badge.svg)](https://github.com/duzhaokun123/BilibiliHD/actions)
 [![GitHub license](https://img.shields.io/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
 
 非官方哔哩哔哩客户端

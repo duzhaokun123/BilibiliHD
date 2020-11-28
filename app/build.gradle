@@ -26,8 +26,7 @@ def isHasChange = { ->
 }
 
 def isRunningOnCI = { ->
-    //TODO
-    return false
+    return System.getenv("CI") == "true"
 }
 
 android {
@@ -48,9 +47,9 @@ android {
         signingConfigs {
             release {
                 storeFile = file("../ReleaseKey.jks")
-                storePassword = System.getenv("release_key")
+                storePassword = System.getenv("REL_KEY")
                 keyAlias = "key0"
-                keyPassword = System.getenv("release_key")
+                keyPassword = System.getenv("REL_KEY")
             }
         }
     }

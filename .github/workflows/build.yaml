@@ -1,0 +1,32 @@
+name: Build
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync third party
+        run: sh script/sync_third_party.sh
+      - name: Build
+        env:
+          REL_KEY: ${{ secrets.REL_KEY }}
+        run: |
+          openssl aes-256-cbc -K ${{ secrets.ENC_KEY }} -iv ${{ secrets.ENC_IV }} -in ReleaseKey.jks.enc -out ReleaseKey.jks -d
+          ./gradlew assembleRelease
+      - name: Upload JianGuonYun
+        run: curl -T app/build/outputs/apk/release/*.apk --user "${{ secrets.JG_USN }}:${{ secrets.JG_PSW }}" "https://dav.jianguoyun.com/dav/BilibiliHD/"
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.6'
+      - name: Publish LanZou
+        env:
+          LZ_YLOGIN: ${{ secrets.LZ_YLOGIN }}
+          LZ_PHPDISK_INFO: ${{ secrets.LZ_PHPDISK_INFO }}
+        run: |
+          pip3 install lanzou-api --upgrade
+          python3 script/upload_to_lanzou.py app/build/outputs/apk/release/*.apk

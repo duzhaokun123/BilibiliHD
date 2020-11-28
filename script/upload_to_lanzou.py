@@ -5,7 +5,7 @@ from lanzou.api import LanZouCloud
 
 if __name__ == '__main__':
     lzy = LanZouCloud()
-    cookie = {'ylogin': os.getenv('lanzou_ylogin'), 'phpdisk_info': os.getenv('lanzou_phpdisk_info')}
+    cookie = {'ylogin': os.getenv('LZ_YLOGIN'), 'phpdisk_info': os.getenv('LZ_PHPDISK_INFO')}
     lzy.login_by_cookie(cookie)
 
     bilibili_hd_dir_id = lzy.get_dir_list().find_by_name('Bilibili_HD').id
