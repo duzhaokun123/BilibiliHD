@@ -94,7 +94,9 @@ android {
     }
     applicationVariants.all { variants ->
         variants.outputs.all {
-            outputFileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${defaultConfig.versionCode}_${buildType.name}_${new SimpleDateFormat("yy-MM-dd-HH-mm").format(System.currentTimeMillis())}.apk"
+            def simpleDataFormat = new SimpleDateFormat("yy-MM-dd-HH-mm")
+            simpleDataFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"))
+            outputFileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${defaultConfig.versionCode}_${buildType.name}_${simpleDataFormat.format(System.currentTimeMillis())}.apk"
         }
     }
 }
@@ -127,7 +129,7 @@ dependencies {
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'com.google.android.material:material:1.3.0-alpha03'
+    implementation 'com.google.android.material:material:1.3.0-alpha04'
 //    implementation 'androidx.navigation:navigation-fragment:2.2.1'
 //    implementation 'androidx.navigation:navigation-ui:2.2.1'
 //    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'

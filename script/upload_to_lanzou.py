@@ -18,4 +18,9 @@ if __name__ == '__main__':
 
     code = lzy.upload_file(sys.argv[1], bilibili_hd_v01_dir_id, uploaded_handler=handler)
 
+    if code == 0:
+        print('success')
+    else:
+        print(f'fail with code ${code}')
+
     exit(code)

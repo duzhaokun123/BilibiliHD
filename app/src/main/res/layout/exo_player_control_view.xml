@@ -116,6 +116,15 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white" />
 
+        <Button
+            android:id="@+id/btn_speed"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0x"
+            android:textColor="@android:color/white"
+            tools:ignore="HardcodedText" />
+
         <ImageButton
             android:id="@+id/ib_fullscreen"
             android:layout_width="50dp"

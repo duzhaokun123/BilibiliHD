@@ -1,5 +1,5 @@
 # Bilibili HD
-[![CI](https://github.com/duzhaokun123/BilibiliHD/workflows/build/badge.svg)](https://github.com/duzhaokun123/BilibiliHD/actions)
+![Build](https://github.com/duzhaokun123/BilibiliHD/workflows/Build/badge.svg)
 [![GitHub license](https://img.shields.io/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
 
 非官方哔哩哔哩客户端
@@ -36,7 +36,7 @@
         - [x] 控制清晰度
         - [x] 播放器控制换p
         - [x] 拖动时预览
-        - [ ] 倍速
+        - [x] 倍速
         - [x] 精准空降
         - [ ] 屏幕滑动进度控制
         - [x] 远程播放 (仅在本机通过模拟辅助显示设备测试)

@@ -3,18 +3,22 @@ package com.duzhaokun123.bilibilihd.ui.widget;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +38,7 @@ import com.duzhaokun123.bilibilihd.utils.ImageViewUtil;
 import com.duzhaokun123.bilibilihd.utils.OtherUtils;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.duzhaokun123.danmakuview.ui.DanmakuView;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
@@ -53,7 +58,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private FrameLayout overlay;
     private ProgressBar pbExoBuffering;
     private ImageButton ibFullscreen, ibNext;
-    private Button btnDanmakuSwitch, btnDanmaku, btnQuality, btnLine;
+    private Button btnDanmakuSwitch, btnDanmaku, btnQuality, btnLine, btnSpeed;
     private LinearLayout llTime;
     private DefaultTimeBar exoProgress;
     private TextView tvLive;
@@ -97,12 +102,14 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         btnDanmaku = findViewById(R.id.btn_danmaku);
         btnQuality = findViewById(R.id.btn_quality);
         btnLine = findViewById(R.id.btn_line);
+        btnSpeed = findViewById(R.id.btn_speed);
         llTime = findViewById(R.id.ll_time);
         exoProgress = findViewById(R.id.exo_progress);
         tvLive = findViewById(R.id.tv_live);
         ll = findViewById(R.id.ll);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -212,6 +219,49 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             }
         });
         ll.setOnClickListener(v -> {
+        });
+        btnSpeed.setOnClickListener(v -> {
+            final float[] speed = {Objects.requireNonNull(getPlayer()).getPlaybackParameters().speed};
+            PopupWindow popupWindow = new PopupWindow(OtherUtils.dp2px(300), OtherUtils.dp2px(50));
+            @SuppressLint("InflateParams") View popSpeed = LayoutInflater.from(getContext()).inflate(R.layout.pop_speed, null, false);
+            popupWindow.setContentView(popSpeed);
+            popupWindow.setOutsideTouchable(true);
+            SeekBar sbSpeed = popSpeed.findViewById(R.id.sb_speed);
+            TextView tvSpeed = popSpeed.findViewById(R.id.tv_speed);
+            Button btnP01 = popSpeed.findViewById(R.id.btn_p01);
+            Button btnM01 = popSpeed.findViewById(R.id.btn_m01);
+            sbSpeed.setProgress((int) (100 * speed[0]));
+            tvSpeed.setText("" + speed[0] + "x");
+            sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    speed[0] = progress / 100F;
+                    tvSpeed.setText("" + speed[0] + "x");
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+            btnP01.setOnClickListener(v1 -> sbSpeed.setProgress(sbSpeed.getProgress() + 10, true));
+            btnM01.setOnClickListener(v1 -> sbSpeed.setProgress(sbSpeed.getProgress() - 10, true));
+            popupWindow.setOnDismissListener(() -> {
+                if (speed[0] == 0F) {
+                    TipUtil.showToast("should not be 0.0");
+                    return;
+                }
+                btnSpeed.setText("" + speed[0] + "x");
+                PlaybackParameters param = new PlaybackParameters(speed[0]);
+                Objects.requireNonNull(getPlayer()).setPlaybackParameters(param);
+                overlayBaseBind.dv.setSpeed(speed[0]);
+            });
+            popupWindow.showAsDropDown(btnSpeed);
+
         });
     }
 
@@ -358,10 +408,12 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             exoProgress.setVisibility(GONE);
             ibNext.setVisibility(GONE);
             tvLive.setVisibility(VISIBLE);
+            btnSpeed.setVisibility(GONE);
         } else {
             llTime.setVisibility(VISIBLE);
             exoProgress.setVisibility(VISIBLE);
             tvLive.setVisibility(GONE);
+            btnSpeed.setVisibility(VISIBLE);
         }
     }
 
