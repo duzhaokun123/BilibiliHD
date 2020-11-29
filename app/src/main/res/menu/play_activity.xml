@@ -60,6 +60,10 @@
         app:showAsAction="never">
         <menu>
             <item
+                android:id="@+id/danmaku_reload"
+                android:title="@string/reload" />
+
+            <item
                 android:id="@+id/sync_danmaku_progress"
                 android:title="@string/sync_danmaku_progress" />
             <item

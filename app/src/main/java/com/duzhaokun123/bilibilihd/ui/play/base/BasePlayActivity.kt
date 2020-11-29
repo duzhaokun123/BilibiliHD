@@ -308,6 +308,10 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 baseBind.bpvwv.biliPlayerView.danmakuView.cleanCache()
                 true
             }
+            R.id.danmaku_reload -> {
+                onReloadDanmaku()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -487,6 +491,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     abstract fun onDownload()
     abstract fun onStartAddToHistory()
     abstract fun onSendDanmaku()
+    abstract fun onReloadDanmaku()
 
     protected open fun findViews2() {}
 }

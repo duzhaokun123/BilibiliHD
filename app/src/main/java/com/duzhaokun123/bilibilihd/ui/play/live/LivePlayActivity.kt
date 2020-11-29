@@ -103,6 +103,10 @@ class LivePlayActivity : BasePlayActivity<PlayExtLiveBinding>() {
         }
     }
 
+    override fun onReloadDanmaku() {
+        // TODO: 20-11-30
+    }
+
     private fun loadRoomInfo() {
         GlobalScope.launch(Dispatchers.IO) {
             try {

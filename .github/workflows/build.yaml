@@ -17,13 +17,13 @@ jobs:
         run: |
           openssl aes-256-cbc -K ${{ secrets.ENC_KEY }} -iv ${{ secrets.ENC_IV }} -in ReleaseKey.jks.enc -out ReleaseKey.jks -d
           ./gradlew assembleRelease
-      - name: Upload JianGuonYun
+      - name: Upload to JianGuonYun
         run: curl -T app/build/outputs/apk/release/*.apk --user "${{ secrets.JG_USN }}:${{ secrets.JG_PSW }}" "https://dav.jianguoyun.com/dav/BilibiliHD/"
       - name: Setup python
         uses: actions/setup-python@v2
         with:
           python-version: '3.8.6'
-      - name: Publish LanZou
+      - name: Publish to LanZou
         env:
           LZ_YLOGIN: ${{ secrets.LZ_YLOGIN }}
           LZ_PHPDISK_INFO: ${{ secrets.LZ_PHPDISK_INFO }}

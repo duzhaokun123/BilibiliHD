@@ -177,7 +177,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
                     }
 
                     override val defaultIndex
-                        get() =  if (Settings.play.defaultQualityType == 1) {
+                        get() = if (Settings.play.defaultQualityType == 1) {
                             videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.quality)
                         } else {
                             videoPlayUrl!!.data.acceptQuality.indexOf(videoPlayUrl!!.data.dash.video[0].id)
@@ -270,5 +270,10 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
 
     override fun onSendDanmaku() {
         TipUtil.showTip(this, "没有实现")
+    }
+
+    override fun onReloadDanmaku() {
+        if (biliView != null)
+            loadDanmakuByAidCid(aid, cid, biliView!!.data.pages[page - 1].duration)
     }
 }

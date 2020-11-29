@@ -9,129 +9,143 @@
         android:id="@+id/exo_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/ll"
+        android:layout_above="@id/fl"
         android:background="@color/colorTransparentBlack"
         app:played_color="@color/colorAccent" />
 
-    <LinearLayout
-        android:id="@+id/ll"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorTransparentBlack"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/exo_play"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:foreground="?selectableItemBackground"
-            android:src="@drawable/ic_play_arrow"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/exo_pause"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:foreground="?selectableItemBackground"
-            android:src="@drawable/ic_pause"
-            tools:ignore="ContentDescription" />
-
-        <ImageButton
-            android:id="@+id/ib_next"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:foreground="?selectableItemBackground"
-            android:src="@drawable/ic_skip_next_write"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
-
-        <Button
-            android:id="@+id/btn_danmaku_switch"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/danmaku"
-            android:textColor="@android:color/white" />
+        app:flexWrap="wrap"
+        app:justifyContent="flex_end">
 
         <LinearLayout
-            android:id="@+id/ll_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_flexGrow="1">
 
-            <TextView
-                android:id="@+id/exo_position"
+            <ImageButton
+                android:id="@+id/exo_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/ic_play_arrow"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/exo_pause"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/ic_pause"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/ib_next"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/ic_skip_next_write"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
+            <Button
+                android:id="@+id/btn_danmaku_switch"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/danmaku"
                 android:textColor="@android:color/white" />
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/ll_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/"
-                android:textColor="@android:color/white"
-                tools:ignore="HardcodedText" />
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/exo_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@android:color/white"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/exo_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/exo_duration"
+                android:id="@+id/tv_live"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/live"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_danmaku"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/danmaku"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_live"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/live"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_danmaku"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/danmaku"
-            android:textColor="@android:color/white" />
+            <Button
+                android:id="@+id/btn_quality"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
 
-        <Button
-            android:id="@+id/btn_quality"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white" />
+            <Button
+                android:id="@+id/btn_line"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
 
-        <Button
-            android:id="@+id/btn_line"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white" />
+            <Button
+                android:id="@+id/btn_speed"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0x"
+                android:textColor="@android:color/white"
+                tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/btn_speed"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1.0x"
-            android:textColor="@android:color/white"
-            tools:ignore="HardcodedText" />
-
-        <ImageButton
-            android:id="@+id/ib_fullscreen"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:foreground="?selectableItemBackground"
-            android:src="@drawable/ic_fullscreen"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/ib_fullscreen"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/ic_fullscreen"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 </RelativeLayout>

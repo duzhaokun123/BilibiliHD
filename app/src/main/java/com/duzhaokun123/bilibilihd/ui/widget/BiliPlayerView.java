@@ -42,6 +42,7 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TimeBar;
+import com.google.android.flexbox.FlexboxLayout;
 import com.hiczp.bilibili.api.web.model.VideoShot;
 
 import java.util.Objects;
@@ -62,7 +63,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
     private LinearLayout llTime;
     private DefaultTimeBar exoProgress;
     private TextView tvLive;
-    private LinearLayout ll;
+    private FlexboxLayout fl;
 
     private DanmakuLoadListener danmakuLoadListener;
     private BiliPlayerViewWrapperView.OnFullscreenClickListener onFullscreenClickListener;
@@ -106,7 +107,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
         llTime = findViewById(R.id.ll_time);
         exoProgress = findViewById(R.id.exo_progress);
         tvLive = findViewById(R.id.tv_live);
-        ll = findViewById(R.id.ll);
+        fl = findViewById(R.id.fl);
     }
 
     @SuppressLint("SetTextI18n")
@@ -218,7 +219,7 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 overlayBaseBind.ivPreview.setVisibility(GONE);
             }
         });
-        ll.setOnClickListener(v -> {
+        fl.setOnClickListener(v -> {
         });
         btnSpeed.setOnClickListener(v -> {
             final float[] speed = {Objects.requireNonNull(getPlayer()).getPlaybackParameters().speed};
@@ -291,13 +292,13 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 message.setData(bundle);
                 handler.sendMessage(message);
             }
-            overlayBaseBind.dv.parse(new ProtobufBiliDanmakuParser(dmSegMobileReplies));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            handler.sendEmptyMessage(WHAT_DANMAKU_LOAD_SUCCESSFUL);
+            overlayBaseBind.dv.parse(new ProtobufBiliDanmakuParser(dmSegMobileReplies),
+                    danmakus -> {
+                        handler.sendEmptyMessageDelayed(WHAT_DANMAKU_LOAD_SUCCESSFUL, 17);
+                        return null;
+                    }
+            );
+
         }).start();
     }
 
@@ -337,8 +338,8 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
                 }
                 if (getPlayer() != null) {
                     overlayBaseBind.dv.seekTo(getPlayer().getContentPosition());
-                    if (!getPlayer().isPlaying()) {
-                        overlayBaseBind.dv.pause();
+                    if (getPlayer().isPlaying()) {
+                        overlayBaseBind.dv.resume();
                     }
                 }
                 pbExoBuffering.setVisibility(INVISIBLE);

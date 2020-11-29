@@ -36,8 +36,8 @@ android {
         applicationId "com.duzhaokun123.bilibilihd"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 137
-        versionName "0.1.0+${getGitHash()}${isRunningOnCI() ? "-ci" : ""}${isHasChange() ? "-changed" : ""}"
+        versionCode 138
+        versionName "0.1.1+${getGitHash()}${isRunningOnCI() ? "-ci" : ""}${isHasChange() ? "-changed" : ""}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "IS_GIT_VERSION", "true")
         multiDexEnabled true

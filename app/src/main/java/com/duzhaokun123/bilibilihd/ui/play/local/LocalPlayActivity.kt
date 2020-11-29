@@ -23,6 +23,10 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
     private lateinit var officialAppDownloadUri: Uri
@@ -120,5 +124,20 @@ class LocalPlayActivity : BasePlayActivity<PlayExtLocalBinding>() {
 
     override fun onSendDanmaku() {
         //ignore
+    }
+
+    override fun onReloadDanmaku() {
+        model.danmakuUri.value?.let {
+            val inputStream = contentResolver.openInputStream(it)!!
+            loadDanmakuByBiliDanmakuParser(XmlBiliDanmakuParser(inputStream)) {
+                inputStream.close()
+                GlobalScope.launch(Dispatchers.Main) {
+                    baseBind.bpvwv.biliPlayerView.danmakuView.seekTo(baseBind.bpvwv.biliPlayerView.player!!.contentPosition)
+                    delay(17)
+                    if (baseBind.bpvwv.isPlaying)
+                        baseBind.bpvwv.biliPlayerView.danmakuView.resume()
+                }
+            }
+        }
     }
 }
