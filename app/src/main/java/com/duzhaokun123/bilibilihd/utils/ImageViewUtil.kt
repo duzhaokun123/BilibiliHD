@@ -16,6 +16,9 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.LayoutIvOverlayBinding
 import com.hiczp.bilibili.api.web.model.VideoShot
 import com.stfalcon.imageviewer.StfalconImageViewer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -77,32 +80,29 @@ object ImageViewUtil {
 
     fun viewImage(context: Context, pImage: String?, pImageView: ImageView? = null, share: Boolean = true) {
         if (pImage == null) return
-        var shareUri: Uri = Uri.EMPTY
-        if (share) {
-            Thread {
-                val srcFile = Glide.with(context).asFile().load(pImage).submit().get()
-                val shareFile = File(context.cacheDir, "shareImg${File.separatorChar}${System.currentTimeMillis()}.jpeg").apply { parentFile!!.mkdirs() } // FIXME: 20-11-2 你凭什么认为一定是 jpeg 格式
-                FileInputStream(srcFile).use { `in` ->
-                    FileOutputStream(shareFile).use { out ->
-                        IOUtil.copy(`in`, out)
-                    }
-                }
-                shareUri = FileProvider.getUriForFile(context, "com.duzhaokun123.bilibilihd.fileprovider", shareFile)
-            }.start()
-        }
         val overlayBinding =
                 DataBindingUtil.inflate<LayoutIvOverlayBinding>(LayoutInflater.from(context), R.layout.layout_iv_overlay, null, false)
         overlayBinding.tb.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.share -> {
                     if (share) {
-                        val shareIntent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_STREAM, shareUri)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            setDataAndType(shareUri, context.contentResolver.getType(shareUri))
+                        GlobalScope.launch(Dispatchers.IO) {
+                            val shareUri: Uri
+                            val srcFile = Glide.with(context).asFile().load(pImage).submit().get()
+                            val shareFile = File(context.cacheDir, "shareImg${File.separatorChar}share.jpeg").apply { parentFile!!.mkdirs() } // FIXME: 20-11-2 你凭什么认为一定是 jpeg 格式
+                            FileInputStream(srcFile).use { `in` ->
+                                FileOutputStream(shareFile).use { out ->
+                                    IOUtil.copy(`in`, out)
+                                }
+                            }
+                            shareUri = FileProvider.getUriForFile(context, "com.duzhaokun123.bilibilihd.fileprovider", shareFile)
+                            context.startActivity(Intent.createChooser(Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_STREAM, shareUri)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                setDataAndType(shareUri, context.contentResolver.getType(shareUri))
+                            }, context.getText(R.string.share_to)))
                         }
-                        context.startActivity(Intent.createChooser(shareIntent, context.getText(R.string.share_to)))
                     } else {
                         TipUtil.showTip(context, R.string.unshareable)
                     }

@@ -57,6 +57,7 @@ object DownloadUtil {
                             put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis().toString())
                             put(MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/bilibili HD")
                             put(MediaStore.Images.Media.IS_PENDING, 1)
+                            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg") // FIXME: 20-12-2 为什么一定是 jpeg
                         }
                         val pictureContentUri = resolver.insert(pictureCollection, pictureValues)!!
                         resolver.openFileDescriptor(pictureContentUri, "w", null)!!.use {

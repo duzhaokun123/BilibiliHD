@@ -16,6 +16,7 @@ import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import com.hiczp.bilibili.api.app.model.SplashList;
 
+// TODO: 20-12-2 重写
 public class WelcomeActivity extends BaseActivity<ActivityWelcomeBinding> {
 
     private SplashList splashList;
