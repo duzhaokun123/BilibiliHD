@@ -4,7 +4,7 @@ import android.util.Xml
 import com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser.ProtobufBiliDanmakuParser.Companion.initialSpecialDanmakuData
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil.toDanmakuType
-import com.duzhaokun123.danmakuview.danmaku.BiliSpecialDanmaku
+import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
 import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
 import com.duzhaokun123.danmakuview.model.Danmakus
 import org.xmlpull.v1.XmlPullParser
@@ -38,7 +38,7 @@ class XmlBiliDanmakuParser(inputStream: InputStream) : DanmakuParser {
                     danmaku.textColor = color
                     danmaku.textShadowColor =
                             if (color <= android.graphics.Color.BLACK) android.graphics.Color.WHITE else android.graphics.Color.BLACK
-                    if (danmaku is BiliSpecialDanmaku) initialSpecialDanmakuData(danmaku)
+                    if (danmaku is SpecialDanmaku) initialSpecialDanmakuData(danmaku)
                     danmakus.add(danmaku) }
             } else {
                 var depth = 1

@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.ui.settings;
 
 import android.annotation.SuppressLint;
+import android.icu.text.SimpleDateFormat;
 
 import com.duzhaokun123.bilibilihd.BuildConfig;
 import com.duzhaokun123.bilibilihd.R;
@@ -25,6 +26,7 @@ public class AboutFragment extends BaseFragment<FragmentAboutBinding> {
     protected void initView() {
         baseBind.version.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
         baseBind.buildType.setText(getString(R.string.build_type) + " " + BuildConfig.BUILD_TYPE);
+        baseBind.buildTime.append(" " + SimpleDateFormat.getDateTimeInstance().format(BuildConfig.BUILD_TIME));
         baseBind.rlProjectHome.setOnClickListener(v -> BrowserUtil.openCustomTab(requireContext(), getString(R.string.project_home_url)));
     }
 

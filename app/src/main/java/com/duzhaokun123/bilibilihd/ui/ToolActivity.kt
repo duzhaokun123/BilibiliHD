@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui
 
+import android.app.Activity
 import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
@@ -13,9 +14,16 @@ import okhttp3.internal.toLongOrDefault
 import android.content.Intent
 import com.duzhaokun123.bilibilihd.ui.play.live.LivePlayActivity
 import com.duzhaokun123.bilibilihd.utils.Logcat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ToolActivity : BaseActivity<ActivityToolBinding>() {
+    companion object {
+        const val REQUEST_CODE_SAVE_LOG = 0
+    }
+
     override fun initConfig() = FIX_LAYOUT
 
     override fun initLayout() = R.layout.activity_tool
@@ -59,8 +67,26 @@ class ToolActivity : BaseActivity<ActivityToolBinding>() {
         baseBind.btnLiveGo.setOnClickListener {
             LivePlayActivity.enter(this, baseBind.etLiveCid.text.toString().toLong())
         }
-        baseBind.btnSaveLog.setOnClickListener { Logcat.saveLog(this) }
+        baseBind.btnSaveLog.setOnClickListener {
+            startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/log"
+                putExtra(Intent.EXTRA_TITLE, "${System.currentTimeMillis()}.log")
+            }, REQUEST_CODE_SAVE_LOG)
+        }
     }
 
     override fun initData() {}
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SAVE_LOG && resultCode == Activity.RESULT_OK && data != null) {
+            GlobalScope.launch(Dispatchers.IO) {
+                contentResolver.openOutputStream(data.data!!).use {
+                    Logcat.saveLog(it!!)
+                }
+                launch(Dispatchers.Main) { TipUtil.showToast(getString(R.string.saved_to_s, data.dataString)) }
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.duzhaokun123.bilibilihd.mybilibiliapi.danamku.parser
 
 import android.graphics.Color
+import android.graphics.PointF
 import android.text.TextUtils
 import com.duzhaokun123.bilibilihd.proto.BiliDanmaku
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
@@ -8,6 +9,7 @@ import com.duzhaokun123.bilibilihd.utils.DanmakuUtil.toDanmakuType
 import com.duzhaokun123.bilibilihd.utils.toFloatOrDefault
 import com.duzhaokun123.danmakuview.Value
 import com.duzhaokun123.danmakuview.danmaku.BiliSpecialDanmaku
+import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
 import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
 import com.duzhaokun123.danmakuview.model.Danmakus
 import org.json.JSONArray
@@ -15,7 +17,10 @@ import org.json.JSONException
 
 class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmaku.DmSegMobileReply?>) : DanmakuParser {
     companion object {
-        fun initialSpecialDanmakuData(danmaku: BiliSpecialDanmaku) {
+        const val BILI_PLAYER_WIDTH = 682.0F
+        const val BILI_PLAYER_HEIGHT = 438.0F
+
+        fun initialSpecialDanmakuData(danmaku: SpecialDanmaku) {
             val text = danmaku.text.trim { it <= ' ' }
             if (text.startsWith('[')) {
                 var textArray: Array<String?>? = null
@@ -28,6 +33,7 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
+                // TODO: 20-12-2
                 if (textArray != null && textArray.size >= 5 && textArray[4].isNullOrEmpty().not()) {
                     danmaku.text = textArray[4]!!
                     danmaku.fillText()
@@ -72,16 +78,19 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                         endY *= BiliSpecialDanmaku.BILI_PLAYER_HEIGHT
                     }
                     danmaku.duration = alphaDuration
-                    danmaku.rotationZ = rotateZ
-                    danmaku.rotationY = rotateY
-                    danmaku.beginX = beginX
-                    danmaku.beginY = beginY
-                    danmaku.endX = endX
-                    danmaku.endY = endY
-                    danmaku.translationDuration = translationDuration
-                    danmaku.translationStartDelay = translationStartDelay
-                    danmaku.beginAlpha = beginAlpha
-                    danmaku.endAlpha = endAlpha
+//                    danmaku.rotationZ = rotateZ
+                    danmaku.keyframes[0F] = Triple(PointF(beginX / BILI_PLAYER_WIDTH, beginY / BILI_PLAYER_HEIGHT), rotateY, beginAlpha)
+                    danmaku.keyframes[1F] = Triple(PointF(endX / BILI_PLAYER_WIDTH, endY / BILI_PLAYER_HEIGHT), rotateY, endAlpha)
+
+//                    danmaku.rotationY = rotateY
+//                    danmaku.beginX = beginX
+//                    danmaku.beginY = beginY
+//                    danmaku.endX = endX
+//                    danmaku.endY = endY
+//                    danmaku.translationDuration = translationDuration
+//                    danmaku.translationStartDelay = translationStartDelay
+//                    danmaku.beginAlpha = beginAlpha
+//                    danmaku.endAlpha = endAlpha
                     if (textArray.size >= 12) {
                         if (textArray[11].isNullOrEmpty().not() && textArray[11].toBoolean()) {
                             danmaku.textShadowColor = Color.TRANSPARENT
@@ -90,10 +99,10 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                     if (textArray.size >= 13) {
                         //TODO 字体 textArray[12]
                     }
-                    if (textArray.size >= 14) {
-                        // Linear.easeIn or Quadratic.easeOut
-                        danmaku.isQuadraticEaseOut = "0" == textArray[13]
-                    }
+//                    if (textArray.size >= 14) {
+//                        // Linear.easeIn or Quadratic.easeOut
+//                        danmaku.isQuadraticEaseOut = "0" == textArray[13]
+//                    }
                     if (textArray.size >= 15) {
                         // 路径数据
                         if ("" != textArray[14]) {
@@ -110,7 +119,12 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                                             points[i][1] = pointArray[1].toFloatOrDefault()
                                         }
                                     }
-                                    danmaku.setLinePathData(points)
+                                    val t = danmaku.duration.toFloat() / points.size
+                                    var a = 0F
+                                    points.forEachIndexed { index, floats ->
+                                        danmaku.keyframes[a] = Triple(PointF(floats[0] / BILI_PLAYER_WIDTH, floats[1] / BILI_PLAYER_HEIGHT), rotateY, beginAlpha + (endAlpha - beginAlpha) * (index / points.size))
+                                        a += t
+                                    }
                                 }
                             }
                         }
@@ -137,7 +151,7 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
                         danmaku.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
                         danmaku.text = danmakuElem.content
 
-                        if (danmaku is BiliSpecialDanmaku)
+                        if (danmaku is SpecialDanmaku)
                             initialSpecialDanmakuData(danmaku)
 
                         danmakus.add(danmaku)

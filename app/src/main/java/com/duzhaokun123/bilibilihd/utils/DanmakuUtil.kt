@@ -23,7 +23,7 @@ object DanmakuUtil {
             4 -> SimpleDanmakuFactory.Type.BOTTOM_DANMAKU
             5 -> SimpleDanmakuFactory.Type.TOP_DANMAKU
             6 -> SimpleDanmakuFactory.Type.L2R_DANMAKU
-            7 -> SimpleDanmakuFactory.Type.BILI_SPECIAL_DANMAKU
+            7 -> SimpleDanmakuFactory.Type.SPECIAL_DANMAKU
             else -> {
                 Log.e(TAG, "unknowen type $this, R2L_DANMAKU as default")
                 SimpleDanmakuFactory.Type.R2L_DANMAKU
