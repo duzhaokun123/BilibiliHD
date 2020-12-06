@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="space"
+            type="com.hiczp.bilibili.api.app.model.Space" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,6 +47,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
+                android:text="@{space.data.card.name}"
                 android:textColor="@color/ordinaryText"
                 android:textSize="20sp"
                 android:transitionName="name" />
@@ -79,6 +87,7 @@
                 android:layout_below="@id/tv_name"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="20dp"
+                android:text="@{space.data.card.sign}"
                 android:textIsSelectable="true" />
 
             <LinearLayout
@@ -100,7 +109,7 @@
                         android:id="@+id/tv_fans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
+                        android:text="@{String.valueOf(space.data.card.fans)}"
                         android:textColor="@color/ordinaryText"
                         android:textSize="18sp"
                         tools:ignore="HardcodedText" />
@@ -122,7 +131,7 @@
                         android:id="@+id/tv_watching"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
+                        android:text="@{String.valueOf(space.data.card.attention)}"
                         android:textColor="@color/ordinaryText"
                         android:textSize="18sp"
                         tools:ignore="HardcodedText" />

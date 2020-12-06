@@ -159,4 +159,6 @@
     <string name="font">font</string>
     <string name="file">file</string>
     <string name="build_time">build time</string>
+    <string name="user_space">user space</string>
+    <string name="expires_in">expires in</string>
 </resources>

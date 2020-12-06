@@ -157,4 +157,6 @@
     <string name="font">字体</string>
     <string name="file">文件</string>
     <string name="build_time">构建时间</string>
+    <string name="user_space">用户空间</string>
+    <string name="expires_in">过期于</string>
 </resources>

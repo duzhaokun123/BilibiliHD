@@ -11,6 +11,7 @@ import com.duzhaokun123.danmakuview.Value
 import com.duzhaokun123.danmakuview.danmaku.BiliSpecialDanmaku
 import com.duzhaokun123.danmakuview.danmaku.SpecialDanmaku
 import com.duzhaokun123.danmakuview.interfaces.DanmakuParser
+import com.duzhaokun123.danmakuview.model.DanmakuConfig
 import com.duzhaokun123.danmakuview.model.Danmakus
 import org.json.JSONArray
 import org.json.JSONException
@@ -21,6 +22,7 @@ class ProtobufBiliDanmakuParser(private val dmSegMobileReplies: Array<BiliDanmak
         const val BILI_PLAYER_HEIGHT = 438.0F
 
         fun initialSpecialDanmakuData(danmaku: SpecialDanmaku) {
+            danmaku.drawMode = DanmakuConfig.DrawMode.SHADOW
             val text = danmaku.text.trim { it <= ' ' }
             if (text.startsWith('[')) {
                 var textArray: Array<String?>? = null

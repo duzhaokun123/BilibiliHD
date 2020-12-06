@@ -1,10 +1,10 @@
 package com.duzhaokun123.bilibilihd.ui.settings
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -25,10 +25,14 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseFragment
 import com.duzhaokun123.bilibilihd.databinding.FragmentSettingsUsersBinding
 import com.duzhaokun123.bilibilihd.ui.login.LoginActivity
+import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.hiczp.bilibili.api.app.model.MyInfo
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("unused")
 class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
@@ -40,7 +44,7 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun initConfig() = NEED_HANDLER
+    override fun initConfig() = 0
 
     override fun initLayout() = R.layout.fragment_settings_users
 
@@ -57,8 +61,11 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                 return UserCardHolder(LayoutInflater.from(context).inflate(R.layout.layout_user_card_item, parent, false))
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                (holder as UserCardHolder).mTvContent.text = loginUserInfoMap!!.getByIndex(position).userId.toString()
+                val loginResponse = loginUserInfoMap!!.getByIndex(position)
+                (holder as UserCardHolder).mTvContent.text =
+                        "${loginResponse.userId} ${getString(R.string.expires_in)}: ${DateTimeFormatUtil.getFormat1().format((loginResponse.expires) * 1000)}"
                 holder.mCv.setOnClickListener {
                     pBilibiliClient.loginResponse = loginUserInfoMap!!.getByIndex(position)
                     loginUserInfoMap!!.setLoggedUid(loginUserInfoMap!!.getByIndex(position).userId)
@@ -91,16 +98,17 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                                     }
                                     .setNegativeButton(android.R.string.cancel, null)
                                     .show()
+                            R.id.user_space -> UserSpaceActivity.enter(requireActivity(), loginResponse.userId, holder.mCivFace)
                         }
                         true
                     }
                     popupMenu.show()
                     true
                 }
-                Thread {
+                GlobalScope.launch(Dispatchers.IO) {
                     try {
                         val space = pBilibiliClient.pAppAPI.space(loginUserInfoMap!!.getByIndex(position).userId)
-                        runOnUiThread {
+                        kRunOnUiThread {
                             if (context != null) {
                                 GlideUtil.loadUrlInto(context, space.data.card.face, holder.mCivFace, false)
                             }
@@ -108,9 +116,9 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        runOnUiThread { TipUtil.showTip(context, e.message) }
+                        kRunOnUiThread { TipUtil.showTip(context, e.message) }
                     }
-                }.start()
+                }
             }
 
             override fun getItemCount(): Int {
@@ -197,33 +205,32 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
             val loginResponse = loginUserInfoMap!!.loggedLoginResponse
             if (loginResponse != null) {
                 baseBind.tvContent.text = loginResponse.userId.toString()
-                object : Thread() {
-                    override fun run() {
-                        try {
-                            myInfo = pBilibiliClient.pAppAPI.getMyInfo()
-                            handler?.sendEmptyMessage(2)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            runOnUiThread { TipUtil.showTip(context, e.message) }
-                        }
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        myInfo = pBilibiliClient.pAppAPI.getMyInfo()
+                        kRunOnUiThread { setMyInfo() }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        runOnUiThread { TipUtil.showTip(context, e.message) }
                     }
-                }.start()
+                }
+                baseBind.rl.setOnClickListener {
+                    UserSpaceActivity.enter(requireActivity(), loginResponse.userId, baseBind.civFace, baseBind.tvName)
+                }
             }
+
         } else {
             baseBind.tvContent.text = null
             baseBind.tvName.setText(R.string.not_logged_in)
             baseBind.civFace.setImageDrawable(null)
+            baseBind.rl.setOnClickListener(null)
         }
     }
 
-    override fun handlerCallback(msg: Message) {
-        when (msg.what) {
-            2 -> {
-                baseBind.tvName.text = myInfo!!.data.name
-                if (context != null) {
-                    Glide.with(requireContext()).load(myInfo!!.data.face).into(baseBind.civFace)
-                }
-            }
+    private fun setMyInfo() {
+        baseBind.tvName.text = myInfo!!.data.name
+        if (context != null) {
+            Glide.with(requireContext()).load(myInfo!!.data.face).into(baseBind.civFace)
         }
     }
 

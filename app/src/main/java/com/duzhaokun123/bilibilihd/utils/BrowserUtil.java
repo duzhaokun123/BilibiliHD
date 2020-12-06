@@ -8,6 +8,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 
 import com.duzhaokun123.bilibilihd.R;
@@ -18,7 +19,13 @@ public class BrowserUtil {
     public static void openCustomTab(@NonNull Context context, @NonNull String url) {
         Log.d("BrowserUtil", "openCustomTab: openUrl = " + url);
         try {
-            new CustomTabsIntent.Builder().setToolbarColor(context.getColor(R.color.colorPrimary)).build().launchUrl(context, Uri.parse(url));
+            new CustomTabsIntent.Builder()
+                    .setDefaultColorSchemeParams( new CustomTabColorSchemeParams.Builder()
+                            .setToolbarColor( context.getColor(R.color.colorPrimary))
+                            .build()
+                    )
+                    .build()
+                    .launchUrl(context, Uri.parse(url));
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
         }

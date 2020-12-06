@@ -45,7 +45,7 @@ class RootReplyAdapter(context: Context, private val reply: Reply) : BaseSimpleA
         } ?: return
 
         baseBind.civFace.setOnClickListener {
-            UserSpaceActivity.enter(activity, aReply.mid, baseBind.civFace, null)
+            UserSpaceActivity.enter(activity!!, aReply.mid, baseBind.civFace, null)
         }
     }
 

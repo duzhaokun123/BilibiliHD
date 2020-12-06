@@ -26,7 +26,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply2) :
     override fun initView(baseBind: ItemReplyBinding, position: Int) {
         childReply.data.root.replies?.get(position)?.let { reply ->
             baseBind.civFace.setOnClickListener {
-                UserSpaceActivity.enter(activity, reply.mid, baseBind.civFace, null)
+                UserSpaceActivity.enter(activity!!, reply.mid, baseBind.civFace, null)
             }
         }
     }
