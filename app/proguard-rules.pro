@@ -24,3 +24,4 @@
 -keep public class * extends androidx.fragment.app.Fragment
 -keep public class com.duzhaokun123.bilibilihd.model** {*;}
 -keep public class com.hiczp.bilibili.api** {*;}
+-keepnames public class * extends java.lang.Throwable

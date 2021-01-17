@@ -74,4 +74,8 @@
                 android:title="@string/danmaku_settings" />
         </menu>
     </item>
+
+    <item
+        android:id="@+id/finish_background"
+        android:title="finish background" />
 </menu>

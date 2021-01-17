@@ -2,8 +2,13 @@ package com.duzhaokun123.bilibilihd.ui.play.base
 
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.drawable.Icon
+import android.os.Bundle
 import android.util.Rational
 import android.view.Menu
 import android.view.MenuItem
@@ -39,6 +44,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<ActivityPlayBaseBinding>() {
+    companion object {
+        const val ACTION_FINISH = "com.duzhaokun123.bilibilihd.action.FINISH"
+    }
+
     protected lateinit var extBind: extLayout
 
     private var showingFragment: Fragment? = null
@@ -49,6 +58,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     private var presentation: PlayPresentation? = null
     private var remotePlayControlFragment: Fragment? = null
     private var mediaRouteSelector: MediaRouteSelector? = null
+    private val finishBroadcastReceiver = FinishBroadcastReceiver()
 
     private var playId = 0L
     private val notificationId = NotificationUtil.getNewId()
@@ -78,11 +88,18 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         notificationBuilder?.setContentTitle(title)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        registerReceiver(finishBroadcastReceiver, IntentFilter().apply {
+            addAction(ACTION_FINISH)
+        })
+    }
+
     override fun initView() {
         extBind = DataBindingUtil.inflate(layoutInflater, initExtLayout(), baseBind.flExt, true)
         findViews2()
 
-        baseBind.bpvwv.onFullscreenClickListener = object: BiliPlayerViewWrapperView.OnFullscreenClickListener {
+        baseBind.bpvwv.onFullscreenClickListener = object : BiliPlayerViewWrapperView.OnFullscreenClickListener {
             override fun onClick(isFullscreen: Boolean) {
                 this@BasePlayActivity.isFullscreen = isFullscreen
                 if (this@BasePlayActivity.isFullscreen) {
@@ -312,6 +329,12 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
                 onReloadDanmaku()
                 true
             }
+            R.id.finish_background -> {
+                sendBroadcast(Intent().apply {
+                    action = ACTION_FINISH
+                })
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -372,6 +395,7 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         PlayControlService.removeId(playId)
         baseBind.bpvwv.release()
         NotificationUtil.remove(notificationId)
+        unregisterReceiver(finishBroadcastReceiver)
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
@@ -494,4 +518,12 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
     abstract fun onReloadDanmaku()
 
     protected open fun findViews2() {}
+
+    inner class FinishBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == ACTION_FINISH && this@BasePlayActivity.isStopped) {
+                this@BasePlayActivity.finish()
+            }
+        }
+    }
 }

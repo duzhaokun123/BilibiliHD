@@ -46,6 +46,8 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     @Nullable
     public DisplayCutout displayCutout;
 
+    public boolean isStopped = true;
+
     private Map<Integer, IRequestPermissionCallback> iRequestPermissionCallbackMap;
     private int permissionNum = 0;
     private boolean firstCreate = true;
@@ -121,6 +123,12 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        isStopped = false;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if ((config & FULLSCREEN) != 0) {
@@ -128,6 +136,12 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isStopped = true;
     }
 
     @Override
