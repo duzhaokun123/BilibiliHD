@@ -5,20 +5,22 @@ import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Message
 import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityUserSpaceBinding
 import com.duzhaokun123.bilibilihd.utils.*
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil.setLevelDrawable
@@ -33,7 +35,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-class UserSpaceActivity : BaseActivity<ActivityUserSpaceBinding>() {
+class UserSpaceActivity : BaseActivity2<ActivityUserSpaceBinding>() {
     private var mSpace: Space? = null
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.user_space_activity, menu)
@@ -48,12 +50,12 @@ class UserSpaceActivity : BaseActivity<ActivityUserSpaceBinding>() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun initConfig() = 0
+    override fun initConfig() = setOf(Config.TRANSPARENT_ACTION_BAR)
 
-    public override fun initLayout() =  R.layout.activity_user_space
+    override fun initLayout() = R.layout.activity_user_space
 
     @SuppressLint("SetTextI18n")
-    public override fun initView() {
+    override fun initView() {
         if (Settings.layout.isUserSpaceUseWebView) {
             BrowserUtil.openWebViewActivity(this, "https://space.bilibili.com/${startIntent.getLongExtra(EXTRA_UID, 0)}", true, true)
             finish()
@@ -87,10 +89,10 @@ class UserSpaceActivity : BaseActivity<ActivityUserSpaceBinding>() {
         }
     }
 
-    public override fun initData() {
+    override fun initData() {
         if (Settings.layout.isUserSpaceUseWebView) return
 
-        GlobalScope.launch(Dispatchers.IO   ) {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 mSpace = Application.getPBilibiliClient().pAppAPI.space(startIntent.getLongExtra(EXTRA_UID, 0))
 
@@ -99,15 +101,11 @@ class UserSpaceActivity : BaseActivity<ActivityUserSpaceBinding>() {
                 kRunOnUiThread { TipUtil.showToast(e.message) }
             }
             if (mSpace != null) {
-                kRunOnUiThread {  setInfo() }
+                kRunOnUiThread { setInfo() }
             }
         }
     }
 
-    override fun handlerCallback(msg: Message) {
-        setInfo()
-    }
-    
     private fun setInfo() {
         Glide.with(this).load(mSpace!!.data.card.face).into(baseBind.civFace)
         if (mSpace!!.data.images.imgUrl == "") {

@@ -2,214 +2,243 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.ToolActivity">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:text="av bv 转换算法 感谢 mcfx@zhihu.com\n如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎\nhttps://www.zhihu.com/question/381784377/answer/1099438784"
-            android:textIsSelectable="true" />
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="always">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ui.ToolActivity">
 
-            <EditText
-                android:id="@+id/et_av"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="av"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                tools:ignore="HardcodedText" />
+                android:autoLink="web"
+                android:text="av bv 转换算法 感谢 mcfx@zhihu.com\n如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎\nhttps://www.zhihu.com/question/381784377/answer/1099438784"
+                android:textIsSelectable="true" />
 
-            <EditText
-                android:id="@+id/et_bv"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="BV"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                tools:ignore="HardcodedText" />
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/et_av"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="av"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    tools:ignore="HardcodedText" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/et_bv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="BV"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_av2bv"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="av2bv"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_bv2av"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="bv2av"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:autoLink="web"
+                android:text="详见 https://github.com/SocialSisterYi/bilibili-API-collect/tree/master/comment#%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%B1%BB%E5%9E%8B%E4%BB%A3%E7%A0%81"
+                android:textIsSelectable="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="type"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/et_oid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="oid"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_reply_go"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="GO"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_uid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="uid"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_uid_go"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="go"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_video_n"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="av or BV"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/et_video_page"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="page"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_video_go"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="go"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_live_cid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="live cid"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_live_go"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="go"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_ss"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="season id"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/btn_ss_go"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="go"
+                    android:textColor="@color/ordinaryText"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btn_av2bv"
+                android:id="@+id/btn_save_log"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="av2bv"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/btn_bv2av"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="bv2av"
+                android:text="save log"
                 android:textColor="@color/ordinaryText"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:autoLink="web"
-            android:text="详见 https://github.com/SocialSisterYi/bilibili-API-collect/tree/master/comment#%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%B1%BB%E5%9E%8B%E4%BB%A3%E7%A0%81"
-            android:textIsSelectable="true" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/et_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="type"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:maxLines="1"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/et_oid"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="oid"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:maxLines="1"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/btn_reply_go"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="GO"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/et_uid"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="uid"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/btn_uid_go"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="go"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/et_video_n"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="av or BV"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/et_video_page"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="page"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/btn_video_go"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="go"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/et_live_cid"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="live cid"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/btn_live_go"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="go"
-                android:textColor="@color/ordinaryText"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_save_log"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="save log"
-            android:textColor="@color/ordinaryText"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

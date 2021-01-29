@@ -25,6 +25,9 @@ fun String?.notEmptyOrNull(): String? {
 val pBilibiliClient
     get() = Application.getPBilibiliClient()
 
+val bilibiliClient
+    get() = Application.getPBilibiliClient().bilibiliClient
+
 val gson
     get() = GsonUtil.getGsonInstance()
 

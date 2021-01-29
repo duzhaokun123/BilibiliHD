@@ -20,6 +20,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.play.season.SeasonPLayActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme.TransparencyActionBar.DarkActionBar" />
+        <activity
             android:name=".ui.play.live.LivePlayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
             android:supportsPictureInPicture="true"
@@ -106,7 +111,7 @@
         <activity android:name=".ui.JumpActivity" />
         <activity
             android:name=".ui.userspace.UserSpaceActivity"
-            android:theme="@style/AppTheme.TransparencyActionBar" />
+            android:theme="@style/AppTheme.UserSpaceActivity" />
         <activity
             android:name=".ui.search.SearchActivity"
             android:label="@string/search"

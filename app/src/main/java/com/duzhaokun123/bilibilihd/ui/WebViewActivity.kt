@@ -15,15 +15,16 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.viewModels
+import androidx.core.view.updatePadding
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.duzhaokun123.bilibilihd.Params
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 
-class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
+class WebViewActivity : BaseActivity2<LayoutWebViewBinding>() {
     companion object {
         const val EXTRA_DESKTOP_UA = "desktop_ua"
         const val EXTRA_INTERCEPT_ALL = "intercept_all"
@@ -34,7 +35,7 @@ class WebViewActivity : BaseActivity<LayoutWebViewBinding>() {
 
     private val configViewModel: ConfigViewModel by viewModels()
 
-    override fun initConfig() = DISABLE_FULLSCREEN_LAYOUT
+    override fun initConfig() = setOf(Config.FIX_LAYOUT)
 
     override fun initLayout() = R.layout.layout_web_view
 

@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.preference.Preference
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.utils.DanmakuUtil
-import com.duzhaokun123.bilibilihd.utils.IOUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.takisoft.preferencex.SimpleMenuPreference
@@ -50,7 +49,7 @@ class SettingsDanmakuFragment : PreferenceFragmentCompat() {
                 val inputStream = requireContext().contentResolver.openInputStream(data!!.data!!)!!
                 val outputStream = FileOutputStream(File(requireContext().filesDir, "font.ttf"))
                 try {
-                    IOUtil.copy(inputStream, outputStream)
+                    inputStream.copyTo(outputStream)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     TipUtil.showTip(context, e.message)

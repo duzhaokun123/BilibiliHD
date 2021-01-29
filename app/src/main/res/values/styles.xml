@@ -71,4 +71,8 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="AppTheme.UserSpaceActivity" parent="AppTheme">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 </resources>

@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui
 
 import android.app.Activity
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
@@ -12,23 +11,26 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
 import com.duzhaokun123.bilibilihd.utils.toIntOrDefault
 import okhttp3.internal.toLongOrDefault
 import android.content.Intent
+import androidx.core.view.updatePadding
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.ui.play.live.LivePlayActivity
+import com.duzhaokun123.bilibilihd.ui.play.season.SeasonPLayActivity
 import com.duzhaokun123.bilibilihd.utils.Logcat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class ToolActivity : BaseActivity<ActivityToolBinding>() {
+class ToolActivity : BaseActivity2<ActivityToolBinding>() {
     companion object {
         const val REQUEST_CODE_SAVE_LOG = 0
     }
 
-    override fun initConfig() = FIX_LAYOUT
-
+    override fun initConfig() = setOf<Config>()
     override fun initLayout() = R.layout.activity_tool
 
     override fun initView() {
+        baseBind.nsv.setOnScrollChangeListener(AutoSetActionBarUpListener())
         baseBind.btnAv2bv.setOnClickListener {
             try {
                 baseBind.etBv.setText(MyBilibiliClientUtil.av2bv(baseBind.etAv.text.toString().toLong()))
@@ -67,6 +69,12 @@ class ToolActivity : BaseActivity<ActivityToolBinding>() {
         baseBind.btnLiveGo.setOnClickListener {
             LivePlayActivity.enter(this, baseBind.etLiveCid.text.toString().toLong())
         }
+        baseBind.btnSsGo.setOnClickListener {
+            val intent = Intent(this, SeasonPLayActivity::class.java).apply {
+                putExtra(SeasonPLayActivity.EXTRA_SSID, baseBind.etSs.text.toString().toLong())
+            }
+            startActivity(intent)
+        }
         baseBind.btnSaveLog.setOnClickListener {
             startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -88,5 +96,10 @@ class ToolActivity : BaseActivity<ActivityToolBinding>() {
                 launch(Dispatchers.Main) { TipUtil.showToast(getString(R.string.saved_to_s, data.dataString)) }
             }
         }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        baseBind.nsv.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
     }
 }

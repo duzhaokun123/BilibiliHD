@@ -41,7 +41,7 @@ object DownloadUtil {
                             FileOutputStream(File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "bilibili HD${File.separatorChar}${System.currentTimeMillis()}").apply {
                                 parentFile!!.mkdirs()
                             }).use {
-                                IOUtil.copy(inputStream, it)
+                                inputStream.copyTo(it)
                                 success = true
                             }
                         } catch (e: Exception) {

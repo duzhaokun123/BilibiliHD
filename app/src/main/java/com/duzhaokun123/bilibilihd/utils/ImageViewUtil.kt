@@ -92,7 +92,7 @@ object ImageViewUtil {
                             val shareFile = File(context.cacheDir, "shareImg${File.separatorChar}share.jpeg").apply { parentFile!!.mkdirs() } // FIXME: 20-11-2 你凭什么认为一定是 jpeg 格式
                             FileInputStream(srcFile).use { `in` ->
                                 FileOutputStream(shareFile).use { out ->
-                                    IOUtil.copy(`in`, out)
+                                    `in`.copyTo(out)
                                 }
                             }
                             shareUri = FileProvider.getUriForFile(context, "com.duzhaokun123.bilibilihd.fileprovider", shareFile)

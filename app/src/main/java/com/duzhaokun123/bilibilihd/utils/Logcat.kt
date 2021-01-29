@@ -20,7 +20,7 @@ object Logcat {
             outputStreamWriter.write("\n")
             outputStreamWriter.flush()
             Runtime.getRuntime().exec("logcat -d").inputStream.use {
-                IOUtil.copy(it, outputStream)
+                it.copyTo(outputStream)
             }
         }
     }

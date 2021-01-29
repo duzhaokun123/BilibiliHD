@@ -20,4 +20,6 @@
     <color name="accentCivBorderColor">@color/colorAccent</color>
     <color name="tagBackground">@color/darkBackground</color>
     <color name="dimText">#757575</color>
+
+    <color name="actionBarHalfTransparent">#CCFFFFFF</color>
 </resources>
