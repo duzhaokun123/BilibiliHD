@@ -38,6 +38,9 @@ class SettingsActivity : BaseActivity2<ActivitySettingsBinding>() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         baseBind.nsv?.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+        if (baseBind.nsv == null) {
+            baseBind.clRoot.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+        }
     }
 
     fun get2ndFl() = baseBind.flSettings2nd
