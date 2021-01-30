@@ -53,14 +53,14 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
     protected void initView() {
 
         baseBind.btnSkip.setOnClickListener(v -> {
-            if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
-                getBaseActivity().getHandler().sendEmptyMessage(1);
+            if (getBaseActivity2() != null && getBaseActivity2().getHandler() != null) {
+                getBaseActivity2().getHandler().sendEmptyMessage(1);
             }
         });
         baseBind.btnKeep.setOnClickListener(v -> {
             keep = true;
-            if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
-                getBaseActivity().getHandler().removeCallbacksAndMessages(null);
+            if (getBaseActivity2() != null && getBaseActivity2().getHandler() != null) {
+                getBaseActivity2().getHandler().removeCallbacksAndMessages(null);
             }
         });
     }
@@ -94,8 +94,8 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
                     @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (player.getContentDuration() - player.getContentPosition() < 100 && !keep) {
-                            if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
-                                getBaseActivity().getHandler().sendEmptyMessage(1);
+                            if (getBaseActivity2() != null && getBaseActivity2().getHandler() != null) {
+                                getBaseActivity2().getHandler().sendEmptyMessage(1);
                             }
                         }
                     }
@@ -103,12 +103,12 @@ public class WelcomeAdFragment extends BaseFragment<FragmentWelcomeAdBinding> {
                 player.setPlayWhenReady(true);
                 player.addListener(new Player.EventListener() {
                     @Override
-                    public void onPlayerError(ExoPlaybackException error) {
+                    public void onPlayerError(@NonNull ExoPlaybackException error) {
                         Objects.requireNonNull(requireBaseActivity().getHandler()).sendEmptyMessageDelayed(1, 2000);
                     }
                 });
-            } else if (getBaseActivity() != null && getBaseActivity().getHandler() != null) {
-                getBaseActivity().getHandler().sendEmptyMessageDelayed(1, 2000);
+            } else if (getBaseActivity2() != null && getBaseActivity2().getHandler() != null) {
+                getBaseActivity2().getHandler().sendEmptyMessageDelayed(1, 2000);
             }
         } else {
             Objects.requireNonNull(requireBaseActivity().getHandler()).sendEmptyMessageDelayed(1, 2000);

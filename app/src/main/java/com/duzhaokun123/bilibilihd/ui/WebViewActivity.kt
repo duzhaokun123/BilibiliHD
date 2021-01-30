@@ -15,7 +15,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.viewModels
-import androidx.core.view.updatePadding
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.duzhaokun123.bilibilihd.Params

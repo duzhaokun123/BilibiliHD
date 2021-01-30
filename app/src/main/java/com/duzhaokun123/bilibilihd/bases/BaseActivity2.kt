@@ -19,16 +19,18 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.duzhaokun123.bilibilihd.R
+import com.duzhaokun123.bilibilihd.utils.Handler
 import com.duzhaokun123.bilibilihd.utils.OtherUtils
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 
-abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Handler.IHandlerMessageCallback {
     enum class Config {
         // FIXME: 21-1-29 Activity 重构导致全屏失效
         FULLSCREEN,
         HIDE_ACTION_BAR,
         FIX_LAYOUT,
-        TRANSPARENT_ACTION_BAR
+        TRANSPARENT_ACTION_BAR,
+        NEED_HANDLER
     }
 
     val className by lazy { this::class.simpleName }
@@ -59,6 +61,8 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity() {
         private set
     var isFirstCreate = true
         private set
+    var handler: Handler? = null
+        private set
     lateinit var baseBind: layout
         private set
 
@@ -80,6 +84,10 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity() {
         if (savedInstanceState != null) isFirstCreate = false
 
         super.onCreate(savedInstanceState)
+
+        if (Config.NEED_HANDLER in config) {
+            handler = Handler(this)
+        }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -148,6 +156,8 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         TipUtil.unregisterCoordinatorLayout(this)
+        handler?.destroy()
+        handler = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,19 +1,19 @@
 package com.duzhaokun123.bilibilihd.ui.universal.reply
 
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
+import androidx.core.view.updatePadding
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityRootReplyBinding
 
-class RootReplyActivity : BaseActivity<ActivityRootReplyBinding>() {
+class RootReplyActivity : BaseActivity2<ActivityRootReplyBinding>() {
     companion object {
         const val EXTRA_TYPE = "type"
         const val EXTRA_OID = "oid"
         const val EXTRA_MODE = "mode"
     }
 
-    override fun initConfig() = FIX_LAYOUT
+    override fun initConfig() = setOf<Config>()
 
     override fun initLayout() = R.layout.activity_root_reply
 
@@ -34,10 +34,15 @@ class RootReplyActivity : BaseActivity<ActivityRootReplyBinding>() {
 
     override fun initData() {
         val model: RootReplyFragment.AllCountViewModel by viewModels()
-        model.allCount.observe(this, Observer { allCount ->
+        model.allCount.observe(this, { allCount ->
             baseBind.tvAllCount.text = allCount.toString()
         })
     }
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        baseBind.clRoot.updatePadding(top = fixTopHeight)
+    }
 }

@@ -14,12 +14,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.cardview.widget.CardView
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.utils.*
@@ -30,18 +31,18 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView.LoadingListener
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.properties.Delegates
 
-class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
+class FavoriteActivity : BaseActivity2<LayoutXrecyclerviewOnlyBinding>() {
     private var ids: ResourceIds? = null
     private var infos: ResourceInfos? = null
 
     private var mediaId by Delegates.notNull<Long>()
     private var mid by Delegates.notNull<Long>()
 
-    override fun initConfig() = NEED_HANDLER or FIX_LAYOUT
+    override fun initConfig() = setOf(Config.NEED_HANDLER, Config.FIX_LAYOUT)
 
-    public override fun initLayout() = R.layout.layout_xrecyclerview_only
+    override fun initLayout() = R.layout.layout_xrecyclerview_only
 
-    public override fun initView() {
+    override fun initView() {
         title = startIntent.getStringExtra("name")
         var spanCount = resources.getInteger(R.integer.column_medium)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT && Settings.layout.column != 0) {
@@ -51,41 +52,29 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
         }
         baseBind.xrv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
         if (spanCount == 1) {
-            baseBind!!.xrv.addItemDecoration(object : ItemDecoration() {
+            baseBind.xrv.addItemDecoration(object : ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
-                    outRect[0, 0, 0] = resources.getDimensionPixelOffset(R.dimen.divider_height)
+                    outRect.set(0,0,0, resources.getDimensionPixelOffset(R.dimen.divider_height))
                 }
             })
         } else {
             baseBind.xrv.addItemDecoration(object : ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
-                    outRect[0, 0, resources.getDimensionPixelOffset(R.dimen.divider_height)] = resources.getDimensionPixelOffset(R.dimen.divider_height)
+                    outRect.set(0, 0, resources.getDimensionPixelOffset(R.dimen.divider_height), resources.getDimensionPixelOffset(R.dimen.divider_height))
                 }
             })
         }
         baseBind.xrv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-                return if (viewType == 0) {
-                    VideoCardHolder(LayoutInflater.from(this@FavoriteActivity).inflate(R.layout.layout_video_card_item, parent, false))
-                } else {
-                    VHolder(View(this@FavoriteActivity))
-                }
-            }
-
-            override fun getItemViewType(position: Int): Int {
-                return if (position == ids!!.data.size) {
-                    1
-                } else {
-                    0
-                }
+                return VideoCardHolder(LayoutInflater.from(this@FavoriteActivity).inflate(R.layout.layout_video_card_item, parent, false))
             }
 
             @SuppressLint("SetTextI18n")
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 if (getItemViewType(position) == 1) {
-                    val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, fixButtonHeight)
+                    val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, fixBottomHeight)
                     holder.itemView.layoutParams = params
                 } else {
                     if (infos == null) {
@@ -129,7 +118,7 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
                 return if (ids == null) {
                     0
                 } else {
-                    ids!!.data.size + 1
+                    ids!!.data.size
                 }
             }
 
@@ -140,8 +129,6 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
                 val mTvUp: TextView = itemView.findViewById(R.id.tv_up)
                 val mCivFace: CircleImageView = itemView.findViewById(R.id.civ_face)
             }
-
-            inner class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
         }
         baseBind.xrv.setLoadingMoreEnabled(false)
         baseBind.xrv.setLoadingListener(object : LoadingListener {
@@ -153,7 +140,7 @@ class FavoriteActivity : BaseActivity<LayoutXrecyclerviewOnlyBinding>() {
         })
     }
 
-    public override fun initData() {
+    override fun initData() {
         mediaId = startIntent.getLongExtra("media_id", 0)
         mid = startIntent.getLongExtra("mid", 0)
 

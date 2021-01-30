@@ -3,11 +3,12 @@ package com.duzhaokun123.bilibilihd.ui.universal.reply
 import android.graphics.Rect
 import android.os.Message
 import android.view.View
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityChildReplyBinding
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
@@ -17,7 +18,7 @@ import com.hiczp.bilibili.api.main.model.ChildReply2
 import com.hiczp.bilibili.api.main.model.SendReplyResponse
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
-class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
+class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
     companion object {
         const val EXTRA_TYPE = "type"
         const val EXTRA_OID = "oid"
@@ -41,7 +42,7 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
 
     private lateinit var childReply: ChildReply2
 
-    override fun initConfig() = FIX_LAYOUT or NEED_HANDLER
+    override fun initConfig() = setOf(Config.NEED_HANDLER)
 
     override fun initLayout() = R.layout.activity_child_reply
 
@@ -103,6 +104,11 @@ class ChildReplyActivity : BaseActivity<ActivityChildReplyBinding>() {
     }
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        baseBind.clRoot.updatePadding(top = fixTopHeight)
+    }
 
     override fun handlerCallback(msg: Message) {
         when (msg.what) {

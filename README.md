@@ -117,6 +117,7 @@
 ### TODO
 - 重作界面
 - 下载
+- 换掉`XRecyclerView`
 
 ### 从源代码构建注意
 ```shell script

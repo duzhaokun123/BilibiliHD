@@ -75,6 +75,16 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     }
 
     @Nullable
+    public BaseActivity2<?> getBaseActivity2() {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity2) {
+            return (BaseActivity2<?>) activity;
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
     public Handler getHandler() {
         return handler;
     }
