@@ -14,11 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.duzhaokun123.bilibilihd.R;
 import com.hiczp.bilibili.api.app.model.Space;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 public class HomeFragment extends Fragment {
 
-    private XRecyclerView mXrv;
+    private RecyclerView mRv;
 
     private Space space;
 
@@ -31,8 +30,8 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
+        View view = inflater.inflate(R.layout.layout_recyclerview_with_v, container, false);
+        mRv = view.findViewById(R.id.rv);
         view.setBackgroundColor(Color.BLUE);
         return view;
     }
@@ -41,8 +40,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mXrv.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.column_medium)));
-        mXrv.setAdapter(new RecyclerView.Adapter() {
+        mRv.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.column_medium)));
+        mRv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

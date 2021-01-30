@@ -1,6 +1,5 @@
 package com.duzhaokun123.bilibilihd.ui.userspace;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.duzhaokun123.bilibilihd.R;
-
 import com.hiczp.bilibili.api.app.model.Space;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 public class SubmitFragment extends Fragment {
-
-    private XRecyclerView mXrv;
 
     private Space space;
 
@@ -30,10 +24,7 @@ public class SubmitFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_xrecyclerview_only, container, false);
-        mXrv = view.findViewById(R.id.xrv);
-        view.setBackgroundColor(Color.YELLOW);
-        return view;
+        return new View(getContext());
     }
 
     @Override

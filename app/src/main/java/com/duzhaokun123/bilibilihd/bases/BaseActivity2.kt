@@ -18,6 +18,7 @@ import androidx.core.view.*
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.utils.Handler
 import com.duzhaokun123.bilibilihd.utils.OtherUtils
@@ -238,9 +239,15 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
 
     private fun DisplayCutout.compatSafeInsetBottom() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) this.safeInsetBottom else 0
 
-    inner class AutoSetActionBarUpListener : NestedScrollView.OnScrollChangeListener {
+    inner class NSVAutoSetActionBarUpListener : NestedScrollView.OnScrollChangeListener {
         override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
             setActionBarUp(scrollY > 0, true)
+        }
+    }
+
+    inner class RVAutoSetActionBarUpListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            setActionBarUp(recyclerView.computeVerticalScrollOffset() > 0, true)
         }
     }
 

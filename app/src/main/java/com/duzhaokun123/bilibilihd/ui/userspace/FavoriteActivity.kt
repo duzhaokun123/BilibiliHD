@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.cardview.widget.CardView
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -21,26 +22,25 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity2
-import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding
+import com.duzhaokun123.bilibilihd.databinding.LayoutSrlBinding
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.utils.*
 import com.duzhaokun123.bilibilihd.utils.ApiUtil.resources
 import com.hiczp.bilibili.api.main.model.ResourceIds
 import com.hiczp.bilibili.api.main.model.ResourceInfos
-import com.jcodecraeer.xrecyclerview.XRecyclerView.LoadingListener
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.properties.Delegates
 
-class FavoriteActivity : BaseActivity2<LayoutXrecyclerviewOnlyBinding>() {
+class FavoriteActivity : BaseActivity2<LayoutSrlBinding>() {
     private var ids: ResourceIds? = null
     private var infos: ResourceInfos? = null
 
     private var mediaId by Delegates.notNull<Long>()
     private var mid by Delegates.notNull<Long>()
 
-    override fun initConfig() = setOf(Config.NEED_HANDLER, Config.FIX_LAYOUT)
+    override fun initConfig() = setOf(Config.NEED_HANDLER)
 
-    override fun initLayout() = R.layout.layout_xrecyclerview_only
+    override fun initLayout() = R.layout.layout_srl
 
     override fun initView() {
         title = startIntent.getStringExtra("name")
@@ -50,23 +50,24 @@ class FavoriteActivity : BaseActivity2<LayoutXrecyclerviewOnlyBinding>() {
         } else if (Settings.layout.columnLand != 0) {
             spanCount = Settings.layout.columnLand
         }
-        baseBind.xrv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        baseBind.rv.addOnScrollListener(RVAutoSetActionBarUpListener())
+        baseBind.rv.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
         if (spanCount == 1) {
-            baseBind.xrv.addItemDecoration(object : ItemDecoration() {
+            baseBind.rv.addItemDecoration(object : ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
                     outRect.set(0,0,0, resources.getDimensionPixelOffset(R.dimen.divider_height))
                 }
             })
         } else {
-            baseBind.xrv.addItemDecoration(object : ItemDecoration() {
+            baseBind.rv.addItemDecoration(object : ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
                     outRect.set(0, 0, resources.getDimensionPixelOffset(R.dimen.divider_height), resources.getDimensionPixelOffset(R.dimen.divider_height))
                 }
             })
         }
-        baseBind.xrv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        baseBind.rv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
                 return VideoCardHolder(LayoutInflater.from(this@FavoriteActivity).inflate(R.layout.layout_video_card_item, parent, false))
             }
@@ -130,32 +131,41 @@ class FavoriteActivity : BaseActivity2<LayoutXrecyclerviewOnlyBinding>() {
                 val mCivFace: CircleImageView = itemView.findViewById(R.id.civ_face)
             }
         }
-        baseBind.xrv.setLoadingMoreEnabled(false)
-        baseBind.xrv.setLoadingListener(object : LoadingListener {
-            override fun onRefresh() {
-                Refresh().start()
-            }
-
-            override fun onLoadMore() {}
-        })
+        baseBind.srl.setOnRefreshListener {
+            Refresh().start()
+        }
+        baseBind.srl.setOnLoadMoreListener {}
     }
 
     override fun initData() {
         mediaId = startIntent.getLongExtra("media_id", 0)
         mid = startIntent.getLongExtra("mid", 0)
 
-        baseBind.xrv.refresh()
+        baseBind.srl.autoRefresh()
     }
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            baseBind.srl.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+            baseBind.mh.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = fixTopHeight
+            }
+            baseBind.cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = -1 * fixBottomHeight
+            }
+        }
+    }
+
     override fun handlerCallback(msg: Message) {
         when (msg.what) {
             1 -> {
-                baseBind.xrv.refreshComplete()
-                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, ids!!.data.size)
+                baseBind.srl.finishRefreshWithNoMoreData()
+                baseBind.rv.adapter!!.notifyItemRangeChanged(0, ids!!.data.size)
             }
-            0 -> XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, ids!!.data.size)
+            0 -> baseBind.rv.adapter!!.notifyItemRangeChanged(0, ids!!.data.size)
         }
     }
 

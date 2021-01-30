@@ -15,7 +15,7 @@ class JumpActivity : BaseActivity2<ActivityJumpBinding>() {
     override fun initLayout() = R.layout.activity_jump
 
     override fun initView() {
-        baseBind.nsv.setOnScrollChangeListener(AutoSetActionBarUpListener())
+        baseBind.nsv.setOnScrollChangeListener(NSVAutoSetActionBarUpListener())
         val intent = Intent()
         baseBind.btnAdd.setOnClickListener {
             try {

@@ -30,7 +30,7 @@ class ToolActivity : BaseActivity2<ActivityToolBinding>() {
     override fun initLayout() = R.layout.activity_tool
 
     override fun initView() {
-        baseBind.nsv.setOnScrollChangeListener(AutoSetActionBarUpListener())
+        baseBind.nsv.setOnScrollChangeListener(NSVAutoSetActionBarUpListener())
         baseBind.btnAv2bv.setOnClickListener {
             try {
                 baseBind.etBv.setText(MyBilibiliClientUtil.av2bv(baseBind.etAv.text.toString().toLong()))

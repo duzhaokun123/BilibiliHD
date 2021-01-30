@@ -3,6 +3,8 @@ package com.duzhaokun123.bilibilihd.ui.universal.reply
 import android.graphics.Rect
 import android.os.Message
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,11 +14,11 @@ import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityChildReplyBinding
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
-import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil
 import com.duzhaokun123.bilibilihd.utils.pBilibiliClient
 import com.hiczp.bilibili.api.main.model.ChildReply2
 import com.hiczp.bilibili.api.main.model.SendReplyResponse
-import com.jcodecraeer.xrecyclerview.XRecyclerView
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
     companion object {
@@ -41,10 +43,19 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
     private var isEnd = false
 
     private lateinit var childReply: ChildReply2
+    private lateinit var srl: SmartRefreshLayout
+    private lateinit var rv: RecyclerView
+    private lateinit var cf: ClassicsFooter
 
     override fun initConfig() = setOf(Config.NEED_HANDLER)
 
     override fun initLayout() = R.layout.activity_child_reply
+
+    override fun findViews() {
+        srl = findViewById(R.id.srl)
+        rv = findViewById(R.id.rv)
+        cf = findViewById(R.id.cf)
+    }
 
     override fun initView() {
         startIntent.let {
@@ -57,27 +68,24 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
         baseBind.tvRoot.text = root.toString()
         baseBind.etParent.hint = root.toString()
 
-        baseBind.xrv.addItemDecoration(object : RecyclerView.ItemDecoration() {
+        rv.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 super.getItemOffsets(outRect, view, parent, state)
                 outRect[0, 0, 0] = resources.getDimensionPixelOffset(R.dimen.divider_height)
             }
         })
-        baseBind.xrv.layoutManager = LinearLayoutManager(this)
-        baseBind.xrv.setLoadingListener(object : XRecyclerView.LoadingListener {
-            override fun onLoadMore() {
-                if (isEnd.not()) {
-                    handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_LOAD_MORE)
-                } else {
-                    baseBind.xrv.setNoMore(true)
-                }
+        rv.layoutManager = LinearLayoutManager(this)
+        srl.setOnRefreshListener {
+            isEnd = false
+            handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_REFRESH)
+        }
+        srl.setOnLoadMoreListener {
+            if (isEnd.not()) {
+                handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_LOAD_MORE)
+            } else {
+                srl.finishLoadMoreWithNoMoreData()
             }
-
-            override fun onRefresh() {
-                isEnd = false
-                handler?.sendEmptyMessage(RootReplyFragment.WHAT_REPLY_REFRESH)
-            }
-        })
+        }
         baseBind.btnSend.setOnClickListener {
             Thread {
                 var sendReplyResponse: SendReplyResponse? = null
@@ -90,7 +98,7 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
                 }
                 if (sendReplyResponse != null) {
                     runOnUiThread {
-                        baseBind.xrv.refresh()
+                        srl.autoRefresh()
                         baseBind.etText.text = null
                         baseBind.etParent.text = null
                     }
@@ -100,7 +108,7 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
     }
 
     override fun initData() {
-        baseBind.xrv.refresh()
+        srl.autoRefresh()
     }
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
@@ -108,6 +116,10 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         baseBind.clRoot.updatePadding(top = fixTopHeight)
+        srl.updatePadding(bottom = fixBottomHeight)
+        cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = -1 * fixBottomHeight
+        }
     }
 
     override fun handlerCallback(msg: Message) {
@@ -129,8 +141,8 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
             }.start()
             WHAT_REPLY_REFRESH_END -> {
                 if (::childReply.isInitialized) {
-                    baseBind.xrv.adapter = ChildReplyAdapter(this, childReply)
-                    baseBind.xrv.refreshComplete()
+                    rv.adapter = ChildReplyAdapter(this, childReply)
+                    srl.finishRefresh()
                     baseBind.tvRcount.text = childReply.data.root.rcount.toString()
                 }
             }
@@ -154,9 +166,9 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
                 }
             }.start()
             WHAT_REPLY_LOAD_MORE_END -> {
-                baseBind.xrv.loadMoreComplete()
+                srl.finishLoadMore()
                 if (::childReply.isInitialized) {
-                    XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, childReply.data.root.replies!!.lastIndex)
+                    rv.adapter!!.notifyItemRangeChanged(0,childReply.data.root.replies!!.lastIndex )
                 }
             }
             WHAT_SET_PARENT -> {

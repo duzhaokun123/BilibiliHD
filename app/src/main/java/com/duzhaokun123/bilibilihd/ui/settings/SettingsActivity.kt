@@ -1,7 +1,6 @@
 package com.duzhaokun123.bilibilihd.ui.settings
 
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.duzhaokun123.bilibilihd.R
@@ -21,7 +20,7 @@ class SettingsActivity : BaseActivity2<ActivitySettingsBinding>() {
     }
 
     override fun initView() {
-        baseBind.nsv?.setOnScrollChangeListener(AutoSetActionBarUpListener())
+        baseBind.nsv?.setOnScrollChangeListener(NSVAutoSetActionBarUpListener())
         val mFragmentSettingFirst: Fragment = SettingsMainFragment()
         if (first) {
             first = false

@@ -140,9 +140,9 @@ script/sync_third_party.sh
 
 [Material](https://material.io)
 
-[StfalconImageViewer](https://github.com/stfalcon-studio/StfalconImageViewer)
+[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
 
-[XRecyclerView](https://github.com/XRecyclerView/XRecyclerView)
+[StfalconImageViewer](https://github.com/stfalcon-studio/StfalconImageViewer)
 
 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
 

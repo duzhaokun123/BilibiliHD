@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.duzhaokun123.bilibilihd.Application;
 import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
-import com.duzhaokun123.bilibilihd.databinding.LayoutXrecyclerviewOnlyBinding;
+import com.duzhaokun123.bilibilihd.databinding.LayoutSrlBinding;
 import com.duzhaokun123.bilibilihd.pbilibiliapi.api.PBilibiliClient;
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
@@ -32,15 +32,15 @@ import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
-import com.duzhaokun123.bilibilihd.utils.XRecyclerViewUtil;
 import com.hiczp.bilibili.api.app.model.HomePage;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> implements Refreshable {
+public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refreshable {
     private PBilibiliClient pBilibiliClient = Application.getPBilibiliClient();
     private HomePage homePage;
 
@@ -56,7 +56,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
 
     @Override
     protected int initLayout() {
-        return R.layout.layout_xrecyclerview_only;
+        return R.layout.layout_srl;
     }
 
     @Override
@@ -67,9 +67,9 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
         } else if (Settings.layout.getColumnLand() != 0) {
             spanCount = Settings.layout.getColumnLand();
         }
-        baseBind.xrv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        baseBind.rv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
         if (spanCount == 1) {
-            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -77,7 +77,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
                 }
             });
         } else {
-            baseBind.xrv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            baseBind.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
@@ -85,10 +85,10 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
                 }
             });
         }
-        baseBind.xrv.setAdapter(new RecyclerView.Adapter() {
+        baseBind.rv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public VideoCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 return new VideoCardHolder(LayoutInflater.from(getContext()).inflate(R.layout.layout_video_card_item, parent, false));
             }
 
@@ -213,10 +213,10 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
 
             class VideoCardHolder extends RecyclerView.ViewHolder {
 
-                private ImageView mIv;
-                private TextView mTvTitle, mTvCoverLeftText1, mTvCoverLeftText2, mTvCoverLeftText3, mTvUp;
-                private CardView mCv;
-                private CircleImageView mCivFace;
+                final private ImageView mIv;
+                final private TextView mTvTitle, mTvCoverLeftText1, mTvCoverLeftText2, mTvCoverLeftText3, mTvUp;
+                final private CardView mCv;
+                final private CircleImageView mCivFace;
 
                 VideoCardHolder(@NonNull View itemView) {
                     super(itemView);
@@ -231,16 +231,15 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
                 }
             }
         });
-        baseBind.xrv.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        baseBind.xrv.setLoadingListener(new XRecyclerView.LoadingListener() {
+        baseBind.srl.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
-            public void onRefresh() {
-                new Refresh().start();
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                new LoadMore().start();
             }
 
             @Override
-            public void onLoadMore() {
-                new LoadMore().start();
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                new Refresh().start();
             }
         });
     }
@@ -248,7 +247,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
     @Override
     protected void initData() {
         if (homePage == null) {
-            baseBind.xrv.refresh();
+            baseBind.srl.autoRefresh();
         }
     }
 
@@ -256,11 +255,12 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
     public void handlerCallback(@NonNull Message msg) {
         switch (msg.what) {
             case 0:
-                baseBind.xrv.refreshComplete();
-                XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, homePage.getData().getItems().size() - 1);
+                baseBind.srl.finishRefresh();
+                Objects.requireNonNull(baseBind.rv.getAdapter()).notifyItemRangeChanged(0, homePage.getData().getItems().size());
                 break;
             case 1:
-                baseBind.xrv.loadMoreComplete();
+                baseBind.srl.finishLoadMore();
+                Objects.requireNonNull(baseBind.rv.getAdapter()).notifyItemRangeChanged(0, homePage.getData().getItems().size());
                 break;
         }
     }
@@ -273,7 +273,7 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
 
     @Override
     public void onRefresh() {
-        baseBind.xrv.refresh();
+        baseBind.srl.autoRefresh();
     }
 
     class Refresh extends Thread {
@@ -281,16 +281,16 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
         public void run() {
             try {
                 homePage = pBilibiliClient.getPAppAPI().homePage(true);
-                for (int i = 0; i < 2; i++) {
-                    homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
-                }
                 if (handler != null) {
                     handler.sendEmptyMessage(0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                    getActivity().runOnUiThread(() -> {
+                        TipUtil.showTip(getContext(), e.getMessage());
+                        baseBind.srl.finishRefresh(false);
+                    });
                 }
             }
         }
@@ -304,7 +304,10 @@ public class HomeFragment extends BaseFragment<LayoutXrecyclerviewOnlyBinding> i
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> TipUtil.showTip(getContext(), e.getMessage()));
+                    getActivity().runOnUiThread(() -> {
+                        TipUtil.showTip(getContext(), e.getMessage());
+                        baseBind.srl.finishLoadMore(false);
+                    });
                 }
             }
             if (handler != null) {

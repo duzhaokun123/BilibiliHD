@@ -109,7 +109,7 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
 
     protected abstract int initLayout();
 
-    protected void findViews(View parentView) {
+    protected void findViews(@NonNull View parentView) {
     }
 
     protected abstract void initView();

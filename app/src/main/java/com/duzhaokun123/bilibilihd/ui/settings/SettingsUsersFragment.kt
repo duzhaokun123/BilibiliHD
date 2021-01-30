@@ -49,14 +49,14 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
     override fun initLayout() = R.layout.fragment_settings_users
 
     override fun initView() {
-        baseBind.xrv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        baseBind.xrv.addItemDecoration(object : ItemDecoration() {
+        baseBind.rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        baseBind.rv.addItemDecoration(object : ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 super.getItemOffsets(outRect, view, parent, state)
                 outRect.set(0, 0, 0, resources.getDimensionPixelOffset(R.dimen.divider_height))
             }
         })
-        baseBind.xrv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        baseBind.rv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
                 return UserCardHolder(LayoutInflater.from(context).inflate(R.layout.layout_user_card_item, parent, false))
             }
@@ -91,7 +91,7 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                                     .setTitle(R.string.delete)
                                     .setPositiveButton(android.R.string.ok) { _, _ ->
                                         loginUserInfoMap!!.remove(loginUserInfoMap!!.getByIndex(position).userId)
-                                        XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap!!.size)
+                                        baseBind.rv.adapter!!.notifyItemRangeChanged(0, loginUserInfoMap!!.size)
                                         Settings.saveLoginUserInfoMap()
                                         pBilibiliClient.loginResponse = loginUserInfoMap!!.loggedLoginResponse
                                         reloadLoggedUserInfo()
@@ -132,8 +132,6 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                 val mCv: CardView = itemView.findViewById(R.id.cv)
             }
         }
-        baseBind.xrv.setLoadingMoreEnabled(false)
-        baseBind.xrv.setPullRefreshEnabled(false)
         baseBind.ibDelete.setOnClickListener {
             loginUserInfoMap!!.setLoggedUid(0)
             Settings.saveLoginUserInfoMap()
@@ -177,7 +175,7 @@ class SettingsUsersFragment : BaseFragment<FragmentSettingsUsersBinding>() {
                 if (loginResponse != null) {
                     loginUserInfoMap!![loginResponse.userId] = loginResponse
                     Settings.saveLoginUserInfoMap()
-                    XRecyclerViewUtil.notifyItemsChanged(baseBind.xrv, loginUserInfoMap!!.size)
+                    baseBind.rv.adapter!!.notifyItemRangeChanged(0,loginUserInfoMap!!.size )
                     TipUtil.showTip(context, R.string.imported)
                 } else {
                     TipUtil.showTip(context, R.string.bad_file)
