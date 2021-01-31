@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Rational
@@ -236,6 +238,9 @@ abstract class BasePlayActivity<extLayout : ViewDataBinding> : BaseActivity<Acti
         if (Settings.danmaku.danmakuVisibility != 0) {
             baseBind.bpvwv.biliPlayerView.danmakuHide()
         }
+
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.statusBarColor = Color.TRANSPARENT
     }
 
     final override fun initRegisterCoordinatorLayout() = baseBind.clRoot

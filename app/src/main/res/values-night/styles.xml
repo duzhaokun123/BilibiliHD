@@ -11,16 +11,4 @@
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Dialog">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
-
-    <style name="AppTheme.TransparencyActionBar" parent="AppTheme">
-        <item name="actionBarStyle">@style/Transparency</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="AppTheme.TransparencyActionBar.DarkActionBar" parent="AppTheme.TransparencyActionBar" />
-
-    <style name="AppTheme.UserSpaceActivity" parent="AppTheme">
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
 </resources>

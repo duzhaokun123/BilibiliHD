@@ -12,12 +12,13 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.bases.BaseActivity
+import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityMainBinding
 import com.duzhaokun123.bilibilihd.ui.JumpActivity
 import com.duzhaokun123.bilibilihd.ui.ToolActivity
@@ -30,7 +31,7 @@ import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.hiczp.bilibili.api.app.model.MyInfo
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity2<ActivityMainBinding>() {
     private var mRlMyInfo: RelativeLayout? = null
     private var mTvUsername: TextView? = null
     private var mTvBBi: TextView? = null
@@ -45,6 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var first = true
     private var title: String? = null
     private var defaultNavWidth = 0
+
     override fun setTitle(title: CharSequence) {
         super.setTitle(title)
         this.title = title.toString()
@@ -69,7 +71,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    public override fun onRestoreInstanceStateSynchronously(savedInstanceState: Bundle) {
+    override fun onRestoreInstanceState2(savedInstanceState: Bundle) {
         first = savedInstanceState.getBoolean("first")
         title = savedInstanceState.getString("title")
     }
@@ -158,13 +160,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    override fun initConfig(): Int {
-        return NEED_HANDLER or FIX_LAYOUT
-    }
+    override fun initConfig() = setOf(Config.NEED_HANDLER)
 
-    override fun initLayout(): Int {
-        return R.layout.activity_main
-    }
+    override fun initLayout() =  R.layout.activity_main
 
     override fun findViews() {
         mRlMyInfo = baseBind.navMain.getHeaderView(0) as RelativeLayout
@@ -243,6 +241,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (defaultNavWidth == 0) {
             defaultNavWidth = baseBind.navMain.width
         }
+        baseBind.flMain.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+        baseBind.navMain.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+        setActionBarUp(true)
     }
 
     @SuppressLint("SetTextI18n")

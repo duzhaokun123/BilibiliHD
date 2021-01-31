@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.databinding.PlayExtOrdinaryBinding
+import com.duzhaokun123.bilibilihd.databinding.PlayExtOnlineBinding
 import com.duzhaokun123.bilibilihd.ui.play.base.BasePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyFragment
 import com.duzhaokun123.bilibilihd.ui.widget.BiliPlayerViewWrapperView
@@ -23,7 +23,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
 import com.hiczp.bilibili.api.app.model.View as BiliView
 
-class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
+class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
     companion object {
         const val EXTRA_FAST_LOAD_COVER_URL = "fast_load_cover_url"
         const val EXTRA_AID = "aid"
@@ -250,7 +250,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOrdinaryBinding>() {
         override fun getItemCount() = 2
     }
 
-    override fun initExtLayout() = R.layout.play_ext_ordinary
+    override fun initExtLayout() = R.layout.play_ext_online
 
     override fun onGetShareUrl() = MyBilibiliClientUtil.getB23Url(aid) ?: ""
 

@@ -22,57 +22,16 @@
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Transparency" parent="AppTheme.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar.Transparency.Fullscreen" parent="AppTheme.NoActionBar.Transparency">
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.TransparencyActionBar" parent="AppTheme">
-        <item name="actionBarTheme">@style/Transparency</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="Transparency">
-        <item name="colorPrimary">@android:color/transparent</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">
-            @android:color/transparent
-        </item>
-    </style>
-
-    <style name="AppTheme.NoActionBar.TransparencyStatus" parent="AppTheme.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="LightTextTransparencyActionBar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="colorPrimary">@android:color/transparent</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">
-            @android:color/transparent
-        </item>
-    </style>
-
-    <style name="AppTheme.TransparencyActionBar.DarkActionBar" parent="AppTheme.TransparencyActionBar">
-        <item name="actionBarTheme">@style/LightTextTransparencyActionBar</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
     <style name="AppTheme.UserSpaceActivity" parent="AppTheme">
         <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="AppTheme.BasePlayActivity" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

@@ -10,7 +10,6 @@ import android.util.DisplayMetrics
 import android.view.DisplayCutout
 import android.view.MenuItem
 import android.view.View
-import androidx.annotation.Keep
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -73,8 +72,6 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
-    private val stateBarBackground by lazy { findViewById<View?>(android.R.id.statusBarBackground) }
-    private val bothABAndSBB by lazy { BothABAndSBB() }
 
     private var isFirstWindowForce = true
     private var layoutFixed = false
@@ -144,6 +141,7 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
 
             if (isFirstWindowForce) {
                 isFirstWindowForce = false
+                findViewById<View?>(android.R.id.statusBarBackground)?.elevation = 0.01F
                 setActionBarUp(false)
             }
         }
@@ -208,14 +206,14 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
             val start = supportActionBar.elevation
             val end = if (v) e1 else 0.01F
             if (start == end) return
-            ObjectAnimator.ofFloat(bothABAndSBB, "elevation", start, end).apply {
+            ObjectAnimator.ofFloat(supportActionBar, "elevation", start, end).apply {
                 duration = 200
             }.start()
         } else {
             if (v)
-                bothABAndSBB.setElevation(e1)
+                supportActionBar.elevation = e1
             else
-                bothABAndSBB.setElevation(0.01F)
+                supportActionBar.elevation = 0.01F
         }
     }
 
@@ -248,16 +246,6 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
     inner class RVAutoSetActionBarUpListener : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             setActionBarUp(recyclerView.computeVerticalScrollOffset() > 0, true)
-        }
-    }
-
-    inner class BothABAndSBB {
-        private val supportActionBar = this@BaseActivity2.supportActionBar
-
-        @Keep
-        fun setElevation(elevation: Float) {
-            supportActionBar?.elevation = elevation
-            stateBarBackground?.elevation = elevation
         }
     }
 }

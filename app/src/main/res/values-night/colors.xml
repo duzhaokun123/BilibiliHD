@@ -17,5 +17,5 @@
     <color name="lightGray">@color/lighterBackground</color>
     <color name="tagBackground">@color/lightBackground</color>
 
-    <color name="actionBarHalfTransparent">#CC222222</color>
+    <color name="actionBarHalfTransparent">#E6222222</color>
 </resources>

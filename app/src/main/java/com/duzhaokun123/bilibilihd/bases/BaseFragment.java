@@ -98,6 +98,15 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
         return activity;
     }
 
+    @NonNull
+    public BaseActivity2<?> requireBaseActivity2() {
+        BaseActivity2<?> activity = getBaseActivity2();
+        if (activity == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to an baseActivity2.");
+        }
+        return activity;
+    }
+
     public boolean isFirstCreate() {
         return firstCreate;
     }
