@@ -64,3 +64,8 @@ fun String.toLongOrDefault(default: Long = 0L): Long {
         default
     }
 }
+
+fun String.replaceAfterInclude(delimiter: Char, replacement: String, missingDelimiterValue: String = this): String {
+    val index = indexOf(delimiter)
+    return if (index == -1) missingDelimiterValue else replaceRange(index, length, replacement)
+}

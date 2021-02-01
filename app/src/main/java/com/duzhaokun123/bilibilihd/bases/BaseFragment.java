@@ -22,6 +22,7 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
     protected layout baseBind;
     @Nullable
     protected Handler handler;
+    protected boolean isStopped = true;
 
     private boolean firstCreate = true;
 
@@ -53,6 +54,18 @@ public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragm
         initView();
         initData();
         return parentView;
+    }
+
+    @Override
+    public void onStart() {
+        isStopped = false;
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        isStopped = true;
+        super.onStop();
     }
 
     @Override
