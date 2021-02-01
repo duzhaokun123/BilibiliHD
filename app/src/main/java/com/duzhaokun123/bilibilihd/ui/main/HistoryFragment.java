@@ -183,6 +183,27 @@ public class HistoryFragment extends BaseFragment<LayoutSrlBinding> implements R
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        requireBaseActivity2().registerOnFixInfoReady(2, (fth, fbh) -> {
+            baseBind.srl.setPadding(0, fth, 0, fbh);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) baseBind.cf.getLayoutParams();
+            lp.topMargin = -1 * fbh;
+            baseBind.cf.setLayoutParams(lp);
+            lp = (ViewGroup.MarginLayoutParams) baseBind.mh.getLayoutParams();
+            lp.topMargin = fth;
+            baseBind.mh.setLayoutParams(lp);
+            return null;
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        requireBaseActivity2().unRegisterOnFixInfoReady(2);
+    }
+
+    @Override
     public void handlerCallback(@NonNull Message msg) {
         switch (msg.what) {
             case 0:

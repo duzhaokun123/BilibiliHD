@@ -61,6 +61,8 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
         private set
     var isFirstCreate = true
         private set
+    var isFixInfoReady = false
+        private set
     var handler: Handler? = null
         private set
     lateinit var baseBind: layout
@@ -72,6 +74,7 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
+    private val onFixInfoReadyCallbacks = mutableMapOf<Int,(Int, Int) -> Unit>()
 
     private var isFirstWindowForce = true
     private var layoutFixed = false
@@ -134,6 +137,9 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
             if (displayCutout == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 displayCutout = window.decorView.rootWindowInsets.displayCutout
             }
+
+            isFixInfoReady = true
+            onFixInfoReadyCallbacks.values.forEach { it.invoke(fixTopHeight, fixBottomHeight) }
 
             if (layoutFixed.not() && Config.FIX_LAYOUT in config) {
                 updateLayoutFix()
@@ -220,6 +226,15 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
     fun updateLayoutFix() {
         layoutFixed = true
         baseBind.root.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    }
+
+    fun registerOnFixInfoReady(key: Int, callback :(fixTopHeight: Int, fixBottomHeight: Int) -> Unit) {
+        onFixInfoReadyCallbacks[key] = callback
+        if (isFixInfoReady) callback.invoke(fixTopHeight, fixBottomHeight)
+    }
+
+    fun unRegisterOnFixInfoReady(key: Int) {
+        onFixInfoReadyCallbacks.remove(key)
     }
 
     abstract fun initConfig(): Set<Config>

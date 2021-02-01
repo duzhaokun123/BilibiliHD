@@ -241,7 +241,6 @@ class MainActivity : BaseActivity2<ActivityMainBinding>() {
         if (defaultNavWidth == 0) {
             defaultNavWidth = baseBind.navMain.width
         }
-        baseBind.flMain.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
         baseBind.navMain.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
         setActionBarUp(true)
     }

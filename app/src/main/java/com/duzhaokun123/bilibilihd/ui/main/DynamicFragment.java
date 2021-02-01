@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 
 import com.duzhaokun123.bilibilihd.Params;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.databinding.LayoutWebViewBinding;
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil;
 import com.duzhaokun123.bilibilihd.utils.Refreshable;
 
@@ -72,6 +72,21 @@ public class DynamicFragment extends BaseFragment<LayoutWebViewBinding> implemen
         if (isFirstCreate()) {
             baseBind.wv.loadUrl("https://t.bilibili.com");
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        requireBaseActivity2().registerOnFixInfoReady(3, (fth, fbh) -> {
+            baseBind.rl.setPadding(0, fth, 0, fbh);
+            return null;
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        requireBaseActivity2().unRegisterOnFixInfoReady(3);
     }
 
     @Override

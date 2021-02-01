@@ -252,6 +252,33 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        requireBaseActivity2().registerOnFixInfoReady(1, (fth, fbh) -> {
+            baseBind.srl.setPadding(0, fth, 0, fbh);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) baseBind.cf.getLayoutParams();
+            lp.topMargin = -1 * fbh;
+            baseBind.cf.setLayoutParams(lp);
+            lp = (ViewGroup.MarginLayoutParams) baseBind.mh.getLayoutParams();
+            lp.topMargin = fth;
+            baseBind.mh.setLayoutParams(lp);
+            return null;
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        requireBaseActivity2().unRegisterOnFixInfoReady(1);
+    }
+
+    @Override
     public void handlerCallback(@NonNull Message msg) {
         switch (msg.what) {
             case 0:
@@ -301,6 +328,9 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
         public void run() {
             try {
                 homePage.getData().getItems().addAll(pBilibiliClient.getPAppAPI().homePage(false).getData().getItems());
+                if (handler != null) {
+                    handler.sendEmptyMessage(1);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
@@ -310,9 +340,7 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
                     });
                 }
             }
-            if (handler != null) {
-                handler.sendEmptyMessage(1);
-            }
+
         }
     }
 }

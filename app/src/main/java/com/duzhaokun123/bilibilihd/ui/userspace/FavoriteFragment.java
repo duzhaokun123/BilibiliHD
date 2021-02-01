@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.duzhaokun123.bilibilihd.R;
-import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewWithVBinding;
-import com.duzhaokun123.bilibilihd.bases.BaseActivity;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
+import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewBinding;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.hiczp.bilibili.api.app.model.Space;
 
-public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBinding> {
+public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewBinding> {
 
 
     private Space space;
@@ -41,7 +40,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
 
     @Override
     protected int initLayout() {
-        return R.layout.layout_recyclerview_with_v;
+        return R.layout.layout_recyclerview;
     }
 
     @Override
@@ -115,18 +114,20 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewWithVBindin
                 }
             }
         });
-
-        BaseActivity<?> baseActivity = getBaseActivity();
-        if (baseActivity != null && baseActivity.navigationBarOnButton) {
-            ViewGroup.LayoutParams params = baseBind.v.getLayoutParams();
-            params.height = baseActivity.getFixButtonHeight();
-            baseBind.v.setLayoutParams(params);
-        }
     }
 
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        requireBaseActivity2().registerOnFixInfoReady(4, (fth, fbh) -> {
+            baseBind.rv.setPadding(0,0,0,fbh);
+            return null;
+        });
     }
 
     @Override
