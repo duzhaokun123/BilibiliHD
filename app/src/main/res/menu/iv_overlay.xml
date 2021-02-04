@@ -11,4 +11,8 @@
         android:icon="@drawable/ic_dl_white"
         android:title="@string/download"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/close"
+        android:icon="@drawable/ic_dialog_close_dark"
+        android:title="close"
+        app:showAsAction="always"/>
 </menu>

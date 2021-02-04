@@ -110,6 +110,7 @@
 - 评论快速滚动会闪烁
 - 在`Chrome OS`上由于解码器问题(大)部分视频无法播放, 建议使用官方客户端
 - 弹幕播放进度偏移, 具体视设备性能和播放时常而定
+- 查看大图有时候按返回不返回
 - [更多](https://github.com/duzhaokun123/BilibiliHD/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 - 更多 BUG 等你发现
 
@@ -137,6 +138,8 @@ script/sync_third_party.sh
 [ExoPlayer](https://exoplayer.dev/)
 
 [Material](https://material.io)
+
+[PhotoView](https://github.com/Baseflow/PhotoView)
 
 [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
 

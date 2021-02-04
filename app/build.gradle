@@ -203,6 +203,7 @@ dependencies {
 
     //StfalconImageViewer
     implementation 'com.github.stfalcon:stfalcon-imageviewer:1.0.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
     //Biometric
     implementation 'androidx.biometric:biometric:1.0.1'
