@@ -39,6 +39,10 @@ public class MyBilibiliClientUtil {
     private static final long xor = 177451812L;
     private static final long add = 8728348608L;
 
+    /**
+     *
+     * @return 错误时返回 0
+     */
     public static long bv2av(String bv) {
         if (bv == null) {
             return 0;

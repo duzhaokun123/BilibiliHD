@@ -20,8 +20,8 @@ class UrlOpenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent
-        val uri = intent.data
-        val scheme = uri!!.scheme
+        val uri = intent.data!!
+        val scheme = uri.scheme
         val host = uri.host
         val path = uri.path
 
@@ -58,7 +58,11 @@ class UrlOpenActivity : AppCompatActivity() {
                             intent1 = Intent(this, OnlinePlayActivity::class.java)
                             if (path != null) {
                                 try {
-                                    intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path.substring(7)))
+                                    val aid = MyBilibiliClientUtil.bv2av(path.substring(7))
+                                    if (aid != 0L)
+                                        intent1.putExtra("aid", aid)
+                                    else
+                                        throw RuntimeException()
                                 } catch (e: Exception) {
                                     try {
                                         intent1.putExtra("aid", path.substring(9).toLong())
@@ -92,7 +96,11 @@ class UrlOpenActivity : AppCompatActivity() {
                         try {
                             intent1.putExtra("aid", path!!.substring(1).toLong())
                         } catch (e: NumberFormatException) {
-                            intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path!!.substring(1)))
+                            try {
+                                intent1.putExtra("aid", path!!.substring(3).toLong())
+                            } catch (e: NumberFormatException) {
+                                intent1.putExtra("aid", MyBilibiliClientUtil.bv2av(path!!.substring(1)))
+                            }
                         }
                     }
                     "article" -> {
@@ -108,6 +116,7 @@ class UrlOpenActivity : AppCompatActivity() {
                 }
             }
             if (intent1 != null) {
+                Log.d(TAG, "onCreate: intent1: $intent1, ${intent1.extras}")
                 startActivity(intent1)
             }
         } catch (e: Exception) {

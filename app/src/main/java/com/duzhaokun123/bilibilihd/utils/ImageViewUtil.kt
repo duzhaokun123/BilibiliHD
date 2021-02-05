@@ -99,11 +99,7 @@ object ImageViewUtil {
                             val shareUri: Uri
                             val srcFile = Glide.with(context).asFile().load(pImage).submit().get()
                             val shareFile = File(context.cacheDir, "shareImg${File.separatorChar}share.jpeg").apply { parentFile!!.mkdirs() } // FIXME: 20-11-2 你凭什么认为一定是 jpeg 格式
-                            FileInputStream(srcFile).use { `in` ->
-                                FileOutputStream(shareFile).use { out ->
-                                    `in`.copyTo(out)
-                                }
-                            }
+                            srcFile.copyTo(shareFile, overwrite = true)
                             shareUri = FileProvider.getUriForFile(context, "com.duzhaokun123.bilibilihd.fileprovider", shareFile)
                             context.startActivity(Intent.createChooser(Intent().apply {
                                 action = Intent.ACTION_SEND
