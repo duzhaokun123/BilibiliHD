@@ -81,12 +81,7 @@ android {
 
     }
     packagingOptions {
-        pickFirst 'META-INF/ktor-http.kotlin_module'
-        pickFirst 'META-INF/ktor-utils.kotlin_module'
-        pickFirst 'META-INF/kotlinx-coroutines-core.kotlin_module'
-        pickFirst 'META-INF/ktor-io.kotlin_module'
-        pickFirst 'META-INF/ktor-http-cio.kotlin_module'
-        pickFirst 'META-INF/ktor-client-core.kotlin_module'
+        exclude "META-INF/*.kotlin_module"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -124,8 +119,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.1'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
     //browser
     implementation 'androidx.browser:browser:1.3.0'
@@ -139,7 +134,7 @@ dependencies {
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'com.google.android.material:material:1.3.0-rc01'
+    implementation 'com.google.android.material:material:1.3.0'
 //    implementation 'androidx.navigation:navigation-fragment:2.2.1'
 //    implementation 'androidx.navigation:navigation-ui:2.2.1'
 //    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -175,10 +170,15 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-rc01'
 
     //MediaRouter
-    implementation 'androidx.mediarouter:mediarouter:1.2.0'
+    implementation 'androidx.mediarouter:mediarouter:1.2.1'
 
-    //protobuf-lite
-    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+    //grpc
+    def grpcVersion = '1.35.0'
+    implementation "io.grpc:grpc-okhttp:$grpcVersion"
+    implementation "io.grpc:grpc-android:$grpcVersion"
+    implementation "io.grpc:grpc-protobuf-lite:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
+    implementation 'org.apache.tomcat:annotations-api:6.0.53'
 
     //html-textview
     implementation 'org.sufficientlysecure:html-textview:3.9'
@@ -206,31 +206,35 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
     //Biometric
-    implementation 'androidx.biometric:biometric:1.0.1'
+    implementation 'androidx.biometric:biometric:1.1.0'
 
     //SmartRefreshLayout
     def srlVersion = "2.0.3"
-    implementation  "com.scwang.smart:refresh-layout-kernel:$srlVersion"
-    implementation  "com.scwang.smart:refresh-header-material:$srlVersion"
-    implementation  "com.scwang.smart:refresh-footer-classics:$srlVersion"
+    implementation "com.scwang.smart:refresh-layout-kernel:$srlVersion"
+    implementation "com.scwang.smart:refresh-header-material:$srlVersion"
+    implementation "com.scwang.smart:refresh-footer-classics:$srlVersion"
 }
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:4.0.0-rc-2'
+        artifact = 'com.google.protobuf:protoc:3.14.0'
     }
     plugins {
-        javalite {
-            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.35.0'
         }
     }
     generateProtoTasks {
         all().each { task ->
             task.builtins {
-                remove java
+                java {
+                    option "lite"
+                }
             }
             task.plugins {
-                javalite {}
+                grpc {
+                    option "lite"
+                }
             }
         }
     }

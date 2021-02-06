@@ -37,6 +37,7 @@ import com.hiczp.bilibili.api.player.model.VideoPlayUrl;
 
 import java.util.Objects;
 
+import bilibili.app.view.v1.ViewV1;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
@@ -45,12 +46,12 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
     private TextView mTvUpName, mTvUpFans;
     private CircleImageView mCivFace;
 
-    private com.hiczp.bilibili.api.app.model.View biliView;
+    private ViewV1.ViewReply biliView;
     private VideoPlayUrl videoPlayUrl;
     private long aid;
     private int page;
 
-    public static IntroFragment getInstance(com.hiczp.bilibili.api.app.model.View biliView, long aid, int page) {
+    public static IntroFragment getInstance(ViewV1.ViewReply biliView, long aid, int page) {
         IntroFragment introFragment = new IntroFragment();
         introFragment.biliView = biliView;
         introFragment.aid = aid;
@@ -87,35 +88,35 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
             params.height = baseActivity.getFixButtonHeight();
             baseBind.v.setLayoutParams(params);
         }
-        for (com.hiczp.bilibili.api.app.model.View.Data.Tag tag : biliView.getData().getTag()) {
+        for (ViewV1.Tag tag : biliView.getTagList()) {
             TextView textView = new TextView(getContext());
-            textView.setText(tag.getTagName());
+            textView.setText(tag.getName());
             textView.setTextSize(12);
             textView.setBackgroundResource(R.drawable.bg_tag);
             textView.setTextColor(getResources().getColor(R.color.ordinaryText, null));
             textView.setPadding(OtherUtils.dp2px(10), OtherUtils.dp2px(5), OtherUtils.dp2px(10), OtherUtils.dp2px(5));
-            textView.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), "https://www.bilibili.com/v/channel/" + tag.getTagId(), true, true));
+            textView.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), "https://www.bilibili.com/v/channel/" + tag.getId(), true, true));
             baseBind.fblTags.addView(textView);
         }
-        if (biliView.getData().getHonor() != null) {
+        if (biliView.hasHonor()) {
             baseBind.llHonor.setVisibility(View.VISIBLE);
-            baseBind.tvHonorText.setText(biliView.getData().getHonor().getText());
-            baseBind.tvHonorTextExtra.setText(biliView.getData().getHonor().getTextExtra());
-            baseBind.tvHonorUrl.setText(biliView.getData().getHonor().getUrlText());
+            baseBind.tvHonorText.setText(biliView.getHonor().getText());
+            baseBind.tvHonorTextExtra.setText(biliView.getHonor().getTextExtra());
+            baseBind.tvHonorUrl.setText(biliView.getHonor().getUrlText());
             int textColor;
             if (OtherUtils.isNightMode()) {
-                Glide.with(this).load(biliView.getData().getHonor().getIconNight()).into(baseBind.ivHonorIcon);
-                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getData().getHonor().getBgColorNight()));
-                textColor = Color.parseColor(biliView.getData().getHonor().getTextColorNight());
+                Glide.with(this).load(biliView.getHonor().getIconNight()).into(baseBind.ivHonorIcon);
+                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getHonor().getBgColorNight()));
+                textColor = Color.parseColor(biliView.getHonor().getTextColorNight());
             } else {
-                Glide.with(this).load(biliView.getData().getHonor().getIcon()).into(baseBind.ivHonorIcon);
-                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getData().getHonor().getBgColor()));
-                textColor = Color.parseColor(biliView.getData().getHonor().getTextColor());
+                Glide.with(this).load(biliView.getHonor().getIcon()).into(baseBind.ivHonorIcon);
+                baseBind.llHonor.setBackgroundColor(Color.parseColor(biliView.getHonor().getBgColor()));
+                textColor = Color.parseColor(biliView.getHonor().getTextColor());
             }
             baseBind.tvHonorText.setTextColor(textColor);
             baseBind.tvHonorTextExtra.setTextColor(textColor);
             baseBind.tvHonorUrl.setTextColor(textColor);
-            baseBind.llHonor.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), biliView.getData().getHonor().getUrl(), false, true));
+            baseBind.llHonor.setOnClickListener(v -> BrowserUtil.openWebViewActivity(requireContext(), biliView.getHonor().getUrl(), false, true));
         }
         baseBind.tvLike.setOnClickListener(v -> new Thread(() -> {
             try {
@@ -123,7 +124,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         TipUtil.showTip(getContext(), likeResponse.getData().getToast());
-                        baseBind.tvLike.setText(String.valueOf(biliView.getData().getStat().getLike() + 1));
+                        baseBind.tvLike.setText(String.valueOf(biliView.getArc().getStat().getLike() + 1));
                     });
                 }
             } catch (Exception e) {
@@ -149,7 +150,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         baseBind.tvCoin.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(requireContext(), baseBind.tvCoin);
             popupMenu.getMenu().add(0, 1, 1, "1");
-            if (biliView.getData().getCopyright() == 1) {
+            if (biliView.getArc().getCopyright() == 1) {
                 popupMenu.getMenu().add(0, 2, 2, "2");
             }
             popupMenu.setOnMenuItemClickListener(item -> {
@@ -158,7 +159,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             TipUtil.showTip(getContext(), getString(R.string.added_coin_d, item.getOrder()));
-                            baseBind.tvCoin.setText(String.valueOf(biliView.getData().getStat().getCoin() + item.getOrder()));
+                            baseBind.tvCoin.setText(String.valueOf(biliView.getArc().getStat().getCoin() + item.getOrder()));
                         });
                     }
                 } catch (Exception e) {
@@ -206,28 +207,28 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 }
             }
         }).start());
-        if (biliView.getData().getCopyright() == 1) {
+        if (biliView.getArc().getCopyright() == 1) {
             baseBind.tvSelfMade.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     protected void initData() {
-        GlideUtil.loadUrlInto(getContext(), biliView.getData().getOwner().getFace(), mCivFace, false);
-        mCivFace.setOnClickListener(v -> UserSpaceActivity.enter(getActivity(), biliView.getData().getOwner().getMid(), mCivFace, null));
-        mTvUpName.setText(biliView.getData().getOwner().getName());
+        GlideUtil.loadUrlInto(getContext(), biliView.getArc().getAuthor().getFace(), mCivFace, false);
+        mCivFace.setOnClickListener(v -> UserSpaceActivity.enter(getActivity(), biliView.getArc().getAuthor().getMid(), mCivFace, null));
+        mTvUpName.setText(biliView.getArc().getAuthor().getName());
         mTvUpName.setOnClickListener(v -> mCivFace.callOnClick());
-        mTvUpFans.setText(getString(R.string.num_fans, biliView.getData().getOwnerExt().getFans()));
-        baseBind.tvDesc.setText(biliView.getData().getDesc());
+        mTvUpFans.setText(getString(R.string.num_fans, biliView.getOwnerExt().getFans()));
+        baseBind.tvDesc.setText(biliView.getArc().getDesc());
         LinkifyUtil.INSTANCE.addAllLinks(baseBind.tvDesc);
-        baseBind.tvUptime.setText(DateTimeFormatUtil.getFormat1().format(biliView.getData().getPubdate() * 1000L));
-        baseBind.tvDanmakuHas.setText(String.valueOf(biliView.getData().getStat().getDanmaku()));
-        baseBind.tvWatched.setText(String.valueOf(biliView.getData().getStat().getView()));
-        baseBind.tvTitle.setText(biliView.getData().getTitle());
-        baseBind.tvLike.setText(String.valueOf(biliView.getData().getStat().getLike()));
-        baseBind.tvCoin.setText(String.valueOf(biliView.getData().getStat().getCoin()));
-        baseBind.tvFavorite.setText(String.valueOf(biliView.getData().getStat().getFavorite()));
-        new LoadVideoPlayUrl(biliView.getData().getPages().get(page - 1).getCid(), 0).start();
+        baseBind.tvUptime.setText(DateTimeFormatUtil.getFormat1().format(biliView.getArc().getPubdate() * 1000L));
+        baseBind.tvDanmakuHas.setText(String.valueOf(biliView.getArc().getStat().getDanmaku()));
+        baseBind.tvWatched.setText(String.valueOf(biliView.getArc().getStat().getView()));
+        baseBind.tvTitle.setText(biliView.getArc().getTitle());
+        baseBind.tvLike.setText(String.valueOf(biliView.getArc().getStat().getLike()));
+        baseBind.tvCoin.setText(String.valueOf(biliView.getArc().getStat().getCoin()));
+        baseBind.tvFavorite.setText(String.valueOf(biliView.getArc().getStat().getFav()));
+        new LoadVideoPlayUrl(biliView.getPagesList().get(page - 1).getPage().getCid(), 0).start();
     }
 
     @Override
@@ -235,13 +236,13 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
         switch (msg.what) {
             case 0:
                 sendBack();
-                for (com.hiczp.bilibili.api.app.model.View.Data.Page page1 : biliView.getData().getPages()) {
+                for (ViewV1.ViewPage page1 : biliView.getPagesList()) {
                     RadioButton radioButton = new RadioButton(getContext());
-                    radioButton.setText(page1.getPart());
+                    radioButton.setText(page1.getPage().getPart());
                     radioButton.setOnClickListener(v -> {
-                        if (page != page1.getPage()) {
-                            new LoadVideoPlayUrl(page1.getCid(), 1).start();
-                            page = page1.getPage();
+                        if (page != page1.getPage().getPage()) {
+                            new LoadVideoPlayUrl(page1.getPage().getCid(), 1).start();
+                            page = page1.getPage().getPage();
                         }
                     });
                     radioButton.setButtonDrawable(null);
@@ -254,7 +255,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.rightMargin = OtherUtils.dp2px(5);
                     baseBind.rgPages.addView(radioButton, params);
-                    if (page == page1.getPage()) {
+                    if (page == page1.getPage().getPage()) {
                         radioButton.setChecked(true);
                     }
                 }
@@ -272,7 +273,7 @@ public class IntroFragment extends BaseFragment<FragmentPlayIntroBinding> {
                 sendBack();
                 break;
             case WHAT_LOAD_NEW_PAGE:
-                new LoadVideoPlayUrl(biliView.getData().getPages().get(msg.arg1 - 1).getCid(), 1).start();
+                new LoadVideoPlayUrl(biliView.getPagesList().get(msg.arg1 - 1).getPage().getCid(), 1).start();
                 ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(false);
                 page = msg.arg1;
                 ((RadioButton) baseBind.rgPages.getChildAt(page - 1)).setChecked(true);

@@ -40,6 +40,7 @@ public class Application extends android.app.Application implements Handler.IHan
         LoginResponse loginResponse = null;
         if (pBilibiliClient != null) {
             loginResponse = pBilibiliClient.getLoginResponse();
+            pBilibiliClient.close();
         }
         if (Settings.bilibiliApi.isCustom()) {
             pBilibiliClient = new PBilibiliClient(new CustomBilibiliClientProperties(),

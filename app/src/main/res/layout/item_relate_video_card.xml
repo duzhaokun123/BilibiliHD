@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+
+        <variable
+            name="relate"
+            type="bilibili.app.view.v1.ViewV1.Relate" />
+    </data>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
@@ -25,23 +30,23 @@
                 tools:srcCompat="@tools:sample/backgrounds/scenic[5]" />
 
             <TextView
-                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iv_cover"
+                android:text="@{relate.title}"
                 android:textColor="@color/ordinaryText"
                 android:textSize="14sp"
                 tools:text="title" />
 
             <TextView
-                android:id="@+id/tv_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/ll"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iv_cover"
                 android:drawablePadding="5dp"
+                android:text="@{relate.author.name}"
                 app:drawableStartCompat="@drawable/ic_up"
                 tools:text="up" />
 
@@ -55,25 +60,24 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
+                    android:text="@{String.valueOf(relate.stat.view)}"
                     app:drawableStartCompat="@drawable/ic_play"
                     tools:text="0" />
 
                 <TextView
-                    android:id="@+id/tv_danmaku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:drawablePadding="5dp"
+                    android:text="@{String.valueOf(relate.stat.danmaku)}"
                     app:drawableStartCompat="@drawable/ic_danmaku"
                     tools:text="0" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@id/iv_cover"
@@ -81,6 +85,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/bg_text"
+                android:text="@{com.duzhaokun123.bilibilihd.utils.DateTimeFormatUtil.getStringForTime(relate.duration * 1000)}"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 tools:text="1:30" />

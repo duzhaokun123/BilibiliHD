@@ -1,5 +1,6 @@
 package com.duzhaokun123.bilibilihd.pbilibiliapi.api
 
+import com.duzhaokun123.bilibilihd.grpcbiliclient.GrpcBiliClient
 import com.duzhaokun123.bilibilihd.utils.BrowserUtil
 import com.hiczp.bilibili.api.BilibiliClient
 import com.hiczp.bilibili.api.BilibiliClientProperties
@@ -9,7 +10,7 @@ import kotlinx.coroutines.future.future
 import okhttp3.logging.HttpLoggingInterceptor
 
 class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
-                      val logLevel: HttpLoggingInterceptor.Level) {
+                      val logLevel: HttpLoggingInterceptor.Level) : AutoCloseable {
     constructor() : this(object : BilibiliClientProperties {}, HttpLoggingInterceptor.Level.NONE)
 
     val bilibiliClient by lazy { BilibiliClient(bilibiliClientProperties, logLevel) }
@@ -59,4 +60,10 @@ class PBilibiliClient(val bilibiliClientProperties: BilibiliClientProperties,
 
     val isLogin
         get() = bilibiliClient.isLogin
+
+    val grpcBiliClient = GrpcBiliClient()
+
+    override fun close() {
+        grpcBiliClient.shutdown()
+    }
 }

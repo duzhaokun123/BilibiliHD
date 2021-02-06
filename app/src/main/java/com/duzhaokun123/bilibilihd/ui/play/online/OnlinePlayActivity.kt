@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import bilibili.app.view.v1.ViewV1
 import com.duzhaokun123.bilibilihd.Application
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.databinding.PlayExtOnlineBinding
@@ -21,7 +22,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hiczp.bilibili.api.player.model.VideoPlayUrl
-import com.hiczp.bilibili.api.app.model.View as BiliView
 
 class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
     companion object {
@@ -40,7 +40,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
     private var rootReplyFragment: RootReplyFragment? = null
 
     private var videoPlayUrl: VideoPlayUrl? = null
-    private var biliView: BiliView? = null
+    private var biliView: ViewV1.ViewReply? = null
     private var aid = 0L
     private var cid = 0L
     private var page = 0
@@ -85,7 +85,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
             WHAT_LOAD_BILIVIEW ->
                 Thread {
                     try {
-                        biliView = Application.getPBilibiliClient().pAppAPI.view(aid)
+                        biliView = grpcBiliClient.view(aid = aid)
                         handler?.sendEmptyMessage(WHAT_BILIVIEW_LOAD_OVER)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -97,16 +97,16 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
                 TabLayoutMediator(extBind.tl, extBind.vp) { tab, position ->
                     when (position) {
                         0 -> tab.setText(R.string.intro)
-                        1 -> tab.text = getString(R.string.comment_num, biliView?.data?.stat?.reply)
+                        1 -> tab.text = getString(R.string.comment_num, biliView!!.arc.stat.reply)
                     }
                 }.attach()
-                setCover(biliView?.data?.pic)
-                title = biliView?.data?.title
-                biliView?.data?.history?.let { history ->
+                setCover(biliView!!.arc.pic)
+                title = biliView!!.arc?.title
+                biliView!!.history?.let { history ->
                     var p = 0
-                    for (page in biliView!!.data.pages) {
-                        if (page.cid == history.cid) {
-                            p = page.page
+                    for (page in biliView!!.pagesList) {
+                        if (page.page.cid == history.cid) {
+                            p = page.page.page
                         }
                     }
                     Snackbar.make(baseBind.clRoot,
@@ -133,9 +133,9 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
                 page = msg.data.getInt("page")
-                cid = biliView!!.data.pages[page - 1].cid.toLong()
+                cid = biliView!!.pagesList[page - 1].page.cid
                 baseBind.bpvwv.biliPlayerView.loadShot(aid, cid)
-                loadDanmakuByAidCid(aid, cid, biliView!!.data.pages[page - 1].duration)
+                loadDanmakuByAidCid(aid, cid, biliView!!.pagesList[page - 1].page.duration.toInt())
                 setVideoMediaSourceAdapter(object : BiliPlayerViewWrapperView.VideoMediaSourceAdapter {
                     val dataSourceFactory = DefaultDataSourceFactory(Application.getInstance(), pBilibiliClient.bilibiliClientProperties.defaultUserAgent)
 
@@ -190,14 +190,14 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
 
                     override fun getId(index: Int) = videoPlayUrl!!.data.acceptQuality[index]
                 })
-                biliView!!.data.pages[page - 1].dimension.let {
-                    if (it.rotate == 0) {
-                        setWidthHeight(it.width, it.height)
+                biliView!!.pagesList[page - 1].page.dimension.let {
+                    if (it.rotate == 0L) {
+                        setWidthHeight(it.width.toInt(), it.height.toInt())
                     } else {
-                        setWidthHeight(it.height, it.width)
+                        setWidthHeight(it.height.toInt(), it.width.toInt())
                     }
                 }
-                biliView!!.data.pages.let {
+                biliView!!.pagesList.let {
                     if (it.size > page) {
                         baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener {
                             val message = Message()
@@ -209,7 +209,7 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
                         baseBind.bpvwv.biliPlayerView.setOnIbNextClickListener(null)
                     }
                 }
-                setNotificationContentText(biliView?.data?.pages?.get(page - 1)?.part)
+                setNotificationContentText(biliView!!.pagesList[page - 1].page.part)
             }
             WHAT_ADD_HISTORY -> {
                 val playedTime = baseBind.bpvwv.player.currentPosition
@@ -254,10 +254,10 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
 
     override fun onGetShareUrl() = MyBilibiliClientUtil.getB23Url(aid) ?: ""
 
-    override fun onGetShareTitle() = biliView?.data?.title
+    override fun onGetShareTitle() = biliView?.arc?.title
 
     override fun onCheckCover() {
-        biliView?.let { ImageViewUtil.viewImage(this, it.data.pic) }
+        biliView?.let { ImageViewUtil.viewImage(this, it.arc.pic) }
     }
 
     override fun onDownload() {
@@ -274,6 +274,6 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
 
     override fun onReloadDanmaku() {
         if (biliView != null)
-            loadDanmakuByAidCid(aid, cid, biliView!!.data.pages[page - 1].duration)
+            loadDanmakuByAidCid(aid, cid, biliView!!.pagesList[page - 1].page.duration.toInt())
     }
 }

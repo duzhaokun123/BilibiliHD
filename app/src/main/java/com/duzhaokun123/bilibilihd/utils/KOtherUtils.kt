@@ -28,6 +28,9 @@ val pBilibiliClient
 val bilibiliClient
     get() = Application.getPBilibiliClient().bilibiliClient
 
+val grpcBiliClient
+    get() = Application.getPBilibiliClient().grpcBiliClient
+
 val gson
     get() = GsonUtil.getGsonInstance()
 

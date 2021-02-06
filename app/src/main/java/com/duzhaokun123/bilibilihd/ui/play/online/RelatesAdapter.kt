@@ -5,18 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import androidx.appcompat.widget.PopupMenu
+import bilibili.app.view.v1.ViewV1
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseSimpleAdapter
 import com.duzhaokun123.bilibilihd.databinding.ItemRelateVideoCardBinding
 import com.duzhaokun123.bilibilihd.utils.*
-import com.hiczp.bilibili.api.app.model.View as BiliView
 
-class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSimpleAdapter<ItemRelateVideoCardBinding>(context) {
+class RelatesAdapter(context: Context, private val biliView: ViewV1.ViewReply) : BaseSimpleAdapter<ItemRelateVideoCardBinding>(context) {
     override fun getItemCount(): Int {
-        return if (biliView.data.relates == null) {
+        return if (biliView.relatesList == null) {
             0
         } else {
-            biliView.data.relates!!.size
+            biliView.relatesList.size
         }
     }
 
@@ -24,13 +24,13 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
 
     override fun initView(baseBind: ItemRelateVideoCardBinding, position: Int) {
         baseBind.cv.setOnClickListener {
-            if (biliView.data.relates!![position].aid != 0) {
+            if (biliView.relatesList[position].aid != 0L) {
                 val intent = Intent(context, OnlinePlayActivity::class.java)
-                intent.putExtra("aid", biliView.data.relates!![position].aid.toLong())
-                intent.putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, biliView.data.relates!![position].pic)
+                intent.putExtra("aid", biliView.relatesList[position].aid.toLong())
+                intent.putExtra(OnlinePlayActivity.EXTRA_FAST_LOAD_COVER_URL, biliView.relatesList[position].pic)
                 context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity!!, baseBind.ivCover, "cover").toBundle())
             } else {
-                BrowserUtil.openCustomTab(context, biliView.data.relates!![position].uri)
+                BrowserUtil.openCustomTab(context, biliView.relatesList[position].uri)
             }
         }
         baseBind.cv.setOnLongClickListener {
@@ -39,12 +39,12 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
             popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                 when (item.itemId) {
                     R.id.check_cover -> {
-                        ImageViewUtil.viewImage(context, biliView.data.relates!![position].pic, baseBind.ivCover)
+                        ImageViewUtil.viewImage(context, biliView.relatesList[position].pic, baseBind.ivCover)
                     }
                     R.id.add_to_watch_later ->
                         Thread {
                             try {
-                                pBilibiliClient.pMainAPI.toView(aid = biliView.data.relates!![position].aid.toLong())
+                                pBilibiliClient.pMainAPI.toView(aid = biliView.relatesList[position].aid.toLong())
                                 runOnUiThread { TipUtil.showTip(context, R.string.added) }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -60,12 +60,8 @@ class RelatesAdapter(context: Context, private val biliView: BiliView) : BaseSim
     }
 
     override fun initData(baseBind: ItemRelateVideoCardBinding, position: Int) {
-        biliView.data.relates!![position].let {
-            baseBind.tvTitle.text = it.title
-            baseBind.tvPlay.text = it.stat.view.toString()
-            baseBind.tvDanmaku.text = it.stat.danmaku.toString()
-            baseBind.tvUp.text = it.owner?.name
-            baseBind.tvDuration.text = DateTimeFormatUtil.getStringForTime(it.duration.toLong() * 1000)
+        biliView.relatesList[position].let {
+            baseBind.relate = it
             GlideUtil.loadUrlInto(context, it.pic, baseBind.ivCover, false)
         }
     }
