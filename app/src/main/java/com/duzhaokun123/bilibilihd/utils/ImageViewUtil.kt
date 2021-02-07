@@ -144,7 +144,7 @@ object ImageViewUtil {
                                         scaleType = ImageView.ScaleType.CENTER
                                         setImageBitmap(bitmap)
                                         maximumScale = max(5F, scale)
-                                        mediumScale = (maximumScale + scale) / 3
+                                        mediumScale = (maximumScale + scale) / 2
                                         minimumScale = scale
                                         this@apply.scale = scale
                                     }

@@ -151,6 +151,8 @@ script/sync_third_party.sh
 
 [flexbox-layout](https://github.com/google/flexbox-layout)
 
+[gRPC](https://grpc.io)
+
 [glide](https://bumptech.github.io/glide/)
 
 [gson](https://github.com/google/gson)

@@ -102,33 +102,34 @@ class OnlinePlayActivity : BasePlayActivity<PlayExtOnlineBinding>() {
                 }.attach()
                 setCover(biliView!!.arc.pic)
                 title = biliView!!.arc?.title
-                biliView!!.history?.let { history ->
-                    var p = 0
-                    for (page in biliView!!.pagesList) {
-                        if (page.page.cid == history.cid) {
-                            p = page.page.page
-                        }
-                    }
-                    Snackbar.make(baseBind.clRoot,
-                            getString(R.string.last_time_view_to_dp_s, p, DateTimeFormatUtil.getStringForTime(history.progress * 1000)),
-                            BaseTransientBottomBar.LENGTH_LONG)
-                            .setAction(R.string.jump) {
-                                if (page != p) {
-                                    val message = Message()
-                                    message.what = IntroFragment.WHAT_LOAD_NEW_PAGE
-                                    message.arg1 = p
-                                    introFragment?.handler?.sendMessage(message)
-                                }
-                                Thread {
-                                    Thread.sleep(1000)
-                                    runOnUiThread {
-                                        setCover(null)
-                                        seekTo(history.progress * 1000)
-                                    }
-                                }.start()
+                if (biliView!!.hasHistory())
+                    biliView!!.history.let { history ->
+                        var p = 0
+                        for (page in biliView!!.pagesList) {
+                            if (page.page.cid == history.cid) {
+                                p = page.page.page
                             }
-                            .show()
-                }
+                        }
+                        Snackbar.make(baseBind.clRoot,
+                                getString(R.string.last_time_view_to_dp_s, p, DateTimeFormatUtil.getStringForTime(history.progress * 1000)),
+                                BaseTransientBottomBar.LENGTH_LONG)
+                                .setAction(R.string.jump) {
+                                    if (page != p) {
+                                        val message = Message()
+                                        message.what = IntroFragment.WHAT_LOAD_NEW_PAGE
+                                        message.arg1 = p
+                                        introFragment?.handler?.sendMessage(message)
+                                    }
+                                    Thread {
+                                        Thread.sleep(1000)
+                                        runOnUiThread {
+                                            setCover(null)
+                                            seekTo(history.progress * 1000)
+                                        }
+                                    }.start()
+                                }
+                                .show()
+                    }
             }
             WHAT_INTRO_FRAGMENT_SEND_BACK -> {
                 videoPlayUrl = GsonUtil.getGsonInstance().fromJson(msg.data.getString("videoPlayUrl"), VideoPlayUrl::class.java)
