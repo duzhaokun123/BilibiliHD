@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -124,10 +126,19 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewBinding> {
     @Override
     public void onStart() {
         super.onStart();
-        requireBaseActivity2().registerOnFixInfoReady(4, (fth, fbh) -> {
+        requireBaseActivity2().registerOnApplyWindowInsets(4, windowInsetsCompat -> {
+            int fbh;
+            Insets a =  windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            fbh = a.bottom;
             baseBind.rv.setPadding(0,0,0,fbh);
             return null;
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        requireBaseActivity2().unregisterOnApplyWindowInsets(4);
     }
 
     @Override

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -173,19 +175,13 @@ public class HistoryFragment extends BaseFragment<LayoutSrlBinding> implements R
                 new Refresh().start();
             }
         });
-    }
 
-    @Override
-    protected void initData() {
-        if (mHistory == null) {
-            baseBind.srl.autoRefresh();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireBaseActivity2().registerOnFixInfoReady(2, (fth, fbh) -> {
+        requireBaseActivity2().registerOnApplyWindowInsets(2, windowInsetsCompat -> {
+            int fth;
+            int fbh;
+            Insets a =  windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            fth = a.top;
+            fbh = a.bottom;
             baseBind.srl.setPadding(0, fth, 0, fbh);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) baseBind.cf.getLayoutParams();
             lp.topMargin = -1 * fbh;
@@ -198,9 +194,10 @@ public class HistoryFragment extends BaseFragment<LayoutSrlBinding> implements R
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        requireBaseActivity2().unRegisterOnFixInfoReady(2);
+    protected void initData() {
+        if (mHistory == null) {
+            baseBind.srl.autoRefresh();
+        }
     }
 
     @Override

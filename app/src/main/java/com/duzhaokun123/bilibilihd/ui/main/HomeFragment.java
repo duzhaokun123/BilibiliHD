@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -242,19 +244,13 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
                 new Refresh().start();
             }
         });
-    }
 
-    @Override
-    protected void initData() {
-        if (homePage == null) {
-            baseBind.srl.autoRefresh();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        requireBaseActivity2().registerOnFixInfoReady(1, (fth, fbh) -> {
+        requireBaseActivity2().registerOnApplyWindowInsets(1, windowInsetsCompat -> {
+            int fth;
+            int fbh;
+            Insets a =  windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            fth = a.top;
+            fbh = a.bottom;
             baseBind.srl.setPadding(0, fth, 0, fbh);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) baseBind.cf.getLayoutParams();
             lp.topMargin = -1 * fbh;
@@ -267,15 +263,10 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        requireBaseActivity2().unRegisterOnFixInfoReady(1);
+    protected void initData() {
+        if (homePage == null) {
+            baseBind.srl.autoRefresh();
+        }
     }
 
     @Override

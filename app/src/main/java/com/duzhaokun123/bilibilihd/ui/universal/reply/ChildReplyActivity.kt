@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.os.Message
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.duzhaokun123.bilibilihd.databinding.ActivityChildReplyBinding
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.pBilibiliClient
+import com.duzhaokun123.bilibilihd.utils.systemBars
 import com.hiczp.bilibili.api.main.model.ChildReply2
 import com.hiczp.bilibili.api.main.model.SendReplyResponse
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -113,12 +115,13 @@ class ChildReplyActivity : BaseActivity2<ActivityChildReplyBinding>() {
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        baseBind.clRoot.updatePadding(top = fixTopHeight)
-        srl.updatePadding(bottom = fixBottomHeight)
-        cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            topMargin = -1 * fixBottomHeight
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            baseBind.clRoot.updatePadding(top = it.top)
+            srl.updatePadding(bottom = it.bottom)
+            cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = -1 * it.bottom
+            }
         }
     }
 

@@ -2,20 +2,18 @@ package com.duzhaokun123.bilibilihd.ui
 
 import android.app.Activity
 import com.duzhaokun123.bilibilihd.R
-import com.duzhaokun123.bilibilihd.utils.MyBilibiliClientUtil
-import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.databinding.ActivityToolBinding
 import com.duzhaokun123.bilibilihd.ui.play.online.OnlinePlayActivity
 import com.duzhaokun123.bilibilihd.ui.universal.reply.RootReplyActivity
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity
-import com.duzhaokun123.bilibilihd.utils.toIntOrDefault
 import okhttp3.internal.toLongOrDefault
 import android.content.Intent
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.ui.play.live.LivePlayActivity
 import com.duzhaokun123.bilibilihd.ui.play.season.SeasonPLayActivity
-import com.duzhaokun123.bilibilihd.utils.Logcat
+import com.duzhaokun123.bilibilihd.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -98,8 +96,9 @@ class ToolActivity : BaseActivity2<ActivityToolBinding>() {
         }
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        baseBind.nsv.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            baseBind.nsv.updatePadding(top = it.top, bottom = it.bottom)
+        }
     }
 }

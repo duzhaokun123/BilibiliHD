@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.cardview.widget.CardView
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
@@ -74,17 +75,13 @@ class FavoriteActivity : BaseActivity2<LayoutSrlBinding>() {
 
             @SuppressLint("SetTextI18n")
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                if (getItemViewType(position) == 1) {
-                    val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, fixBottomHeight)
-                    holder.itemView.layoutParams = params
-                } else {
-                    if (infos == null) {
+                if (infos == null) {
                         (holder as VideoCardHolder).mTvTitle.text = ids!!.data[position].bvid
                     } else {
                         infos!!.data[position].let { data ->
                             (holder as VideoCardHolder).mTvTitle.text = data.title
                             holder.mTvUp.text = "${data.upper.name}\n${data.intro}"
-                            GlideUtil.loadUrlInto(this@FavoriteActivity, data.cover, holder.mIv, true)
+                            Glide.with(this@FavoriteActivity).load(data.cover).into(holder.mIv)
                             Glide.with(this@FavoriteActivity).load(data.upper.face).into(holder.mCivFace)
 
                             holder.mCv.setOnClickListener {
@@ -112,16 +109,10 @@ class FavoriteActivity : BaseActivity2<LayoutSrlBinding>() {
                             }
                         }
                     }
-                }
+
             }
 
-            override fun getItemCount(): Int {
-                return if (ids == null) {
-                    0
-                } else {
-                    ids!!.data.size
-                }
-            }
+            override fun getItemCount() = ids?.data?.size ?: 0
 
             inner class VideoCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 val mCv: CardView = itemView.findViewById(R.id.cv)
@@ -146,15 +137,14 @@ class FavoriteActivity : BaseActivity2<LayoutSrlBinding>() {
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            baseBind.srl.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            baseBind.srl.updatePadding(top = it.top, bottom = it.bottom)
             baseBind.mh.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = fixTopHeight
+                topMargin = it.top
             }
             baseBind.cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = -1 * fixBottomHeight
+                topMargin = -1 * it.bottom
             }
         }
     }

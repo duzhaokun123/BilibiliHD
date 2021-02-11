@@ -1,11 +1,13 @@
 package com.duzhaokun123.bilibilihd.ui.settings
 
 import android.os.Bundle
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivitySettingsBinding
+import com.duzhaokun123.bilibilihd.utils.systemBars
 
 class SettingsActivity : BaseActivity2<ActivitySettingsBinding>() {
     private var first = true
@@ -35,18 +37,19 @@ class SettingsActivity : BaseActivity2<ActivitySettingsBinding>() {
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        baseBind.nsv?.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
-        if (baseBind.nsv == null) {
-            baseBind.clRoot.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
-        }
-    }
-
     fun get2ndFl() = baseBind.flSettings2nd
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("first", first)
+    }
+
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            baseBind.nsv?.updatePadding(top = it.top, bottom = it.bottom)
+            if (baseBind.nsv == null) {
+                baseBind.clRoot.updatePadding(top = it.top, bottom = it.bottom)
+            }
+        }
     }
 }

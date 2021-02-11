@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ import com.duzhaokun123.bilibilihd.databinding.ActivitySearchBinding
 import com.duzhaokun123.bilibilihd.utils.ListUtil
 import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.TipUtil
+import com.duzhaokun123.bilibilihd.utils.systemBars
 import com.hiczp.bilibili.api.app.model.SearchResult
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.MaterialHeader
@@ -113,15 +115,14 @@ class SearchActivity : BaseActivity2<ActivitySearchBinding>() {
         handleIntent(intent)
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            srl.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            srl.updatePadding(top = it.top, bottom = it.bottom)
             mh.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = fixTopHeight
+                topMargin = it.top
             }
             cf.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = -1 * fixBottomHeight
+                topMargin = -1 * it.bottom
             }
         }
     }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.*
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.duzhaokun123.bilibilihd.Params
 import com.duzhaokun123.bilibilihd.R
@@ -59,6 +60,12 @@ class DynamicFragment : BaseFragment<LayoutWebViewBinding>(), Refreshable {
                 }
             }, "app")
         }
+
+        requireBaseActivity2().registerOnApplyWindowInsets(3){windowInsetsCompat ->
+            windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+                baseBind.rl.updatePadding(top = it.top, bottom = it.bottom)
+            }
+        }
     }
 
     override fun initData() {
@@ -69,9 +76,6 @@ class DynamicFragment : BaseFragment<LayoutWebViewBinding>(), Refreshable {
 
     override fun onStart() {
         super.onStart()
-        requireBaseActivity2().registerOnFixInfoReady(3) { fixTopHeight, fixBottomHeight ->
-            baseBind.rl.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
-        }
         GlobalScope.launch(Dispatchers.Main) {
             while (isStopped.not()) {
                 if (loadFinished) { // FIXME: 21-2-2 这没有阻止网页加载图片, 造成更多流量消耗
@@ -90,11 +94,6 @@ class DynamicFragment : BaseFragment<LayoutWebViewBinding>(), Refreshable {
                 delay(2000)
             }
         }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        requireBaseActivity2().unRegisterOnFixInfoReady(3)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -241,8 +242,13 @@ class MainActivity : BaseActivity2<ActivityMainBinding>() {
         if (defaultNavWidth == 0) {
             defaultNavWidth = baseBind.navMain.width
         }
-        baseBind.navMain.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
         setActionBarUp(true)
+    }
+
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+            baseBind.navMain.updatePadding(top = it.top, bottom = it.bottom)
+        }
     }
 
     @SuppressLint("SetTextI18n")

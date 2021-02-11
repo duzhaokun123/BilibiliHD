@@ -36,33 +36,10 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
 
     val className by lazy { this::class.simpleName }
     val startIntent: Intent by lazy { intent }
-    val navigationBarHeight: Int
-        get() {
-            val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-            return if (resourceId > 0)
-                resources.getDimensionPixelSize(resourceId)
-            else 0
-        }
-    val statusBarHeight: Int
-        get() {
-            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-            return if (resourceId > 0)
-                resources.getDimensionPixelSize(resourceId)
-            else 0
-        }
     val actionBarHeight get() = supportActionBar?.height ?: 0
-    val fixTopHeight
-        get() = maxOf(statusBarHeight, displayCutout?.compatSafeInsetTop() ?: 0) + actionBarHeight
-    val fixBottomHeight
-        get() = if (isNavigationBarOnBottom)
-            navigationBarHeight + (displayCutout?.compatSafeInsetBottom() ?: 0)
-        else
-            displayCutout?.compatSafeInsetBottom() ?: 0
     var isStopped = true
         private set
     var isFirstCreate = true
-        private set
-    var isFixInfoReady = false
         private set
     var handler: Handler? = null
         private set
@@ -75,12 +52,13 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
-    private val onFixInfoReadyCallbacks = mutableMapOf<Int,(Int, Int) -> Unit>()
+    private val onApplyWindowInsetsCallbacks = mutableMapOf<Int, (WindowInsetsCompat) -> Unit>()
 
     private var isFirstWindowForce = true
     private var layoutFixed = false
     private var displayCutout: DisplayCutout? = null
     private var isNavigationBarOnBottom = true
+    private var lastWindowInsetsCompat: WindowInsetsCompat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) isFirstCreate = false
@@ -107,10 +85,17 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
 
         baseBind = DataBindingUtil.setContentView(this, initLayout())
         ViewCompat.setOnApplyWindowInsetsListener(baseBind.root) { v, insets ->
+            lastWindowInsetsCompat = insets
+            onApplyWindowInsets(insets)
+            onApplyWindowInsetsCallbacks.forEach { (_, v) -> v.invoke(insets) }
             insets.getInsets(WindowInsetsCompat.Type.systemBars()).let {
                 v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     leftMargin = it.left
                     rightMargin = it.right
+                    if (Config.FIX_LAYOUT in config) {
+                        topMargin = it.top
+                        bottomMargin = it.bottom
+                    }
                 }
             }
             WindowInsetsCompat.CONSUMED
@@ -146,13 +131,6 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
 
             if (displayCutout == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 displayCutout = window.decorView.rootWindowInsets.displayCutout
-            }
-
-            isFixInfoReady = true
-            onFixInfoReadyCallbacks.values.forEach { it.invoke(fixTopHeight, fixBottomHeight) }
-
-            if (layoutFixed.not() && Config.FIX_LAYOUT in config) {
-                updateLayoutFix()
             }
 
             if (isFirstWindowForce) {
@@ -233,18 +211,13 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
         }
     }
 
-    fun updateLayoutFix() {
-        layoutFixed = true
-        baseBind.root.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    fun registerOnApplyWindowInsets(key: Int, onApplyWindowInsets: (windowInsetsCompat: WindowInsetsCompat) -> Unit) {
+        onApplyWindowInsetsCallbacks[key] = onApplyWindowInsets
+        lastWindowInsetsCompat?.let { onApplyWindowInsets(it) }
     }
 
-    fun registerOnFixInfoReady(key: Int, callback :(fixTopHeight: Int, fixBottomHeight: Int) -> Unit) {
-        onFixInfoReadyCallbacks[key] = callback
-        if (isFixInfoReady) callback.invoke(fixTopHeight, fixBottomHeight)
-    }
-
-    fun unRegisterOnFixInfoReady(key: Int) {
-        onFixInfoReadyCallbacks.remove(key)
+    fun unregisterOnApplyWindowInsets(key: Int) {
+        onApplyWindowInsetsCallbacks.remove(key)
     }
 
     abstract fun initConfig(): Set<Config>
@@ -257,6 +230,7 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
     abstract fun initData()
     open fun initRegisterCoordinatorLayout() = null as CoordinatorLayout?
     open fun onRestoreInstanceState2(savedInstanceState: Bundle) {}
+    open fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {}
 
     private fun DisplayCutout.compatSafeInsetTop() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) this.safeInsetTop else 0
 

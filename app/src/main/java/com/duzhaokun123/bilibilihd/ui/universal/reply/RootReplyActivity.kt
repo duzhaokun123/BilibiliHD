@@ -1,10 +1,12 @@
 package com.duzhaokun123.bilibilihd.ui.universal.reply
 
 import androidx.activity.viewModels
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityRootReplyBinding
+import com.duzhaokun123.bilibilihd.utils.systemBars
 
 class RootReplyActivity : BaseActivity2<ActivityRootReplyBinding>() {
     companion object {
@@ -41,8 +43,7 @@ class RootReplyActivity : BaseActivity2<ActivityRootReplyBinding>() {
 
     override fun initRegisterCoordinatorLayout() = baseBind.clRoot
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        baseBind.clRoot.updatePadding(top = fixTopHeight)
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        baseBind.clRoot.updatePadding(top = windowInsetsCompat.systemBars.top)
     }
 }

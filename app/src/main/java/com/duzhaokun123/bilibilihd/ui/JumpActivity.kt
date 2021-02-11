@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.util.Log
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityJumpBinding
 import com.duzhaokun123.bilibilihd.utils.TipUtil
+import com.duzhaokun123.bilibilihd.utils.systemBars
 
 class JumpActivity : BaseActivity2<ActivityJumpBinding>() {
     override fun initConfig() = setOf<Config>()
@@ -52,8 +54,9 @@ class JumpActivity : BaseActivity2<ActivityJumpBinding>() {
 
     override fun initData() {}
 
-    override fun onWindowFocusChanged(hasFocus: kotlin.Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        baseBind.nsv.updatePadding(top = fixTopHeight, bottom = fixBottomHeight)
+    override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
+        windowInsetsCompat.systemBars.let {
+            baseBind.nsv.updatePadding(top = it.top, bottom = it.bottom)
+        }
     }
 }
