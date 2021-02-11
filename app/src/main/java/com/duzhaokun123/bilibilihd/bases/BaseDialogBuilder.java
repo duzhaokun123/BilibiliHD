@@ -11,7 +11,7 @@ import androidx.databinding.ViewDataBinding;
 
 import com.duzhaokun123.bilibilihd.utils.Handler;
 
-public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends AlertDialog.Builder implements Handler.IHandlerMessageCallback {
+public abstract class BaseDialogBuilder<Layout extends ViewDataBinding> extends AlertDialog.Builder implements Handler.IHandlerMessageCallback {
     public BaseDialogBuilder(@NonNull Context context) {
         super(context);
 
@@ -49,7 +49,7 @@ public abstract class BaseDialogBuilder<layout extends ViewDataBinding> extends 
 
     private final int config;
 
-    protected layout baseBind;
+    protected Layout baseBind;
     @Nullable
     protected Handler handler;
 

@@ -33,12 +33,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 object ImageViewUtil {
-    fun autoAspectRation(imageView: ImageView, drawable: Drawable) {
-        val params = imageView.layoutParams
-        params.height = imageView.width / drawable.intrinsicWidth * drawable.intrinsicHeight + imageView.paddingBottom + imageView.paddingTop
-        imageView.layoutParams = params
-    }
-
     fun setLevelDrawable(imageView: ImageView, level: Int) {
         when (level) {
             0 -> imageView.setImageResource(R.drawable.ic_user_level_0)

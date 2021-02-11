@@ -14,12 +14,12 @@ import androidx.fragment.app.Fragment;
 
 import com.duzhaokun123.bilibilihd.utils.Handler;
 
-public abstract class BaseFragment<layout extends ViewDataBinding> extends Fragment implements Handler.IHandlerMessageCallback {
+public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragment implements Handler.IHandlerMessageCallback {
 
     protected static final int NEED_HANDLER = 0b010;
 
     protected final String CLASS_NAME = this.getClass().getSimpleName();
-    protected layout baseBind;
+    protected Layout baseBind;
     @Nullable
     protected Handler handler;
     protected boolean isStopped = true;

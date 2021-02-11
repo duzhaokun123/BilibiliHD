@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends RecyclerView.Adapter<BaseSimpleAdapter<layout>.ViewHolder> {
+public abstract class BaseSimpleAdapter<Layout extends ViewDataBinding> extends RecyclerView.Adapter<BaseSimpleAdapter<Layout>.ViewHolder> {
     public final String CLASS_NAME = this.getClass().getSimpleName();
 
     private final Context mContext;
@@ -48,19 +48,19 @@ public abstract class BaseSimpleAdapter<layout extends ViewDataBinding> extends 
 
     protected abstract int initLayout();
 
-    protected abstract void initView(@NonNull layout baseBind, int position);
+    protected abstract void initView(@NonNull Layout baseBind, int position);
 
-    protected abstract void initData(@NonNull layout baseBind, int position);
+    protected abstract void initData(@NonNull Layout baseBind, int position);
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final layout baseBind;
+        private final Layout baseBind;
 
-        public ViewHolder(layout viewDataBinding) {
+        public ViewHolder(Layout viewDataBinding) {
             super(viewDataBinding.getRoot());
             baseBind = viewDataBinding;
         }
 
-        public layout getBaseBind() {
+        public Layout getBaseBind() {
             return baseBind;
         }
     }

@@ -15,7 +15,9 @@
         <ImageView
             android:id="@+id/iv"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="100dp"
             android:scaleType="fitCenter" />
 
         <TextView

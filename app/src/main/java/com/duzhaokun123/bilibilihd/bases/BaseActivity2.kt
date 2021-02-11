@@ -10,6 +10,7 @@ import android.util.DisplayMetrics
 import android.view.DisplayCutout
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -23,7 +24,7 @@ import com.duzhaokun123.bilibilihd.utils.Handler
 import com.duzhaokun123.bilibilihd.utils.OtherUtils
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 
-abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Handler.IHandlerMessageCallback {
+abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Handler.IHandlerMessageCallback {
     enum class Config {
         // FIXME: 21-1-29 Activity 重构导致全屏失效
         FULLSCREEN,
@@ -65,7 +66,7 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
         private set
     var handler: Handler? = null
         private set
-    lateinit var baseBind: layout
+    lateinit var baseBind: Layout
         private set
 
     private val config by lazy { initConfig() }
@@ -105,6 +106,15 @@ abstract class BaseActivity2<layout : ViewDataBinding> : AppCompatActivity(), Ha
         window.statusBarColor = abc
 
         baseBind = DataBindingUtil.setContentView(this, initLayout())
+        ViewCompat.setOnApplyWindowInsetsListener(baseBind.root) { v, insets ->
+            insets.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    leftMargin = it.left
+                    rightMargin = it.right
+                }
+            }
+            WindowInsetsCompat.CONSUMED
+        }
 
         savedInstanceState?.let { onRestoreInstanceState2(it) }
 

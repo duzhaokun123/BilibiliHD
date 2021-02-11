@@ -24,7 +24,7 @@ import com.duzhaokun123.bilibilihd.utils.TipUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCompatActivity implements Handler.IHandlerMessageCallback {
+public abstract class BaseActivity<Layout extends ViewDataBinding> extends AppCompatActivity implements Handler.IHandlerMessageCallback {
 
     protected static final int FULLSCREEN = 0b001;
     protected static final int NEED_HANDLER = 0b010;
@@ -35,7 +35,7 @@ public abstract class BaseActivity<layout extends ViewDataBinding> extends AppCo
     private boolean layoutFixed = false;
 
     public final String CLASS_NAME = this.getClass().getSimpleName();
-    protected layout baseBind;
+    protected Layout baseBind;
     @Nullable
     protected Handler handler;
     /**

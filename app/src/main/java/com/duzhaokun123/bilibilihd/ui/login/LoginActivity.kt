@@ -25,7 +25,7 @@ class LoginActivity : BaseActivity2<ActivityLoginBinding>() {
             Thread {
                 var loginResponse: LoginResponse? = null
                 try {
-                    loginResponse = pBilibiliClient.login(baseBind.etUsername.text.toString(), baseBind.etPassword.text.toString())
+                    loginResponse = pBilibiliClient.login(baseBind.tietUsername.text.toString(), baseBind.tietPassword.text.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
                     if (e is BilibiliApiException && e.commonResponse.code == -105) {
