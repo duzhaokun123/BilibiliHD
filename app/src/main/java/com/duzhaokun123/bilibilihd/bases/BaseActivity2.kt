@@ -23,6 +23,7 @@ import com.duzhaokun123.bilibilihd.R
 import com.duzhaokun123.bilibilihd.utils.Handler
 import com.duzhaokun123.bilibilihd.utils.OtherUtils
 import com.duzhaokun123.bilibilihd.utils.TipUtil
+import com.duzhaokun123.bilibilihd.utils.systemBars
 
 abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Handler.IHandlerMessageCallback {
     enum class Config {
@@ -88,7 +89,7 @@ abstract class BaseActivity2<Layout : ViewDataBinding> : AppCompatActivity(), Ha
             lastWindowInsetsCompat = insets
             onApplyWindowInsets(insets)
             onApplyWindowInsetsCallbacks.forEach { (_, v) -> v.invoke(insets) }
-            insets.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+            insets.systemBars.let {
                 v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     leftMargin = it.left
                     rightMargin = it.right

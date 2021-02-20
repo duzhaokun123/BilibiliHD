@@ -29,6 +29,7 @@ import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity.Companion.ente
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil.setLevelDrawable
 import com.duzhaokun123.bilibilihd.utils.Refreshable
 import com.duzhaokun123.bilibilihd.utils.TipUtil
+import com.duzhaokun123.bilibilihd.utils.systemBars
 import com.hiczp.bilibili.api.app.model.MyInfo
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -246,7 +247,7 @@ class MainActivity : BaseActivity2<ActivityMainBinding>() {
     }
 
     override fun onApplyWindowInsets(windowInsetsCompat: WindowInsetsCompat) {
-        windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+        windowInsetsCompat.systemBars.let {
             baseBind.navMain.updatePadding(top = it.top, bottom = it.bottom)
         }
     }

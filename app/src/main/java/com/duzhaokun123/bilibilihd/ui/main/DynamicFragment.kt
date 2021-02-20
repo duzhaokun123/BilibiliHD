@@ -62,7 +62,7 @@ class DynamicFragment : BaseFragment<LayoutWebViewBinding>(), Refreshable {
         }
 
         requireBaseActivity2().registerOnApplyWindowInsets(3){windowInsetsCompat ->
-            windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()).let {
+            windowInsetsCompat.systemBars.let {
                 baseBind.rl.updatePadding(top = it.top, bottom = it.bottom)
             }
         }

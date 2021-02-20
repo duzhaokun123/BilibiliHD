@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -34,6 +33,7 @@ import com.duzhaokun123.bilibilihd.utils.ObjectCache;
 import com.duzhaokun123.bilibilihd.utils.Refreshable;
 import com.duzhaokun123.bilibilihd.utils.Settings;
 import com.duzhaokun123.bilibilihd.utils.TipUtil;
+import com.duzhaokun123.bilibilihd.utils.WindowInsetsCompatKt;
 import com.hiczp.bilibili.api.app.model.HomePage;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
@@ -248,7 +248,7 @@ public class HomeFragment extends BaseFragment<LayoutSrlBinding> implements Refr
         requireBaseActivity2().registerOnApplyWindowInsets(1, windowInsetsCompat -> {
             int fth;
             int fbh;
-            Insets a =  windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets a = WindowInsetsCompatKt.getSystemBars(windowInsetsCompat);
             fth = a.top;
             fbh = a.bottom;
             baseBind.srl.setPadding(0, fth, 0, fbh);

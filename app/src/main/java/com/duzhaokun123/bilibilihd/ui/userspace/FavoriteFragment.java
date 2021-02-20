@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +21,7 @@ import com.duzhaokun123.bilibilihd.R;
 import com.duzhaokun123.bilibilihd.bases.BaseFragment;
 import com.duzhaokun123.bilibilihd.databinding.LayoutRecyclerviewBinding;
 import com.duzhaokun123.bilibilihd.utils.ObjectCache;
+import com.duzhaokun123.bilibilihd.utils.WindowInsetsCompatKt;
 import com.hiczp.bilibili.api.app.model.Space;
 
 public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewBinding> {
@@ -128,7 +128,7 @@ public class FavoriteFragment extends BaseFragment<LayoutRecyclerviewBinding> {
         super.onStart();
         requireBaseActivity2().registerOnApplyWindowInsets(4, windowInsetsCompat -> {
             int fbh;
-            Insets a =  windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets a = WindowInsetsCompatKt.getSystemBars(windowInsetsCompat);
             fbh = a.bottom;
             baseBind.rv.setPadding(0,0,0,fbh);
             return null;
