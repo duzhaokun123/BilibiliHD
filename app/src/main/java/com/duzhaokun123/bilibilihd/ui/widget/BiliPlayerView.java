@@ -231,13 +231,13 @@ public class BiliPlayerView extends PlayerView implements Handler.IHandlerMessag
             TextView tvSpeed = popSpeed.findViewById(R.id.tv_speed);
             Button btnP01 = popSpeed.findViewById(R.id.btn_p01);
             Button btnM01 = popSpeed.findViewById(R.id.btn_m01);
-            sbSpeed.setProgress((int) (100 * speed[0]));
+            sbSpeed.setProgress((int) (100 * speed[0]) - 10);
             tvSpeed.setText("" + speed[0] + "x");
             sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    speed[0] = progress / 100F;
+                    speed[0] = (progress + 10)/ 100F;
                     tvSpeed.setText("" + speed[0] + "x");
                 }
 

@@ -139,7 +139,7 @@ class ChildReplyAdapter(context: Context, private val childReply: ChildReply2) :
                             bundle.putString(ChildReplyActivity.EXTRA_USERNAME, reply.member.uname)
                             message.data = bundle
                             message.what = ChildReplyActivity.WHAT_SET_PARENT
-                            baseActivity?.handler?.sendMessage(message)
+                            baseActivity2?.handler?.sendMessage(message)
                         }
                         R.id.check_dialog -> {
                             // TODO: 20-8-15

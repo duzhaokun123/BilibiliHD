@@ -18,8 +18,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:max="200"
-            android:progress="100" />
+            android:max="190"
+            android:progress="90" />
 
         <TextView
             android:id="@+id/tv_speed"

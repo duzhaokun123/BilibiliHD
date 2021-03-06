@@ -7,7 +7,7 @@
 主要是为了解决官方客户端无法横屏和在大屏幕设备上的表现不好的问题
 
 ## 弃坑警告
-该项目随时可能因为包括但不限于以下原因中的的一个或多个而终止
+该项目随时可能由于包括但不限于以下原因中的的一个或多个而终止
 - 高考
 - 电脑坏了
 - 历史遗留问题太多，不想解决
@@ -20,7 +20,7 @@
 
 - v0.1 https://wws.lanzous.com/b01tqpnaf 密码: 233
 
-下载 https://github.com/duzhaokun123/BilibiliHD/releases (重大发布)
+下载 https://github.com/duzhaokun123/BilibiliHD/releases (重要发布)
 
 ~~不再打包32位原生库, 有需求请自行编译~~不再存在原生库
 
