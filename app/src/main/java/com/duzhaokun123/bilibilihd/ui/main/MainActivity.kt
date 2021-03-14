@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -28,6 +29,7 @@ import com.duzhaokun123.bilibilihd.ui.settings.SettingsActivity
 import com.duzhaokun123.bilibilihd.ui.userspace.UserSpaceActivity.Companion.enter
 import com.duzhaokun123.bilibilihd.utils.ImageViewUtil.setLevelDrawable
 import com.duzhaokun123.bilibilihd.utils.Refreshable
+import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.TipUtil
 import com.duzhaokun123.bilibilihd.utils.systemBars
 import com.hiczp.bilibili.api.app.model.MyInfo
@@ -65,6 +67,18 @@ class MainActivity : BaseActivity2<ActivityMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!Settings.getNeverShowFW())
+            AlertDialog.Builder(this, R.style.AppTheme_Dialog)
+                    .apply {
+                        setTitle("警告")
+                        setMessage("本应用仅供作者交流学习使用, 如被封号与作者无关, 怕被封号请不要使用")
+                        setNegativeButton(android.R.string.ok, null)
+                        setNeutralButton("不再提示") { _, _ -> Settings.setNeverShowFW(true) }
+                        setCancelable(false)
+                    }
+                    .show()
+
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
@@ -164,7 +178,7 @@ class MainActivity : BaseActivity2<ActivityMainBinding>() {
 
     override fun initConfig() = setOf(Config.NEED_HANDLER)
 
-    override fun initLayout() =  R.layout.activity_main
+    override fun initLayout() = R.layout.activity_main
 
     override fun findViews() {
         mRlMyInfo = baseBind.navMain.getHeaderView(0) as RelativeLayout

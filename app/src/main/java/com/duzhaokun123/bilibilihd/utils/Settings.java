@@ -276,6 +276,14 @@ public class Settings {
         }
     }
 
+    public static boolean getNeverShowFW() {
+        return sharedPreferences.getBoolean("never_show_fw", false);
+    }
+
+    public static void setNeverShowFW(boolean v) {
+        sharedPreferences.edit().putBoolean("never_show_fw", v).apply();
+    }
+
     public static int getIntByString(String key, int def) {
         String i = sharedPreferences.getString(key, null);
         try {
