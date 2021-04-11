@@ -161,7 +161,7 @@ dependencies {
 //    implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
 
     //DanmakuView
-    implementation project(':danmakuview')
+    implementation 'com.github.duzhaokun123:DanmakuView:0.1.2'
 
     //lifecycle
     // ViewModel

@@ -1,9 +1,6 @@
 include ':app'
 include ':bilibili-api'
-include ':danmakuview'
 rootProject.name = 'bilibili HD'
 
 // https://github.com/duzhaokun123/bilibili-api.git
 project(':bilibili-api').projectDir = new File(rootDir, 'third_party/bilibili-api')
-// https://github.com/duzhaokun123/DanmakuView.git
-project(':danmakuview').projectDir = new File(rootDir, 'third_party/DanmakuView/danmakuview')

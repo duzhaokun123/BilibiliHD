@@ -6,6 +6,7 @@ import com.duzhaokun123.bilibilihd.bases.BaseActivity2
 import com.duzhaokun123.bilibilihd.databinding.ActivityLoginBinding
 import com.duzhaokun123.bilibilihd.utils.Settings
 import com.duzhaokun123.bilibilihd.utils.TipUtil
+import com.duzhaokun123.bilibilihd.utils.kRunOnUiThread
 import com.duzhaokun123.bilibilihd.utils.pBilibiliClient
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
@@ -34,7 +35,7 @@ class LoginActivity : BaseActivity2<ActivityLoginBinding>() {
                     runOnUiThread { TipUtil.showTip(this@LoginActivity, e.message) }
                 }
                 loginResponse?.let {
-                    if (it.data.url == null) {
+                    if (it.data.url.isNullOrEmpty()) {
                         val loginUserInfoMap = Settings.getLoginUserInfoMap()
                         loginUserInfoMap[it.userId] = it
                         loginUserInfoMap.setLoggedUid(it.userId)
@@ -42,7 +43,9 @@ class LoginActivity : BaseActivity2<ActivityLoginBinding>() {
                         handler?.sendEmptyMessage(WHAT_FINISH)
                     } else {
                         pBilibiliClient.loginResponse = null
-                        TipUtil.showToast("无法登录")
+                        kRunOnUiThread {
+                            TipUtil.showToast("无法登录")
+                        }
                     }
                 }
             }.start()
