@@ -1,4 +1,4 @@
-# Bilibili HD
+# Bilibili HD (已弃用)
 ![Build](https://github.com/duzhaokun123/BilibiliHD/workflows/Build/badge.svg)
 [![GitHub license](https://img.shields.io/github/license/duzhaokun123/BilibiliHD)](https://github.com/duzhaokun123/BilibiliHD/blob/dev/LICENSE)
 
@@ -8,7 +8,7 @@
 
 # 警告: 本应用仅供作者交流学习使用, 如被封号与作者无关, 怕被封号请不要使用
 
-# !即将弃用!: 使用 [BilibiliHD2](https://github.com/duzhaokun123/BilibiliHD2) 代替
+# !已弃用!: 使用 [BilibiliHD2](https://github.com/duzhaokun123/BilibiliHD2) 代替
 
 ## 弃坑警告
 该项目随时可能由于包括但不限于以下原因中的的一个或多个而终止
